@@ -19,5 +19,12 @@
     "action": "Usou Cajado Sombrio: Nevoa de Medo",
     "result": "Dificulta percepcao e pode impor hesitacao narrativa.",
     "notes": "Sugestao de teste: Teste de vontade dos afetados ou teste de ocultacao de Miko."
+  },
+  {
+    "timestamp": "2026-06-03T02:02:49-03:00",
+    "character": "Narrador",
+    "action": "Rolou 1d20",
+    "result": "Total 19; individuais [19]",
+    "notes": ""
   }
 ]
