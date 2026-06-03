@@ -1,4 +1,154 @@
 {
-  "notes": [],
-  "flags": {}
+  "locations": [
+    {
+      "name": "País de Magik",
+      "type": "região",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Cidade de Pedralume",
+      "type": "capital",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Floresta Viridian",
+      "type": "floresta",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Campos dos Kriots",
+      "type": "região",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Lago das Carpas Profetas",
+      "type": "lago",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Estrada do Viajante",
+      "type": "estrada",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Floresta do Avesso",
+      "type": "floresta",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Brejo do Esquecimento",
+      "type": "brejo",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Montanhas Trippi",
+      "type": "montanha",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Vale Vermilion",
+      "type": "vale",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Penhascos do Último Passo",
+      "type": "penhasco",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Avelgard",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Varnhollow",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Corvenn",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Dunwall",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Brisvale",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Norwick",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Eldermor",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Arkenfor",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Velharth",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Stonewatch",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Redmoor",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Thornwich",
+      "type": "cidade",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Vilarejo dos Gatos Autistas",
+      "type": "mini vilarejo",
+      "notes": "",
+      "narrative_hooks": []
+    },
+    {
+      "name": "Vilarejo dos Gatos com TDAH",
+      "type": "mini vilarejo",
+      "notes": "",
+      "narrative_hooks": []
+    }
+  ]
 }

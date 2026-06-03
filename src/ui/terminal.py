@@ -7,7 +7,7 @@ from pathlib import Path
 
 from src.core.combat import apply_physical_damage, roll_damage
 from src.core.character import create_miko_meu, load_or_create_miko, save_character, save_characters
-from src.core.currency import PedralumeMoney, convert_pedralume
+from src.core.currency import PedralumeMoney
 from src.core.dice import roll_dice
 from src.core.magic import apply_magic_damage
 from src.core.session import list_events, register_event
@@ -50,7 +50,7 @@ def run_terminal() -> None:
             elif option == "9":
                 simulate_magical_damage_prompt(storage)
             elif option == "10":
-                show_pedralume_prompt()
+                organize_pedralume_prompt()
             elif option == "11":
                 show_world_locations(storage)
             elif option == "0":
@@ -73,7 +73,7 @@ def print_menu() -> None:
     print("7 - Realizar teste 1d20")
     print("8 - Simular dano fisico")
     print("9 - Simular dano magico")
-    print("10 - Ver moeda Pedralume")
+    print("10 - Ver/organizar moeda Pedralume")
     print("11 - Ver locais conhecidos do mundo")
     print("0 - Sair")
 
@@ -215,7 +215,7 @@ def simulate_magical_damage_prompt(storage: JSONStorage) -> None:
     )
 
 
-def show_pedralume_prompt() -> None:
+def organize_pedralume_prompt() -> None:
     print("\nConversao oficial:")
     print("10 Pedralumes Brutas = 1 Pedralume Refinada")
     print("10 Pedralumes Refinadas = 1 Pedralume Pura")
@@ -229,7 +229,7 @@ def show_pedralume_prompt() -> None:
         primordial=read_int("Pedralumes Primordiais: "),
     )
     print(f"Organizado: {money.display()}")
-    print(f"Total em Pedralumes Brutas: {convert_pedralume(money.raw_amount, 'bruta', 'bruta'):g}")
+    print(f"Total em Pedralumes Brutas: {money.raw_amount}")
 
 
 def show_world_locations(storage: JSONStorage) -> None:

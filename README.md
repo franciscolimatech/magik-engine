@@ -2,7 +2,8 @@
 
 MAGIK Engine e uma base inicial em Python para apoiar sessoes de RPG de mesa.
 Ele nao substitui o mestre: o objetivo e controlar fichas, dados, habilidades,
-consequencias e historico da sessao.
+consequencias, regras mecanicas oficiais e historico da sessao. A decisao final
+continua sendo do mestre.
 
 ## Requisitos
 
@@ -35,6 +36,11 @@ O terminal mostra o menu:
 4 - Usar Cajado Sombrio
 5 - Registrar acontecimento
 6 - Ver historico
+7 - Realizar teste 1d20
+8 - Simular dano fisico
+9 - Simular dano magico
+10 - Ver moeda Pedralume
+11 - Ver locais conhecidos do mundo
 0 - Sair
 ```
 
@@ -62,5 +68,13 @@ Esta primeira versao inclui:
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.
+- Sistema oficial de dano com escolha entre `d5`, `d10`, `d20` e `d30`.
+- Armadura como camada separada da vida para dano fisico.
+- Dano magico ignorando armadura e cura limitada pela vida maxima.
+- Testes oficiais `1d20`: Percepcao, Furtividade, Forca, Agilidade,
+  Conhecimento, Persuasao e Vontade.
+- Moeda Pedralume com conversao, soma, subtracao e exibicao organizada.
+- Locais conhecidos do mundo em `data/world_state.json`, sem descricoes
+  inventadas.
 
 Nao ha integracao com IA nesta etapa.
