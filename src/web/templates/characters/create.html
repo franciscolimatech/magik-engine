@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Criar personagem</h1>
+    <p>O id sera gerado automaticamente a partir do nome.</p>
+  </div>
+  <a class="button secondary" href="/characters">Cancelar</a>
+</div>
+
+<section class="card form-card">
+  {% if error %}
+  <p class="error">{{ error }}</p>
+  {% endif %}
+  <form method="post" action="/characters/new">
+    <div class="field-grid">
+      <label>
+        Nome
+        <input name="name" required value="{{ form.get('name', '') }}">
+      </label>
+      <label>
+        Classe
+        <input name="character_class" required value="{{ form.get('character_class', '') }}">
+      </label>
+      <label>
+        Vida maxima
+        <input name="max_health" type="number" min="1" required value="{{ form.get('max_health', '20') }}">
+      </label>
+      <label>
+        Vida atual
+        <input name="current_health" type="number" min="0" value="{{ form.get('current_health', '') }}">
+      </label>
+      <label>
+        Armadura
+        <input name="armor" type="number" min="0" value="{{ form.get('armor', '0') }}">
+      </label>
+      <label>
+        Tags separadas por virgula
+        <input name="tags" value="{{ form.get('tags', '') }}">
+      </label>
+    </div>
+    <label>
+      Equipamentos separados por virgula
+      <input name="equipment" value="{{ form.get('equipment', '') }}">
+    </label>
+    <label>
+      Observacoes
+      <textarea name="notes" rows="4">{{ form.get('notes', '') }}</textarea>
+    </label>
+    <button class="button" type="submit">Salvar personagem</button>
+  </form>
+</section>
+{% endblock %}

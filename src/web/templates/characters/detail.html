@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if error %}
+<section class="card">
+  <h1>Personagem nao encontrado</h1>
+  <p class="error">{{ error }}</p>
+  <a class="button" href="/characters">Voltar para personagens</a>
+</section>
+{% else %}
+<div class="page-heading">
+  <div>
+    <h1>{{ character.name }}</h1>
+    <p>{{ character.character_class }} · <code>{{ character.id }}</code></p>
+  </div>
+  <a class="button secondary" href="/characters">Voltar</a>
+</div>
+
+<section class="sheet-grid">
+  <article class="card stat-card">
+    <span>Vida</span>
+    <strong>{{ character.current_health }}/{{ character.max_health }}</strong>
+  </article>
+  <article class="card stat-card">
+    <span>Armadura</span>
+    <strong>{{ character.armor }}</strong>
+  </article>
+  <article class="card stat-card">
+    <span>Classe</span>
+    <strong>{{ character.character_class }}</strong>
+  </article>
+</section>
+
+<section class="detail-grid">
+  <article class="card">
+    <h2>Equipamentos</h2>
+    {% include "partials/list_values.html" with context %}
+  </article>
+  <article class="card">
+    <h2>Status</h2>
+    {% set values = character.status %}
+    {% include "partials/list_values.html" %}
+  </article>
+  <article class="card">
+    <h2>Tags</h2>
+    {% set values = character.tags %}
+    {% include "partials/list_values.html" %}
+  </article>
+  <article class="card">
+    <h2>Sistemas especiais</h2>
+    {% set values = character.special_systems %}
+    {% include "partials/list_values.html" %}
+    {% if character.living_weapon %}
+    <p class="subtle">Arma viva: {{ character.living_weapon }}</p>
+    {% endif %}
+  </article>
+</section>
+
+<section class="card">
+  <h2>Habilidades</h2>
+  {% if character.abilities %}
+  <div class="ability-list">
+    {% for ability in character.abilities %}
+    <article class="ability">
+      <strong>{{ ability.name or ability.id }}</strong>
+      <span>{{ ability.type or "tipo nao informado" }} · {{ ability.use or "uso nao informado" }}</span>
+      {% if ability.description %}<p>{{ ability.description }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="empty">Nenhuma habilidade cadastrada.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Observacoes</h2>
+  {% set values = character.notes %}
+  {% include "partials/list_values.html" %}
+</section>
+{% endif %}
+{% endblock %}

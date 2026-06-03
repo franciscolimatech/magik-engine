@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "MAGIK Engine" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">M</span>
+      <span>MAGIK Engine</span>
+    </a>
+    <nav class="nav">
+      <a href="/characters">Personagens</a>
+      <a href="/characters/new">Criar personagem</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+</body>
+</html>

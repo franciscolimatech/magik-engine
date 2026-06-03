@@ -1,0 +1,10 @@
+{% set current_values = values if values is defined else character.equipment %}
+{% if current_values %}
+<ul class="value-list">
+  {% for value in current_values %}
+  <li>{{ value }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="empty">Nenhum registro.</p>
+{% endif %}

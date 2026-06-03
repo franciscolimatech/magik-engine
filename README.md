@@ -27,6 +27,34 @@ python main.py
 Se os arquivos em `data/` nao existirem, o MAGIK Engine cria automaticamente
 `characters.json`, `sessions.json` e `world_state.json` com os dados iniciais.
 
+## Interface web
+
+A v0.9 adiciona uma base web com FastAPI, Jinja2 e CSS proprio, sem remover o
+terminal. A interface usa os mesmos modulos de `core`, `systems` e `storage`;
+as regras continuam no Python.
+
+Instale as dependencias:
+
+```powershell
+pip install -r requirements.txt
+```
+
+Rode localmente:
+
+```powershell
+uvicorn src.web.app:app --reload
+```
+
+Acesse:
+
+```text
+http://127.0.0.1:8000
+```
+
+Nesta primeira versao web, a tela inicial traz atalhos e o modulo de
+personagens ja permite listar fichas, abrir a ficha visual e criar personagem.
+Campanhas, combates e IA Narradora aparecem como areas futuras da interface.
+
 O terminal mostra o menu:
 
 ```text
@@ -69,6 +97,7 @@ python -m pytest
 - `src/systems`: sistemas especificos de jogo, como Ikisaki, maldicoes e Cajado Sombrio.
 - `src/storage`: contratos e adaptadores de armazenamento JSON ou memoria.
 - `src/ui`: entrada e saida da interface simples via terminal.
+- `src/web`: aplicacao FastAPI, rotas, templates Jinja2 e arquivos estaticos.
 - `data`: arquivos JSON usados como armazenamento inicial.
 - `tests`: testes basicos com pytest.
 
@@ -371,6 +400,7 @@ Esta versao inclui:
 - Combate por turnos com iniciativa, rodada, turno atual, dano, cura, status e historico.
 - Campanhas e sessoes organizadas, com combates associados e pendencias.
 - IA Narradora Auxiliar opcional, com fallback local sem IA.
+- Interface web inicial com listagem, ficha e criacao de personagens.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.
@@ -384,5 +414,3 @@ Esta versao inclui:
   inventadas.
 - Motor narrativo sem IA para falas da Ikisaki, consequencias, eventos,
   rumores e pressagios, com controle de tom e contexto por tipo de local.
-
-Nao ha integracao com IA nesta etapa.

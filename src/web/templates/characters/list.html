@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Personagens</h1>
+    <p>{{ characters|length }} ficha{{ "" if characters|length == 1 else "s" }} cadastrada{{ "" if characters|length == 1 else "s" }}.</p>
+  </div>
+  <a class="button" href="/characters/new">Criar personagem</a>
+</div>
+
+<section class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Classe</th>
+          <th>Vida</th>
+          <th>Armadura</th>
+          <th>Id</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for character in characters %}
+        <tr>
+          <td>{{ character.name }}</td>
+          <td>{{ character.character_class }}</td>
+          <td>{{ character.current_health }}/{{ character.max_health }}</td>
+          <td>{{ character.armor }}</td>
+          <td><code>{{ character.id }}</code></td>
+          <td><a class="text-link" href="/characters/{{ character.id }}">Ver ficha</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

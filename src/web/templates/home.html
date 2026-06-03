@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div>
+    <h1>MAGIK Engine</h1>
+    <p>Fichas, campanhas e ferramentas do mestre em uma mesa escura e organizada.</p>
+  </div>
+  <div class="hero-panel">
+    <span class="panel-label">v0.9</span>
+    <strong>Mesa do mestre</strong>
+    <p>Personagens prontos para consulta.</p>
+  </div>
+</section>
+
+<section class="link-grid" aria-label="Atalhos principais">
+  <a class="feature-card" href="/characters">
+    <span>Personagens</span>
+    <strong>Ver fichas cadastradas</strong>
+  </a>
+  <a class="feature-card" href="/characters/new">
+    <span>Criar personagem</span>
+    <strong>Adicionar uma nova ficha</strong>
+  </a>
+  <a class="feature-card is-disabled" href="#" aria-disabled="true">
+    <span>Campanhas</span>
+    <strong>Em breve</strong>
+  </a>
+  <a class="feature-card is-disabled" href="#" aria-disabled="true">
+    <span>Combates</span>
+    <strong>Em breve</strong>
+  </a>
+  <a class="feature-card is-disabled" href="#" aria-disabled="true">
+    <span>IA Narradora</span>
+    <strong>Em breve</strong>
+  </a>
+</section>
+{% endblock %}
