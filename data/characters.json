@@ -1,6 +1,7 @@
 {
   "characters": [
     {
+      "id": "miko-meu",
       "name": "Miko Meu",
       "class": "Sombrio",
       "max_health": 25,
@@ -9,6 +10,28 @@
       "equipment": [
         "Cajado",
         "Corrente de Ferro"
+      ],
+      "abilities": [
+        {
+          "id": "ikisaki_roulette",
+          "name": "Roleta Sombria: Dez Elos de Ikisaki",
+          "type": "unique"
+        },
+        {
+          "id": "shadow_staff",
+          "name": "Cajado Sombrio",
+          "type": "unique"
+        }
+      ],
+      "notes": [],
+      "status": [],
+      "tags": [
+        "personagem inicial",
+        "sombrio"
+      ],
+      "special_systems": [
+        "ikisaki",
+        "shadow_staff"
       ],
       "living_weapon": "Ikisaki",
       "can_disappear_in_shadows": true,

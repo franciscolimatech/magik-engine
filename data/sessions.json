@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "timestamp": "2026-06-03T01:34:10-03:00",
+    "character": "Ikisaki",
+    "action": "Fala da Ikisaki: debochada",
+    "result": "Miko, voce tem um plano ou so uma expressao confiante?",
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-06-03T01:35:35-03:00",
+    "character": "Miko Meu",
+    "action": "Realizou teste de Percepção",
+    "result": "10: Percebe o basico.",
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-06-03T01:35:46-03:00",
+    "character": "Miko Meu",
+    "action": "Usou Cajado Sombrio: Nevoa de Medo",
+    "result": "Dificulta percepcao e pode impor hesitacao narrativa.",
+    "notes": "Sugestao de teste: Teste de vontade dos afetados ou teste de ocultacao de Miko."
+  }
+]

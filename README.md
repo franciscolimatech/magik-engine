@@ -46,6 +46,8 @@ O terminal mostra o menu:
 14 - Gerar evento aleatorio
 15 - Gerar rumor
 16 - Gerar pressagio da maldicao
+17 - Gerenciar personagens
+18 - Curar personagem
 0 - Sair
 ```
 
@@ -87,12 +89,38 @@ quando a tabela tem mais de uma opcao.
 Ao gerar consequencia, evento, rumor ou pressagio pelo terminal, voce pode
 registrar no historico ou descartar o resultado.
 
+## Personagens
+
+A partir da v0.3.2, o MAGIK Engine suporta multiplos personagens. Miko Meu
+continua sendo criado automaticamente como personagem inicial e exemplo, mas a
+estrutura geral aceita novos personagens com:
+
+- `id`
+- nome e classe
+- vida maxima e vida atual
+- armadura
+- equipamentos
+- habilidades
+- observacoes
+- status
+- tags
+- sistemas especiais simples
+
+Use a opcao `17 - Gerenciar personagens` para listar fichas, ver detalhes,
+criar personagens, editar vida/armadura, adicionar ou remover equipamentos e
+registrar observacoes. Dano fisico, dano magico, cura, testes e registros de
+sessao podem ser associados a um personagem escolhido.
+
+Sistemas especiais como Ikisaki e Cajado Sombrio ainda sao especificos do Miko
+Meu por enquanto, mas ficam registrados na ficha em `special_systems` e
+`abilities` para facilitar futuras expansoes.
+
 ## Estado atual
 
 Esta versao inclui:
 
 - Rolagem de dados no formato `1d20`, `1d10`, `2d6` etc.
-- Ficha inicial do personagem Miko Meu.
+- Suporte a multiplos personagens, com Miko Meu como ficha inicial.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.
