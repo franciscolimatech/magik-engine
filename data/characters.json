@@ -1,0 +1,20 @@
+{
+  "characters": [
+    {
+      "name": "Miko Meu",
+      "class": "Sombrio",
+      "max_health": 25,
+      "current_health": 25,
+      "armor": 5,
+      "equipment": [
+        "Cajado",
+        "Corrente de Ferro"
+      ],
+      "living_weapon": "Ikisaki",
+      "can_disappear_in_shadows": true,
+      "chain_debts": 0,
+      "last_ikisaki_result": null,
+      "ikisaki_available": true
+    }
+  ]
+}
