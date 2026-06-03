@@ -5,6 +5,18 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from src.core.abilities import (
+    ABILITY_TYPES,
+    ABILITY_USES,
+    Ability,
+    add_ability,
+    get_ability,
+    list_abilities,
+    remove_ability,
+    restore_ability_uses,
+    update_ability,
+    use_ability,
+)
 from src.core.combat import apply_physical_damage, roll_damage
 from src.core.character import (
     add_equipment,
@@ -450,6 +462,7 @@ def manage_characters_menu(storage: JSONStorage) -> None:
         print("6 - Adicionar equipamento")
         print("7 - Remover equipamento")
         print("8 - Adicionar observacao")
+        print("9 - Gerenciar habilidades")
         print("0 - Voltar")
 
         try:
@@ -481,6 +494,8 @@ def manage_characters_menu(storage: JSONStorage) -> None:
                 character = select_character(storage)
                 note = input("Observacao: ").strip()
                 print(format_character_sheet(add_note(storage, character.id, note)))
+            elif option == "9":
+                manage_abilities_menu(storage)
             elif option == "0":
                 break
             else:
@@ -525,6 +540,130 @@ def heal_character_prompt(storage: JSONStorage) -> None:
     )
 
 
+def manage_abilities_menu(storage: JSONStorage) -> None:
+    character = select_character(storage)
+    while True:
+        print(format_title(f"Habilidades de {character.name}"))
+        print("1 - Listar habilidades")
+        print("2 - Adicionar habilidade")
+        print("3 - Editar habilidade")
+        print("4 - Remover habilidade")
+        print("5 - Usar habilidade")
+        print("6 - Restaurar usos de habilidades")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            character = get_character(storage, character.id)
+            if option == "1":
+                show_abilities(character)
+            elif option == "2":
+                ability = read_ability_fields()
+                update_character(storage, add_ability(character, ability))
+                print("Habilidade adicionada.")
+            elif option == "3":
+                ability_id = input("Id da habilidade para editar: ").strip()
+                current = get_ability(character, ability_id)
+                ability = read_ability_fields(current)
+                update_character(storage, update_ability(character, ability))
+                print("Habilidade atualizada.")
+            elif option == "4":
+                ability_id = input("Id da habilidade para remover: ").strip()
+                update_character(storage, remove_ability(character, ability_id))
+                print("Habilidade removida.")
+            elif option == "5":
+                use_character_ability_prompt(storage, character)
+            elif option == "6":
+                scope = input("Restaurar por combate, sessao ou todos? [sessao]: ").strip() or "sessao"
+                update_character(storage, restore_ability_uses(character, scope))
+                print("Usos restaurados quando aplicavel.")
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def show_abilities(character) -> None:
+    abilities = list_abilities(character)
+    if not abilities:
+        print("Nenhuma habilidade cadastrada.")
+        return
+    for ability in abilities:
+        print(format_title(ability.name))
+        print(f"Id: {ability.id}")
+        print(f"Tipo: {ability.type}")
+        print(f"Uso: {ability.use}")
+        print(f"Efeito: {ability.effect or 'sem efeito descrito'}")
+        print(f"Custo: {ability.cost or 'sem custo descrito'}")
+        if ability.usage_limit is not None:
+            print(f"Usos: {ability.remaining_uses}/{ability.usage_limit}")
+        print(f"Exige teste: {'sim' if ability.requires_test else 'nao'}")
+        if ability.suggested_test:
+            print(f"Teste sugerido: {ability.suggested_test}")
+        if ability.notes:
+            print(f"Observacoes: {ability.notes}")
+
+
+def read_ability_fields(current: Ability | None = None) -> Ability:
+    current = current or Ability(id="", name="")
+    ability_id = input_with_default("Id", current.id)
+    name = input_with_default("Nome", current.name)
+    description = input_with_default("Descricao", current.description)
+    ability_type = input_with_default(f"Tipo ({', '.join(sorted(ABILITY_TYPES))})", current.type)
+    use = input_with_default(f"Uso ({', '.join(sorted(ABILITY_USES))})", current.use)
+    effect = input_with_default("Efeito", current.effect)
+    cost = input_with_default("Custo", current.cost)
+    usage_limit = read_optional_int("Limite de uso", current.usage_limit)
+    remaining_uses = read_optional_int("Usos restantes", current.remaining_uses)
+    requires_test = read_bool("Exige teste?", current.requires_test)
+    suggested_test = input_with_default("Teste sugerido", current.suggested_test or "") or None
+    notes = input_with_default("Observacoes", current.notes)
+    return Ability(
+        id=ability_id,
+        name=name,
+        description=description,
+        type=ability_type,
+        use=use,
+        effect=effect,
+        cost=cost,
+        usage_limit=usage_limit,
+        remaining_uses=remaining_uses,
+        requires_test=requires_test,
+        suggested_test=suggested_test,
+        notes=notes,
+    )
+
+
+def use_character_ability_prompt(storage: JSONStorage, character) -> None:
+    show_abilities(character)
+    ability_id = input("Id da habilidade para usar: ").strip()
+    result = use_ability(character, ability_id)
+    update_character(storage, character)
+    ability = result.ability
+    print(format_title(f"Habilidade usada: {ability.name}"))
+    print(f"Efeito: {result.effect or 'sem efeito descrito'}")
+    print(f"Custo: {result.cost or 'sem custo descrito'}")
+    if ability.suggested_test:
+        print(f"Teste sugerido: {ability.suggested_test}")
+    if result.remaining_uses is not None:
+        print(f"Usos restantes: {result.remaining_uses}")
+    if character.id == "miko-meu" and ability.id in {"ikisaki_roulette", "shadow_staff"}:
+        print("Aviso: esta habilidade tem um sistema proprio no menu principal.")
+    register_event(
+        storage,
+        character=character.name,
+        action=f"Usou habilidade: {ability.name}",
+        result=result.effect or "Habilidade usada.",
+        notes=(
+            f"Custo: {result.cost or 'nenhum'}. "
+            f"Usos restantes: {result.remaining_uses if result.remaining_uses is not None else 'livre'}. "
+            f"Observacoes: {result.notes or 'nenhuma'}."
+        ),
+    )
+
+
 def select_character(storage: JSONStorage, allow_skip: bool = False):
     characters = list_characters(storage)
     print(format_character_list(characters, allow_skip=allow_skip))
@@ -561,6 +700,31 @@ def read_int(prompt: str) -> int:
         return int(value)
     except ValueError as exc:
         raise ValueError("Digite um numero inteiro valido.") from exc
+
+
+def read_optional_int(prompt: str, default: int | None = None) -> int | None:
+    default_text = "" if default is None else str(default)
+    value = input_with_default(prompt, default_text)
+    if not value:
+        return None
+    try:
+        return int(value)
+    except ValueError as exc:
+        raise ValueError("Digite um numero inteiro valido.") from exc
+
+
+def read_bool(prompt: str, default: bool = False) -> bool:
+    suffix = "S/n" if default else "s/N"
+    value = input(f"{prompt} [{suffix}]: ").strip().casefold()
+    if not value:
+        return default
+    return value in {"s", "sim", "y", "yes"}
+
+
+def input_with_default(prompt: str, default: str = "") -> str:
+    suffix = f" [{default}]" if default else ""
+    value = input(f"{prompt}{suffix}: ").strip()
+    return value if value else default
 
 
 def print_json(data: dict) -> None:

@@ -116,6 +116,41 @@ Sistemas especiais como Ikisaki e Cajado Sombrio ainda sao especificos do Miko
 Meu por enquanto, mas ficam registrados na ficha em `special_systems` e
 `abilities` para facilitar futuras expansoes.
 
+## Habilidades
+
+A v0.4 adiciona um sistema geral de habilidades para qualquer personagem. Cada
+habilidade pode registrar id, nome, descricao, tipo, forma de uso, efeito,
+custo, limite de uso, usos restantes, teste sugerido e observacoes.
+
+Tipos aceitos:
+
+- `ataque`
+- `defesa`
+- `suporte`
+- `cura`
+- `magia`
+- `controle`
+- `utilidade`
+- `transformacao`
+- `passiva`
+- `unica`
+
+Usos aceitos:
+
+- `livre`
+- `1 vez por combate`
+- `1 vez por sessao`
+- `limitado`
+- `passivo`
+
+No terminal, entre em `17 - Gerenciar personagens` e depois em
+`9 - Gerenciar habilidades` para listar, adicionar, editar, remover, usar ou
+restaurar usos de habilidades. Ao usar uma habilidade, o sistema mostra efeito,
+custo, teste sugerido e usos restantes, alem de registrar o uso no historico.
+
+Ikisaki e Cajado Sombrio aparecem como habilidades gerais do Miko Meu, mas seus
+sistemas completos continuam nas opcoes especiais do menu principal.
+
 ## Uso no terminal
 
 As opcoes principais foram pensadas para uso rapido durante a mesa:
@@ -152,6 +187,7 @@ Esta versao inclui:
 
 - Rolagem de dados no formato `1d20`, `1d10`, `2d6` etc.
 - Suporte a multiplos personagens, com Miko Meu como ficha inicial.
+- Sistema geral de habilidades por personagem.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.

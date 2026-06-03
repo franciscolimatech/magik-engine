@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass, field
 import re
 from typing import Any
 
+from src.core.abilities import Ability
 from src.storage.types import JsonStore
 
 
@@ -74,16 +75,54 @@ def create_miko_meu() -> Character:
         id=MIKO_ID,
         equipment=["Cajado", "Corrente de Ferro"],
         abilities=[
-            {
-                "id": "ikisaki_roulette",
-                "name": "Roleta Sombria: Dez Elos de Ikisaki",
-                "type": "unique",
-            },
-            {
-                "id": "shadow_staff",
-                "name": "Cajado Sombrio",
-                "type": "unique",
-            },
+            Ability(
+                id="ikisaki_roulette",
+                name="Roleta Sombria: Dez Elos de Ikisaki",
+                description="Usa o sistema especial da Ikisaki.",
+                type="unica",
+                use="livre",
+                effect="Rola 1d10 na Roleta Sombria e aplica o elo sorteado.",
+                cost="Preco conforme o elo sorteado.",
+                requires_test=False,
+                suggested_test=None,
+                notes="Use a opcao especial da Ikisaki no menu principal.",
+            ).to_dict(),
+            Ability(
+                id="shadow_staff",
+                name="Cajado Sombrio",
+                description="Usa o sistema especial do Cajado Sombrio.",
+                type="magia",
+                use="livre",
+                effect="Permite escolher uma magia simples do Cajado Sombrio.",
+                cost="Sem mana nesta etapa.",
+                requires_test=True,
+                suggested_test="Teste sugerido pela magia escolhida.",
+                notes="Use a opcao especial do Cajado Sombrio no menu principal.",
+            ).to_dict(),
+            Ability(
+                id="disappear_in_shadows",
+                name="Desaparecer nas Sombras",
+                description="Miko pode desaparecer nas sombras.",
+                type="utilidade",
+                use="livre",
+                effect="Ajuda Miko a sumir, se esconder ou reposicionar narrativamente nas sombras.",
+                cost="Depende da cena e da decisao do mestre.",
+                requires_test=True,
+                suggested_test="Furtividade ou Agilidade",
+            ).to_dict(),
+            Ability(
+                id="shadow_switch",
+                name="Switch Sombrio",
+                description="Risco narrativo ligado as Dividas de Corrente e a Ikisaki.",
+                type="transformacao",
+                use="limitado",
+                effect="Indica uma possivel tomada sombria da cena pela maldicao.",
+                cost="Grave; depende da cena e da decisao do mestre.",
+                usage_limit=1,
+                remaining_uses=1,
+                requires_test=False,
+                notes="Nao ativa automaticamente; o mestre decide quando e como entra em cena.",
+            ).to_dict(),
         ],
         notes=[],
         status=[],

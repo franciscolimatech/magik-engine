@@ -36,6 +36,12 @@ def test_create_miko_meu_has_initial_sheet() -> None:
     assert miko.ikisaki_available is True
     assert "ikisaki" in miko.special_systems
     assert "shadow_staff" in miko.special_systems
+    assert {ability["id"] for ability in miko.abilities} >= {
+        "ikisaki_roulette",
+        "shadow_staff",
+        "disappear_in_shadows",
+        "shadow_switch",
+    }
 
 
 def test_save_and_load_miko_from_json_storage(tmp_path) -> None:

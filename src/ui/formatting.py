@@ -86,5 +86,10 @@ def _format_list(values: list[str]) -> str:
 def _format_abilities(abilities: list[dict]) -> str:
     if not abilities:
         return "nenhuma"
-    names = [str(ability.get("name", ability.get("id", "habilidade sem nome"))) for ability in abilities]
+    names = []
+    for ability in abilities:
+        uses = ability.get("remaining_uses")
+        limit = ability.get("usage_limit")
+        suffix = f" ({uses}/{limit})" if uses is not None and limit is not None else ""
+        names.append(f"{ability.get('name', ability.get('id', 'habilidade sem nome'))}{suffix}")
     return ", ".join(names)
