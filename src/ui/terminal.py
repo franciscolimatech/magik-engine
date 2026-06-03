@@ -12,6 +12,7 @@ from src.ai.narrator import (
     generate_npc_line,
     generate_short_narration,
     improve_event_text,
+    run_quick_ai_test,
     summarize_session,
 )
 from src.core.abilities import (
@@ -1388,6 +1389,7 @@ def manage_ai_narrator_menu(storage: JSONStorage) -> None:
         print("4 - Narrar resultado da Roleta Sombria")
         print("5 - Gerar fala de NPC")
         print("6 - Resumir sessao")
+        print("7 - Executar teste rapido da IA")
         print("0 - Voltar")
 
         try:
@@ -1431,6 +1433,16 @@ def manage_ai_narrator_menu(storage: JSONStorage) -> None:
                 }
                 result = summarize_session(context)
                 show_ai_result_and_maybe_record(storage, result, "Resumo de sessao", campaign_session.id)
+            elif option == "7":
+                quick_result = run_quick_ai_test()
+                print(format_title("Teste rapido da IA"))
+                source_label = "IA" if quick_result["source"] == "ai" else "fallback local"
+                print(f"Status: {quick_result['reason']}")
+                print(f"Origem: {source_label}")
+                if quick_result["source"] == "fallback":
+                    print("IA nao configurada. Usando narracao local.")
+                print(f"Texto: {quick_result['text']}")
+                print("Teste rapido concluido; nada foi salvo no historico.")
             elif option == "0":
                 break
             else:
@@ -1461,7 +1473,7 @@ def show_ai_result_and_maybe_record(
     print(format_title(f"Resultado gerado por {source_label}"))
     print(result.text)
     if result.source == "fallback":
-        print("\nIA indisponivel ou falhou; narracao gerada localmente.")
+        print("\nIA nao configurada. Usando narracao local.")
     decision = input("Registrar no historico? [s/N]: ").strip().casefold()
     if decision not in {"s", "sim", "y", "yes"}:
         print("Resultado descartado; nada foi salvo no historico.")

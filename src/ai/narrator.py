@@ -107,6 +107,31 @@ def check_ai_status(config: AIConfig | None = None) -> dict[str, str | bool]:
     return {"available": True, "reason": "IA configurada por variavel de ambiente."}
 
 
+def run_quick_ai_test(
+    client: AIClient | None = None,
+    config: AIConfig | None = None,
+) -> dict[str, str | bool]:
+    resolved_config = config or AIConfig.from_env()
+    status = check_ai_status(resolved_config)
+    result = generate_short_narration(
+        {
+            "acao": "teste rapido da IA Narradora",
+            "resultado": "sem efeito mecanico",
+            "tom": "neutro",
+            "observacoes": "Nao registrar automaticamente no historico.",
+        },
+        client=client,
+        config=resolved_config,
+    )
+    return {
+        "available": status["available"],
+        "reason": status["reason"],
+        "source": result.source,
+        "text": result.text,
+        "should_register": result.should_register,
+    }
+
+
 def generate_short_narration(
     context: dict[str, Any],
     client: AIClient | None = None,

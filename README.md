@@ -276,11 +276,31 @@ Use `24 - IA Narradora Auxiliar` no terminal para:
 - narrar consequencia;
 - narrar resultado da Roleta Sombria;
 - gerar fala de NPC;
-- resumir sessao.
+- resumir sessao;
+- executar um teste rapido da IA.
 
 Nenhum texto gerado pela IA e registrado automaticamente. O terminal pergunta
 se o mestre quer registrar ou descartar, e permite vincular o registro a uma
 campanha/sessao quando fizer sentido.
+
+Para testar sem chave, deixe `OPENAI_API_KEY` ausente e rode:
+
+```powershell
+python main.py
+```
+
+No menu, entre em `24 - IA Narradora Auxiliar`, use `1 - Verificar status da IA`
+e depois `7 - Executar teste rapido da IA`. O terminal deve indicar que a IA
+nao esta configurada, mostrar `fallback local` como origem e gerar uma narracao
+local sem salvar nada no historico.
+
+Para configurar depois, defina `OPENAI_API_KEY` apenas no ambiente da sua
+maquina antes de rodar o programa. A chave nao e salva pelo MAGIK Engine e nao
+deve aparecer no terminal, em JSON ou em commits.
+
+A IA continua sendo apenas narradora auxiliar: ela nao decide dano, vida,
+armadura, resultado de dado, morte de personagem, consequencia obrigatoria ou
+alteracao de estado. O mestre sempre aprova, registra ou descarta.
 
 ## Uso no terminal
 
