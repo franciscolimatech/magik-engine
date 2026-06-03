@@ -18,6 +18,34 @@ from src.core.abilities import (
     use_ability,
 )
 from src.core.combat import apply_physical_damage, roll_damage
+from src.core.campaigns import (
+    add_campaign_event,
+    add_campaign_location,
+    add_campaign_npc,
+    add_campaign_pending_task,
+    add_campaign_player_character,
+    add_session_combat,
+    add_session_consequence,
+    add_session_created_pending_task,
+    add_session_event,
+    add_session_note,
+    add_session_resolved_pending_task,
+    add_session_reward,
+    create_campaign,
+    create_campaign_session,
+    default_campaign_data,
+    default_campaign_session_data,
+    finish_campaign,
+    finish_campaign_session,
+    get_campaign,
+    get_campaign_session,
+    list_campaign_sessions,
+    list_campaigns,
+    pause_campaign,
+    resolve_campaign_pending_task,
+    start_campaign_session,
+    update_session_summary,
+)
 from src.core.character import (
     add_equipment,
     add_note,
@@ -109,6 +137,10 @@ from src.systems.staff import list_staff_spells
 from src.ui.formatting import (
     format_character_list,
     format_character_sheet,
+    format_campaign_list,
+    format_campaign_session_list,
+    format_campaign_session_summary,
+    format_campaign_summary,
     format_combat_list,
     format_combat_summary,
     format_current_participant,
@@ -179,6 +211,8 @@ def run_terminal() -> None:
                 manage_npcs_menu(storage)
             elif option == "22":
                 manage_combats_menu(storage)
+            elif option == "23":
+                manage_campaigns_menu(storage)
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
@@ -212,6 +246,7 @@ def print_menu() -> None:
     print("20 - Gerenciar criaturas/inimigos")
     print("21 - Gerenciar NPCs")
     print("22 - Gerenciar combates")
+    print("23 - Gerenciar campanhas e sessoes")
     print("0 - Sair")
 
 
@@ -224,6 +259,8 @@ def ensure_initial_data(storage: JSONStorage) -> None:
     storage.read_json("creatures.json", default=default_creature_data())
     storage.read_json("npcs.json", default=default_npc_data())
     storage.read_json("combats.json", default=default_combat_data())
+    storage.read_json("campaigns.json", default=default_campaign_data())
+    storage.read_json("campaign_sessions.json", default=default_campaign_session_data())
 
 
 def show_miko(storage: JSONStorage) -> None:
@@ -1089,6 +1126,222 @@ def select_combat_participant(storage: JSONStorage):
     else:
         participant_id = selected
     return combat, participant_id
+
+
+def manage_campaigns_menu(storage: JSONStorage) -> None:
+    while True:
+        print(format_title("Gerenciar campanhas e sessoes"))
+        print("1 - Listar campanhas")
+        print("2 - Criar campanha")
+        print("3 - Ver campanha")
+        print("4 - Adicionar personagem participante")
+        print("5 - Adicionar NPC importante")
+        print("6 - Adicionar local importante")
+        print("7 - Adicionar evento importante")
+        print("8 - Adicionar pendencia")
+        print("9 - Resolver pendencia")
+        print("10 - Pausar campanha")
+        print("11 - Finalizar campanha")
+        print("12 - Gerenciar sessoes da campanha")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                print(format_campaign_list(list_campaigns(storage)))
+            elif option == "2":
+                campaign = create_campaign_prompt(storage)
+                register_event(storage, "Campanha", "Campanha criada", campaign.name, campaign.description)
+            elif option == "3":
+                print(format_campaign_summary(select_campaign(storage)))
+            elif option == "4":
+                campaign = select_campaign(storage)
+                character = select_character(storage)
+                updated = add_campaign_player_character(storage, campaign.id, character.id)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Personagem adicionado a campanha", character.name)
+            elif option == "5":
+                campaign = select_campaign(storage)
+                npc = select_npc(storage)
+                updated = add_campaign_npc(storage, campaign.id, npc.id)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "NPC importante adicionado", npc.name)
+            elif option == "6":
+                campaign = select_campaign(storage)
+                location = input("Local importante: ").strip()
+                updated = add_campaign_location(storage, campaign.id, location)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Local importante adicionado", location)
+            elif option == "7":
+                campaign = select_campaign(storage)
+                event = input("Evento importante: ").strip()
+                updated = add_campaign_event(storage, campaign.id, event)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Evento importante adicionado", event)
+            elif option == "8":
+                campaign = select_campaign(storage)
+                task = input("Pendencia: ").strip()
+                updated = add_campaign_pending_task(storage, campaign.id, task)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Pendencia adicionada", task)
+            elif option == "9":
+                campaign = select_campaign(storage)
+                task = input("Pendencia resolvida: ").strip()
+                updated = resolve_campaign_pending_task(storage, campaign.id, task)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Pendencia resolvida", task)
+            elif option == "10":
+                campaign = select_campaign(storage)
+                updated = pause_campaign(storage, campaign.id)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Campanha pausada", updated.name)
+            elif option == "11":
+                campaign = select_campaign(storage)
+                updated = finish_campaign(storage, campaign.id)
+                print(format_campaign_summary(updated))
+                register_event(storage, "Campanha", "Campanha finalizada", updated.name)
+            elif option == "12":
+                campaign = select_campaign(storage)
+                manage_campaign_sessions_menu(storage, campaign.id)
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def create_campaign_prompt(storage: JSONStorage):
+    name = input("Nome da campanha: ").strip()
+    description = input("Descricao: ").strip()
+    campaign = create_campaign(storage, name, description)
+    print(format_campaign_summary(campaign))
+    return campaign
+
+
+def select_campaign(storage: JSONStorage):
+    campaigns = list_campaigns(storage)
+    print(format_campaign_list(campaigns))
+    selected = input("Opcao ou id: ").strip()
+    if selected.isdigit() and 1 <= int(selected) <= len(campaigns):
+        return campaigns[int(selected) - 1]
+    if selected.isdigit():
+        raise ValueError("Numero de campanha fora da lista.")
+    return get_campaign(storage, selected)
+
+
+def manage_campaign_sessions_menu(storage: JSONStorage, campaign_id: str) -> None:
+    while True:
+        print(format_title(f"Sessoes da campanha {campaign_id}"))
+        print("1 - Listar sessoes")
+        print("2 - Criar sessao")
+        print("3 - Ver sessao")
+        print("4 - Iniciar sessao")
+        print("5 - Finalizar sessao")
+        print("6 - Adicionar evento")
+        print("7 - Associar combate")
+        print("8 - Adicionar recompensa")
+        print("9 - Adicionar consequencia")
+        print("10 - Adicionar pendencia criada")
+        print("11 - Adicionar pendencia resolvida")
+        print("12 - Adicionar observacao")
+        print("13 - Atualizar resumo")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                print(format_campaign_session_list(list_campaign_sessions(storage, campaign_id)))
+            elif option == "2":
+                session = create_campaign_session_prompt(storage, campaign_id)
+                register_event(storage, "Sessao", "Sessao de campanha criada", session.title)
+            elif option == "3":
+                print(format_campaign_session_summary(select_campaign_session(storage, campaign_id)))
+            elif option == "4":
+                session = select_campaign_session(storage, campaign_id)
+                updated = start_campaign_session(storage, session.id)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Sessao iniciada", updated.title)
+            elif option == "5":
+                session = select_campaign_session(storage, campaign_id)
+                updated = finish_campaign_session(storage, session.id)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Sessao finalizada", updated.title)
+            elif option == "6":
+                session = select_campaign_session(storage, campaign_id)
+                event = input("Evento: ").strip()
+                updated = add_session_event(storage, session.id, event)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Evento adicionado a sessao", event)
+            elif option == "7":
+                session = select_campaign_session(storage, campaign_id)
+                combat = select_combat(storage)
+                updated = add_session_combat(storage, session.id, combat.id)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Combate associado a sessao", combat.name)
+            elif option == "8":
+                session = select_campaign_session(storage, campaign_id)
+                reward = input("Recompensa: ").strip()
+                updated = add_session_reward(storage, session.id, reward)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Recompensa adicionada", reward)
+            elif option == "9":
+                session = select_campaign_session(storage, campaign_id)
+                consequence = input("Consequencia: ").strip()
+                updated = add_session_consequence(storage, session.id, consequence)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Consequencia adicionada", consequence)
+            elif option == "10":
+                session = select_campaign_session(storage, campaign_id)
+                task = input("Pendencia criada: ").strip()
+                updated = add_session_created_pending_task(storage, session.id, task)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Pendencia criada na sessao", task)
+            elif option == "11":
+                session = select_campaign_session(storage, campaign_id)
+                task = input("Pendencia resolvida: ").strip()
+                updated = add_session_resolved_pending_task(storage, session.id, task)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Pendencia resolvida na sessao", task)
+            elif option == "12":
+                session = select_campaign_session(storage, campaign_id)
+                note = input("Observacao: ").strip()
+                updated = add_session_note(storage, session.id, note)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Observacao adicionada a sessao", note)
+            elif option == "13":
+                session = select_campaign_session(storage, campaign_id)
+                summary = input("Resumo: ").strip()
+                updated = update_session_summary(storage, session.id, summary)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Resumo atualizado", updated.title)
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def create_campaign_session_prompt(storage: JSONStorage, campaign_id: str):
+    title = input("Titulo da sessao: ").strip()
+    number_text = input("Numero opcional da sessao: ").strip()
+    number = int(number_text) if number_text else None
+    summary = input("Resumo inicial: ").strip()
+    session = create_campaign_session(storage, campaign_id, title, number=number, summary=summary)
+    print(format_campaign_session_summary(session))
+    return session
+
+
+def select_campaign_session(storage: JSONStorage, campaign_id: str):
+    sessions = list_campaign_sessions(storage, campaign_id)
+    print(format_campaign_session_list(sessions))
+    selected = input("Opcao ou id: ").strip()
+    if selected.isdigit() and 1 <= int(selected) <= len(sessions):
+        return sorted(sessions, key=lambda item: item.number)[int(selected) - 1]
+    if selected.isdigit():
+        raise ValueError("Numero de sessao fora da lista.")
+    return get_campaign_session(storage, selected)
 
 
 def read_int(prompt: str) -> int:

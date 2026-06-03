@@ -52,6 +52,7 @@ O terminal mostra o menu:
 20 - Gerenciar criaturas/inimigos
 21 - Gerenciar NPCs
 22 - Gerenciar combates
+23 - Gerenciar campanhas e sessoes
 0 - Sair
 ```
 
@@ -210,6 +211,27 @@ atualizado no combate e, quando ha referencia segura, tambem na ficha original
 do personagem ou criatura. A acao tambem e registrada no historico do combate e
 no historico geral da sessao.
 
+## Campanhas e sessoes
+
+A v0.7 adiciona organizacao por campanhas e sessoes de campanha. Uma campanha
+guarda o panorama da aventura: personagens participantes, NPCs importantes,
+locais importantes, eventos importantes e pendencias abertas ou resolvidas.
+
+Uma sessao de campanha guarda o que aconteceu em uma noite ou encontro de jogo:
+numero, titulo, resumo, participantes, local principal, eventos, combates,
+recompensas, consequencias, pendencias criadas/resolvidas e observacoes.
+
+Use `23 - Gerenciar campanhas e sessoes` para criar campanhas, pausar,
+finalizar, adicionar participantes, registrar pendencias e gerenciar as sessoes.
+Dentro do submenu de sessoes, voce pode criar sessoes, iniciar/finalizar,
+adicionar eventos, associar combates existentes, registrar recompensas,
+consequencias, pendencias e atualizar o resumo.
+
+O historico geral em `data/sessions.json` continua existindo para registros
+cronologicos livres. Campanhas e sessoes organizadas ficam em
+`data/campaigns.json` e `data/campaign_sessions.json`. Eventos antigos nao sao
+migrados automaticamente, mas continuam compativeis.
+
 ## Uso no terminal
 
 As opcoes principais foram pensadas para uso rapido durante a mesa:
@@ -224,6 +246,7 @@ As opcoes principais foram pensadas para uso rapido durante a mesa:
 - `20`: gerenciamento de criaturas, inimigos e chefes.
 - `21`: gerenciamento de NPCs sociais e narrativos.
 - `22`: organizador de combate por turnos.
+- `23`: organizacao de campanhas e sessoes.
 
 Quando uma acao envolve personagem, o terminal lista os personagens disponiveis
 com numero, nome, classe e id. Voce pode escolher pelo numero ou pelo id.
@@ -252,6 +275,7 @@ Esta versao inclui:
 - Sistema geral de habilidades por personagem.
 - Sistema de criaturas/inimigos e NPCs separado de personagens jogadores.
 - Combate por turnos com iniciativa, rodada, turno atual, dano, cura, status e historico.
+- Campanhas e sessoes organizadas, com combates associados e pendencias.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from src.core.character import Character
+from src.core.campaigns import Campaign, CampaignSession
 from src.core.creatures import Creature
 from src.core.npcs import NPC
 from src.core.session import SessionEvent
@@ -189,6 +190,67 @@ def format_participant_line(participant: CombatParticipant) -> str:
         f"{participant.name} [{participant.id}] - {participant.type}, "
         f"vida {participant.current_health}/{participant.max_health}, armadura {participant.armor}, "
         f"iniciativa {participant.initiative}, {alive}, status: {status}"
+    )
+
+
+def format_campaign_list(campaigns: list[Campaign]) -> str:
+    lines = [format_title("Campanhas")]
+    if not campaigns:
+        lines.append("Nenhuma campanha cadastrada.")
+        return "\n".join(lines)
+    for index, campaign in enumerate(campaigns, start=1):
+        lines.append(f"{index} - {campaign.name} ({campaign.status}) [{campaign.id}]")
+    return "\n".join(lines)
+
+
+def format_campaign_summary(campaign: Campaign) -> str:
+    return "\n".join(
+        [
+            format_title(f"Campanha: {campaign.name}"),
+            f"Id: {campaign.id}",
+            f"Status: {campaign.status}",
+            f"Descricao: {campaign.description or 'sem descricao'}",
+            f"Personagens: {_format_list(campaign.player_characters)}",
+            f"NPCs importantes: {_format_list(campaign.important_npcs)}",
+            f"Locais importantes: {_format_list(campaign.important_locations)}",
+            f"Eventos importantes: {_format_list(campaign.important_events)}",
+            f"Pendencias abertas: {_format_list(campaign.pending_tasks)}",
+            f"Pendencias resolvidas: {_format_list(campaign.resolved_tasks)}",
+            f"Criado em: {campaign.created_at}",
+            f"Atualizado em: {campaign.updated_at}",
+        ]
+    )
+
+
+def format_campaign_session_list(sessions: list[CampaignSession]) -> str:
+    lines = [format_title("Sessoes da campanha")]
+    if not sessions:
+        lines.append("Nenhuma sessao cadastrada.")
+        return "\n".join(lines)
+    for session in sorted(sessions, key=lambda item: item.number):
+        lines.append(f"{session.number} - {session.title} ({session.status}) [{session.id}]")
+    return "\n".join(lines)
+
+
+def format_campaign_session_summary(session: CampaignSession) -> str:
+    return "\n".join(
+        [
+            format_title(f"Sessao {session.number}: {session.title}"),
+            f"Id: {session.id}",
+            f"Campanha: {session.campaign_id}",
+            f"Status: {session.status}",
+            f"Data: {session.date}",
+            f"Resumo: {session.summary or 'sem resumo'}",
+            f"Participantes: {_format_list(session.participants)}",
+            f"Local principal: {session.main_location or 'nao informado'}",
+            f"Eventos: {_format_list(session.events)}",
+            f"Combates: {_format_list(session.combats)}",
+            f"Recompensas: {_format_list(session.rewards)}",
+            f"Consequencias: {_format_list(session.consequences)}",
+            f"Pendencias criadas: {_format_list(session.created_pending_tasks)}",
+            f"Pendencias resolvidas: {_format_list(session.resolved_pending_tasks)}",
+            f"Observacoes: {_format_list(session.notes)}",
+        ]
     )
 
 
