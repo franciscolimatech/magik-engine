@@ -10,6 +10,7 @@ from typing import Any, Mapping, Protocol
 from urllib import request
 from urllib.error import HTTPError, URLError
 
+from src.ai.ollama_client import generate_with_ollama, get_ollama_status
 from src.ai.prompts import build_prompt
 from src.systems.narrative import (
     generate_narrative_consequence,
@@ -97,16 +98,41 @@ class OpenAIResponsesClient:
 
 def is_ai_available(config: AIConfig | None = None) -> bool:
     resolved = config or AIConfig.from_env()
-    return bool(resolved.enabled and resolved.api_key)
+    if not resolved.enabled:
+        return False
+    ollama_status = get_ollama_status()
+    return bool(ollama_status["available"] or resolved.api_key)
 
 
 def check_ai_status(config: AIConfig | None = None) -> dict[str, str | bool]:
     resolved = config or AIConfig.from_env()
+    ollama_status = get_ollama_status()
+    openai_configured = bool(resolved.enabled and resolved.api_key)
+    fallback_active = not bool(ollama_status["available"] or openai_configured)
+
     if not resolved.enabled:
-        return {"available": False, "reason": "IA desativada por MAGIK_AI_ENABLED."}
-    if not resolved.api_key:
-        return {"available": False, "reason": "OPENAI_API_KEY nao configurada; fallback local ativo."}
-    return {"available": True, "reason": "IA configurada por variavel de ambiente."}
+        return {
+            "available": False,
+            "reason": "IA desativada por MAGIK_AI_ENABLED.",
+            "ollama_available": bool(ollama_status["available"]),
+            "ollama_model": str(ollama_status["model"]),
+            "openai_configured": bool(resolved.api_key),
+            "fallback_active": True,
+        }
+    if ollama_status["available"]:
+        reason = str(ollama_status["reason"])
+    elif resolved.api_key:
+        reason = "Ollama não respondeu em localhost:11434. OpenAI API configurada como próxima opção."
+    else:
+        reason = "Nenhuma IA externa disponível. Usando fallback local."
+    return {
+        "available": bool(ollama_status["available"] or openai_configured),
+        "reason": reason,
+        "ollama_available": bool(ollama_status["available"]),
+        "ollama_model": str(ollama_status["model"]),
+        "openai_configured": openai_configured,
+        "fallback_active": fallback_active,
+    }
 
 
 def run_quick_ai_test(
@@ -128,6 +154,10 @@ def run_quick_ai_test(
     return {
         "available": status["available"],
         "reason": status["reason"],
+        "ollama_available": status["ollama_available"],
+        "ollama_model": status["ollama_model"],
+        "openai_configured": status["openai_configured"],
+        "fallback_active": status["fallback_active"],
         "source": result.source,
         "text": result.text,
         "should_register": result.should_register,
@@ -235,18 +265,33 @@ def _generate_or_fallback(
     resolved_config = config or AIConfig.from_env()
     if not resolved_config.enabled:
         return _fallback_result(fallback, "disabled")
-    if not resolved_config.api_key:
-        return _fallback_result(fallback, "missing_api_key")
 
+    prompt = build_prompt(task, context)
+    ollama_status = get_ollama_status()
+    ollama_diagnostic = "ollama_unavailable"
+    if ollama_status["available"]:
+        try:
+            text = generate_with_ollama(prompt, model=str(ollama_status["model"]))
+            return NarrationResult(
+                source="ollama",
+                text=text,
+                should_register=False,
+                diagnostic="ok",
+                message=str(ollama_status["reason"]),
+            )
+        except Exception:
+            ollama_diagnostic = "ollama_error"
+
+    if not resolved_config.api_key:
+        return _fallback_result(fallback, "missing_api_key" if ollama_diagnostic == "ollama_unavailable" else ollama_diagnostic)
     try:
-        prompt = build_prompt(task, context)
         text = (client or OpenAIResponsesClient()).complete(prompt, resolved_config)
         return NarrationResult(
             source="ai",
             text=text,
             should_register=False,
             diagnostic="ok",
-            message="IA respondeu com sucesso.",
+            message="OpenAI API respondeu com sucesso.",
         )
     except Exception as exc:
         return _fallback_result(fallback, diagnose_ai_error(exc))
@@ -302,6 +347,8 @@ def ai_diagnostic_message(diagnostic: str) -> str:
         "ok": "IA respondeu com sucesso.",
         "disabled": "IA desativada. Usando narracao local.",
         "missing_api_key": "OPENAI_API_KEY ausente. Usando narracao local.",
+        "ollama_unavailable": "Ollama não respondeu em localhost:11434. Tentando próxima opção.",
+        "ollama_error": "Ollama local falhou. Usando fallback local.",
         "missing_openai_library": (
             "IA configurada, mas a chamada falhou. Usando fallback local. "
             "Diagnostico: biblioteca openai nao instalada."

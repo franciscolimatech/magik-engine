@@ -237,7 +237,8 @@ especifica.
 
 ## IA Narradora Auxiliar
 
-A v0.8 adiciona uma camada opcional de IA para narração. Ela pode ajudar a
+A v0.8.2 adiciona suporte a IA local com Ollama, mantendo a OpenAI API como
+segunda opção e o fallback local sem IA como garantia. Ela pode ajudar a
 narrar eventos, criar falas de NPC, descrever consequencias, resumir sessoes,
 melhorar textos e explicar resultados da Roleta Sombria com base nos dados que
 o Python ja calculou.
@@ -249,7 +250,29 @@ Regra principal:
 - IA apenas narra, sugere e organiza texto.
 - O mestre aprova, registra ou descarta.
 
-Para ativar, configure a variavel de ambiente:
+Ordem de prioridade:
+
+1. Ollama local;
+2. OpenAI API, se `OPENAI_API_KEY` existir;
+3. fallback local.
+
+Com Ollama local, nao e preciso pagar creditos de API para usar a narradora
+auxiliar. Instale o Ollama, baixe o modelo e deixe o servico local rodando:
+
+```powershell
+ollama pull llama3.2:3b
+ollama run llama3.2:3b
+```
+
+Opcionalmente, configure outro modelo:
+
+```powershell
+$env:OLLAMA_MODEL="llama3.2:3b"
+```
+
+O endpoint padrao usado pelo MAGIK Engine e `http://localhost:11434`.
+
+Para usar OpenAI API como segunda opcao, configure a variavel de ambiente:
 
 ```powershell
 $env:OPENAI_API_KEY="sua-chave"
@@ -265,9 +288,9 @@ $env:MAGIK_AI_ENABLED="true"
 Nao coloque chaves no codigo, nao salve em JSON e nao commite `.env`. O projeto
 inclui `.env` e `.env.local` no `.gitignore`.
 
-Se `OPENAI_API_KEY` nao existir, ou se a chamada falhar, o MAGIK Engine continua
-funcionando normalmente usando o motor narrativo local sem IA. Nesse caso, a
-saida vem marcada como `fallback`.
+Se Ollama nao responder e `OPENAI_API_KEY` nao existir, ou se todas as chamadas
+falharem, o MAGIK Engine continua funcionando normalmente usando o motor
+narrativo local sem IA. Nesse caso, a saida vem marcada como `fallback`.
 
 Use `24 - IA Narradora Auxiliar` no terminal para:
 
@@ -290,9 +313,9 @@ python main.py
 ```
 
 No menu, entre em `24 - IA Narradora Auxiliar`, use `1 - Verificar status da IA`
-e depois `7 - Executar teste rapido da IA`. O terminal deve indicar que a IA
-nao esta configurada, mostrar `fallback local` como origem e gerar uma narracao
-local sem salvar nada no historico.
+e depois `7 - Executar teste rapido da IA`. O terminal mostra status do Ollama
+local, modelo configurado, status da OpenAI API, fallback local e a origem da
+resposta: `ollama`, `ai` ou `fallback`.
 
 Para configurar depois, defina `OPENAI_API_KEY` apenas no ambiente da sua
 maquina antes de rodar o programa. A chave nao e salva pelo MAGIK Engine e nao

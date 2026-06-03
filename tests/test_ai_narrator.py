@@ -1,8 +1,10 @@
 import io
+import json
 from urllib.error import HTTPError, URLError
 
 import pytest
 
+from src.ai import ollama_client
 from src.ai.narrator import (
     AIConfig,
     NarrationResult,
@@ -16,6 +18,7 @@ from src.ai.narrator import (
     run_quick_ai_test,
     summarize_session,
 )
+import src.ai.narrator as narrator_module
 from src.ai.prompts import SYSTEM_GUARDRAILS, build_prompt, sanitize_context
 from src.core.character import create_miko_meu
 from src.systems.narrative import reset_narrative_memory
@@ -47,7 +50,17 @@ class RaisingClient:
 
 
 @pytest.fixture(autouse=True)
-def clear_narrative_memory():
+def clear_narrative_memory(monkeypatch):
+    monkeypatch.setattr(
+        narrator_module,
+        "get_ollama_status",
+        lambda: {
+            "available": False,
+            "model": "llama3.2:3b",
+            "url": "http://localhost:11434",
+            "reason": "Ollama não respondeu em localhost:11434. Tentando próxima opção.",
+        },
+    )
     reset_narrative_memory()
     yield
     reset_narrative_memory()
@@ -58,6 +71,8 @@ def test_ai_unavailable_without_openai_api_key() -> None:
 
     assert is_ai_available(config) is False
     assert check_ai_status(config)["available"] is False
+    assert check_ai_status(config)["ollama_available"] is False
+    assert check_ai_status(config)["openai_configured"] is False
 
 
 def test_generate_short_narration_uses_fallback_without_key() -> None:
@@ -102,6 +117,107 @@ def test_generate_with_fake_ai_returns_structured_output() -> None:
     assert result.text == "Cena narrada."
     assert result.should_register is False
     assert "Python decide regras" in client.prompt
+
+
+def test_ollama_available_with_mock(monkeypatch) -> None:
+    monkeypatch.setattr(
+        narrator_module,
+        "get_ollama_status",
+        lambda: {
+            "available": True,
+            "model": "llama3.2:3b",
+            "url": "http://localhost:11434",
+            "reason": "Ollama local disponível usando modelo llama3.2:3b.",
+        },
+    )
+
+    status = check_ai_status(AIConfig.from_env({}))
+
+    assert status["available"] is True
+    assert status["ollama_available"] is True
+    assert status["ollama_model"] == "llama3.2:3b"
+    assert "Ollama local disponível" in str(status["reason"])
+
+
+def test_ollama_unavailable_with_mock() -> None:
+    status = check_ai_status(AIConfig.from_env({}))
+
+    assert status["available"] is False
+    assert status["ollama_available"] is False
+    assert status["fallback_active"] is True
+    assert "fallback local" in str(status["reason"])
+
+
+def test_source_is_ollama_when_ollama_responds(monkeypatch) -> None:
+    monkeypatch.setattr(
+        narrator_module,
+        "get_ollama_status",
+        lambda: {
+            "available": True,
+            "model": "llama3.2:3b",
+            "url": "http://localhost:11434",
+            "reason": "Ollama local disponível usando modelo llama3.2:3b.",
+        },
+    )
+    monkeypatch.setattr(narrator_module, "generate_with_ollama", lambda prompt, model=None: "Cena vinda do Ollama.")
+
+    result = generate_short_narration({"acao": "abrir porta"}, config=AIConfig.from_env({}))
+
+    assert result.source == "ollama"
+    assert result.text == "Cena vinda do Ollama."
+    assert result.should_register is False
+    assert result.diagnostic == "ok"
+
+
+def test_ollama_error_uses_openai_as_second_option(monkeypatch) -> None:
+    monkeypatch.setattr(
+        narrator_module,
+        "get_ollama_status",
+        lambda: {
+            "available": True,
+            "model": "llama3.2:3b",
+            "url": "http://localhost:11434",
+            "reason": "Ollama local disponível usando modelo llama3.2:3b.",
+        },
+    )
+    monkeypatch.setattr(
+        narrator_module,
+        "generate_with_ollama",
+        lambda prompt, model=None: (_ for _ in ()).throw(RuntimeError("ollama caiu")),
+    )
+
+    result = generate_short_narration(
+        {"acao": "abrir porta"},
+        client=FakeClient("OpenAI assumiu."),
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "ai"
+    assert result.text == "OpenAI assumiu."
+
+
+def test_ollama_error_uses_fallback_when_openai_missing(monkeypatch) -> None:
+    monkeypatch.setattr(
+        narrator_module,
+        "get_ollama_status",
+        lambda: {
+            "available": True,
+            "model": "llama3.2:3b",
+            "url": "http://localhost:11434",
+            "reason": "Ollama local disponível usando modelo llama3.2:3b.",
+        },
+    )
+    monkeypatch.setattr(
+        narrator_module,
+        "generate_with_ollama",
+        lambda prompt, model=None: (_ for _ in ()).throw(RuntimeError("ollama caiu")),
+    )
+
+    result = generate_short_narration({"acao": "abrir porta"}, config=AIConfig.from_env({}))
+
+    assert result.source == "fallback"
+    assert result.diagnostic == "ollama_error"
+    assert "Ollama local falhou" in result.message
 
 
 def test_ai_error_uses_fallback() -> None:
@@ -183,6 +299,7 @@ def test_quick_ai_test_uses_fallback_without_key_and_does_not_register() -> None
     assert result["source"] in {"ai", "fallback"}
     assert result["text"]
     assert result["should_register"] is False
+    assert result["ollama_model"] == "llama3.2:3b"
 
 
 def test_quick_ai_test_uses_ai_when_available_and_does_not_register() -> None:
@@ -195,6 +312,27 @@ def test_quick_ai_test_uses_ai_when_available_and_does_not_register() -> None:
     assert result["source"] == "ai"
     assert result["source"] in {"ai", "fallback"}
     assert result["text"] == "Teste narrado pela IA."
+    assert result["should_register"] is False
+
+
+def test_quick_ai_test_uses_ollama(monkeypatch) -> None:
+    monkeypatch.setattr(
+        narrator_module,
+        "get_ollama_status",
+        lambda: {
+            "available": True,
+            "model": "llama3.2:3b",
+            "url": "http://localhost:11434",
+            "reason": "Ollama local disponível usando modelo llama3.2:3b.",
+        },
+    )
+    monkeypatch.setattr(narrator_module, "generate_with_ollama", lambda prompt, model=None: "Teste via Ollama.")
+
+    result = run_quick_ai_test(config=AIConfig.from_env({}))
+
+    assert result["available"] is True
+    assert result["source"] == "ollama"
+    assert result["text"] == "Teste via Ollama."
     assert result["should_register"] is False
 
 
@@ -289,3 +427,66 @@ def _http_error(status: int, body: bytes) -> HTTPError:
         hdrs=None,
         fp=io.BytesIO(body),
     )
+
+
+class FakeHTTPResponse:
+    def __init__(self, payload: dict) -> None:
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def read(self) -> bytes:
+        return json.dumps(self.payload).encode("utf-8")
+
+
+def test_ollama_client_default_model(monkeypatch) -> None:
+    monkeypatch.delenv("OLLAMA_MODEL", raising=False)
+
+    assert ollama_client.get_ollama_model() == "llama3.2:3b"
+
+
+def test_ollama_client_model_from_env(monkeypatch) -> None:
+    monkeypatch.setenv("OLLAMA_MODEL", "mistral")
+
+    assert ollama_client.get_ollama_model() == "mistral"
+
+
+def test_ollama_client_status_available(monkeypatch) -> None:
+    monkeypatch.setattr(ollama_client.request, "urlopen", lambda *args, **kwargs: FakeHTTPResponse({"models": []}))
+
+    status = ollama_client.get_ollama_status()
+
+    assert status["available"] is True
+    assert status["model"] == ollama_client.get_ollama_model()
+
+
+def test_ollama_client_status_unavailable(monkeypatch) -> None:
+    def fail(*args, **kwargs):
+        raise URLError("connection refused")
+
+    monkeypatch.setattr(ollama_client.request, "urlopen", fail)
+
+    status = ollama_client.get_ollama_status()
+
+    assert status["available"] is False
+    assert "Ollama não respondeu" in status["reason"]
+
+
+def test_ollama_client_generate(monkeypatch) -> None:
+    seen = {}
+
+    def fake_urlopen(http_request, timeout):
+        seen["payload"] = json.loads(http_request.data.decode("utf-8"))
+        return FakeHTTPResponse({"response": "Narracao local."})
+
+    monkeypatch.setattr(ollama_client.request, "urlopen", fake_urlopen)
+
+    text = ollama_client.generate_with_ollama("Prompt seguro.", model="llama3.2:3b")
+
+    assert text == "Narracao local."
+    assert seen["payload"]["model"] == "llama3.2:3b"
+    assert seen["payload"]["stream"] is False

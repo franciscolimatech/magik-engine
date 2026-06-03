@@ -1395,7 +1395,7 @@ def manage_ai_narrator_menu(storage: JSONStorage) -> None:
         try:
             option = input("Escolha uma opcao: ").strip()
             if option == "1":
-                print_json(check_ai_status())
+                show_ai_status()
             elif option == "2":
                 result = generate_short_narration(read_ai_context("Evento"))
                 show_ai_result_and_maybe_record(storage, result, "Narracao de evento")
@@ -1436,10 +1436,11 @@ def manage_ai_narrator_menu(storage: JSONStorage) -> None:
             elif option == "7":
                 quick_result = run_quick_ai_test()
                 print(format_title("Teste rapido da IA"))
-                source_label = "IA" if quick_result["source"] == "ai" else "fallback local"
+                source_label = ai_source_label(str(quick_result["source"]))
                 print(f"Status: {quick_result['reason']}")
+                print(f"Modelo Ollama: {quick_result.get('ollama_model', 'llama3.2:3b')}")
                 print(f"Origem: {source_label}")
-                if quick_result["source"] == "fallback" and quick_result.get("message"):
+                if quick_result.get("message"):
                     print(str(quick_result["message"]))
                 print(f"Texto: {quick_result['text']}")
                 print("Teste rapido concluido; nada foi salvo no historico.")
@@ -1463,13 +1464,31 @@ def read_ai_context(title: str) -> dict:
     }
 
 
+def show_ai_status() -> None:
+    status = check_ai_status()
+    print(format_title("Status da IA"))
+    print(f"Ollama local: {'disponivel' if status.get('ollama_available') else 'indisponivel'}")
+    print(f"Modelo Ollama: {status.get('ollama_model')}")
+    print(f"OpenAI API: {'configurada' if status.get('openai_configured') else 'nao configurada'}")
+    print(f"Fallback local: {'ativo' if status.get('fallback_active') else 'pronto'}")
+    print(f"Mensagem: {status.get('reason')}")
+
+
+def ai_source_label(source: str) -> str:
+    if source == "ollama":
+        return "Ollama local"
+    if source == "ai":
+        return "OpenAI API"
+    return "fallback local"
+
+
 def show_ai_result_and_maybe_record(
     storage: JSONStorage,
     result,
     action: str,
     campaign_session_id: str | None = None,
 ) -> None:
-    source_label = "IA" if result.source == "ai" else "fallback local"
+    source_label = ai_source_label(result.source)
     print(format_title(f"Resultado gerado por {source_label}"))
     print(result.text)
     if result.source == "fallback":
