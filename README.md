@@ -39,8 +39,13 @@ O terminal mostra o menu:
 7 - Realizar teste 1d20
 8 - Simular dano fisico
 9 - Simular dano magico
-10 - Ver moeda Pedralume
+10 - Ver/organizar moeda Pedralume
 11 - Ver locais conhecidos do mundo
+12 - Gerar fala da Ikisaki
+13 - Gerar consequencia narrativa
+14 - Gerar evento aleatorio
+15 - Gerar rumor
+16 - Gerar pressagio da maldicao
 0 - Sair
 ```
 
@@ -59,9 +64,17 @@ python -m pytest
 - `data`: arquivos JSON usados como armazenamento inicial.
 - `tests`: testes basicos com pytest.
 
+## Motor narrativo
+
+O motor narrativo da v0.3 usa tabelas internas controladas para criar
+imprevisibilidade sem integrar IA. Ele pode gerar falas da Ikisaki,
+consequencias narrativas, eventos aleatorios, rumores e pressagios da maldicao.
+Esses resultados podem ser registrados no historico de sessao, mas nao
+estabelecem verdades absolutas nem substituem a decisao do mestre.
+
 ## Estado atual
 
-Esta primeira versao inclui:
+Esta versao inclui:
 
 - Rolagem de dados no formato `1d20`, `1d10`, `2d6` etc.
 - Ficha inicial do personagem Miko Meu.
@@ -76,5 +89,7 @@ Esta primeira versao inclui:
 - Moeda Pedralume com conversao, soma, subtracao e exibicao organizada.
 - Locais conhecidos do mundo em `data/world_state.json`, sem descricoes
   inventadas.
+- Motor narrativo sem IA para falas da Ikisaki, consequencias, eventos,
+  rumores e pressagios.
 
 Nao ha integracao com IA nesta etapa.

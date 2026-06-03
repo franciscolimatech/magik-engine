@@ -15,6 +15,16 @@ from src.core.skill_tests import list_test_types, perform_skill_test
 from src.core.world import default_world_state, list_locations
 from src.storage.json_storage import JSONStorage
 from src.systems.ikisaki import use_shadow_roulette
+from src.systems.narrative import (
+    generate_curse_omen,
+    generate_ikisaki_line,
+    generate_narrative_consequence,
+    generate_random_event,
+    generate_rumor,
+    list_consequence_price_levels,
+    list_ikisaki_line_categories,
+    record_narrative_result,
+)
 from src.systems.staff import list_staff_spells
 
 
@@ -53,6 +63,16 @@ def run_terminal() -> None:
                 organize_pedralume_prompt()
             elif option == "11":
                 show_world_locations(storage)
+            elif option == "12":
+                generate_ikisaki_line_prompt(storage)
+            elif option == "13":
+                generate_narrative_consequence_prompt(storage)
+            elif option == "14":
+                generate_random_event_prompt(storage)
+            elif option == "15":
+                generate_rumor_prompt(storage)
+            elif option == "16":
+                generate_curse_omen_prompt(storage)
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
@@ -75,6 +95,11 @@ def print_menu() -> None:
     print("9 - Simular dano magico")
     print("10 - Ver/organizar moeda Pedralume")
     print("11 - Ver locais conhecidos do mundo")
+    print("12 - Gerar fala da Ikisaki")
+    print("13 - Gerar consequencia narrativa")
+    print("14 - Gerar evento aleatorio")
+    print("15 - Gerar rumor")
+    print("16 - Gerar pressagio da maldicao")
     print("0 - Sair")
 
 
@@ -236,6 +261,78 @@ def show_world_locations(storage: JSONStorage) -> None:
     print("\nLocais conhecidos do mundo")
     for location in list_locations(storage):
         print(f"- {location.name} ({location.type})")
+
+
+def generate_ikisaki_line_prompt(storage: JSONStorage) -> None:
+    categories = list_ikisaki_line_categories()
+    print("\nCategorias de fala da Ikisaki")
+    for index, category in enumerate(categories, start=1):
+        print(f"{index} - {category}")
+
+    selected = input("Escolha uma categoria: ").strip()
+    if not selected.isdigit() or not 1 <= int(selected) <= len(categories):
+        raise ValueError("Escolha uma categoria valida.")
+
+    line = generate_ikisaki_line(categories[int(selected) - 1])
+    print_json(line.to_dict())
+    record_narrative_result(
+        storage,
+        character="Ikisaki",
+        action=f"Fala da Ikisaki: {line.category}",
+        result=line.text,
+    )
+
+
+def generate_narrative_consequence_prompt(storage: JSONStorage) -> None:
+    price_levels = list_consequence_price_levels()
+    print("\nNiveis de preco narrativo")
+    for index, price_level in enumerate(price_levels, start=1):
+        print(f"{index} - {price_level}")
+
+    selected = input("Escolha um nivel: ").strip()
+    if not selected.isdigit() or not 1 <= int(selected) <= len(price_levels):
+        raise ValueError("Escolha um nivel de preco valido.")
+
+    consequence = generate_narrative_consequence(price_levels[int(selected) - 1])
+    print_json(consequence.to_dict())
+    record_narrative_result(
+        storage,
+        action=f"Consequencia narrativa: {consequence.price_level}",
+        result=consequence.description,
+    )
+
+
+def generate_random_event_prompt(storage: JSONStorage) -> None:
+    event = generate_random_event()
+    print_json(event.to_dict())
+    record_narrative_result(
+        storage,
+        action=f"Evento aleatorio: {event.category}",
+        result=event.description,
+        notes=f"Teste sugerido: {event.suggested_test or 'nenhum'}. Possivel consequencia: {event.possible_consequence}",
+    )
+
+
+def generate_rumor_prompt(storage: JSONStorage) -> None:
+    rumor = generate_rumor()
+    print_json(rumor.to_dict())
+    record_narrative_result(
+        storage,
+        action=f"Rumor: {rumor.level}",
+        result=rumor.text,
+    )
+
+
+def generate_curse_omen_prompt(storage: JSONStorage) -> None:
+    omen = generate_curse_omen()
+    print_json(omen.to_dict())
+    record_narrative_result(
+        storage,
+        character="Miko Meu",
+        action="Pressagio da maldicao de Ikisaki",
+        result=omen.description,
+        notes="Pressagio narrativo; nao aplica dano automaticamente.",
+    )
 
 
 def read_int(prompt: str) -> int:
