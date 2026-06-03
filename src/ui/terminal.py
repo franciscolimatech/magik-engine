@@ -21,8 +21,12 @@ from src.systems.narrative import (
     generate_narrative_consequence,
     generate_random_event,
     generate_rumor,
+    list_location_types,
     list_consequence_price_levels,
     list_ikisaki_line_categories,
+    list_tones,
+    maybe_record_narrative_result,
+    narrate_ikisaki_roulette,
     record_narrative_result,
 )
 from src.systems.staff import list_staff_spells
@@ -130,15 +134,18 @@ def roll_dice_prompt(storage: JSONStorage) -> None:
 def use_ikisaki_prompt(storage: JSONStorage) -> None:
     miko = load_or_create_miko(storage)
     result = use_shadow_roulette(miko)
+    narrative = narrate_ikisaki_roulette(result)
     save_character(storage, miko)
 
     print_json(result.to_dict())
+    print("\nCena sugerida:")
+    print_json(narrative.to_dict())
     register_event(
         storage,
         character=miko.name,
         action="Usou Roleta Sombria: Dez Elos de Ikisaki",
         result=f"{result.number} - {result.link_name}; preco {result.price_level}",
-        notes=result.consequence or "",
+        notes=result.consequence or narrative.texto,
     )
 
 
@@ -293,46 +300,105 @@ def generate_narrative_consequence_prompt(storage: JSONStorage) -> None:
     if not selected.isdigit() or not 1 <= int(selected) <= len(price_levels):
         raise ValueError("Escolha um nivel de preco valido.")
 
-    consequence = generate_narrative_consequence(price_levels[int(selected) - 1])
+    tone = ask_optional_tone()
+    consequence = generate_narrative_consequence(price_levels[int(selected) - 1], tone=tone)
     print_json(consequence.to_dict())
-    record_narrative_result(
+    maybe_record_generated_result(
         storage,
+        consequence,
+        character="Narrador",
         action=f"Consequencia narrativa: {consequence.price_level}",
-        result=consequence.description,
     )
 
 
 def generate_random_event_prompt(storage: JSONStorage) -> None:
-    event = generate_random_event()
+    tone = ask_optional_tone()
+    location_type = ask_optional_location_type()
+    event = generate_random_event(tone=tone, location_type=location_type)
     print_json(event.to_dict())
-    record_narrative_result(
+    maybe_record_generated_result(
         storage,
+        event,
+        character="Narrador",
         action=f"Evento aleatorio: {event.category}",
-        result=event.description,
-        notes=f"Teste sugerido: {event.suggested_test or 'nenhum'}. Possivel consequencia: {event.possible_consequence}",
     )
 
 
 def generate_rumor_prompt(storage: JSONStorage) -> None:
-    rumor = generate_rumor()
+    tone = ask_optional_tone()
+    rumor = generate_rumor(tone=tone)
     print_json(rumor.to_dict())
-    record_narrative_result(
+    maybe_record_generated_result(
         storage,
+        rumor,
+        character="Narrador",
         action=f"Rumor: {rumor.level}",
-        result=rumor.text,
     )
 
 
 def generate_curse_omen_prompt(storage: JSONStorage) -> None:
     omen = generate_curse_omen()
     print_json(omen.to_dict())
-    record_narrative_result(
+    maybe_record_generated_result(
         storage,
+        omen,
         character="Miko Meu",
         action="Pressagio da maldicao de Ikisaki",
-        result=omen.description,
         notes="Pressagio narrativo; nao aplica dano automaticamente.",
     )
+
+
+def maybe_record_generated_result(
+    storage: JSONStorage,
+    result,
+    character: str,
+    action: str,
+    notes: str = "",
+) -> None:
+    decision = input("Registrar no historico? [s/N]: ").strip().casefold()
+    should_register = decision in {"s", "sim", "y", "yes"}
+    event = maybe_record_narrative_result(
+        storage,
+        result,
+        should_register=should_register,
+        character=character,
+        action=action,
+        notes=notes,
+    )
+    if event is None:
+        print("Resultado descartado; nada foi salvo no historico.")
+    else:
+        print("Resultado registrado no historico.")
+
+
+def ask_optional_tone() -> str | None:
+    tones = list_tones()
+    print("\nTons narrativos")
+    print("0 - neutro/sem preferencia")
+    for index, tone in enumerate(tones, start=1):
+        print(f"{index} - {tone}")
+
+    selected = input("Escolha um tom opcional: ").strip()
+    if not selected or selected == "0":
+        return None
+    if selected.isdigit() and 1 <= int(selected) <= len(tones):
+        return tones[int(selected) - 1]
+    return selected
+
+
+def ask_optional_location_type() -> str | None:
+    location_types = list_location_types()
+    print("\nTipo de local para contexto do evento")
+    print("0 - sem contexto")
+    for index, location_type in enumerate(location_types, start=1):
+        print(f"{index} - {location_type}")
+
+    selected = input("Escolha um tipo de local opcional: ").strip()
+    if not selected or selected == "0":
+        return None
+    if selected.isdigit() and 1 <= int(selected) <= len(location_types):
+        return location_types[int(selected) - 1]
+    return selected
 
 
 def read_int(prompt: str) -> int:

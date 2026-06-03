@@ -66,11 +66,26 @@ python -m pytest
 
 ## Motor narrativo
 
-O motor narrativo da v0.3 usa tabelas internas controladas para criar
-imprevisibilidade sem integrar IA. Ele pode gerar falas da Ikisaki,
-consequencias narrativas, eventos aleatorios, rumores e pressagios da maldicao.
-Esses resultados podem ser registrados no historico de sessao, mas nao
+O motor narrativo usa tabelas internas controladas para criar imprevisibilidade
+sem integrar IA. Ele pode gerar falas da Ikisaki, consequencias narrativas,
+eventos aleatorios, rumores e pressagios da maldicao. Esses resultados nao
 estabelecem verdades absolutas nem substituem a decisao do mestre.
+
+Na v0.3.1, eventos, rumores e consequencias aceitam tom opcional:
+
+- `neutro`
+- `sombrio`
+- `engracado`
+- `perigoso`
+- `misterioso`
+
+Eventos tambem podem usar o tipo de local como contexto, por exemplo `cidade`,
+`floresta`, `estrada`, `lago` ou `penhasco`, sem criar descricoes oficiais para
+o mapa. O motor evita repetir exatamente o mesmo resultado logo em seguida
+quando a tabela tem mais de uma opcao.
+
+Ao gerar consequencia, evento, rumor ou pressagio pelo terminal, voce pode
+registrar no historico ou descartar o resultado.
 
 ## Estado atual
 
@@ -90,6 +105,6 @@ Esta versao inclui:
 - Locais conhecidos do mundo em `data/world_state.json`, sem descricoes
   inventadas.
 - Motor narrativo sem IA para falas da Ikisaki, consequencias, eventos,
-  rumores e pressagios.
+  rumores e pressagios, com controle de tom e contexto por tipo de local.
 
 Nao ha integracao com IA nesta etapa.
