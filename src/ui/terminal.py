@@ -34,8 +34,38 @@ from src.core.character import (
     update_character_health,
 )
 from src.core.currency import PedralumeMoney
+from src.core.creatures import (
+    CREATURE_TYPES,
+    add_creature_note,
+    add_creature_status,
+    apply_magical_damage_to_creature,
+    apply_physical_damage_to_creature,
+    create_creature,
+    default_creature_data,
+    get_creature,
+    heal_creature,
+    list_creatures,
+    remove_creature,
+    remove_creature_status,
+    update_creature_armor,
+    update_creature_health,
+)
 from src.core.dice import roll_dice
 from src.core.magic import apply_healing, apply_magic_damage
+from src.core.npcs import (
+    NPC_ATTITUDES,
+    NPC_ROLES,
+    add_npc_note,
+    add_npc_rumor,
+    add_npc_status,
+    change_npc_attitude,
+    create_npc,
+    default_npc_data,
+    get_npc,
+    list_npcs,
+    remove_npc,
+    remove_npc_status,
+)
 from src.core.session import list_events, register_event
 from src.core.skill_tests import list_test_types, perform_skill_test
 from src.core.world import default_world_state, list_locations
@@ -59,8 +89,12 @@ from src.systems.staff import list_staff_spells
 from src.ui.formatting import (
     format_character_list,
     format_character_sheet,
+    format_creature_list,
+    format_creature_sheet,
     format_history,
     format_manual_test_script,
+    format_npc_list,
+    format_npc_sheet,
     format_title,
 )
 
@@ -116,6 +150,10 @@ def run_terminal() -> None:
                 heal_character_prompt(storage)
             elif option == "19":
                 show_manual_test_script()
+            elif option == "20":
+                manage_creatures_menu(storage)
+            elif option == "21":
+                manage_npcs_menu(storage)
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
@@ -146,6 +184,8 @@ def print_menu() -> None:
     print("17 - Gerenciar personagens")
     print("18 - Curar personagem")
     print("19 - Roteiro de teste manual")
+    print("20 - Gerenciar criaturas/inimigos")
+    print("21 - Gerenciar NPCs")
     print("0 - Sair")
 
 
@@ -155,6 +195,8 @@ def ensure_initial_data(storage: JSONStorage) -> None:
     load_or_create_miko(storage)
     storage.read_json("sessions.json", default=[])
     storage.read_json("world_state.json", default=default_world_state())
+    storage.read_json("creatures.json", default=default_creature_data())
+    storage.read_json("npcs.json", default=default_npc_data())
 
 
 def show_miko(storage: JSONStorage) -> None:
@@ -692,6 +734,217 @@ def select_character_name_for_history(storage: JSONStorage) -> str:
 
 def show_manual_test_script() -> None:
     print(format_manual_test_script())
+
+
+def manage_creatures_menu(storage: JSONStorage) -> None:
+    while True:
+        print(format_title("Gerenciar criaturas/inimigos"))
+        print("1 - Listar criaturas")
+        print("2 - Ver ficha de criatura")
+        print("3 - Criar criatura")
+        print("4 - Editar vida")
+        print("5 - Editar armadura")
+        print("6 - Aplicar dano fisico")
+        print("7 - Aplicar dano magico")
+        print("8 - Curar criatura")
+        print("9 - Adicionar status")
+        print("10 - Remover status")
+        print("11 - Adicionar observacao")
+        print("12 - Remover criatura")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                print(format_creature_list(list_creatures(storage)))
+            elif option == "2":
+                print(format_creature_sheet(select_creature(storage)))
+            elif option == "3":
+                creature = create_creature_prompt(storage)
+                register_event(storage, creature.name, "Criatura criada", creature.type, creature.description)
+            elif option == "4":
+                creature = select_creature(storage)
+                updated = update_creature_health(storage, creature.id, read_int("Nova vida atual: "))
+                print(format_creature_sheet(updated))
+            elif option == "5":
+                creature = select_creature(storage)
+                updated = update_creature_armor(storage, creature.id, read_int("Nova armadura: "))
+                print(format_creature_sheet(updated))
+            elif option == "6":
+                creature = select_creature(storage)
+                damage = read_int("Dano fisico: ")
+                updated, description = apply_physical_damage_to_creature(storage, creature.id, damage)
+                print(format_creature_sheet(updated))
+                register_event(storage, updated.name, "Dano fisico aplicado", f"{damage} de dano", description)
+            elif option == "7":
+                creature = select_creature(storage)
+                damage = read_int("Dano magico: ")
+                updated, description = apply_magical_damage_to_creature(storage, creature.id, damage)
+                print(format_creature_sheet(updated))
+                register_event(storage, updated.name, "Dano magico aplicado", f"{damage} de dano", description)
+            elif option == "8":
+                creature = select_creature(storage)
+                amount = read_int("Cura: ")
+                updated, description = heal_creature(storage, creature.id, amount)
+                print(format_creature_sheet(updated))
+                register_event(storage, updated.name, "Criatura curada", f"{amount} de cura", description)
+            elif option == "9":
+                creature = select_creature(storage)
+                status = input("Status: ").strip()
+                updated = add_creature_status(storage, creature.id, status)
+                print(format_creature_sheet(updated))
+                register_event(storage, updated.name, "Status de criatura adicionado", status)
+            elif option == "10":
+                creature = select_creature(storage)
+                status = input("Status: ").strip()
+                updated = remove_creature_status(storage, creature.id, status)
+                print(format_creature_sheet(updated))
+                register_event(storage, updated.name, "Status de criatura removido", status)
+            elif option == "11":
+                creature = select_creature(storage)
+                note = input("Observacao: ").strip()
+                updated = add_creature_note(storage, creature.id, note)
+                print(format_creature_sheet(updated))
+                register_event(storage, updated.name, "Observacao de criatura adicionada", note)
+            elif option == "12":
+                creature = select_creature(storage)
+                removed = remove_creature(storage, creature.id)
+                print(f"Criatura removida: {removed.name}")
+                register_event(storage, removed.name, "Criatura removida", removed.id)
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def create_creature_prompt(storage: JSONStorage):
+    name = input("Nome: ").strip()
+    creature_type = input_with_default(f"Tipo ({', '.join(sorted(CREATURE_TYPES))})", "criatura")
+    max_health = read_int("Vida maxima: ")
+    armor = read_int("Armadura: ")
+    description = input("Descricao: ").strip()
+    location = input("Localizacao opcional: ").strip() or None
+    threat_level = input("Nivel de ameaca opcional: ").strip() or None
+    creature = create_creature(
+        storage,
+        name=name,
+        creature_type=creature_type,
+        max_health=max_health,
+        armor=armor,
+        description=description,
+        location=location,
+        threat_level=threat_level,
+    )
+    print(format_creature_sheet(creature))
+    return creature
+
+
+def select_creature(storage: JSONStorage):
+    creatures = list_creatures(storage)
+    print(format_creature_list(creatures))
+    selected = input("Opcao ou id: ").strip()
+    if selected.isdigit() and 1 <= int(selected) <= len(creatures):
+        return creatures[int(selected) - 1]
+    if selected.isdigit():
+        raise ValueError("Numero de criatura fora da lista.")
+    return get_creature(storage, selected)
+
+
+def manage_npcs_menu(storage: JSONStorage) -> None:
+    while True:
+        print(format_title("Gerenciar NPCs"))
+        print("1 - Listar NPCs")
+        print("2 - Ver ficha de NPC")
+        print("3 - Criar NPC")
+        print("4 - Alterar atitude")
+        print("5 - Adicionar rumor")
+        print("6 - Adicionar status")
+        print("7 - Remover status")
+        print("8 - Adicionar observacao")
+        print("9 - Remover NPC")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                print(format_npc_list(list_npcs(storage)))
+            elif option == "2":
+                print(format_npc_sheet(select_npc(storage)))
+            elif option == "3":
+                npc = create_npc_prompt(storage)
+                register_event(storage, npc.name, "NPC criado", npc.role, npc.description)
+            elif option == "4":
+                npc = select_npc(storage)
+                attitude = input_with_default(f"Atitude ({', '.join(sorted(NPC_ATTITUDES))})", npc.attitude)
+                updated = change_npc_attitude(storage, npc.id, attitude)
+                print(format_npc_sheet(updated))
+                register_event(storage, updated.name, "Atitude de NPC alterada", updated.attitude)
+            elif option == "5":
+                npc = select_npc(storage)
+                rumor = input("Rumor: ").strip()
+                updated = add_npc_rumor(storage, npc.id, rumor)
+                print(format_npc_sheet(updated))
+                register_event(storage, updated.name, "Rumor de NPC adicionado", rumor)
+            elif option == "6":
+                npc = select_npc(storage)
+                status = input("Status: ").strip()
+                updated = add_npc_status(storage, npc.id, status)
+                print(format_npc_sheet(updated))
+                register_event(storage, updated.name, "Status de NPC adicionado", status)
+            elif option == "7":
+                npc = select_npc(storage)
+                status = input("Status: ").strip()
+                updated = remove_npc_status(storage, npc.id, status)
+                print(format_npc_sheet(updated))
+                register_event(storage, updated.name, "Status de NPC removido", status)
+            elif option == "8":
+                npc = select_npc(storage)
+                note = input("Observacao: ").strip()
+                updated = add_npc_note(storage, npc.id, note)
+                print(format_npc_sheet(updated))
+                register_event(storage, updated.name, "Observacao de NPC adicionada", note)
+            elif option == "9":
+                npc = select_npc(storage)
+                removed = remove_npc(storage, npc.id)
+                print(f"NPC removido: {removed.name}")
+                register_event(storage, removed.name, "NPC removido", removed.id)
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def create_npc_prompt(storage: JSONStorage):
+    name = input("Nome: ").strip()
+    role = input_with_default(f"Papel ({', '.join(sorted(NPC_ROLES))})", "outro")
+    attitude = input_with_default(f"Atitude ({', '.join(sorted(NPC_ATTITUDES))})", "neutra")
+    location = input("Localizacao opcional: ").strip() or None
+    description = input("Descricao: ").strip()
+    npc = create_npc(
+        storage,
+        name=name,
+        role=role,
+        attitude=attitude,
+        location=location,
+        description=description,
+    )
+    print(format_npc_sheet(npc))
+    return npc
+
+
+def select_npc(storage: JSONStorage):
+    npcs = list_npcs(storage)
+    print(format_npc_list(npcs))
+    selected = input("Opcao ou id: ").strip()
+    if selected.isdigit() and 1 <= int(selected) <= len(npcs):
+        return npcs[int(selected) - 1]
+    if selected.isdigit():
+        raise ValueError("Numero de NPC fora da lista.")
+    return get_npc(storage, selected)
 
 
 def read_int(prompt: str) -> int:

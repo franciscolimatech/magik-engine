@@ -49,6 +49,8 @@ O terminal mostra o menu:
 17 - Gerenciar personagens
 18 - Curar personagem
 19 - Roteiro de teste manual
+20 - Gerenciar criaturas/inimigos
+21 - Gerenciar NPCs
 0 - Sair
 ```
 
@@ -151,6 +153,27 @@ custo, teste sugerido e usos restantes, alem de registrar o uso no historico.
 Ikisaki e Cajado Sombrio aparecem como habilidades gerais do Miko Meu, mas seus
 sistemas completos continuam nas opcoes especiais do menu principal.
 
+## Criaturas e NPCs
+
+A v0.5 separa entidades nao-jogadoras em dois grupos:
+
+- **Criaturas/inimigos**: entidades que podem entrar em combate, receber dano
+  fisico, dano magico e cura.
+- **NPCs**: entidades sociais e narrativas, com papel, atitude, rumores, status
+  e observacoes.
+
+Use `20 - Gerenciar criaturas/inimigos` para criar, listar, ver ficha, editar
+vida/armadura, aplicar dano fisico, aplicar dano magico, curar, alterar status,
+registrar observacoes e remover criaturas. Criaturas usam as mesmas regras
+oficiais de armadura, dano magico e cura do sistema principal.
+
+Use `21 - Gerenciar NPCs` para criar, listar, ver ficha, alterar atitude,
+adicionar rumores, alterar status, registrar observacoes e remover NPCs.
+
+Os arquivos `data/creatures.json` e `data/npcs.json` sao criados
+automaticamente se nao existirem ou estiverem vazios. Nenhuma criatura oficial
+foi inventada nesta etapa.
+
 ## Uso no terminal
 
 As opcoes principais foram pensadas para uso rapido durante a mesa:
@@ -162,6 +185,8 @@ As opcoes principais foram pensadas para uso rapido durante a mesa:
 - `12` a `16`: geradores narrativos sem IA.
 - `17`: gerenciamento geral de personagens.
 - `19`: roteiro recomendado para teste manual.
+- `20`: gerenciamento de criaturas, inimigos e chefes.
+- `21`: gerenciamento de NPCs sociais e narrativos.
 
 Quando uma acao envolve personagem, o terminal lista os personagens disponiveis
 com numero, nome, classe e id. Voce pode escolher pelo numero ou pelo id.
@@ -188,6 +213,7 @@ Esta versao inclui:
 - Rolagem de dados no formato `1d20`, `1d10`, `2d6` etc.
 - Suporte a multiplos personagens, com Miko Meu como ficha inicial.
 - Sistema geral de habilidades por personagem.
+- Sistema de criaturas/inimigos e NPCs separado de personagens jogadores.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.

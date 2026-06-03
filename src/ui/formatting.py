@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from src.core.character import Character
+from src.core.creatures import Creature
+from src.core.npcs import NPC
 from src.core.session import SessionEvent
 
 
@@ -77,6 +79,62 @@ def format_manual_test_script() -> str:
         "10 - Ver historico.",
     ]
     return "\n".join([format_title("Roteiro de teste manual"), *steps])
+
+
+def format_creature_list(creatures: list[Creature]) -> str:
+    lines = [format_title("Criaturas e inimigos")]
+    if not creatures:
+        lines.append("Nenhuma criatura cadastrada.")
+        return "\n".join(lines)
+    for index, creature in enumerate(creatures, start=1):
+        lines.append(f"{index} - {creature.name} ({creature.type}) [{creature.id}]")
+    return "\n".join(lines)
+
+
+def format_creature_sheet(creature: Creature) -> str:
+    return "\n".join(
+        [
+            format_title(f"Criatura: {creature.name}"),
+            f"Id: {creature.id}",
+            f"Tipo: {creature.type}",
+            f"Vida: {creature.current_health}/{creature.max_health}",
+            f"Armadura: {creature.armor}",
+            f"Localizacao: {creature.location or 'nao informada'}",
+            f"Nivel de ameaca: {creature.threat_level or 'nao informado'}",
+            f"Descricao: {creature.description or 'sem descricao'}",
+            f"Habilidades: {_format_abilities(creature.abilities)}",
+            f"Status: {_format_list(creature.status)}",
+            f"Tags: {_format_list(creature.tags)}",
+            f"Observacoes: {_format_list(creature.notes)}",
+        ]
+    )
+
+
+def format_npc_list(npcs: list[NPC]) -> str:
+    lines = [format_title("NPCs")]
+    if not npcs:
+        lines.append("Nenhum NPC cadastrado.")
+        return "\n".join(lines)
+    for index, npc in enumerate(npcs, start=1):
+        lines.append(f"{index} - {npc.name} ({npc.role}, {npc.attitude}) [{npc.id}]")
+    return "\n".join(lines)
+
+
+def format_npc_sheet(npc: NPC) -> str:
+    return "\n".join(
+        [
+            format_title(f"NPC: {npc.name}"),
+            f"Id: {npc.id}",
+            f"Papel: {npc.role}",
+            f"Atitude: {npc.attitude}",
+            f"Localizacao: {npc.location or 'nao informada'}",
+            f"Descricao: {npc.description or 'sem descricao'}",
+            f"Rumores: {_format_list(npc.rumors)}",
+            f"Status: {_format_list(npc.status)}",
+            f"Tags: {_format_list(npc.tags)}",
+            f"Observacoes: {_format_list(npc.notes)}",
+        ]
+    )
 
 
 def _format_list(values: list[str]) -> str:
