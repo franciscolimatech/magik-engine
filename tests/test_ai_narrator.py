@@ -1,3 +1,6 @@
+import io
+from urllib.error import HTTPError, URLError
+
 import pytest
 
 from src.ai.narrator import (
@@ -35,6 +38,14 @@ class FailingClient:
         raise RuntimeError("falhou")
 
 
+class RaisingClient:
+    def __init__(self, error: BaseException) -> None:
+        self.error = error
+
+    def complete(self, prompt: str, config: AIConfig) -> str:
+        raise self.error
+
+
 @pytest.fixture(autouse=True)
 def clear_narrative_memory():
     reset_narrative_memory()
@@ -55,6 +66,8 @@ def test_generate_short_narration_uses_fallback_without_key() -> None:
     assert result.source == "fallback"
     assert result.text
     assert result.should_register is False
+    assert result.diagnostic == "missing_api_key"
+    assert "OPENAI_API_KEY ausente" in result.message
 
 
 def test_prompt_sanitizes_sensitive_keys() -> None:
@@ -100,6 +113,8 @@ def test_ai_error_uses_fallback() -> None:
 
     assert result.source == "fallback"
     assert result.text
+    assert result.diagnostic == "unknown_error"
+    assert "IA configurada, mas a chamada falhou" in result.message
 
 
 def test_all_main_ai_functions_use_fallback_without_key() -> None:
@@ -194,3 +209,83 @@ def test_quick_ai_test_falls_back_on_ai_error() -> None:
     assert result["source"] in {"ai", "fallback"}
     assert result["text"]
     assert result["should_register"] is False
+    assert result["diagnostic"] == "unknown_error"
+    assert "IA configurada, mas a chamada falhou" in str(result["message"])
+
+
+def test_missing_openai_library_is_diagnosed() -> None:
+    error = ModuleNotFoundError("No module named 'openai'")
+    error.name = "openai"
+
+    result = generate_short_narration(
+        {"acao": "teste"},
+        client=RaisingClient(error),
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "fallback"
+    assert result.diagnostic == "missing_openai_library"
+    assert "biblioteca openai nao instalada" in result.message
+    assert "fake-key" not in result.message
+
+
+def test_invalid_key_error_is_diagnosed() -> None:
+    result = generate_short_narration(
+        {"acao": "teste"},
+        client=RaisingClient(_http_error(401, b'{"error":{"code":"invalid_api_key"}}')),
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "fallback"
+    assert result.diagnostic == "invalid_api_key"
+    assert "chave invalida" in result.message
+    assert "fake-key" not in result.message
+
+
+def test_connection_error_is_diagnosed() -> None:
+    result = generate_short_narration(
+        {"acao": "teste"},
+        client=RaisingClient(URLError("timed out")),
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "fallback"
+    assert result.diagnostic == "connection_error"
+    assert "erro de conexao" in result.message
+    assert "fake-key" not in result.message
+
+
+def test_billing_credit_permission_error_is_diagnosed() -> None:
+    result = generate_short_narration(
+        {"acao": "teste"},
+        client=RaisingClient(_http_error(429, b'{"error":{"code":"insufficient_quota"}}')),
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "fallback"
+    assert result.diagnostic == "billing_permission_error"
+    assert "billing, credito ou permissao" in result.message
+    assert "fake-key" not in result.message
+
+
+def test_unknown_ai_error_is_diagnosed_without_leaking_key() -> None:
+    result = generate_short_narration(
+        {"acao": "teste"},
+        client=RaisingClient(RuntimeError("falha tecnica com fake-key")),
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "fallback"
+    assert result.diagnostic == "unknown_error"
+    assert "erro desconhecido" in result.message
+    assert "fake-key" not in result.message
+
+
+def _http_error(status: int, body: bytes) -> HTTPError:
+    return HTTPError(
+        url="https://api.openai.com/v1/responses",
+        code=status,
+        msg="erro",
+        hdrs=None,
+        fp=io.BytesIO(body),
+    )

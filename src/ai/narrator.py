@@ -8,7 +8,7 @@ import os
 from types import SimpleNamespace
 from typing import Any, Mapping, Protocol
 from urllib import request
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 from src.ai.prompts import build_prompt
 from src.systems.narrative import (
@@ -43,6 +43,8 @@ class NarrationResult:
     source: str
     text: str
     should_register: bool = False
+    diagnostic: str = "ok"
+    message: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -129,6 +131,8 @@ def run_quick_ai_test(
         "source": result.source,
         "text": result.text,
         "should_register": result.should_register,
+        "diagnostic": result.diagnostic,
+        "message": result.message,
     }
 
 
@@ -229,14 +233,161 @@ def _generate_or_fallback(
     config: AIConfig | None,
 ) -> NarrationResult:
     resolved_config = config or AIConfig.from_env()
-    if is_ai_available(resolved_config):
-        try:
-            prompt = build_prompt(task, context)
-            text = (client or OpenAIResponsesClient()).complete(prompt, resolved_config)
-            return NarrationResult(source="ai", text=text, should_register=False)
-        except Exception:
-            pass
-    return NarrationResult(source="fallback", text=str(fallback()), should_register=False)
+    if not resolved_config.enabled:
+        return _fallback_result(fallback, "disabled")
+    if not resolved_config.api_key:
+        return _fallback_result(fallback, "missing_api_key")
+
+    try:
+        prompt = build_prompt(task, context)
+        text = (client or OpenAIResponsesClient()).complete(prompt, resolved_config)
+        return NarrationResult(
+            source="ai",
+            text=text,
+            should_register=False,
+            diagnostic="ok",
+            message="IA respondeu com sucesso.",
+        )
+    except Exception as exc:
+        return _fallback_result(fallback, diagnose_ai_error(exc))
+
+
+def _fallback_result(fallback: Any, diagnostic: str) -> NarrationResult:
+    return NarrationResult(
+        source="fallback",
+        text=str(fallback()),
+        should_register=False,
+        diagnostic=diagnostic,
+        message=ai_diagnostic_message(diagnostic),
+    )
+
+
+def diagnose_ai_error(error: BaseException) -> str:
+    for current in _error_chain(error):
+        if _is_openai_import_error(current):
+            return "missing_openai_library"
+        if _is_missing_api_key_error(current):
+            return "missing_api_key"
+        if isinstance(current, HTTPError):
+            return _diagnose_http_error(current)
+        if isinstance(current, (URLError, TimeoutError, ConnectionError)):
+            return "connection_error"
+
+    text = _safe_error_text(error)
+    if any(part in text for part in ("invalid_api_key", "incorrect api key", "unauthorized", "401")):
+        return "invalid_api_key"
+    if any(
+        part in text
+        for part in (
+            "billing",
+            "credito",
+            "credit",
+            "quota",
+            "insufficient_quota",
+            "permission",
+            "permissao",
+            "forbidden",
+            "403",
+            "429",
+        )
+    ):
+        return "billing_permission_error"
+    if any(part in text for part in ("connection", "conexao", "timeout", "timed out", "network")):
+        return "connection_error"
+    return "unknown_error"
+
+
+def ai_diagnostic_message(diagnostic: str) -> str:
+    messages = {
+        "ok": "IA respondeu com sucesso.",
+        "disabled": "IA desativada. Usando narracao local.",
+        "missing_api_key": "OPENAI_API_KEY ausente. Usando narracao local.",
+        "missing_openai_library": (
+            "IA configurada, mas a chamada falhou. Usando fallback local. "
+            "Diagnostico: biblioteca openai nao instalada."
+        ),
+        "invalid_api_key": (
+            "IA configurada, mas a chamada falhou. Usando fallback local. "
+            "Diagnostico: chave invalida."
+        ),
+        "connection_error": (
+            "IA configurada, mas a chamada falhou. Usando fallback local. "
+            "Diagnostico: erro de conexao."
+        ),
+        "billing_permission_error": (
+            "IA configurada, mas a chamada falhou. Usando fallback local. "
+            "Diagnostico: billing, credito ou permissao."
+        ),
+        "unknown_error": (
+            "IA configurada, mas a chamada falhou. Usando fallback local. "
+            "Diagnostico: erro desconhecido."
+        ),
+    }
+    return messages.get(diagnostic, messages["unknown_error"])
+
+
+def _error_chain(error: BaseException) -> list[BaseException]:
+    chain = [error]
+    current = error
+    while current.__cause__ is not None:
+        current = current.__cause__
+        chain.append(current)
+    current = error
+    while current.__context__ is not None:
+        current = current.__context__
+        chain.append(current)
+    return chain
+
+
+def _is_openai_import_error(error: BaseException) -> bool:
+    if not isinstance(error, (ImportError, ModuleNotFoundError)):
+        return False
+    module_name = getattr(error, "name", None)
+    return module_name == "openai" or "openai" in str(error).casefold()
+
+
+def _is_missing_api_key_error(error: BaseException) -> bool:
+    text = _safe_error_text(error)
+    return "openai_api_key" in text and "nao configurada" in text
+
+
+def _diagnose_http_error(error: HTTPError) -> str:
+    body = _read_http_error_body(error)
+    text = f"{error.code} {error.reason} {body}".casefold()
+    if error.code == 401 or "invalid_api_key" in text or "incorrect api key" in text:
+        return "invalid_api_key"
+    if error.code in {402, 403, 429} or any(
+        part in text
+        for part in (
+            "billing",
+            "credit",
+            "credito",
+            "quota",
+            "insufficient_quota",
+            "permission",
+            "permissao",
+            "forbidden",
+        )
+    ):
+        return "billing_permission_error"
+    if error.code >= 500:
+        return "connection_error"
+    return "unknown_error"
+
+
+def _read_http_error_body(error: HTTPError) -> str:
+    try:
+        body = error.read()
+    except Exception:
+        return ""
+    if isinstance(body, bytes):
+        return body.decode("utf-8", errors="ignore")
+    return str(body)
+
+
+def _safe_error_text(error: BaseException) -> str:
+    texts = [str(item) for item in _error_chain(error)]
+    return " ".join(texts).casefold()
 
 
 def _fallback_event_text(context: dict[str, Any]) -> str:

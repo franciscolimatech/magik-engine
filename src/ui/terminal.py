@@ -1439,8 +1439,8 @@ def manage_ai_narrator_menu(storage: JSONStorage) -> None:
                 source_label = "IA" if quick_result["source"] == "ai" else "fallback local"
                 print(f"Status: {quick_result['reason']}")
                 print(f"Origem: {source_label}")
-                if quick_result["source"] == "fallback":
-                    print("IA nao configurada. Usando narracao local.")
+                if quick_result["source"] == "fallback" and quick_result.get("message"):
+                    print(str(quick_result["message"]))
                 print(f"Texto: {quick_result['text']}")
                 print("Teste rapido concluido; nada foi salvo no historico.")
             elif option == "0":
@@ -1473,7 +1473,8 @@ def show_ai_result_and_maybe_record(
     print(format_title(f"Resultado gerado por {source_label}"))
     print(result.text)
     if result.source == "fallback":
-        print("\nIA nao configurada. Usando narracao local.")
+        message = getattr(result, "message", "") or "IA configurada, mas a chamada falhou. Usando fallback local."
+        print(f"\n{message}")
     decision = input("Registrar no historico? [s/N]: ").strip().casefold()
     if decision not in {"s", "sim", "y", "yes"}:
         print("Resultado descartado; nada foi salvo no historico.")
