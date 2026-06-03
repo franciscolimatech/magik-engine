@@ -48,6 +48,7 @@ O terminal mostra o menu:
 16 - Gerar pressagio da maldicao
 17 - Gerenciar personagens
 18 - Curar personagem
+19 - Roteiro de teste manual
 0 - Sair
 ```
 
@@ -114,6 +115,36 @@ sessao podem ser associados a um personagem escolhido.
 Sistemas especiais como Ikisaki e Cajado Sombrio ainda sao especificos do Miko
 Meu por enquanto, mas ficam registrados na ficha em `special_systems` e
 `abilities` para facilitar futuras expansoes.
+
+## Uso no terminal
+
+As opcoes principais foram pensadas para uso rapido durante a mesa:
+
+- `1`: atalho para ver a ficha do Miko Meu.
+- `3` e `4`: sistemas especiais do Miko Meu, Ikisaki e Cajado Sombrio.
+- `5` e `6`: registrar e consultar historico da sessao.
+- `7`, `8`, `9` e `18`: testes, dano fisico, dano magico e cura com selecao de personagem.
+- `12` a `16`: geradores narrativos sem IA.
+- `17`: gerenciamento geral de personagens.
+- `19`: roteiro recomendado para teste manual.
+
+Quando uma acao envolve personagem, o terminal lista os personagens disponiveis
+com numero, nome, classe e id. Voce pode escolher pelo numero ou pelo id.
+
+## Teste manual recomendado
+
+Use a opcao `19 - Roteiro de teste manual` e passe por este fluxo:
+
+1. Ver ficha de um personagem.
+2. Rolar `1d20`.
+3. Fazer teste de Vontade.
+4. Usar Roleta Sombria da Ikisaki.
+5. Gerar consequencia narrativa.
+6. Registrar no historico.
+7. Aplicar dano fisico.
+8. Aplicar dano magico.
+9. Curar personagem.
+10. Ver historico.
 
 ## Estado atual
 

@@ -44,6 +44,13 @@ from src.systems.narrative import (
     record_narrative_result,
 )
 from src.systems.staff import list_staff_spells
+from src.ui.formatting import (
+    format_character_list,
+    format_character_sheet,
+    format_history,
+    format_manual_test_script,
+    format_title,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -95,21 +102,23 @@ def run_terminal() -> None:
                 manage_characters_menu(storage)
             elif option == "18":
                 heal_character_prompt(storage)
+            elif option == "19":
+                show_manual_test_script()
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
             else:
-                print("Opcao invalida.")
+                print("Opcao invalida. Digite um numero listado no menu.")
         except (ValueError, RuntimeError) as error:
-            print(f"Erro: {error}")
+            print(f"\nNao consegui concluir essa acao: {error}")
 
 
 def print_menu() -> None:
-    print("\nMAGIK Engine")
-    print("1 - Ver ficha do Miko")
+    print(format_title("MAGIK Engine"))
+    print("1 - Ver ficha do Miko (atalho)")
     print("2 - Rolar dado")
-    print("3 - Usar Roleta Sombria da Ikisaki")
-    print("4 - Usar Cajado Sombrio")
+    print("3 - Usar Roleta Sombria da Ikisaki (especial do Miko)")
+    print("4 - Usar Cajado Sombrio (especial do Miko)")
     print("5 - Registrar acontecimento")
     print("6 - Ver historico")
     print("7 - Realizar teste 1d20")
@@ -124,6 +133,7 @@ def print_menu() -> None:
     print("16 - Gerar pressagio da maldicao")
     print("17 - Gerenciar personagens")
     print("18 - Curar personagem")
+    print("19 - Roteiro de teste manual")
     print("0 - Sair")
 
 
@@ -137,7 +147,7 @@ def ensure_initial_data(storage: JSONStorage) -> None:
 
 def show_miko(storage: JSONStorage) -> None:
     miko = load_or_create_miko(storage)
-    print_json(miko.to_dict())
+    print(format_character_sheet(miko))
 
 
 def roll_dice_prompt(storage: JSONStorage) -> None:
@@ -154,6 +164,7 @@ def roll_dice_prompt(storage: JSONStorage) -> None:
 
 
 def use_ikisaki_prompt(storage: JSONStorage) -> None:
+    print(format_title("Sistema especial do Miko Meu: Ikisaki"))
     miko = load_or_create_miko(storage)
     result = use_shadow_roulette(miko)
     narrative = narrate_ikisaki_roulette(result)
@@ -172,8 +183,9 @@ def use_ikisaki_prompt(storage: JSONStorage) -> None:
 
 
 def use_staff_prompt(storage: JSONStorage) -> None:
+    print(format_title("Sistema especial do Miko Meu: Cajado Sombrio"))
     spells = list_staff_spells()
-    print("\nMagias do Cajado Sombrio")
+    print("\nMagias disponiveis")
     for index, spell in enumerate(spells, start=1):
         print(f"{index} - {spell.name}")
 
@@ -203,21 +215,12 @@ def register_event_prompt(storage: JSONStorage) -> None:
 
     event = register_event(storage, character, action, result, notes)
     print("Acontecimento registrado:")
-    print_json(event.to_dict())
+    print(format_history([event], limit=1))
 
 
 def show_history(storage: JSONStorage) -> None:
     events = list_events(storage)
-    if not events:
-        print("Nenhum acontecimento registrado ainda.")
-        return
-
-    for event in events:
-        print(f"\n[{event.timestamp}] {event.character}")
-        print(f"Acao: {event.action}")
-        print(f"Resultado: {event.result}")
-        if event.notes:
-            print(f"Observacoes: {event.notes}")
+    print(format_history(events, limit=10))
 
 
 def perform_skill_test_prompt(storage: JSONStorage) -> None:
@@ -438,7 +441,7 @@ def ask_optional_location_type() -> str | None:
 
 def manage_characters_menu(storage: JSONStorage) -> None:
     while True:
-        print("\nGerenciar personagens")
+        print(format_title("Gerenciar personagens"))
         print("1 - Listar personagens")
         print("2 - Ver ficha de personagem")
         print("3 - Criar personagem")
@@ -449,44 +452,45 @@ def manage_characters_menu(storage: JSONStorage) -> None:
         print("8 - Adicionar observacao")
         print("0 - Voltar")
 
-        option = input("Escolha uma opcao: ").strip()
-        if option == "1":
-            show_character_list(storage)
-        elif option == "2":
-            character = select_character(storage)
-            print_json(character.to_dict())
-        elif option == "3":
-            create_character_prompt(storage)
-        elif option == "4":
-            character = select_character(storage)
-            new_health = read_int("Nova vida atual: ")
-            print_json(update_character_health(storage, character.id, new_health).to_dict())
-        elif option == "5":
-            character = select_character(storage)
-            new_armor = read_int("Nova armadura: ")
-            print_json(update_character_armor(storage, character.id, new_armor).to_dict())
-        elif option == "6":
-            character = select_character(storage)
-            item = input("Equipamento para adicionar: ").strip()
-            print_json(add_equipment(storage, character.id, item).to_dict())
-        elif option == "7":
-            character = select_character(storage)
-            item = input("Equipamento para remover: ").strip()
-            print_json(remove_equipment(storage, character.id, item).to_dict())
-        elif option == "8":
-            character = select_character(storage)
-            note = input("Observacao: ").strip()
-            print_json(add_note(storage, character.id, note).to_dict())
-        elif option == "0":
-            break
-        else:
-            print("Opcao invalida.")
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                show_character_list(storage)
+            elif option == "2":
+                character = select_character(storage)
+                print(format_character_sheet(character))
+            elif option == "3":
+                create_character_prompt(storage)
+            elif option == "4":
+                character = select_character(storage)
+                new_health = read_int("Nova vida atual: ")
+                print(format_character_sheet(update_character_health(storage, character.id, new_health)))
+            elif option == "5":
+                character = select_character(storage)
+                new_armor = read_int("Nova armadura: ")
+                print(format_character_sheet(update_character_armor(storage, character.id, new_armor)))
+            elif option == "6":
+                character = select_character(storage)
+                item = input("Equipamento para adicionar: ").strip()
+                print(format_character_sheet(add_equipment(storage, character.id, item)))
+            elif option == "7":
+                character = select_character(storage)
+                item = input("Equipamento para remover: ").strip()
+                print(format_character_sheet(remove_equipment(storage, character.id, item)))
+            elif option == "8":
+                character = select_character(storage)
+                note = input("Observacao: ").strip()
+                print(format_character_sheet(add_note(storage, character.id, note)))
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
 
 
 def show_character_list(storage: JSONStorage) -> None:
-    print("\nPersonagens")
-    for character in list_characters(storage):
-        print(f"- {character.id}: {character.name} ({character.character_class})")
+    print(format_character_list(list_characters(storage)))
 
 
 def create_character_prompt(storage: JSONStorage) -> None:
@@ -502,7 +506,7 @@ def create_character_prompt(storage: JSONStorage) -> None:
         armor=armor,
     )
     print("Personagem criado:")
-    print_json(character.to_dict())
+    print(format_character_sheet(character))
 
 
 def heal_character_prompt(storage: JSONStorage) -> None:
@@ -523,17 +527,15 @@ def heal_character_prompt(storage: JSONStorage) -> None:
 
 def select_character(storage: JSONStorage, allow_skip: bool = False):
     characters = list_characters(storage)
-    print("\nEscolha um personagem")
-    if allow_skip:
-        print("0 - Nenhum/Narrador")
-    for index, character in enumerate(characters, start=1):
-        print(f"{index} - {character.name} [{character.id}]")
+    print(format_character_list(characters, allow_skip=allow_skip))
 
     selected = input("Opcao ou id: ").strip()
     if allow_skip and (not selected or selected == "0"):
         return None
     if selected.isdigit() and 1 <= int(selected) <= len(characters):
         return characters[int(selected) - 1]
+    if selected.isdigit():
+        raise ValueError("Numero de personagem fora da lista.")
     return get_character(storage, selected)
 
 
@@ -547,6 +549,10 @@ def select_character_name_for_history(storage: JSONStorage) -> str:
         return "Narrador"
     character = select_character(storage, allow_skip=True)
     return character.name if character is not None else "Narrador"
+
+
+def show_manual_test_script() -> None:
+    print(format_manual_test_script())
 
 
 def read_int(prompt: str) -> int:
