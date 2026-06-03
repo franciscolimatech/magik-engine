@@ -68,6 +68,26 @@ from src.core.npcs import (
 )
 from src.core.session import list_events, register_event
 from src.core.skill_tests import list_test_types, perform_skill_test
+from src.core.turn_combat import (
+    add_character_to_combat,
+    add_creature_to_combat,
+    add_participant_status,
+    advance_turn,
+    apply_magical_damage_to_participant,
+    apply_physical_damage_to_participant,
+    create_combat,
+    default_combat_data,
+    finish_combat,
+    get_combat,
+    get_current_participant,
+    heal_participant,
+    list_combats,
+    register_free_combat_action,
+    remove_participant_status,
+    roll_initiative,
+    start_combat,
+    use_participant_ability,
+)
 from src.core.world import default_world_state, list_locations
 from src.storage.json_storage import JSONStorage
 from src.systems.ikisaki import use_shadow_roulette
@@ -89,6 +109,9 @@ from src.systems.staff import list_staff_spells
 from src.ui.formatting import (
     format_character_list,
     format_character_sheet,
+    format_combat_list,
+    format_combat_summary,
+    format_current_participant,
     format_creature_list,
     format_creature_sheet,
     format_history,
@@ -154,6 +177,8 @@ def run_terminal() -> None:
                 manage_creatures_menu(storage)
             elif option == "21":
                 manage_npcs_menu(storage)
+            elif option == "22":
+                manage_combats_menu(storage)
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
@@ -186,6 +211,7 @@ def print_menu() -> None:
     print("19 - Roteiro de teste manual")
     print("20 - Gerenciar criaturas/inimigos")
     print("21 - Gerenciar NPCs")
+    print("22 - Gerenciar combates")
     print("0 - Sair")
 
 
@@ -197,6 +223,7 @@ def ensure_initial_data(storage: JSONStorage) -> None:
     storage.read_json("world_state.json", default=default_world_state())
     storage.read_json("creatures.json", default=default_creature_data())
     storage.read_json("npcs.json", default=default_npc_data())
+    storage.read_json("combats.json", default=default_combat_data())
 
 
 def show_miko(storage: JSONStorage) -> None:
@@ -945,6 +972,123 @@ def select_npc(storage: JSONStorage):
     if selected.isdigit():
         raise ValueError("Numero de NPC fora da lista.")
     return get_npc(storage, selected)
+
+
+def manage_combats_menu(storage: JSONStorage) -> None:
+    while True:
+        print(format_title("Gerenciar combates"))
+        print("1 - Listar combates")
+        print("2 - Criar combate")
+        print("3 - Ver combate")
+        print("4 - Adicionar personagem")
+        print("5 - Adicionar criatura")
+        print("6 - Rolar iniciativa")
+        print("7 - Iniciar combate")
+        print("8 - Ver turno atual")
+        print("9 - Avancar turno")
+        print("10 - Aplicar dano fisico")
+        print("11 - Aplicar dano magico")
+        print("12 - Curar participante")
+        print("13 - Adicionar status")
+        print("14 - Remover status")
+        print("15 - Usar habilidade")
+        print("16 - Registrar acao narrativa")
+        print("17 - Finalizar combate")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                print(format_combat_list(list_combats(storage)))
+            elif option == "2":
+                combat = create_combat(storage, input("Nome do combate: ").strip())
+                print(format_combat_summary(combat))
+            elif option == "3":
+                print(format_combat_summary(select_combat(storage)))
+            elif option == "4":
+                combat = select_combat(storage)
+                character = select_character(storage)
+                print(format_combat_summary(add_character_to_combat(storage, combat.id, character.id)))
+            elif option == "5":
+                combat = select_combat(storage)
+                creature = select_creature(storage)
+                print(format_combat_summary(add_creature_to_combat(storage, combat.id, creature.id)))
+            elif option == "6":
+                combat = select_combat(storage)
+                print(format_combat_summary(roll_initiative(storage, combat.id)))
+            elif option == "7":
+                combat = select_combat(storage)
+                print(format_combat_summary(start_combat(storage, combat.id)))
+            elif option == "8":
+                combat = select_combat(storage)
+                current = get_current_participant(combat)
+                print(format_title("Turno atual"))
+                print(format_current_participant(combat))
+                print(f"Participante: {current.name}")
+            elif option == "9":
+                combat = select_combat(storage)
+                print(format_combat_summary(advance_turn(storage, combat.id)))
+            elif option == "10":
+                combat, participant_id = select_combat_participant(storage)
+                damage = read_int("Dano fisico: ")
+                print(format_combat_summary(apply_physical_damage_to_participant(storage, combat.id, participant_id, damage)))
+            elif option == "11":
+                combat, participant_id = select_combat_participant(storage)
+                damage = read_int("Dano magico: ")
+                print(format_combat_summary(apply_magical_damage_to_participant(storage, combat.id, participant_id, damage)))
+            elif option == "12":
+                combat, participant_id = select_combat_participant(storage)
+                amount = read_int("Cura: ")
+                print(format_combat_summary(heal_participant(storage, combat.id, participant_id, amount)))
+            elif option == "13":
+                combat, participant_id = select_combat_participant(storage)
+                status = input("Status: ").strip()
+                print(format_combat_summary(add_participant_status(storage, combat.id, participant_id, status)))
+            elif option == "14":
+                combat, participant_id = select_combat_participant(storage)
+                status = input("Status: ").strip()
+                print(format_combat_summary(remove_participant_status(storage, combat.id, participant_id, status)))
+            elif option == "15":
+                combat, participant_id = select_combat_participant(storage)
+                ability_id = input("Id da habilidade: ").strip()
+                print(format_combat_summary(use_participant_ability(storage, combat.id, participant_id, ability_id)))
+            elif option == "16":
+                combat = select_combat(storage)
+                description = input("Acao narrativa: ").strip()
+                print(format_combat_summary(register_free_combat_action(storage, combat.id, description)))
+            elif option == "17":
+                combat = select_combat(storage)
+                print(format_combat_summary(finish_combat(storage, combat.id)))
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def select_combat(storage: JSONStorage):
+    combats = list_combats(storage)
+    print(format_combat_list(combats))
+    selected = input("Opcao ou id: ").strip()
+    if selected.isdigit() and 1 <= int(selected) <= len(combats):
+        return combats[int(selected) - 1]
+    if selected.isdigit():
+        raise ValueError("Numero de combate fora da lista.")
+    return get_combat(storage, selected)
+
+
+def select_combat_participant(storage: JSONStorage):
+    combat = select_combat(storage)
+    print(format_combat_summary(combat, history_limit=2))
+    selected = input("Participante por numero, id ou referencia: ").strip()
+    if selected.isdigit() and 1 <= int(selected) <= len(combat.participants):
+        participant_id = combat.participants[int(selected) - 1].id
+    elif selected.isdigit():
+        raise ValueError("Numero de participante fora da lista.")
+    else:
+        participant_id = selected
+    return combat, participant_id
 
 
 def read_int(prompt: str) -> int:

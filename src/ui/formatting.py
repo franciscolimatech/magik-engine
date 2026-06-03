@@ -6,6 +6,7 @@ from src.core.character import Character
 from src.core.creatures import Creature
 from src.core.npcs import NPC
 from src.core.session import SessionEvent
+from src.core.turn_combat import Combat, CombatParticipant
 
 
 LINE = "-" * 48
@@ -134,6 +135,60 @@ def format_npc_sheet(npc: NPC) -> str:
             f"Tags: {_format_list(npc.tags)}",
             f"Observacoes: {_format_list(npc.notes)}",
         ]
+    )
+
+
+def format_combat_list(combats: list[Combat]) -> str:
+    lines = [format_title("Combates")]
+    if not combats:
+        lines.append("Nenhum combate cadastrado.")
+        return "\n".join(lines)
+    for index, combat in enumerate(combats, start=1):
+        lines.append(
+            f"{index} - {combat.name} ({combat.status}) [{combat.id}] "
+            f"rodada {combat.current_round}, participantes {len(combat.participants)}"
+        )
+    return "\n".join(lines)
+
+
+def format_combat_summary(combat: Combat, history_limit: int = 5) -> str:
+    lines = [
+        format_title(f"Combate: {combat.name}"),
+        f"Id: {combat.id}",
+        f"Status: {combat.status}",
+        f"Rodada atual: {combat.current_round}",
+        f"Turno atual: {format_current_participant(combat)}",
+        format_title("Ordem de turnos"),
+    ]
+    if combat.participants:
+        lines.extend(format_participant_line(participant) for participant in combat.participants)
+    else:
+        lines.append("Nenhum participante.")
+
+    lines.append(format_title(f"Historico do combate - ultimos {min(history_limit, len(combat.combat_history))} eventos"))
+    if combat.combat_history:
+        lines.extend(combat.combat_history[-history_limit:])
+    else:
+        lines.append("Nenhum evento de combate registrado.")
+    return "\n".join(lines)
+
+
+def format_current_participant(combat: Combat) -> str:
+    if not combat.participants:
+        return "nenhum participante"
+    if combat.current_turn >= len(combat.participants):
+        return "turno fora da lista"
+    participant = combat.participants[combat.current_turn]
+    return format_participant_line(participant)
+
+
+def format_participant_line(participant: CombatParticipant) -> str:
+    alive = "vivo" if participant.is_alive and participant.current_health > 0 else "fora de combate"
+    status = _format_list(participant.status)
+    return (
+        f"{participant.name} [{participant.id}] - {participant.type}, "
+        f"vida {participant.current_health}/{participant.max_health}, armadura {participant.armor}, "
+        f"iniciativa {participant.initiative}, {alive}, status: {status}"
     )
 
 

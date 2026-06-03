@@ -51,6 +51,7 @@ O terminal mostra o menu:
 19 - Roteiro de teste manual
 20 - Gerenciar criaturas/inimigos
 21 - Gerenciar NPCs
+22 - Gerenciar combates
 0 - Sair
 ```
 
@@ -174,6 +175,41 @@ Os arquivos `data/creatures.json` e `data/npcs.json` sao criados
 automaticamente se nao existirem ou estiverem vazios. Nenhuma criatura oficial
 foi inventada nesta etapa.
 
+## Combate por turnos
+
+A v0.6 adiciona um organizador de combate por turnos. Ele nao decide as acoes
+do mestre nem substitui a narrativa: apenas controla ordem, rodada,
+participantes, dano, cura, status e historico do combate.
+
+O combate basico em `src/core/combat.py` continua sendo a regra mecanica pura:
+escolha de dado de dano, dano fisico contra armadura, dano magico ignorando
+armadura e cura. O combate por turnos usa essas mesmas regras para organizar
+uma cena com varios participantes.
+
+Use `22 - Gerenciar combates` para:
+
+- criar e listar combates;
+- adicionar personagens e criaturas;
+- rolar iniciativa;
+- iniciar combate;
+- ver o turno atual;
+- avancar turno e rodada;
+- aplicar dano fisico ou magico;
+- curar participante;
+- alterar status;
+- usar habilidade geral de personagem;
+- registrar uma acao narrativa livre;
+- finalizar combate.
+
+A ordem de turnos e baseada na iniciativa. Ao avancar turno, o sistema pula
+participantes mortos ou com vida 0. Quando chega ao fim da lista, uma nova
+rodada comeca.
+
+Quando dano ou cura acontece dentro de um combate, o estado do participante e
+atualizado no combate e, quando ha referencia segura, tambem na ficha original
+do personagem ou criatura. A acao tambem e registrada no historico do combate e
+no historico geral da sessao.
+
 ## Uso no terminal
 
 As opcoes principais foram pensadas para uso rapido durante a mesa:
@@ -187,6 +223,7 @@ As opcoes principais foram pensadas para uso rapido durante a mesa:
 - `19`: roteiro recomendado para teste manual.
 - `20`: gerenciamento de criaturas, inimigos e chefes.
 - `21`: gerenciamento de NPCs sociais e narrativos.
+- `22`: organizador de combate por turnos.
 
 Quando uma acao envolve personagem, o terminal lista os personagens disponiveis
 com numero, nome, classe e id. Voce pode escolher pelo numero ou pelo id.
@@ -214,6 +251,7 @@ Esta versao inclui:
 - Suporte a multiplos personagens, com Miko Meu como ficha inicial.
 - Sistema geral de habilidades por personagem.
 - Sistema de criaturas/inimigos e NPCs separado de personagens jogadores.
+- Combate por turnos com iniciativa, rodada, turno atual, dano, cura, status e historico.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.
