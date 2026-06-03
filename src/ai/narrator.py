@@ -244,12 +244,31 @@ def explain_ikisaki_roulette(
     tone: str | None = None,
     client: AIClient | None = None,
     config: AIConfig | None = None,
+    context: dict[str, Any] | None = None,
 ) -> NarrationResult:
-    context = _roulette_context(roulette_result, tone)
+    roulette_context = _roulette_context(roulette_result, tone)
+    prompt_context = dict(context or {})
+    prompt_context.update(
+        {
+            "personagem": prompt_context.get("personagem", "Miko Meu"),
+            "roleta_sombria": roulette_context,
+            "resultado_mecanico": {
+                **_dict_value(prompt_context.get("resultado_mecanico")),
+                "personagem": "Miko Meu",
+                "numero": roulette_context["numero"],
+                "elo": roulette_context["elo"],
+                "preco": roulette_context["preco"],
+                "divida_de_corrente": roulette_context["divida_gerada"],
+                "risco_switch_sombrio": roulette_context["risco_switch"],
+            },
+            "tom": prompt_context.get("tom") or roulette_context.get("tom"),
+            "tom_desejado": prompt_context.get("tom_desejado") or roulette_context.get("tom"),
+        }
+    )
     return _generate_or_fallback(
         "Narrar resultado da Roleta Sombria usando apenas dados mecanicos fornecidos.",
-        context,
-        lambda: narrate_ikisaki_roulette(_roulette_namespace(context), tone=context.get("tom")).text,
+        prompt_context,
+        lambda: narrate_ikisaki_roulette(_roulette_namespace(roulette_context), tone=prompt_context.get("tom")).text,
         client,
         config,
     )
@@ -445,11 +464,16 @@ def _fallback_event_text(context: dict[str, Any]) -> str:
 
 
 def _fallback_summary(context: dict[str, Any]) -> str:
-    title = context.get("titulo") or context.get("sessao") or "sessao"
-    events = context.get("eventos") or context.get("events") or []
+    session = _dict_value(context.get("sessao"))
+    title = context.get("titulo") or session.get("titulo") or context.get("sessao") or "sessao"
+    events = context.get("eventos") or context.get("events") or session.get("eventos") or context.get("eventos_recentes") or []
     if isinstance(events, list) and events:
         return f"Resumo local de {title}: " + " ".join(str(event) for event in events[:5])
     return f"Resumo local de {title}: sem eventos detalhados informados."
+
+
+def _dict_value(value: Any) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
 
 
 def _roulette_context(roulette_result: Any, tone: str | None) -> dict[str, Any]:

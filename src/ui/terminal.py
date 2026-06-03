@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from src.ai.context_builder import build_narrative_context, summarize_narrative_context
 from src.ai.narrator import (
     check_ai_status,
     describe_consequence,
@@ -1397,40 +1398,67 @@ def manage_ai_narrator_menu(storage: JSONStorage) -> None:
             if option == "1":
                 show_ai_status()
             elif option == "2":
-                result = generate_short_narration(read_ai_context("Evento"))
+                context = enrich_ai_context_from_selection(storage, read_ai_context("Evento"), "evento")
+                result = generate_short_narration(context)
                 show_ai_result_and_maybe_record(storage, result, "Narracao de evento")
             elif option == "3":
-                context = read_ai_context("Consequencia")
-                context["preco"] = input_with_default("Preco narrativo", "leve")
+                base_context = read_ai_context("Consequencia")
+                base_context["preco"] = input_with_default("Preco narrativo", "leve")
+                context = enrich_ai_context_from_selection(
+                    storage,
+                    base_context,
+                    "consequencia",
+                    {"preco": base_context["preco"]},
+                )
                 result = describe_consequence(context)
                 show_ai_result_and_maybe_record(storage, result, "Narracao de consequencia")
             elif option == "4":
-                context = read_ai_context("Roleta Sombria")
-                context["number"] = read_int("Numero sorteado: ")
-                context["link_name"] = input("Nome do elo: ").strip()
-                context["price_level"] = input_with_default("Preco", "leve")
-                context["repeated_number"] = read_bool("Numero repetido?", False)
-                context["chain_debt_generated"] = read_bool("Gerou Divida de Corrente?", False)
-                context["switch_risk"] = read_bool("Ha risco de Switch Sombrio?", False)
-                result = explain_ikisaki_roulette(context, tone=context.get("tom"))
+                base_context = read_ai_context("Roleta Sombria")
+                roulette_result = {
+                    "number": read_int("Numero sorteado: "),
+                    "link_name": input("Nome do elo: ").strip(),
+                    "price_level": input_with_default("Preco", "leve"),
+                    "repeated_number": read_bool("Numero repetido?", False),
+                    "chain_debt_generated": read_bool("Gerou Divida de Corrente?", False),
+                    "switch_risk": read_bool("Ha risco de Switch Sombrio?", False),
+                }
+                base_context.update(roulette_result)
+                context = enrich_ai_context_from_selection(
+                    storage,
+                    base_context,
+                    "roleta_sombria",
+                    {
+                        "personagem": "Miko Meu",
+                        "numero": roulette_result["number"],
+                        "elo": roulette_result["link_name"],
+                        "preco": roulette_result["price_level"],
+                        "divida_de_corrente": roulette_result["chain_debt_generated"],
+                        "risco_switch_sombrio": roulette_result["switch_risk"],
+                    },
+                )
+                result = explain_ikisaki_roulette(roulette_result, tone=context.get("tom"), context=context)
                 show_ai_result_and_maybe_record(storage, result, "Narracao da Roleta Sombria")
             elif option == "5":
-                context = read_ai_context("Fala de NPC")
-                context["npc"] = input("Nome do NPC: ").strip() or "NPC"
+                base_context = read_ai_context("Fala de NPC")
+                base_context["npc"] = input("Nome do NPC: ").strip() or "NPC"
+                context = enrich_ai_context_from_selection(
+                    storage,
+                    base_context,
+                    "fala_npc",
+                    {"npc": base_context["npc"]},
+                )
                 result = generate_npc_line(context)
                 show_ai_result_and_maybe_record(storage, result, "Fala de NPC")
             elif option == "6":
                 campaign_session = select_any_campaign_session(storage)
-                context = {
-                    "sessao": campaign_session.title,
-                    "titulo": campaign_session.title,
-                    "eventos": campaign_session.events,
-                    "combates": campaign_session.combats,
-                    "recompensas": campaign_session.rewards,
-                    "consequencias": campaign_session.consequences,
-                    "observacoes": campaign_session.notes,
-                    "tom": ask_optional_tone(),
-                }
+                context = build_narrative_context(
+                    storage,
+                    campaign_id=campaign_session.campaign_id,
+                    session_id=campaign_session.id,
+                    mechanical_result={"tipo": "resumo_sessao"},
+                    tone=ask_optional_tone(),
+                )
+                print(summarize_narrative_context(context))
                 result = summarize_session(context)
                 show_ai_result_and_maybe_record(storage, result, "Resumo de sessao", campaign_session.id)
             elif option == "7":
@@ -1462,6 +1490,56 @@ def read_ai_context(title: str) -> dict:
         "tom": ask_optional_tone(),
         "observacoes": input("Observacoes/limites do mestre: ").strip(),
     }
+
+
+def enrich_ai_context_from_selection(
+    storage: JSONStorage,
+    base_context: dict,
+    task_type: str,
+    mechanical_result: dict | None = None,
+) -> dict:
+    campaign_id, session_id = ask_ai_context_selection(storage)
+    resolved_mechanical = build_ai_mechanical_result(base_context, task_type, mechanical_result)
+    context = build_narrative_context(
+        storage,
+        campaign_id=campaign_id,
+        session_id=session_id,
+        mechanical_result=resolved_mechanical,
+        tone=base_context.get("tom"),
+        local=base_context.get("local"),
+        action=base_context.get("acao"),
+        observations=base_context.get("observacoes"),
+        extra=base_context,
+    )
+    print(summarize_narrative_context(context))
+    return context
+
+
+def ask_ai_context_selection(storage: JSONStorage) -> tuple[str | None, str | None]:
+    if not read_bool("Usar contexto de campanha/sessao?", False):
+        return None, None
+    campaign = select_campaign(storage)
+    if read_bool("Escolher sessao da campanha?", True):
+        session = select_campaign_session(storage, campaign.id)
+        return campaign.id, session.id
+    return campaign.id, None
+
+
+def build_ai_mechanical_result(
+    base_context: dict,
+    task_type: str,
+    extra_result: dict | None = None,
+) -> dict:
+    result = {
+        "tipo": task_type,
+        "personagem": base_context.get("personagem"),
+        "acao": base_context.get("acao"),
+        "resultado": base_context.get("resultado"),
+        "observacoes": base_context.get("observacoes"),
+    }
+    if extra_result:
+        result.update(extra_result)
+    return {key: value for key, value in result.items() if value not in (None, "", [], {})}
 
 
 def show_ai_status() -> None:

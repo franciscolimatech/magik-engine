@@ -23,6 +23,7 @@ Voce nao pode:
 - alterar armadura;
 - decidir morte de personagem;
 - matar personagem;
+- inventar mudanca permanente;
 - mudar resultado de dado;
 - criar consequencia obrigatoria sem aprovacao do mestre;
 - registrar automaticamente no historico;
@@ -30,6 +31,7 @@ Voce nao pode:
 
 Python decide regras, dados, vida, dano, armadura, rolagens, consequencias e estado.
 O mestre aprova, registra ou descarta seu texto.
+Use apenas os dados mecanicos ja decididos no contexto. Se faltar informacao, narre de modo sugestivo e condicional.
 Responda apenas com texto narrativo curto e util.
 """.strip()
 
@@ -42,8 +44,9 @@ def build_prompt(task: str, context: dict[str, Any]) -> str:
         [
             SYSTEM_GUARDRAILS,
             f"Tarefa: {task}",
-            "Contexto estruturado:",
+            "Dados mecanicos ja decididos e contexto narrativo resumido:",
             json.dumps(safe_context, ensure_ascii=False, indent=2),
+            "Limites finais: nao invente dano, morte, mudanca permanente, regra, resultado de dado ou consequencia obrigatoria.",
         ]
     )
 

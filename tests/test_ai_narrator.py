@@ -5,6 +5,7 @@ from urllib.error import HTTPError, URLError
 import pytest
 
 from src.ai import ollama_client
+from src.ai.context_builder import build_narrative_context
 from src.ai.narrator import (
     AIConfig,
     NarrationResult,
@@ -20,7 +21,15 @@ from src.ai.narrator import (
 )
 import src.ai.narrator as narrator_module
 from src.ai.prompts import SYSTEM_GUARDRAILS, build_prompt, sanitize_context
+from src.core.campaigns import (
+    add_campaign_location,
+    add_session_event,
+    add_session_participant,
+    create_campaign,
+    create_campaign_session,
+)
 from src.core.character import create_miko_meu
+from src.storage.memory import MemoryStorage
 from src.systems.narrative import reset_narrative_memory
 from src.systems.ikisaki import use_shadow_roulette
 
@@ -102,8 +111,24 @@ def test_prompt_guardrails_keep_ai_out_of_game_state() -> None:
     assert "alterar armadura" in guardrails
     assert "mudar resultado de dado" in guardrails
     assert "matar personagem" in guardrails
+    assert "mudanca permanente" in guardrails
     assert "registrar automaticamente" in guardrails
     assert "mestre aprova" in guardrails
+
+
+def test_prompt_with_context_keeps_rule_limits_explicit() -> None:
+    prompt = build_prompt(
+        "Narrar evento",
+        {
+            "resultado_mecanico": {"rolagem": 18, "resultado": "sucesso"},
+            "tom_desejado": "sombrio",
+            "campanha": {"nome": "Ecos de Ikisaki"},
+        },
+    )
+
+    assert "Dados mecanicos ja decididos" in prompt
+    assert "Ecos de Ikisaki" in prompt
+    assert "nao invente dano, morte, mudanca permanente, regra" in prompt
 
 
 def test_generate_with_fake_ai_returns_structured_output() -> None:
@@ -289,6 +314,50 @@ def test_explain_ikisaki_roulette_uses_mechanical_result() -> None:
     assert result.source == "fallback"
     assert "numero 10" in result.text
     assert "Corrente do Ultimo Elo" in result.text
+
+
+def test_explain_ikisaki_roulette_prompt_includes_campaign_context() -> None:
+    storage = MemoryStorage()
+    campaign = create_campaign(storage, "Ikisaki Final", "A corrente volta a cobrar.")
+    add_campaign_location(storage, campaign.id, "Santuario do Elo")
+    session = create_campaign_session(storage, campaign.id, "Divida de Corrente", number=7)
+    add_session_participant(storage, session.id, "Miko Meu")
+    add_session_event(storage, session.id, "Miko ouviu o elo responder.")
+    context = build_narrative_context(
+        storage,
+        session_id=session.id,
+        mechanical_result={"resultado": "roleta ja resolvida"},
+        tone="sombrio",
+    )
+    client = FakeClient("A corrente descreve o preco.")
+    roulette_context = {
+        "number": 10,
+        "link_name": "Corrente do Ultimo Elo",
+        "price_level": "grave",
+        "repeated_number": False,
+        "chain_debt_generated": True,
+        "switch_risk": True,
+    }
+
+    result = explain_ikisaki_roulette(
+        roulette_context,
+        tone="sombrio",
+        context=context,
+        client=client,
+        config=AIConfig(enabled=True, api_key="fake-key"),
+    )
+
+    assert result.source == "ai"
+    assert "Miko Meu" in client.prompt
+    assert "numero" in client.prompt
+    assert "10" in client.prompt
+    assert "Corrente do Ultimo Elo" in client.prompt
+    assert "grave" in client.prompt
+    assert "divida_de_corrente" in client.prompt
+    assert "risco_switch_sombrio" in client.prompt
+    assert "Ikisaki Final" in client.prompt
+    assert "Divida de Corrente" in client.prompt
+    assert "Santuario do Elo" in client.prompt
 
 
 def test_quick_ai_test_uses_fallback_without_key_and_does_not_register() -> None:
