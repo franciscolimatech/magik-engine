@@ -14,6 +14,29 @@ def test_json_storage_creates_missing_file_with_default_data(tmp_path) -> None:
     assert storage.path_for("sessions.json").exists()
 
 
+def test_session_event_without_campaign_links_remains_compatible(tmp_path) -> None:
+    from src.core.session import list_events
+
+    storage = JSONStorage(tmp_path)
+    storage.write_json(
+        "sessions.json",
+        [
+            {
+                "timestamp": "2026-06-03T00:00:00-03:00",
+                "character": "Narrador",
+                "action": "Evento antigo",
+                "result": "Ainda carrega.",
+                "notes": "",
+            }
+        ],
+    )
+
+    event = list_events(storage)[0]
+
+    assert event.campaign_id is None
+    assert event.campaign_session_id is None
+
+
 def test_creatures_json_is_created_automatically(tmp_path) -> None:
     storage = JSONStorage(tmp_path)
 

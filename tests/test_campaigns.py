@@ -9,6 +9,7 @@ from src.core.campaigns import (
     add_session_combat,
     add_session_consequence,
     add_session_event,
+    add_session_participant,
     add_session_reward,
     create_campaign,
     create_campaign_session,
@@ -18,12 +19,15 @@ from src.core.campaigns import (
     list_campaign_sessions,
     list_campaigns,
     pause_campaign,
+    register_campaign_session_event,
     remove_campaign_player_character,
     resolve_campaign_pending_task,
     start_campaign_session,
     update_session_summary,
 )
+from src.core.session import list_events
 from src.storage.memory import MemoryStorage
+from src.ui.formatting import format_campaign_session_summary, format_history
 
 
 def make_storage() -> MemoryStorage:
@@ -31,6 +35,7 @@ def make_storage() -> MemoryStorage:
         {
             "campaigns.json": {"campaigns": []},
             "campaign_sessions.json": {"campaign_sessions": []},
+            "sessions.json": [],
         }
     )
 
@@ -160,6 +165,38 @@ def test_associate_combat_to_session() -> None:
     updated = add_session_combat(storage, session.id, "emboscada")
 
     assert updated.combats == ["emboscada"]
+    assert "Combates: emboscada" in format_campaign_session_summary(updated)
+
+
+def test_add_participant_to_session() -> None:
+    storage = make_storage()
+    campaign = create_campaign(storage, "Sombras")
+    session = create_campaign_session(storage, campaign.id, "Inicio")
+
+    updated = add_session_participant(storage, session.id, "miko-meu")
+
+    assert updated.participants == ["miko-meu"]
+
+
+def test_register_general_history_event_linked_to_campaign_session() -> None:
+    storage = make_storage()
+    campaign = create_campaign(storage, "Sombras")
+    session = create_campaign_session(storage, campaign.id, "Inicio")
+
+    event = register_campaign_session_event(
+        storage,
+        session.id,
+        character="Miko Meu",
+        action="Investigou",
+        result="Encontrou um sinal.",
+    )
+    events = list_events(storage)
+
+    assert event.campaign_id == campaign.id
+    assert event.campaign_session_id == session.id
+    assert events[0].campaign_id == campaign.id
+    assert "sessao=" in format_history(events)
+    assert "Miko Meu: Investigou - Encontrou um sinal." in get_session_events(storage, session.id)
 
 
 def test_add_reward_and_consequence() -> None:
@@ -182,3 +219,9 @@ def test_update_session_summary() -> None:
     updated = update_session_summary(storage, session.id, "Resumo atualizado.")
 
     assert updated.summary == "Resumo atualizado."
+
+
+def get_session_events(storage: MemoryStorage, session_id: str) -> list[str]:
+    from src.core.campaigns import get_campaign_session
+
+    return get_campaign_session(storage, session_id).events

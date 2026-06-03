@@ -63,6 +63,12 @@ def format_history(events: list[SessionEvent], limit: int = 10) -> str:
         )
         if event.notes:
             lines.append(f"Observacoes: {event.notes}")
+        if event.campaign_id or event.campaign_session_id:
+            lines.append(
+                "Vinculos: "
+                f"campanha={event.campaign_id or 'nenhuma'}, "
+                f"sessao={event.campaign_session_id or 'nenhuma'}"
+            )
         lines.append(LINE)
     return "\n".join(lines).rstrip()
 

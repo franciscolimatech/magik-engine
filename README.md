@@ -53,6 +53,7 @@ O terminal mostra o menu:
 21 - Gerenciar NPCs
 22 - Gerenciar combates
 23 - Gerenciar campanhas e sessoes
+24 - IA Narradora Auxiliar
 0 - Sair
 ```
 
@@ -224,13 +225,62 @@ recompensas, consequencias, pendencias criadas/resolvidas e observacoes.
 Use `23 - Gerenciar campanhas e sessoes` para criar campanhas, pausar,
 finalizar, adicionar participantes, registrar pendencias e gerenciar as sessoes.
 Dentro do submenu de sessoes, voce pode criar sessoes, iniciar/finalizar,
-adicionar eventos, associar combates existentes, registrar recompensas,
-consequencias, pendencias e atualizar o resumo.
+adicionar participantes, adicionar eventos, associar combates existentes,
+registrar recompensas, consequencias, pendencias e atualizar o resumo.
 
 O historico geral em `data/sessions.json` continua existindo para registros
 cronologicos livres. Campanhas e sessoes organizadas ficam em
 `data/campaigns.json` e `data/campaign_sessions.json`. Eventos antigos nao sao
-migrados automaticamente, mas continuam compativeis.
+migrados automaticamente, mas continuam compativeis. Novos registros do
+historico geral podem ser vinculados opcionalmente a uma campanha e sessao
+especifica.
+
+## IA Narradora Auxiliar
+
+A v0.8 adiciona uma camada opcional de IA para narração. Ela pode ajudar a
+narrar eventos, criar falas de NPC, descrever consequencias, resumir sessoes,
+melhorar textos e explicar resultados da Roleta Sombria com base nos dados que
+o Python ja calculou.
+
+Regra principal:
+
+- Python decide regras, dados, vida, dano, armadura, rolagens, consequencias e
+  estado.
+- IA apenas narra, sugere e organiza texto.
+- O mestre aprova, registra ou descarta.
+
+Para ativar, configure a variavel de ambiente:
+
+```powershell
+$env:OPENAI_API_KEY="sua-chave"
+```
+
+Opcionalmente:
+
+```powershell
+$env:OPENAI_MODEL="gpt-4o-mini"
+$env:MAGIK_AI_ENABLED="true"
+```
+
+Nao coloque chaves no codigo, nao salve em JSON e nao commite `.env`. O projeto
+inclui `.env` e `.env.local` no `.gitignore`.
+
+Se `OPENAI_API_KEY` nao existir, ou se a chamada falhar, o MAGIK Engine continua
+funcionando normalmente usando o motor narrativo local sem IA. Nesse caso, a
+saida vem marcada como `fallback`.
+
+Use `24 - IA Narradora Auxiliar` no terminal para:
+
+- verificar status da IA;
+- narrar evento;
+- narrar consequencia;
+- narrar resultado da Roleta Sombria;
+- gerar fala de NPC;
+- resumir sessao.
+
+Nenhum texto gerado pela IA e registrado automaticamente. O terminal pergunta
+se o mestre quer registrar ou descartar, e permite vincular o registro a uma
+campanha/sessao quando fizer sentido.
 
 ## Uso no terminal
 
@@ -247,6 +297,7 @@ As opcoes principais foram pensadas para uso rapido durante a mesa:
 - `21`: gerenciamento de NPCs sociais e narrativos.
 - `22`: organizador de combate por turnos.
 - `23`: organizacao de campanhas e sessoes.
+- `24`: narracao auxiliar opcional com IA ou fallback local.
 
 Quando uma acao envolve personagem, o terminal lista os personagens disponiveis
 com numero, nome, classe e id. Voce pode escolher pelo numero ou pelo id.
@@ -276,6 +327,7 @@ Esta versao inclui:
 - Sistema de criaturas/inimigos e NPCs separado de personagens jogadores.
 - Combate por turnos com iniciativa, rodada, turno atual, dano, cura, status e historico.
 - Campanhas e sessoes organizadas, com combates associados e pendencias.
+- IA Narradora Auxiliar opcional, com fallback local sem IA.
 - Roleta Sombria: Dez Elos de Ikisaki.
 - Cajado Sombrio como alternativa quando Ikisaki estiver indisponivel.
 - Registro e consulta de historico de sessao em `data/sessions.json`.

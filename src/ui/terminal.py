@@ -5,6 +5,15 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from src.ai.narrator import (
+    check_ai_status,
+    describe_consequence,
+    explain_ikisaki_roulette,
+    generate_npc_line,
+    generate_short_narration,
+    improve_event_text,
+    summarize_session,
+)
 from src.core.abilities import (
     ABILITY_TYPES,
     ABILITY_USES,
@@ -29,6 +38,7 @@ from src.core.campaigns import (
     add_session_created_pending_task,
     add_session_event,
     add_session_note,
+    add_session_participant,
     add_session_resolved_pending_task,
     add_session_reward,
     create_campaign,
@@ -42,6 +52,7 @@ from src.core.campaigns import (
     list_campaign_sessions,
     list_campaigns,
     pause_campaign,
+    register_campaign_session_event,
     resolve_campaign_pending_task,
     start_campaign_session,
     update_session_summary,
@@ -213,6 +224,8 @@ def run_terminal() -> None:
                 manage_combats_menu(storage)
             elif option == "23":
                 manage_campaigns_menu(storage)
+            elif option == "24":
+                manage_ai_narrator_menu(storage)
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
@@ -247,6 +260,7 @@ def print_menu() -> None:
     print("21 - Gerenciar NPCs")
     print("22 - Gerenciar combates")
     print("23 - Gerenciar campanhas e sessoes")
+    print("24 - IA Narradora Auxiliar")
     print("0 - Sair")
 
 
@@ -331,7 +345,11 @@ def register_event_prompt(storage: JSONStorage) -> None:
     if not action or not result:
         raise ValueError("Acao e resultado sao obrigatorios.")
 
-    event = register_event(storage, character, action, result, notes)
+    if ask_link_campaign_session():
+        campaign_session = select_any_campaign_session(storage)
+        event = register_campaign_session_event(storage, campaign_session.id, character, action, result, notes)
+    else:
+        event = register_event(storage, character, action, result, notes)
     print("Acontecimento registrado:")
     print(format_history([event], limit=1))
 
@@ -1239,13 +1257,14 @@ def manage_campaign_sessions_menu(storage: JSONStorage, campaign_id: str) -> Non
         print("4 - Iniciar sessao")
         print("5 - Finalizar sessao")
         print("6 - Adicionar evento")
-        print("7 - Associar combate")
-        print("8 - Adicionar recompensa")
-        print("9 - Adicionar consequencia")
-        print("10 - Adicionar pendencia criada")
-        print("11 - Adicionar pendencia resolvida")
-        print("12 - Adicionar observacao")
-        print("13 - Atualizar resumo")
+        print("7 - Adicionar participante")
+        print("8 - Associar combate")
+        print("9 - Adicionar recompensa")
+        print("10 - Adicionar consequencia")
+        print("11 - Adicionar pendencia criada")
+        print("12 - Adicionar pendencia resolvida")
+        print("13 - Adicionar observacao")
+        print("14 - Atualizar resumo")
         print("0 - Voltar")
 
         try:
@@ -1275,41 +1294,47 @@ def manage_campaign_sessions_menu(storage: JSONStorage, campaign_id: str) -> Non
                 register_event(storage, "Sessao", "Evento adicionado a sessao", event)
             elif option == "7":
                 session = select_campaign_session(storage, campaign_id)
+                character = select_character(storage)
+                updated = add_session_participant(storage, session.id, character.id)
+                print(format_campaign_session_summary(updated))
+                register_event(storage, "Sessao", "Participante adicionado a sessao", character.name)
+            elif option == "8":
+                session = select_campaign_session(storage, campaign_id)
                 combat = select_combat(storage)
                 updated = add_session_combat(storage, session.id, combat.id)
                 print(format_campaign_session_summary(updated))
                 register_event(storage, "Sessao", "Combate associado a sessao", combat.name)
-            elif option == "8":
+            elif option == "9":
                 session = select_campaign_session(storage, campaign_id)
                 reward = input("Recompensa: ").strip()
                 updated = add_session_reward(storage, session.id, reward)
                 print(format_campaign_session_summary(updated))
                 register_event(storage, "Sessao", "Recompensa adicionada", reward)
-            elif option == "9":
+            elif option == "10":
                 session = select_campaign_session(storage, campaign_id)
                 consequence = input("Consequencia: ").strip()
                 updated = add_session_consequence(storage, session.id, consequence)
                 print(format_campaign_session_summary(updated))
                 register_event(storage, "Sessao", "Consequencia adicionada", consequence)
-            elif option == "10":
+            elif option == "11":
                 session = select_campaign_session(storage, campaign_id)
                 task = input("Pendencia criada: ").strip()
                 updated = add_session_created_pending_task(storage, session.id, task)
                 print(format_campaign_session_summary(updated))
                 register_event(storage, "Sessao", "Pendencia criada na sessao", task)
-            elif option == "11":
+            elif option == "12":
                 session = select_campaign_session(storage, campaign_id)
                 task = input("Pendencia resolvida: ").strip()
                 updated = add_session_resolved_pending_task(storage, session.id, task)
                 print(format_campaign_session_summary(updated))
                 register_event(storage, "Sessao", "Pendencia resolvida na sessao", task)
-            elif option == "12":
+            elif option == "13":
                 session = select_campaign_session(storage, campaign_id)
                 note = input("Observacao: ").strip()
                 updated = add_session_note(storage, session.id, note)
                 print(format_campaign_session_summary(updated))
                 register_event(storage, "Sessao", "Observacao adicionada a sessao", note)
-            elif option == "13":
+            elif option == "14":
                 session = select_campaign_session(storage, campaign_id)
                 summary = input("Resumo: ").strip()
                 updated = update_session_summary(storage, session.id, summary)
@@ -1342,6 +1367,114 @@ def select_campaign_session(storage: JSONStorage, campaign_id: str):
     if selected.isdigit():
         raise ValueError("Numero de sessao fora da lista.")
     return get_campaign_session(storage, selected)
+
+
+def select_any_campaign_session(storage: JSONStorage):
+    campaign = select_campaign(storage)
+    return select_campaign_session(storage, campaign.id)
+
+
+def ask_link_campaign_session() -> bool:
+    answer = input("Associar a uma sessao de campanha? [s/N]: ").strip().casefold()
+    return answer in {"s", "sim", "y", "yes"}
+
+
+def manage_ai_narrator_menu(storage: JSONStorage) -> None:
+    while True:
+        print(format_title("IA Narradora Auxiliar"))
+        print("1 - Verificar status da IA")
+        print("2 - Narrar evento")
+        print("3 - Narrar consequencia")
+        print("4 - Narrar resultado da Roleta Sombria")
+        print("5 - Gerar fala de NPC")
+        print("6 - Resumir sessao")
+        print("0 - Voltar")
+
+        try:
+            option = input("Escolha uma opcao: ").strip()
+            if option == "1":
+                print_json(check_ai_status())
+            elif option == "2":
+                result = generate_short_narration(read_ai_context("Evento"))
+                show_ai_result_and_maybe_record(storage, result, "Narracao de evento")
+            elif option == "3":
+                context = read_ai_context("Consequencia")
+                context["preco"] = input_with_default("Preco narrativo", "leve")
+                result = describe_consequence(context)
+                show_ai_result_and_maybe_record(storage, result, "Narracao de consequencia")
+            elif option == "4":
+                context = read_ai_context("Roleta Sombria")
+                context["number"] = read_int("Numero sorteado: ")
+                context["link_name"] = input("Nome do elo: ").strip()
+                context["price_level"] = input_with_default("Preco", "leve")
+                context["repeated_number"] = read_bool("Numero repetido?", False)
+                context["chain_debt_generated"] = read_bool("Gerou Divida de Corrente?", False)
+                context["switch_risk"] = read_bool("Ha risco de Switch Sombrio?", False)
+                result = explain_ikisaki_roulette(context, tone=context.get("tom"))
+                show_ai_result_and_maybe_record(storage, result, "Narracao da Roleta Sombria")
+            elif option == "5":
+                context = read_ai_context("Fala de NPC")
+                context["npc"] = input("Nome do NPC: ").strip() or "NPC"
+                result = generate_npc_line(context)
+                show_ai_result_and_maybe_record(storage, result, "Fala de NPC")
+            elif option == "6":
+                campaign_session = select_any_campaign_session(storage)
+                context = {
+                    "sessao": campaign_session.title,
+                    "titulo": campaign_session.title,
+                    "eventos": campaign_session.events,
+                    "combates": campaign_session.combats,
+                    "recompensas": campaign_session.rewards,
+                    "consequencias": campaign_session.consequences,
+                    "observacoes": campaign_session.notes,
+                    "tom": ask_optional_tone(),
+                }
+                result = summarize_session(context)
+                show_ai_result_and_maybe_record(storage, result, "Resumo de sessao", campaign_session.id)
+            elif option == "0":
+                break
+            else:
+                print("Opcao invalida. Digite um numero listado no menu.")
+        except ValueError as error:
+            print(f"\nNao consegui concluir essa acao: {error}")
+
+
+def read_ai_context(title: str) -> dict:
+    print(format_title(title))
+    return {
+        "personagem": input("Personagem/Narrador: ").strip() or "Narrador",
+        "local": input("Local opcional: ").strip(),
+        "acao": input("Acao/evento: ").strip(),
+        "resultado": input("Resultado mecanico ja decidido: ").strip(),
+        "tom": ask_optional_tone(),
+        "observacoes": input("Observacoes/limites do mestre: ").strip(),
+    }
+
+
+def show_ai_result_and_maybe_record(
+    storage: JSONStorage,
+    result,
+    action: str,
+    campaign_session_id: str | None = None,
+) -> None:
+    source_label = "IA" if result.source == "ai" else "fallback local"
+    print(format_title(f"Resultado gerado por {source_label}"))
+    print(result.text)
+    if result.source == "fallback":
+        print("\nIA indisponivel ou falhou; narracao gerada localmente.")
+    decision = input("Registrar no historico? [s/N]: ").strip().casefold()
+    if decision not in {"s", "sim", "y", "yes"}:
+        print("Resultado descartado; nada foi salvo no historico.")
+        return
+
+    if campaign_session_id:
+        event = register_campaign_session_event(storage, campaign_session_id, "Narrador", action, result.text)
+    elif ask_link_campaign_session():
+        campaign_session = select_any_campaign_session(storage)
+        event = register_campaign_session_event(storage, campaign_session.id, "Narrador", action, result.text)
+    else:
+        event = register_event(storage, "Narrador", action, result.text)
+    print(format_history([event], limit=1))
 
 
 def read_int(prompt: str) -> int:

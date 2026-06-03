@@ -284,10 +284,40 @@ def add_session_event(storage: JsonStore, session_id: str, event: str) -> Campai
     return update_campaign_session(storage, session)
 
 
+def add_session_participant(storage: JsonStore, session_id: str, participant_id: str) -> CampaignSession:
+    session = get_campaign_session(storage, session_id)
+    _add_unique(session.participants, participant_id)
+    return update_campaign_session(storage, session)
+
+
 def add_session_combat(storage: JsonStore, session_id: str, combat_id: str) -> CampaignSession:
     session = get_campaign_session(storage, session_id)
     _add_unique(session.combats, combat_id)
     return update_campaign_session(storage, session)
+
+
+def register_campaign_session_event(
+    storage: JsonStore,
+    session_id: str,
+    character: str,
+    action: str,
+    result: str,
+    notes: str = "",
+) -> Any:
+    from src.core.session import register_event
+
+    session = get_campaign_session(storage, session_id)
+    event = register_event(
+        storage,
+        character=character,
+        action=action,
+        result=result,
+        notes=notes,
+        campaign_id=session.campaign_id,
+        campaign_session_id=session.id,
+    )
+    add_session_event(storage, session.id, f"{character}: {action} - {result}")
+    return event
 
 
 def add_session_reward(storage: JsonStore, session_id: str, reward: str) -> CampaignSession:

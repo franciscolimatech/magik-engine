@@ -16,6 +16,8 @@ class SessionEvent:
     action: str
     result: str
     notes: str = ""
+    campaign_id: str | None = None
+    campaign_session_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -29,6 +31,8 @@ class SessionEvent:
                 action=str(data["action"]),
                 result=str(data["result"]),
                 notes=str(data.get("notes", "")),
+                campaign_id=data.get("campaign_id"),
+                campaign_session_id=data.get("campaign_session_id"),
             )
         except KeyError as exc:
             raise ValueError(f"Acontecimento de sessao invalido: campo ausente {exc}.") from exc
@@ -40,6 +44,8 @@ def register_event(
     action: str,
     result: str,
     notes: str = "",
+    campaign_id: str | None = None,
+    campaign_session_id: str | None = None,
 ) -> SessionEvent:
     event = SessionEvent(
         timestamp=datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -47,6 +53,8 @@ def register_event(
         action=_required_text(action, "acao"),
         result=_required_text(result, "resultado"),
         notes=notes.strip(),
+        campaign_id=campaign_id,
+        campaign_session_id=campaign_session_id,
     )
     events = storage.read_json("sessions.json", default=[])
     if not isinstance(events, list):
