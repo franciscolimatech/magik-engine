@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any
 
-from src.storage.json_storage import JSONStorage
+from src.storage.types import JsonStore
 
 
 @dataclass(frozen=True)
@@ -22,17 +22,20 @@ class SessionEvent:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "SessionEvent":
-        return cls(
-            timestamp=str(data["timestamp"]),
-            character=str(data["character"]),
-            action=str(data["action"]),
-            result=str(data["result"]),
-            notes=str(data.get("notes", "")),
-        )
+        try:
+            return cls(
+                timestamp=str(data["timestamp"]),
+                character=str(data["character"]),
+                action=str(data["action"]),
+                result=str(data["result"]),
+                notes=str(data.get("notes", "")),
+            )
+        except KeyError as exc:
+            raise ValueError(f"Acontecimento de sessao invalido: campo ausente {exc}.") from exc
 
 
 def register_event(
-    storage: JSONStorage,
+    storage: JsonStore,
     character: str,
     action: str,
     result: str,
@@ -40,17 +43,30 @@ def register_event(
 ) -> SessionEvent:
     event = SessionEvent(
         timestamp=datetime.now().astimezone().isoformat(timespec="seconds"),
-        character=character,
-        action=action,
-        result=result,
-        notes=notes,
+        character=_required_text(character, "personagem"),
+        action=_required_text(action, "acao"),
+        result=_required_text(result, "resultado"),
+        notes=notes.strip(),
     )
     events = storage.read_json("sessions.json", default=[])
+    if not isinstance(events, list):
+        raise ValueError("sessions.json deve conter uma lista de acontecimentos.")
     events.append(event.to_dict())
     storage.write_json("sessions.json", events)
     return event
 
 
-def list_events(storage: JSONStorage) -> list[SessionEvent]:
+def list_events(storage: JsonStore) -> list[SessionEvent]:
     events = storage.read_json("sessions.json", default=[])
+    if not isinstance(events, list):
+        raise ValueError("sessions.json deve conter uma lista de acontecimentos.")
+    if not all(isinstance(event, dict) for event in events):
+        raise ValueError("Cada acontecimento em sessions.json deve ser um objeto JSON.")
     return [SessionEvent.from_dict(event) for event in events]
+
+
+def _required_text(value: str, field_name: str) -> str:
+    cleaned = value.strip()
+    if not cleaned:
+        raise ValueError(f"O campo {field_name} e obrigatorio.")
+    return cleaned

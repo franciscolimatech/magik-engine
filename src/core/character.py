@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from src.storage.types import JsonStore
+
 
 @dataclass
 class Character:
@@ -28,8 +30,13 @@ class Character:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Character":
         payload = dict(data)
-        payload["character_class"] = payload.pop("class")
-        return cls(**payload)
+        try:
+            payload["character_class"] = payload.pop("class")
+            return cls(**payload)
+        except KeyError as exc:
+            raise ValueError(f"Ficha de personagem invalida: campo ausente {exc}.") from exc
+        except TypeError as exc:
+            raise ValueError("Ficha de personagem invalida: campos inesperados ou mal formatados.") from exc
 
 
 def create_miko_meu() -> Character:
@@ -54,18 +61,30 @@ def find_character(characters: list[Character], name: str) -> Character | None:
     return next((character for character in characters if character.name.casefold() == normalized), None)
 
 
-def load_characters(storage: Any) -> list[Character]:
+def load_characters(storage: JsonStore) -> list[Character]:
     default_data = {"characters": [create_miko_meu().to_dict()]}
     data = storage.read_json("characters.json", default=default_data)
-    characters_data = data.get("characters", []) if isinstance(data, dict) else data
+
+    if isinstance(data, dict):
+        characters_data = data.get("characters", [])
+    elif isinstance(data, list):
+        characters_data = data
+    else:
+        raise ValueError("characters.json deve conter uma lista ou um objeto com a chave 'characters'.")
+
+    if not isinstance(characters_data, list):
+        raise ValueError("A chave 'characters' deve conter uma lista de fichas.")
+    if not all(isinstance(character_data, dict) for character_data in characters_data):
+        raise ValueError("Cada ficha em characters.json deve ser um objeto JSON.")
+
     return [Character.from_dict(character_data) for character_data in characters_data]
 
 
-def save_characters(storage: Any, characters: list[Character]) -> None:
+def save_characters(storage: JsonStore, characters: list[Character]) -> None:
     storage.write_json("characters.json", {"characters": [character.to_dict() for character in characters]})
 
 
-def load_or_create_miko(storage: Any) -> Character:
+def load_or_create_miko(storage: JsonStore) -> Character:
     characters = load_characters(storage)
     miko = find_character(characters, "Miko Meu")
     if miko is None:
@@ -73,3 +92,16 @@ def load_or_create_miko(storage: Any) -> Character:
         characters.append(miko)
         save_characters(storage, characters)
     return miko
+
+
+def save_character(storage: JsonStore, character: Character) -> None:
+    characters = load_characters(storage)
+    existing_index = next(
+        (index for index, current in enumerate(characters) if current.name.casefold() == character.name.casefold()),
+        None,
+    )
+    if existing_index is None:
+        characters.append(character)
+    else:
+        characters[existing_index] = character
+    save_characters(storage, characters)

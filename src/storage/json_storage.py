@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -19,12 +20,16 @@ class JSONStorage:
         path = self.path_for(filename)
         if not path.exists():
             self.write_json(filename, default)
-            return default
+            return deepcopy(default)
         if path.stat().st_size == 0:
-            return default
+            self.write_json(filename, default)
+            return deepcopy(default)
 
-        with path.open("r", encoding="utf-8") as file:
-            return json.load(file)
+        try:
+            with path.open("r", encoding="utf-8") as file:
+                return json.load(file)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Arquivo JSON invalido: {path}") from exc
 
     def write_json(self, filename: str, data: Any) -> None:
         path = self.path_for(filename)

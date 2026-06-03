@@ -9,19 +9,22 @@ consequencias e historico da sessao.
 - Python 3.11+
 - pytest para testes
 
-## Como instalar
+## Como instalar em um clone limpo
 
-```bash
+```powershell
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Como rodar
 
-```bash
+```powershell
 python main.py
 ```
+
+Se os arquivos em `data/` nao existirem, o MAGIK Engine cria automaticamente
+`characters.json`, `sessions.json` e `world_state.json` com os dados iniciais.
 
 O terminal mostra o menu:
 
@@ -37,16 +40,16 @@ O terminal mostra o menu:
 
 ## Como testar
 
-```bash
-pytest
+```powershell
+python -m pytest
 ```
 
 ## Estrutura
 
-- `src/core`: regras centrais, como dados, personagem e sessoes.
-- `src/systems`: sistemas especificos, como Ikisaki, maldicoes e Cajado Sombrio.
-- `src/storage`: adaptadores de armazenamento JSON e memoria.
-- `src/ui`: interface simples via terminal.
+- `src/core`: modelos e regras centrais, como dados, personagem e sessoes.
+- `src/systems`: sistemas especificos de jogo, como Ikisaki, maldicoes e Cajado Sombrio.
+- `src/storage`: contratos e adaptadores de armazenamento JSON ou memoria.
+- `src/ui`: entrada e saida da interface simples via terminal.
 - `data`: arquivos JSON usados como armazenamento inicial.
 - `tests`: testes basicos com pytest.
 

@@ -5,9 +5,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.core.character import create_miko_meu, load_or_create_miko, save_characters
+from src.core.combat import apply_physical_damage, roll_damage
+from src.core.character import create_miko_meu, load_or_create_miko, save_character, save_characters
+from src.core.currency import PedralumeMoney, convert_pedralume
 from src.core.dice import roll_dice
+from src.core.magic import apply_magic_damage
 from src.core.session import list_events, register_event
+from src.core.skill_tests import list_test_types, perform_skill_test
+from src.core.world import default_world_state, list_locations
 from src.storage.json_storage import JSONStorage
 from src.systems.ikisaki import use_shadow_roulette
 from src.systems.staff import list_staff_spells
@@ -38,6 +43,16 @@ def run_terminal() -> None:
                 register_event_prompt(storage)
             elif option == "6":
                 show_history(storage)
+            elif option == "7":
+                perform_skill_test_prompt(storage)
+            elif option == "8":
+                simulate_physical_damage_prompt(storage)
+            elif option == "9":
+                simulate_magical_damage_prompt(storage)
+            elif option == "10":
+                show_pedralume_prompt()
+            elif option == "11":
+                show_world_locations(storage)
             elif option == "0":
                 print("Saindo do MAGIK Engine. Boa sessao.")
                 break
@@ -55,6 +70,11 @@ def print_menu() -> None:
     print("4 - Usar Cajado Sombrio")
     print("5 - Registrar acontecimento")
     print("6 - Ver historico")
+    print("7 - Realizar teste 1d20")
+    print("8 - Simular dano fisico")
+    print("9 - Simular dano magico")
+    print("10 - Ver moeda Pedralume")
+    print("11 - Ver locais conhecidos do mundo")
     print("0 - Sair")
 
 
@@ -62,7 +82,7 @@ def ensure_initial_data(storage: JSONStorage) -> None:
     if not storage.path_for("characters.json").exists():
         save_characters(storage, [create_miko_meu()])
     storage.read_json("sessions.json", default=[])
-    storage.read_json("world_state.json", default={"notes": [], "flags": {}})
+    storage.read_json("world_state.json", default=default_world_state())
 
 
 def show_miko(storage: JSONStorage) -> None:
@@ -85,7 +105,7 @@ def roll_dice_prompt(storage: JSONStorage) -> None:
 def use_ikisaki_prompt(storage: JSONStorage) -> None:
     miko = load_or_create_miko(storage)
     result = use_shadow_roulette(miko)
-    save_characters(storage, [miko])
+    save_character(storage, miko)
 
     print_json(result.to_dict())
     register_event(
@@ -143,6 +163,87 @@ def show_history(storage: JSONStorage) -> None:
         print(f"Resultado: {event.result}")
         if event.notes:
             print(f"Observacoes: {event.notes}")
+
+
+def perform_skill_test_prompt(storage: JSONStorage) -> None:
+    test_types = list_test_types()
+    print("\nTestes oficiais 1d20")
+    for index, test_type in enumerate(test_types, start=1):
+        print(f"{index} - {test_type}")
+
+    selected = input("Escolha um teste: ").strip()
+    if not selected.isdigit() or not 1 <= int(selected) <= len(test_types):
+        raise ValueError("Escolha um teste valido.")
+
+    result = perform_skill_test(test_types[int(selected) - 1])
+    print_json(result.to_dict())
+    register_event(
+        storage,
+        character="Miko Meu",
+        action=f"Realizou teste de {result.test_type}",
+        result=f"{result.roll}: {result.interpretation}",
+    )
+
+
+def simulate_physical_damage_prompt(storage: JSONStorage) -> None:
+    current_health = read_int("Vida atual do alvo: ")
+    armor = read_int("Armadura do alvo: ")
+    damage_roll = roll_damage(current_health)
+    result = apply_physical_damage(current_health=current_health, armor=armor, damage=damage_roll.result)
+    print_json({"damage_roll": damage_roll.to_dict(), "application": result.to_dict()})
+    register_event(
+        storage,
+        character="Simulacao",
+        action="Simulou dano fisico",
+        result=f"d{damage_roll.die_sides}={damage_roll.result}; vida {result.current_health}; armadura {result.armor}",
+        notes=result.description,
+    )
+
+
+def simulate_magical_damage_prompt(storage: JSONStorage) -> None:
+    current_health = read_int("Vida atual do alvo: ")
+    armor = read_int("Armadura do alvo: ")
+    damage_roll = roll_damage(current_health)
+    result = apply_magic_damage(current_health=current_health, armor=armor, damage=damage_roll.result)
+    print_json({"damage_roll": damage_roll.to_dict(), "application": result.to_dict()})
+    register_event(
+        storage,
+        character="Simulacao",
+        action="Simulou dano magico",
+        result=f"d{damage_roll.die_sides}={damage_roll.result}; vida {result.current_health}; armadura {result.armor}",
+        notes=result.description,
+    )
+
+
+def show_pedralume_prompt() -> None:
+    print("\nConversao oficial:")
+    print("10 Pedralumes Brutas = 1 Pedralume Refinada")
+    print("10 Pedralumes Refinadas = 1 Pedralume Pura")
+    print("10 Pedralumes Puras = 1 Pedralume Primordial")
+    print("1 Pedralume Primordial = 1000 Pedralumes Brutas")
+
+    money = PedralumeMoney.from_units(
+        bruta=read_int("Pedralumes Brutas: "),
+        refinada=read_int("Pedralumes Refinadas: "),
+        pura=read_int("Pedralumes Puras: "),
+        primordial=read_int("Pedralumes Primordiais: "),
+    )
+    print(f"Organizado: {money.display()}")
+    print(f"Total em Pedralumes Brutas: {convert_pedralume(money.raw_amount, 'bruta', 'bruta'):g}")
+
+
+def show_world_locations(storage: JSONStorage) -> None:
+    print("\nLocais conhecidos do mundo")
+    for location in list_locations(storage):
+        print(f"- {location.name} ({location.type})")
+
+
+def read_int(prompt: str) -> int:
+    value = input(prompt).strip()
+    try:
+        return int(value)
+    except ValueError as exc:
+        raise ValueError("Digite um numero inteiro valido.") from exc
 
 
 def print_json(data: dict) -> None:
