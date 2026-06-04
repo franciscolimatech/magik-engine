@@ -111,12 +111,17 @@ Na v1.4, NPCs podem ter dialogos com multiplas falas, avancados com
 como mensagens, pressagios e sinais narrativos. Eventos unicos disparam uma vez
 durante a execucao; eventos repetiveis podem aparecer novamente.
 
-Na v1.5, o jogo pode receber contexto opcional de personagem, campanha e sessao
-por variaveis de ambiente. Quando um evento de mapa marcado para historico
-dispara e ha campanha/sessao validas, o texto e registrado como evento
-narrativo com origem `game`, nome do mapa e posicao do player. Sem esse
-contexto, o jogo continua funcionando normalmente e apenas mostra o evento na
-tela. A integracao ainda e experimental e tolerante a ids invalidos.
+Na v1.6, o jogo abre primeiro em um menu inicial retro com as opcoes `Iniciar
+jogo`, `Ver contexto`, `Controles` e `Sair`. Use setas ou `WASD` para navegar
+e `Enter` ou `Espaco` para confirmar. A tela de contexto mostra personagem,
+campanha, sessao e mapa inicial antes de entrar no overworld.
+
+O jogo pode receber contexto opcional de personagem, campanha e sessao por
+variaveis de ambiente. Quando um evento de mapa marcado para historico dispara
+e ha campanha/sessao validas, o texto e registrado como evento narrativo com
+origem `game`, nome do mapa e posicao do player. Sem esse contexto, o jogo
+continua funcionando normalmente e apenas mostra o evento na tela. A integracao
+ainda e experimental e tolerante a ids invalidos.
 
 Exemplo no PowerShell:
 

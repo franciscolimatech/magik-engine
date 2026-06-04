@@ -2,7 +2,7 @@ from src.core.character import Character, create_miko_meu
 from src.core.campaigns import create_campaign, create_campaign_session, get_campaign_session
 from src.core.session import list_events
 from src.game.assets import create_assets
-from src.game.app import load_player_name
+from src.game.app import _max_frames_from_env, load_player_name
 from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
@@ -18,9 +18,28 @@ from src.game.maps.test_map import (
     map_height,
     map_width,
 )
+from src.game.scenes.main_menu import MainMenuScene
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
+
+
+class FakePygame:
+    KEYDOWN = 1
+    K_DOWN = 2
+    K_s = 3
+    K_UP = 4
+    K_w = 5
+    K_RETURN = 6
+    K_SPACE = 7
+    K_ESCAPE = 8
+    K_e = 9
+
+
+class FakeEvent:
+    def __init__(self, key: int) -> None:
+        self.type = FakePygame.KEYDOWN
+        self.key = key
 
 
 def test_test_map_loads_with_player_start() -> None:
@@ -204,6 +223,88 @@ def test_hud_shows_campaign_and_session_labels() -> None:
     hud = HUD(player_name="Miko Meu", campaign_label="Campanha: estrada", session_label="Sessao: estrada-sessao-1")
 
     assert hud._campaign_text() == "Campanha: estrada | Sessao: estrada-sessao-1"
+
+
+def test_main_menu_scene_instantiates_without_error() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    assert scene.selected_option == "Iniciar jogo"
+    assert scene.mode == "main"
+
+
+def test_main_menu_starts_with_start_game_selected() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    assert scene.selected_index == 0
+    assert scene.selected_option == "Iniciar jogo"
+
+
+def test_main_menu_navigation_down_changes_option() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+
+    assert scene.selected_option == "Ver contexto"
+
+
+def test_main_menu_navigation_up_wraps_to_exit() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    scene.handle_event(FakeEvent(FakePygame.K_UP))
+
+    assert scene.selected_option == "Sair"
+
+
+def test_main_menu_start_game_requests_overworld() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.consume_requested_scene() == "overworld"
+    assert scene.consume_requested_scene() is None
+
+
+def test_main_menu_exit_requests_quit() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+    scene.selected_index = 3
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.should_quit is True
+
+
+def test_main_menu_context_lines_show_context() -> None:
+    context = GameContext(
+        character_id="miko-meu",
+        player_name="Miko Meu",
+        campaign_id="estrada",
+        campaign_session_id="estrada-sessao-1",
+        map_name="Mapa de Teste",
+    )
+    scene = MainMenuScene(FakePygame, context)
+
+    lines = scene.context_lines()
+
+    assert "Personagem: Miko Meu" in lines
+    assert "Campaign ID: estrada" in lines
+    assert "Session ID: estrada-sessao-1" in lines
+    assert "Status: Com campanha ativa" in lines
+
+
+def test_main_menu_controls_lines_show_commands() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    lines = scene.controls_lines()
+
+    assert "WASD/setas: mover" in lines
+    assert "E/Espaco: interagir" in lines
+    assert "ESC: voltar/sair" in lines
+
+
+def test_max_frames_from_env_still_supports_smoke_test(monkeypatch) -> None:
+    monkeypatch.setenv("MAGIK_GAME_MAX_FRAMES", "3")
+
+    assert _max_frames_from_env() == 3
 
 
 def test_scene_style_movement_blocks_during_dialogue() -> None:

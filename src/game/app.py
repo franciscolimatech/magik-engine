@@ -18,6 +18,7 @@ def load_player_name(storage: JsonStore | None = None) -> str:
 def run_game(max_frames: int | None = None) -> None:
     import pygame
 
+    from src.game.scenes.main_menu import MainMenuScene
     from src.game.scenes.overworld import OverworldScene
 
     storage = JSONStorage(DATA_PATH)
@@ -27,7 +28,7 @@ def run_game(max_frames: int | None = None) -> None:
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
-    scene = OverworldScene(pygame, context, storage=storage)
+    scene = MainMenuScene(pygame, context)
     running = True
     frame_count = 0
 
@@ -35,10 +36,13 @@ def run_game(max_frames: int | None = None) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False
             else:
                 scene.handle_event(event)
+        if getattr(scene, "should_quit", False):
+            running = False
+        requested_scene = _consume_requested_scene(scene)
+        if requested_scene == "overworld":
+            scene = OverworldScene(pygame, context, storage=storage)
         scene.update()
         scene.draw(screen)
         pygame.display.flip()
@@ -48,6 +52,13 @@ def run_game(max_frames: int | None = None) -> None:
             running = False
 
     pygame.quit()
+
+
+def _consume_requested_scene(scene) -> str | None:
+    consume = getattr(scene, "consume_requested_scene", None)
+    if consume is None:
+        return None
+    return consume()
 
 
 def _max_frames_from_env() -> int | None:

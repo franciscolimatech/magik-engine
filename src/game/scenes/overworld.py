@@ -21,6 +21,7 @@ class OverworldScene(BaseScene):
         self.pygame = pygame
         self.context = context if isinstance(context, GameContext) else GameContext(player_name=context)
         self.storage = storage
+        self.should_quit = False
         self.map_data = load_test_map()
         start_x, start_y = find_player_start(self.map_data)
         self.player = Player(start_x, start_y, name=self.context.player_name)
@@ -41,6 +42,9 @@ class OverworldScene(BaseScene):
 
     def handle_event(self, event) -> None:
         if event.type != self.pygame.KEYDOWN:
+            return
+        if event.key == self.pygame.K_ESCAPE:
+            self.should_quit = True
             return
         if self.dialogue and self.dialogue.visible:
             if event.key in {self.pygame.K_SPACE, self.pygame.K_e, self.pygame.K_RETURN}:
