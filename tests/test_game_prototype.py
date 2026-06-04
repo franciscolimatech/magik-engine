@@ -4,6 +4,7 @@ from src.core.session import list_events
 from src.game.assets import create_assets
 from src.game.app import _max_frames_from_env, load_player_name
 from src.game.camera import Camera
+from src.game.dialogue import DialogueChoice, DialogueOption
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
 from src.game.event_registry import register_map_event
@@ -156,11 +157,76 @@ def test_dialogue_box_keeps_speaker_name() -> None:
     assert dialogue.visible is True
 
 
+def test_dialogue_box_enters_choice_mode_after_messages() -> None:
+    choice = DialogueChoice(
+        "Vai seguir?",
+        (
+            DialogueOption("Sim", "Entao cuidado."),
+            DialogueOption("Nao", "Sabio."),
+        ),
+    )
+    dialogue = DialogueBox("Velho", "Ola.", choice=choice)
+
+    dialogue.advance()
+
+    assert dialogue.mode == "choice"
+    assert dialogue.current_text == "Vai seguir?"
+    assert dialogue.selected_option_index == 0
+
+
+def test_dialogue_choice_navigation_down_and_up() -> None:
+    choice = DialogueChoice(
+        "Escolha.",
+        (
+            DialogueOption("Primeira", "Um."),
+            DialogueOption("Segunda", "Dois."),
+        ),
+    )
+    dialogue = DialogueBox("Velho", "Ola.", choice=choice)
+    dialogue.advance()
+
+    dialogue.handle_key(FakePygame, FakePygame.K_DOWN)
+    assert dialogue.selected_option_index == 1
+
+    dialogue.handle_key(FakePygame, FakePygame.K_UP)
+    assert dialogue.selected_option_index == 0
+
+
+def test_dialogue_confirm_choice_returns_option_and_shows_response() -> None:
+    option = DialogueOption("Sim", "Entao leve cuidado.", tags=("coragem",))
+    dialogue = DialogueBox("Velho", "Ola.", choice=DialogueChoice("Vai?", (option,)))
+    dialogue.advance()
+
+    selected = dialogue.handle_key(FakePygame, FakePygame.K_RETURN)
+
+    assert selected == option
+    assert dialogue.mode == "response"
+    assert dialogue.current_text == "Entao leve cuidado."
+    assert dialogue.chosen_option == option
+
+
+def test_dialogue_closes_after_choice_response() -> None:
+    dialogue = DialogueBox("Velho", "Ola.", choice=DialogueChoice("Vai?", (DialogueOption("Sim", "Va."),)))
+    dialogue.advance()
+    dialogue.confirm_choice()
+
+    dialogue.handle_key(FakePygame, FakePygame.K_SPACE)
+
+    assert dialogue.visible is False
+
+
 def test_npc_accepts_multiple_dialogues() -> None:
     npc = NPC(1, 1, "Velho", ["Primeira fala.", "Segunda fala."])
 
     assert npc.dialogue == "Primeira fala."
     assert npc.dialogues == ("Primeira fala.", "Segunda fala.")
+
+
+def test_npc_can_have_choice() -> None:
+    choice = DialogueChoice("Vai seguir?", (DialogueOption("Sim", "Cuidado."),))
+    npc = NPC(1, 1, "Velho", ["Primeira fala."], choice=choice)
+
+    assert npc.choice == choice
 
 
 def test_dialogue_advances_and_closes_after_last_line() -> None:
@@ -334,6 +400,14 @@ def test_map_event_triggers_when_entering_tile() -> None:
     assert found.can_trigger(triggered) is True
 
 
+def test_map_event_can_have_choice() -> None:
+    choice = DialogueChoice("Tocar a corrente?", (DialogueOption("Tocar", "Ela aperta de volta."),))
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",), choice=choice)
+
+    assert event.choice == choice
+    assert event.choice.options[0].text == "Tocar"
+
+
 def test_unique_map_event_does_not_trigger_twice() -> None:
     event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",), repeatable=False)
     triggered = {"pressagio"}
@@ -475,6 +549,22 @@ def test_map_event_with_campaign_session_registers_in_core_history() -> None:
     assert "origem=game" in history[0].notes
     assert "posicao=(2,1)" in history[0].notes
     assert updated_session.events == ["Miko Meu: Evento de mapa - Algo se mexe."]
+
+
+def test_map_event_registration_includes_selected_option() -> None:
+    storage = MemoryStorage()
+    campaign = create_campaign(storage, "Estrada do Viajante")
+    session = create_campaign_session(storage, campaign.id, "Chegada", number=1)
+    context = GameContext(player_name="Miko Meu", campaign_id=campaign.id, campaign_session_id=session.id)
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",))
+    option = DialogueOption("Tocar", "Ela aperta de volta.", tags=("toque",))
+
+    assert register_map_event(storage, context, event, (2, 1), selected_option=option) is True
+
+    history = list_events(storage)
+    assert "Escolha: Tocar" in history[0].result
+    assert "opcao=Tocar" in history[0].notes
+    assert "opcao_tags=toque" in history[0].notes
 
 
 def test_map_event_marked_not_to_register_is_ignored_even_with_context() -> None:

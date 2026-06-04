@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.game.dialogue import DialogueChoice, DialogueOption
+
 
 TEST_MAP = [
     "################################",
@@ -40,6 +42,7 @@ class MapNpc:
     y: int
     name: str
     dialogues: tuple[str, ...]
+    choice: DialogueChoice | None = None
 
 
 NPC_DIALOGUES = [
@@ -58,11 +61,31 @@ NPC_DIALOGUES = [
         ),
     ),
     (
-        "Velha do Brejo",
+        "Velho de Varnhollow",
         (
             "Voce nao devia andar por aqui tao tarde.",
             "A Floresta do Avesso escuta quem fala sozinho.",
             "E essa corrente no seu braco... ela tambem escuta?",
+        ),
+        DialogueChoice(
+            question="Vai mesmo seguir para a floresta?",
+            options=(
+                DialogueOption(
+                    text="Sim, eu preciso ir.",
+                    response="Entao leve cuidado. E nao prometa o que nao pode cumprir.",
+                    tags=("coragem",),
+                ),
+                DialogueOption(
+                    text="Nao hoje.",
+                    response="Sabio. Ou covarde. As vezes e a mesma coisa.",
+                    tags=("cautela",),
+                ),
+                DialogueOption(
+                    text="Que floresta?",
+                    response="Aquela que aparece quando decide que voce ja esta perdido.",
+                    tags=("misterio",),
+                ),
+            ),
         ),
     ),
 ]
@@ -94,8 +117,10 @@ def find_npcs(map_data: list[str]) -> list[MapNpc]:
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
             if tile == "N":
-                name, dialogues = NPC_DIALOGUES[npc_index % len(NPC_DIALOGUES)]
-                npcs.append(MapNpc(x=x, y=y, name=name, dialogues=dialogues))
+                npc_data = NPC_DIALOGUES[npc_index % len(NPC_DIALOGUES)]
+                name, dialogues = npc_data[0], npc_data[1]
+                choice = npc_data[2] if len(npc_data) > 2 else None
+                npcs.append(MapNpc(x=x, y=y, name=name, dialogues=dialogues, choice=choice))
                 npc_index += 1
     return npcs
 

@@ -25,10 +25,11 @@ class OverworldScene(BaseScene):
         self.map_data = load_test_map()
         start_x, start_y = find_player_start(self.map_data)
         self.player = Player(start_x, start_y, name=self.context.player_name)
-        self.npcs = [NPC(item.x, item.y, item.name, item.dialogues) for item in find_npcs(self.map_data)]
+        self.npcs = [NPC(item.x, item.y, item.name, item.dialogues, choice=item.choice) for item in find_npcs(self.map_data)]
         self.events = load_test_events()
         self.triggered_event_ids: set[str] = set()
         self.dialogue: DialogueBox | None = None
+        self.pending_event: MapEvent | None = None
         self.font = pygame.font.Font(None, 24)
         self.camera = Camera()
         self.hud = HUD(
@@ -47,8 +48,16 @@ class OverworldScene(BaseScene):
             self.should_quit = True
             return
         if self.dialogue and self.dialogue.visible:
-            if event.key in {self.pygame.K_SPACE, self.pygame.K_e, self.pygame.K_RETURN}:
-                self.dialogue.advance()
+            selected_option = self.dialogue.handle_key(self.pygame, event.key)
+            if selected_option is not None and self.pending_event is not None and self.storage is not None:
+                register_map_event(
+                    self.storage,
+                    self.context,
+                    self.pending_event,
+                    (self.player.x, self.player.y),
+                    selected_option=selected_option,
+                )
+                self.pending_event = None
             return
         movement = self._movement_for_key(event.key)
         if movement is not None:
@@ -60,6 +69,7 @@ class OverworldScene(BaseScene):
     def update(self) -> None:
         if self.dialogue and not self.dialogue.visible:
             self.dialogue = None
+            self.pending_event = None
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
     def draw(self, surface) -> None:
@@ -88,7 +98,7 @@ class OverworldScene(BaseScene):
         npc = self.facing_npc()
         if npc is None:
             return False
-        self.dialogue = DialogueBox(npc.name, npc.dialogues)
+        self.dialogue = DialogueBox(npc.name, npc.dialogues, choice=npc.choice)
         return True
 
     def facing_npc(self) -> NPC | None:
@@ -100,8 +110,10 @@ class OverworldScene(BaseScene):
             return None
         if not event.repeatable:
             self.triggered_event_ids.add(event.id)
-        self.dialogue = DialogueBox(event.speaker, event.messages)
-        if self.storage is not None:
+        self.dialogue = DialogueBox(event.speaker, event.messages, choice=event.choice)
+        if event.choice is not None:
+            self.pending_event = event
+        elif self.storage is not None:
             register_map_event(self.storage, self.context, event, (x, y))
         return event
 

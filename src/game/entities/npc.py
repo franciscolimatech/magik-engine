@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable
 
+from src.game.dialogue import DialogueChoice
 from src.game.entities.player import Player
 from src.game.settings import TILE_SIZE
 
@@ -15,6 +16,7 @@ class NPC:
     y: int
     name: str
     dialogues: str | Iterable[str]
+    choice: DialogueChoice | None = None
 
     def __post_init__(self) -> None:
         if isinstance(self.dialogues, str):

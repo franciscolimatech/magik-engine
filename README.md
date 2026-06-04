@@ -116,6 +116,12 @@ jogo`, `Ver contexto`, `Controles` e `Sair`. Use setas ou `WASD` para navegar
 e `Enter` ou `Espaco` para confirmar. A tela de contexto mostra personagem,
 campanha, sessao e mapa inicial antes de entrar no overworld.
 
+Na v1.7, dialogos de NPCs e eventos de mapa podem apresentar escolhas simples.
+Use cima/baixo ou `W`/`S` para escolher uma resposta e confirme com `Enter`,
+`Espaco` ou `E`. As consequencias ainda sao leves e narrativas: mostram uma
+resposta na caixa de dialogo e, quando houver campanha/sessao ativa, eventos de
+mapa registrados no historico incluem a opcao escolhida.
+
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara
 e ha campanha/sessao validas, o texto e registrado como evento narrativo com

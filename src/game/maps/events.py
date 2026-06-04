@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.game.dialogue import DialogueChoice, DialogueOption
+
 
 @dataclass(frozen=True)
 class MapEvent:
@@ -16,6 +18,7 @@ class MapEvent:
     repeatable: bool = False
     registrar_no_historico: bool = True
     tags: tuple[str, ...] = ()
+    choice: DialogueChoice | None = None
 
     def can_trigger(self, triggered_event_ids: set[str]) -> bool:
         return self.repeatable or self.id not in triggered_event_ids
@@ -39,6 +42,26 @@ TEST_EVENTS = [
         repeatable=False,
         registrar_no_historico=True,
         tags=("ikisaki", "pressagio"),
+        choice=DialogueChoice(
+            question="Ikisaki se mexe sozinha. Voce toca a corrente?",
+            options=(
+                DialogueOption(
+                    text="Tocar",
+                    response="A corrente esta fria demais para metal. Por um segundo, ela aperta de volta.",
+                    tags=("toque", "ikisaki"),
+                ),
+                DialogueOption(
+                    text="Ignorar",
+                    response="Ikisaki fica quieta, mas o silencio dela parece uma risada guardada.",
+                    tags=("ignorar",),
+                ),
+                DialogueOption(
+                    text="Falar com ela",
+                    response="Os elos tilintam uma vez, como se aprovassem a falta de bom senso.",
+                    tags=("conversa", "ikisaki"),
+                ),
+            ),
+        ),
     ),
     MapEvent(
         id="old-sign",
