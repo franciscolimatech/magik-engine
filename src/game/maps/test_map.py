@@ -11,7 +11,7 @@ TEST_MAP = [
     "################################",
     "#.....ggg.........N............#",
     "#..######....gggg..............#",
-    "#...........###.........www....#",
+    "#...........###..C......www....#",
     "#....P....gg.?....##....www....#",
     "#..........N............www....#",
     "#..####..................####..#",
@@ -32,8 +32,8 @@ TEST_MAP = [
     "################################",
 ]
 
-OBSTACLE_TILES = {"#", "w"}
-FLOOR_TILES = {".", "g", "?", "P", "N"}
+OBSTACLE_TILES = {"#", "w", "C"}
+FLOOR_TILES = {".", "g", "?", "P", "N", "C"}
 
 
 @dataclass(frozen=True)
@@ -43,6 +43,12 @@ class MapNpc:
     name: str
     dialogues: tuple[str, ...]
     choice: DialogueChoice | None = None
+
+
+@dataclass(frozen=True)
+class MapCreature:
+    x: int
+    y: int
 
 
 NPC_DIALOGUES = [
@@ -123,6 +129,15 @@ def find_npcs(map_data: list[str]) -> list[MapNpc]:
                 npcs.append(MapNpc(x=x, y=y, name=name, dialogues=dialogues, choice=choice))
                 npc_index += 1
     return npcs
+
+
+def find_creatures(map_data: list[str]) -> list[MapCreature]:
+    creatures: list[MapCreature] = []
+    for y, row in enumerate(map_data):
+        for x, tile in enumerate(row):
+            if tile == "C":
+                creatures.append(MapCreature(x=x, y=y))
+    return creatures
 
 
 def in_bounds(map_data: list[str], x: int, y: int) -> bool:

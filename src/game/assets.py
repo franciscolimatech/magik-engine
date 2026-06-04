@@ -15,6 +15,7 @@ class GameAssets:
     water_tile: object
     shadow: object
     npc: object
+    creature: object
     interaction_marker: object
     player: dict[str, list[object]]
 
@@ -25,6 +26,7 @@ def create_assets(pygame) -> GameAssets:
             ".": _floor_tile(pygame, colors.FLOOR),
             "P": _floor_tile(pygame, colors.FLOOR),
             "N": _floor_tile(pygame, colors.FLOOR),
+            "C": _floor_tile(pygame, colors.FLOOR),
             "?": _event_tile(pygame),
             "g": _grass_tile(pygame),
         },
@@ -32,6 +34,7 @@ def create_assets(pygame) -> GameAssets:
         water_tile=_water_tile(pygame),
         shadow=_shadow_sprite(pygame),
         npc=_npc_sprite(pygame),
+        creature=_creature_sprite(pygame),
         interaction_marker=_interaction_marker(pygame),
         player={
             "down": [_player_sprite(pygame, "down", 0), _player_sprite(pygame, "down", 1)],
@@ -115,6 +118,20 @@ def _npc_sprite(pygame):
     pygame.draw.rect(surface, colors.WHITE, (18, 11, 2, 2))
     pygame.draw.rect(surface, (16, 28, 48), (11, 24, 4, 5))
     pygame.draw.rect(surface, (16, 28, 48), (18, 24, 4, 5))
+    return surface
+
+
+def _creature_sprite(pygame):
+    surface = _surface(pygame)
+    pygame.draw.ellipse(surface, (4, 6, 12, 140), (5, 23, 22, 7))
+    pygame.draw.rect(surface, (38, 26, 58), (8, 13, 16, 12))
+    pygame.draw.rect(surface, (69, 44, 108), (10, 9, 12, 9))
+    pygame.draw.rect(surface, (120, 82, 180), (7, 16, 5, 6))
+    pygame.draw.rect(surface, (120, 82, 180), (20, 16, 5, 6))
+    pygame.draw.rect(surface, (222, 233, 255), (12, 13, 2, 2))
+    pygame.draw.rect(surface, (222, 233, 255), (18, 13, 2, 2))
+    pygame.draw.rect(surface, (18, 14, 29), (12, 25, 3, 4))
+    pygame.draw.rect(surface, (18, 14, 29), (18, 25, 3, 4))
     return surface
 
 

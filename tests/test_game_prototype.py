@@ -1,16 +1,19 @@
 from src.core.character import Character, create_miko_meu
 from src.core.campaigns import create_campaign, create_campaign_session, get_campaign_session
+from src.core.creatures import create_creature
 from src.core.session import list_events
 from src.game.assets import create_assets
 from src.game.app import _max_frames_from_env, load_player_name
 from src.game.camera import Camera
 from src.game.dialogue import DialogueChoice, DialogueOption
+from src.game.entities.creature import Creature, default_creature, load_game_creature
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
-from src.game.event_registry import register_map_event
+from src.game.event_registry import register_creature_encounter, register_map_event
 from src.game.game_context import GameContext
 from src.game.maps.events import MapEvent, find_event_at
 from src.game.maps.test_map import (
+    find_creatures,
     find_npcs,
     find_player_start,
     is_obstacle,
@@ -19,6 +22,7 @@ from src.game.maps.test_map import (
     map_height,
     map_width,
 )
+from src.game.scenes.overworld import OverworldScene
 from src.game.scenes.main_menu import MainMenuScene
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
@@ -60,6 +64,13 @@ def test_test_map_loads_npcs() -> None:
     assert npcs[0].dialogues
 
 
+def test_test_map_loads_creatures() -> None:
+    creatures = find_creatures(load_test_map())
+
+    assert len(creatures) >= 1
+    assert load_test_map()[creatures[0].y][creatures[0].x] == "C"
+
+
 def test_generated_assets_include_tiles_and_sprites() -> None:
     import pygame
 
@@ -69,7 +80,9 @@ def test_generated_assets_include_tiles_and_sprites() -> None:
     assert assets.wall_tile.get_size() == (32, 32)
     assert assets.water_tile.get_size() == (32, 32)
     assert assets.floor_tiles["g"].get_size() == (32, 32)
+    assert assets.floor_tiles["C"].get_size() == (32, 32)
     assert assets.npc.get_size() == (32, 32)
+    assert assets.creature.get_size() == (32, 32)
     assert assets.interaction_marker.get_width() > 0
     pygame.quit()
 
@@ -115,6 +128,7 @@ def test_floor_and_grass_are_walkable_but_water_blocks() -> None:
     map_data = [
         "######",
         "#.g?w#",
+        "#..C.#",
         "######",
     ]
 
@@ -122,6 +136,7 @@ def test_floor_and_grass_are_walkable_but_water_blocks() -> None:
     assert is_walkable(map_data, 2, 1) is True
     assert is_walkable(map_data, 3, 1) is True
     assert is_obstacle(map_data, 4, 1) is True
+    assert is_obstacle(map_data, 3, 2) is True
 
 
 def test_player_cannot_leave_map() -> None:
@@ -148,6 +163,113 @@ def test_npc_detects_player_facing_it() -> None:
 
     assert npc.is_in_front_of(player) is True
     assert npc.can_interact(player) is True
+
+
+def test_creature_instantiates_correctly() -> None:
+    creature = Creature(
+        id="sombra",
+        name="Sombra",
+        x=3,
+        y=2,
+        description="Uma sombra baixa.",
+        current_health=8,
+        max_health=10,
+        armor=1,
+        hostile=True,
+    )
+
+    assert creature.id == "sombra"
+    assert creature.name == "Sombra"
+    assert creature.position == (3, 2)
+    assert creature.current_health == 8
+    assert creature.max_health == 10
+    assert creature.armor == 1
+    assert creature.hostile is True
+
+
+def test_default_creature_uses_test_values() -> None:
+    creature = default_creature(4, 5)
+
+    assert creature.name == "Sombra Rastejante"
+    assert creature.position == (4, 5)
+    assert creature.max_health > 0
+
+
+def test_game_creature_loads_core_creature_when_available() -> None:
+    storage = MemoryStorage()
+    create_creature(
+        storage,
+        name="Lodo da Estrada",
+        creature_type="criatura",
+        max_health=18,
+        armor=3,
+        description="Um lodo escuro observa sem olhos.",
+    )
+
+    creature = load_game_creature(storage, 7, 8)
+
+    assert creature.name == "Lodo da Estrada"
+    assert creature.position == (7, 8)
+    assert creature.max_health == 18
+    assert creature.current_health == 18
+    assert creature.armor == 3
+    assert creature.description == "Um lodo escuro observa sem olhos."
+
+
+def test_creature_detects_player_facing_it() -> None:
+    player = Player(2, 2, direction="right")
+    creature = default_creature(3, 2)
+
+    assert creature.can_interact(player) is True
+
+
+def test_creature_encounter_opens_with_options() -> None:
+    creature = default_creature(3, 2)
+    choice = creature.encounter_choice()
+
+    assert choice.question == "O que voce faz?"
+    assert [option.text for option in choice.options] == ["Observar", "Ameacar", "Recuar", "Iniciar combate"]
+
+
+def test_creature_observe_option_shows_response() -> None:
+    creature = default_creature(3, 2)
+    option = creature.encounter_choice().options[0]
+    dialogue = DialogueBox(creature.name, creature.encounter_messages(), choice=creature.encounter_choice())
+    dialogue.advance()
+    dialogue.advance()
+
+    selected = dialogue.confirm_choice()
+
+    assert selected == option
+    assert "Vida:" in dialogue.current_text
+
+
+def test_creature_retreat_option_closes_encounter() -> None:
+    creature = default_creature(3, 2)
+    retreat_option = creature.encounter_choice().options[2]
+    dialogue = DialogueBox(creature.name, creature.encounter_messages(), choice=creature.encounter_choice())
+
+    class SceneLike:
+        storage = None
+        context = GameContext(player_name="Miko Meu")
+        pending_event = None
+        pending_creature = creature
+        dialogue = None
+
+    SceneLike.dialogue = dialogue
+
+    OverworldScene._handle_dialogue_option(SceneLike, retreat_option)
+
+    assert SceneLike.dialogue.visible is False
+    assert SceneLike.pending_creature is None
+
+
+def test_creature_start_combat_option_is_not_implemented_message() -> None:
+    creature = default_creature(3, 2)
+    option = creature.encounter_choice().options[3]
+
+    assert option.text == "Iniciar combate"
+    assert option.response == "Combate visual ainda nao implementado."
 
 
 def test_dialogue_box_keeps_speaker_name() -> None:
@@ -565,6 +687,33 @@ def test_map_event_registration_includes_selected_option() -> None:
     assert "Escolha: Tocar" in history[0].result
     assert "opcao=Tocar" in history[0].notes
     assert "opcao_tags=toque" in history[0].notes
+
+
+def test_creature_encounter_registers_with_campaign_session() -> None:
+    storage = MemoryStorage()
+    campaign = create_campaign(storage, "Estrada do Viajante")
+    session = create_campaign_session(storage, campaign.id, "Chegada", number=1)
+    context = GameContext(player_name="Miko Meu", campaign_id=campaign.id, campaign_session_id=session.id)
+    creature = default_creature(3, 2)
+    option = creature.encounter_choice().options[3]
+
+    assert register_creature_encounter(storage, context, creature, creature.position, selected_option=option) is True
+
+    history = list_events(storage)
+    assert len(history) == 1
+    assert history[0].action == "Encontro com criatura"
+    assert "Escolha: Iniciar combate" in history[0].result
+    assert "tipo=creature_encounter" in history[0].notes
+    assert "opcao=Iniciar combate" in history[0].notes
+
+
+def test_creature_encounter_without_campaign_does_not_break() -> None:
+    storage = MemoryStorage()
+    context = GameContext(player_name="Miko Meu")
+    creature = default_creature(3, 2)
+
+    assert register_creature_encounter(storage, context, creature, creature.position) is False
+    assert list_events(storage) == []
 
 
 def test_map_event_marked_not_to_register_is_ignored_even_with_context() -> None:

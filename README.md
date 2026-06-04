@@ -122,6 +122,15 @@ Use cima/baixo ou `W`/`S` para escolher uma resposta e confirme com `Enter`,
 resposta na caixa de dialogo e, quando houver campanha/sessao ativa, eventos de
 mapa registrados no historico incluem a opcao escolhida.
 
+Na v1.8, o mapa tambem pode mostrar criaturas pelo tile `C`. Ao olhar para uma
+criatura e interagir, o jogo abre um encontro narrativo com as opcoes
+`Observar`, `Ameacar`, `Recuar` e `Iniciar combate`. O combate visual ainda nao
+foi implementado: a opcao apenas informa isso e pode registrar o encontro na
+campanha/sessao ativa. Se `data/creatures.json` tiver criaturas cadastradas, o
+prototipo usa a primeira como base visual; caso contrario, usa a criatura de
+teste `Sombra Rastejante`. Nenhum dado da criatura e salvo ou alterado pelo
+jogo 2D nesta etapa.
+
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara
 e ha campanha/sessao validas, o texto e registrado como evento narrativo com

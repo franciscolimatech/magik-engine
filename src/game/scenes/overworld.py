@@ -4,12 +4,20 @@ from __future__ import annotations
 
 from src.game import assets, colors
 from src.game.camera import Camera
+from src.game.entities.creature import Creature, load_game_creature
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
-from src.game.event_registry import register_map_event
+from src.game.event_registry import register_creature_encounter, register_map_event
 from src.game.game_context import GameContext
 from src.game.maps.events import MapEvent, find_event_at, load_test_events
-from src.game.maps.test_map import find_npcs, find_player_start, load_test_map, map_height, map_width
+from src.game.maps.test_map import (
+    find_creatures,
+    find_npcs,
+    find_player_start,
+    load_test_map,
+    map_height,
+    map_width,
+)
 from src.game.scenes.base import BaseScene
 from src.game.ui.dialogue_box import DialogueBox
 from src.game.ui.hud import HUD
@@ -26,10 +34,12 @@ class OverworldScene(BaseScene):
         start_x, start_y = find_player_start(self.map_data)
         self.player = Player(start_x, start_y, name=self.context.player_name)
         self.npcs = [NPC(item.x, item.y, item.name, item.dialogues, choice=item.choice) for item in find_npcs(self.map_data)]
+        self.creatures = [load_game_creature(storage, item.x, item.y) for item in find_creatures(self.map_data)]
         self.events = load_test_events()
         self.triggered_event_ids: set[str] = set()
         self.dialogue: DialogueBox | None = None
         self.pending_event: MapEvent | None = None
+        self.pending_creature: Creature | None = None
         self.font = pygame.font.Font(None, 24)
         self.camera = Camera()
         self.hud = HUD(
@@ -49,15 +59,8 @@ class OverworldScene(BaseScene):
             return
         if self.dialogue and self.dialogue.visible:
             selected_option = self.dialogue.handle_key(self.pygame, event.key)
-            if selected_option is not None and self.pending_event is not None and self.storage is not None:
-                register_map_event(
-                    self.storage,
-                    self.context,
-                    self.pending_event,
-                    (self.player.x, self.player.y),
-                    selected_option=selected_option,
-                )
-                self.pending_event = None
+            if selected_option is not None:
+                self._handle_dialogue_option(selected_option)
             return
         movement = self._movement_for_key(event.key)
         if movement is not None:
@@ -70,6 +73,7 @@ class OverworldScene(BaseScene):
         if self.dialogue and not self.dialogue.visible:
             self.dialogue = None
             self.pending_event = None
+            self.pending_creature = None
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
     def draw(self, surface) -> None:
@@ -79,8 +83,11 @@ class OverworldScene(BaseScene):
                 screen_x, screen_y = self.camera.tile_to_screen(x, y)
                 assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y, self.assets)
         highlighted_npc = self.facing_npc()
+        highlighted_creature = self.facing_creature()
         for npc in self.npcs:
             npc.draw(self.pygame, surface, self.camera, self.assets, highlighted=npc == highlighted_npc)
+        for creature in self.creatures:
+            creature.draw(self.pygame, surface, self.camera, self.assets, highlighted=creature == highlighted_creature)
         self.player.draw(self.pygame, surface, self.camera, self.assets)
         self.hud.draw(self.pygame, surface, self.font)
         if self.dialogue:
@@ -95,6 +102,10 @@ class OverworldScene(BaseScene):
         return moved
 
     def interact(self) -> bool:
+        creature = self.facing_creature()
+        if creature is not None:
+            self.open_creature_encounter(creature)
+            return True
         npc = self.facing_npc()
         if npc is None:
             return False
@@ -103,6 +114,13 @@ class OverworldScene(BaseScene):
 
     def facing_npc(self) -> NPC | None:
         return next((npc for npc in self.npcs if npc.can_interact(self.player)), None)
+
+    def facing_creature(self) -> Creature | None:
+        return next((creature for creature in self.creatures if creature.can_interact(self.player)), None)
+
+    def open_creature_encounter(self, creature: Creature) -> None:
+        self.pending_creature = creature
+        self.dialogue = DialogueBox(creature.name, creature.encounter_messages(), choice=creature.encounter_choice())
 
     def trigger_event_at(self, x: int, y: int) -> MapEvent | None:
         event = find_event_at(self.events, x, y)
@@ -116,6 +134,29 @@ class OverworldScene(BaseScene):
         elif self.storage is not None:
             register_map_event(self.storage, self.context, event, (x, y))
         return event
+
+    def _handle_dialogue_option(self, selected_option) -> None:
+        if self.pending_event is not None and self.storage is not None:
+            register_map_event(
+                self.storage,
+                self.context,
+                self.pending_event,
+                (self.player.x, self.player.y),
+                selected_option=selected_option,
+            )
+            self.pending_event = None
+        if self.pending_creature is not None:
+            if self.storage is not None:
+                register_creature_encounter(
+                    self.storage,
+                    self.context,
+                    self.pending_creature,
+                    self.pending_creature.position,
+                    selected_option=selected_option,
+                )
+            if selected_option.event == "retreat" and self.dialogue is not None:
+                self.dialogue.close()
+            self.pending_creature = None
 
     def _movement_for_key(self, key: int) -> tuple[int, int] | None:
         keys = self.pygame
