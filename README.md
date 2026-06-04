@@ -148,6 +148,14 @@ restantes. O uso ainda e temporario na `BattleScene`: nao salva o personagem no
 JSON. Se nao houver habilidades, o log mostra `Nenhuma habilidade disponivel`.
 `Observar` mostra nome, descricao, vida, armadura, hostilidade e uma dica curta.
 
+Na v1.11, o jogo 2D deixou de assumir Miko Meu como protagonista fixo. O menu
+inicial agora oferece `Continuar`, `Novo Jogo`, `Carregar Personagem`, `Ver
+Contexto`, `Controles` e `Sair`. `Novo Jogo` cria um personagem simples pelo
+jogo, com nome, classe inicial, vida 25, armadura 0, tag `player-created` e nota
+`Criado pelo jogo 2D`. `Carregar Personagem` lista fichas existentes do core e
+inicia o overworld com a ficha escolhida. Miko Meu continua existindo como
+personagem de exemplo e fallback, mas nao e obrigatorio para jogar.
+
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara
 e ha campanha/sessao validas, o texto e registrado como evento narrativo com
@@ -167,10 +175,15 @@ python -m src.game.app
 Para voltar ao modo sem campanha ativa, remova as variaveis ou abra um novo
 terminal.
 
-O jogo carrega o nome do Miko Meu de `data/characters.json` apenas para exibir
-no canto da tela por padrao. Se outro `MAGIK_GAME_CHARACTER_ID` for informado,
-o nome desse personagem sera exibido quando existir; caso contrario, mostra
-`Aventureiro`. Nenhum personagem e alterado ou salvo pelo prototipo.
+O jogo carrega o personagem definido pelo contexto atual. Por variavel de
+ambiente, `MAGIK_GAME_CHARACTER_ID` ainda pode apontar para `miko-meu` ou outro
+id existente. Pelo menu, o jogador pode carregar qualquer personagem salvo ou
+criar uma ficha simples. Se o id escolhido nao existir, o jogo mostra
+`Aventureiro` como fallback.
+
+Proximos passos planejados para o jogo 2D incluem um criador completo,
+aparencia/origem do personagem e, em etapa futura, apoio de IA para poderes
+especiais sem controlar regras.
 
 O terminal mostra o menu:
 

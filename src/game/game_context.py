@@ -61,6 +61,16 @@ class GameContext:
             return ""
         return f"Sessao: {self.campaign_session_id}"
 
+    def with_character(self, character_id: str, storage: JsonStore | None = None) -> "GameContext":
+        cleaned_id = character_id.strip() or MIKO_ID
+        return GameContext(
+            character_id=cleaned_id,
+            campaign_id=self.campaign_id,
+            campaign_session_id=self.campaign_session_id,
+            map_name=self.map_name,
+            player_name=load_player_name(cleaned_id, storage),
+        )
+
 
 def load_player_name(character_id: str = MIKO_ID, storage: JsonStore | None = None) -> str:
     resolved_storage = storage or JSONStorage(DATA_PATH)

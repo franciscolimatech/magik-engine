@@ -3,7 +3,7 @@ from src.core.campaigns import create_campaign, create_campaign_session, get_cam
 from src.core.creatures import create_creature
 from src.core.session import list_events
 from src.game.assets import create_assets
-from src.game.app import _max_frames_from_env, load_player_name
+from src.game.app import _load_battle_character, _max_frames_from_env, load_player_name
 from src.game.camera import Camera
 from src.game.dialogue import DialogueChoice, DialogueOption
 from src.game.entities.creature import Creature, default_creature, load_game_creature
@@ -40,12 +40,14 @@ class FakePygame:
     K_SPACE = 7
     K_ESCAPE = 8
     K_e = 9
+    K_BACKSPACE = 10
 
 
 class FakeEvent:
-    def __init__(self, key: int) -> None:
+    def __init__(self, key: int, unicode: str = "") -> None:
         self.type = FakePygame.KEYDOWN
         self.key = key
+        self.unicode = unicode
 
 
 class FakeRng:
@@ -637,7 +639,7 @@ def test_hud_shows_campaign_and_session_labels() -> None:
 def test_main_menu_scene_instantiates_without_error() -> None:
     scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
 
-    assert scene.selected_option == "Iniciar jogo"
+    assert scene.selected_option == "Continuar"
     assert scene.mode == "main"
 
 
@@ -645,7 +647,9 @@ def test_main_menu_starts_with_start_game_selected() -> None:
     scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
 
     assert scene.selected_index == 0
-    assert scene.selected_option == "Iniciar jogo"
+    assert scene.selected_option == "Continuar"
+    assert "Novo Jogo" in scene.OPTIONS
+    assert "Carregar Personagem" in scene.OPTIONS
 
 
 def test_main_menu_navigation_down_changes_option() -> None:
@@ -653,7 +657,7 @@ def test_main_menu_navigation_down_changes_option() -> None:
 
     scene.handle_event(FakeEvent(FakePygame.K_DOWN))
 
-    assert scene.selected_option == "Ver contexto"
+    assert scene.selected_option == "Novo Jogo"
 
 
 def test_main_menu_navigation_up_wraps_to_exit() -> None:
@@ -675,11 +679,128 @@ def test_main_menu_start_game_requests_overworld() -> None:
 
 def test_main_menu_exit_requests_quit() -> None:
     scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
-    scene.selected_index = 3
+    scene.selected_index = 5
 
     scene.handle_event(FakeEvent(FakePygame.K_RETURN))
 
     assert scene.should_quit is True
+
+
+def test_game_context_can_switch_character_and_player_name() -> None:
+    other = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=1,
+    )
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict(), other.to_dict()]}})
+
+    context = GameContext(player_name="Miko Meu").with_character("lia", storage)
+
+    assert context.character_id == "lia"
+    assert context.player_name == "Lia"
+
+
+def test_main_menu_load_existing_character_updates_context() -> None:
+    other = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=1,
+    )
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict(), other.to_dict()]}})
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=storage)
+
+    assert scene.select_character(1) is True
+
+    assert scene.context.character_id == "lia"
+    assert scene.context.player_name == "Lia"
+    assert scene.consume_requested_scene() == "overworld"
+
+
+def test_main_menu_new_game_requires_name() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    scene.mode = "name"
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.mode == "name"
+    assert scene.error_message == "Nome do personagem e obrigatorio."
+
+
+def test_main_menu_new_game_class_selection_works() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    scene.mode = "class"
+
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+
+    assert scene.selected_option == "Guerreiro"
+
+
+def test_main_menu_new_game_creates_character_with_player_created_tag() -> None:
+    storage = MemoryStorage()
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=storage)
+    scene.new_character_name = "Lia Nova"
+    scene.class_index = 1
+
+    character = scene.create_new_character()
+
+    assert character.name == "Lia Nova"
+    assert character.character_class == "Guerreiro"
+    assert character.max_health == 25
+    assert character.current_health == 25
+    assert character.armor == 0
+    assert "player-created" in character.tags
+    assert "Criado pelo jogo 2D" in character.notes
+    assert scene.context.character_id == character.id
+    assert scene.context.player_name == "Lia Nova"
+
+
+def test_main_menu_new_game_generates_unique_id() -> None:
+    storage = MemoryStorage()
+    first = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=storage)
+    first.new_character_name = "Lia Nova"
+    first.create_new_character()
+    second = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=storage)
+    second.new_character_name = "Lia Nova"
+
+    character = second.create_new_character()
+
+    assert character.id == "lia-nova-2"
+
+
+def test_main_menu_name_input_accepts_allowed_characters() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=MemoryStorage())
+    scene.mode = "name"
+
+    scene.handle_event(FakeEvent(0, unicode="L"))
+    scene.handle_event(FakeEvent(0, unicode="i"))
+    scene.handle_event(FakeEvent(FakePygame.K_SPACE, unicode=" "))
+    scene.handle_event(FakeEvent(0, unicode="_"))
+
+    assert scene.new_character_name == "Li _"
+
+
+def test_battle_character_loader_uses_selected_context_character() -> None:
+    other = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=1,
+    )
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict(), other.to_dict()]}})
+    context = GameContext(character_id="lia", player_name="Lia")
+
+    character = _load_battle_character(storage, context)
+
+    assert character.id == "lia"
+    assert character.name == "Lia"
 
 
 def test_main_menu_context_lines_show_context() -> None:

@@ -30,7 +30,7 @@ def run_game(max_frames: int | None = None) -> None:
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
-    scene = MainMenuScene(pygame, context)
+    scene = MainMenuScene(pygame, context, storage=storage)
     running = True
     frame_count = 0
 
@@ -44,8 +44,10 @@ def run_game(max_frames: int | None = None) -> None:
             running = False
         requested_scene = _consume_requested_scene(scene)
         if requested_scene == "overworld":
+            context = getattr(scene, "context", context)
             scene = getattr(scene, "return_scene", None) or OverworldScene(pygame, context, storage=storage)
         elif requested_scene == "battle":
+            context = getattr(scene, "context", context)
             creature = _consume_requested_creature(scene)
             if creature is not None:
                 scene = BattleScene(
