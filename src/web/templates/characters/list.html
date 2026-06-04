@@ -4,49 +4,61 @@
 <div class="page-heading">
   <div>
     <h1>Personagens</h1>
-    <p>{{ characters|length }} ficha{{ "" if characters|length == 1 else "s" }} cadastrada{{ "" if characters|length == 1 else "s" }}.</p>
+    <p>{{ character_cards|length }} ficha{{ "" if character_cards|length == 1 else "s" }} cadastrada{{ "" if character_cards|length == 1 else "s" }}.</p>
   </div>
   <a class="button" href="/characters/new">Criar personagem</a>
 </div>
 
-<section class="card">
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Classe</th>
-          <th>Vida</th>
-          <th>Armadura</th>
-          <th>Habilidades</th>
-          <th>Tags</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for character in characters %}
-        <tr>
-          <td>{{ character.name }}</td>
-          <td>{{ character.character_class }}</td>
-          <td>{{ character.current_health }}/{{ character.max_health }}</td>
-          <td>{{ character.armor }}</td>
-          <td>{{ character.abilities|length }}</td>
-          <td>
-            {% if character.tags %}
-            <div class="tag-row compact">
-              {% for tag in character.tags[:3] %}
-              <span>{{ tag }}</span>
-              {% endfor %}
-            </div>
-            {% else %}
-            <span class="empty">Sem tags</span>
-            {% endif %}
-          </td>
-          <td><a class="button small" href="/characters/{{ character.id }}">Ver ficha</a></td>
-        </tr>
+<section class="character-card-grid">
+  {% for card in character_cards %}
+  {% set character = card.character %}
+  <article class="character-list-card">
+    <div class="character-list-head">
+      <div>
+        <span>{{ character.character_class }}</span>
+        <h2>{{ character.name }}</h2>
+      </div>
+      <code>{{ character.id }}</code>
+    </div>
+
+    <div class="mini-stats">
+      <div>
+        <div class="attribute-line">
+          <span>Vida</span>
+          <strong>{{ character.current_health }}/{{ character.max_health }}</strong>
+        </div>
+        {% set label = "Vida" %}
+        {% set value = card.health_percent %}
+        {% set class_name = "health compact" %}
+        {% include "partials/stat_bar.html" %}
+      </div>
+      <div>
+        <div class="attribute-line">
+          <span>Armadura</span>
+          <strong>{{ character.armor }}</strong>
+        </div>
+        {% set label = "Armadura" %}
+        {% set value = card.armor_percent %}
+        {% set class_name = "armor compact" %}
+        {% include "partials/stat_bar.html" %}
+      </div>
+    </div>
+
+    <div class="card-meta">
+      <span>{{ character.abilities|length }} habilidade{{ "" if character.abilities|length == 1 else "s" }}</span>
+      {% if character.tags %}
+      <div class="tag-row compact">
+        {% for tag in character.tags[:3] %}
+        <span>{{ tag }}</span>
         {% endfor %}
-      </tbody>
-    </table>
-  </div>
+      </div>
+      {% else %}
+      <span class="empty">Sem tags</span>
+      {% endif %}
+    </div>
+
+    <a class="button small" href="/characters/{{ character.id }}">Ver ficha</a>
+  </article>
+  {% endfor %}
 </section>
 {% endblock %}

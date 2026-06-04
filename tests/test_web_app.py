@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from src.core.character import create_miko_meu, get_character
+from src.core.character import create_character, create_miko_meu, get_character
 from src.storage.memory import MemoryStorage
 from src.web.app import create_app
 
@@ -70,6 +70,8 @@ def test_characters_route_lists_characters() -> None:
     assert "Miko Meu" in response.text
     assert "Sombrio" in response.text
     assert "miko-meu" in response.text
+    assert "character-list-card" in response.text
+    assert "stat-bar health compact" in response.text
 
 
 def test_character_detail_shows_character_sheet() -> None:
@@ -79,8 +81,14 @@ def test_character_detail_shows_character_sheet() -> None:
 
     assert response.status_code == 200
     assert "Miko Meu" in response.text
+    assert "Sombrio" in response.text
     assert "25/25" in response.text
+    assert "Armadura/Escudo" in response.text
+    assert "stat-bar health" in response.text
+    assert "stat-bar armor" in response.text
     assert "Ikisaki" in response.text
+    assert "Cajado Sombrio" in response.text
+    assert "Switch Sombrio" in response.text
 
 
 def test_character_create_saves_and_redirects_to_sheet() -> None:
@@ -213,6 +221,7 @@ def test_created_character_appears_in_listing() -> None:
     assert "Guardia" in response.text
     assert "20/32" in response.text
     assert "investigadora" in response.text
+    assert "character-list-card" in response.text
 
 
 def test_empty_abilities_are_ignored() -> None:
@@ -275,5 +284,32 @@ def test_character_detail_shows_created_abilities() -> None:
 
     assert response.status_code == 200
     assert "Luz de Vigia" in response.text
+    assert "ability-card" in response.text
     assert "Efeito:" in response.text
     assert "Percepcao" in response.text
+    assert "Historia" in response.text
+    assert "Cresceu vigiando travessias perigosas." in response.text
+    assert "Personalidade" in response.text
+
+
+def test_character_detail_handles_empty_equipment_and_abilities() -> None:
+    client, storage = make_client()
+    create_character(
+        storage,
+        name="Sem Bagagem",
+        character_class="Viajante",
+        max_health=12,
+        armor=0,
+        equipment=[],
+        abilities=[],
+        tags=[],
+        notes=[],
+    )
+
+    response = client.get("/characters/sem-bagagem")
+
+    assert response.status_code == 200
+    assert "Sem Bagagem" in response.text
+    assert "Nenhum equipamento cadastrado ainda." in response.text
+    assert "Nenhuma habilidade cadastrada." in response.text
+    assert "Nenhum sistema especial cadastrado." in response.text

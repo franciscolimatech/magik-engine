@@ -8,89 +8,155 @@
   <a class="button" href="/characters">Voltar para personagens</a>
 </section>
 {% else %}
-<div class="page-heading">
-  <div>
-    <h1>{{ character.name }}</h1>
-    <p>{{ character.character_class }} - <code>{{ character.id }}</code></p>
-  </div>
-  <a class="button secondary" href="/characters">Voltar</a>
-</div>
-
-<section class="sheet-grid">
-  <article class="card stat-card">
-    <span>Vida</span>
-    <strong>{{ character.current_health }}/{{ character.max_health }}</strong>
-  </article>
-  <article class="card stat-card">
-    <span>Armadura</span>
-    <strong>{{ character.armor }}</strong>
-  </article>
-  <article class="card stat-card">
-    <span>Classe</span>
-    <strong>{{ character.character_class }}</strong>
-  </article>
-</section>
-
-<section class="detail-grid">
-  <article class="card">
-    <h2>Equipamentos</h2>
-    {% set values = character.equipment %}
-    {% include "partials/list_values.html" %}
-  </article>
-  <article class="card">
-    <h2>Status</h2>
-    {% set values = character.status %}
-    {% include "partials/list_values.html" %}
-  </article>
-  <article class="card">
-    <h2>Tags</h2>
-    {% if character.tags %}
-    <div class="tag-row">
-      {% for tag in character.tags %}
-      <span>{{ tag }}</span>
-      {% endfor %}
+<article class="character-sheet">
+  <header class="sheet-hero card">
+    <div>
+      <span class="panel-label">Ficha de personagem</span>
+      <h1>{{ character.name }}</h1>
+      <p>{{ character.character_class }} - <code>{{ character.id }}</code></p>
+      {% if character.tags %}
+      <div class="tag-row">
+        {% for tag in character.tags[:5] %}
+        <span>{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    {% else %}
-    <p class="empty">Nenhuma tag cadastrada.</p>
-    {% endif %}
-  </article>
-  <article class="card">
-    <h2>Sistemas especiais</h2>
-    {% set values = character.special_systems %}
-    {% include "partials/list_values.html" %}
-    {% if character.living_weapon %}
-    <p class="subtle">Arma viva: {{ character.living_weapon }}</p>
-    {% endif %}
-  </article>
-</section>
+    <div class="sheet-hero-side">
+      <a class="button secondary" href="/characters">Voltar</a>
+      {% if view.special_systems %}
+      <div class="special-stack">
+        {% for system in view.special_systems %}
+        <span>{{ system }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
 
-<section class="card">
-  <h2>Habilidades</h2>
-  {% if character.abilities %}
-  <div class="ability-list">
-    {% for ability in character.abilities %}
-    <article class="ability">
-      <strong>{{ ability.name or ability.id }}</strong>
-      <span>{{ ability.type or "tipo nao informado" }} - {{ ability.use or "uso nao informado" }}</span>
-      {% if ability.description %}<p>{{ ability.description }}</p>{% endif %}
-      {% if ability.effect %}<p><strong>Efeito:</strong> {{ ability.effect }}</p>{% endif %}
-      {% if ability.cost %}<p><strong>Custo:</strong> {{ ability.cost }}</p>{% endif %}
-      {% if ability.usage_limit is not none %}<p><strong>Usos:</strong> {{ ability.remaining_uses }}/{{ ability.usage_limit }}</p>{% endif %}
-      {% if ability.requires_test %}<p><strong>Exige teste:</strong> sim</p>{% endif %}
-      {% if ability.suggested_test %}<p><strong>Teste sugerido:</strong> {{ ability.suggested_test }}</p>{% endif %}
-      {% if ability.notes %}<p><strong>Notas:</strong> {{ ability.notes }}</p>{% endif %}
-    </article>
-    {% endfor %}
-  </div>
-  {% else %}
-  <p class="empty">Nenhuma habilidade cadastrada.</p>
-  {% endif %}
-</section>
+  <section class="sheet-main-grid">
+    <div class="sheet-column">
+      <section class="card attributes-card">
+        <h2>Atributos</h2>
+        <div class="attribute-block">
+          <div class="attribute-line">
+            <span>Vida</span>
+            <strong>{{ character.current_health }}/{{ character.max_health }}</strong>
+          </div>
+          {% set label = "Vida" %}
+          {% set value = view.health_percent %}
+          {% set class_name = "health" %}
+          {% include "partials/stat_bar.html" %}
+        </div>
+        <div class="attribute-block">
+          <div class="attribute-line">
+            <span>Armadura/Escudo</span>
+            <strong>{{ character.armor }}</strong>
+          </div>
+          {% set label = "Armadura" %}
+          {% set value = view.armor_percent %}
+          {% set class_name = "armor" %}
+          {% include "partials/stat_bar.html" %}
+        </div>
+        <div class="attribute-block">
+          <div class="attribute-line">
+            <span>Status ativos</span>
+            <strong>{{ character.status|length }}</strong>
+          </div>
+          {% set values = character.status %}
+          {% include "partials/list_values.html" %}
+        </div>
+      </section>
 
-<section class="card">
-  <h2>Historia e observacoes</h2>
-  {% set values = character.notes %}
-  {% include "partials/list_values.html" %}
-</section>
+      <section class="card">
+        <h2>Equipamentos</h2>
+        {% if character.equipment %}
+        <div class="chip-grid">
+          {% for item in character.equipment %}
+          <span>{{ item }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty">Nenhum equipamento cadastrado ainda.</p>
+        {% endif %}
+      </section>
+
+      <section class="card">
+        <h2>Sistemas especiais</h2>
+        {% if view.special_systems %}
+        <div class="special-grid">
+          {% for system in view.special_systems %}
+          <span>{{ system }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty">Nenhum sistema especial cadastrado.</p>
+        {% endif %}
+      </section>
+    </div>
+
+    <div class="sheet-column wide">
+      <section class="card">
+        <h2>Habilidades</h2>
+        {% if character.abilities %}
+        <div class="ability-card-grid">
+          {% for ability in character.abilities %}
+          {% include "partials/ability_card.html" %}
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty">Nenhuma habilidade cadastrada.</p>
+        {% endif %}
+      </section>
+
+      <section class="card story-card">
+        <h2>Historia e interpretacao</h2>
+        {% if view.notes.description %}
+        <div class="story-block">
+          <h3>Descricao</h3>
+          {% for note in view.notes.description %}
+          <p>{{ note }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if view.notes.history %}
+        <div class="story-block">
+          <h3>Historia</h3>
+          {% for note in view.notes.history %}
+          <p>{{ note }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if view.notes.personality %}
+        <div class="story-block">
+          <h3>Personalidade</h3>
+          {% for note in view.notes.personality %}
+          <p>{{ note }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if view.notes.catchphrases %}
+        <div class="story-block">
+          <h3>Frases marcantes</h3>
+          {% for note in view.notes.catchphrases %}
+          <p>{{ note }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if view.notes.general %}
+        <div class="story-block">
+          <h3>Observacoes gerais</h3>
+          {% for note in view.notes.general %}
+          <p>{{ note }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if not view.notes.description and not view.notes.history and not view.notes.personality and not view.notes.catchphrases and not view.notes.general %}
+        <p class="empty">Nenhuma historia ou observacao cadastrada.</p>
+        {% endif %}
+      </section>
+    </div>
+  </section>
+</article>
 {% endif %}
 {% endblock %}

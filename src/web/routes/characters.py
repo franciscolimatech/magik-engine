@@ -23,6 +23,7 @@ router = APIRouter(prefix="/characters", tags=["characters"])
 @router.get("")
 def character_list(request: Request):
     characters = list_characters(request.app.state.storage)
+    character_cards = [_character_card_view(character) for character in characters]
     return request.app.state.templates.TemplateResponse(
         request,
         "characters/list.html",
@@ -30,6 +31,7 @@ def character_list(request: Request):
             "request": request,
             "title": "Personagens",
             "characters": characters,
+            "character_cards": character_cards,
         },
     )
 
@@ -108,6 +110,7 @@ def character_detail(request: Request, character_id: str):
             "request": request,
             "title": character.name,
             "character": character,
+            "view": _character_sheet_view(character),
             "error": "",
         },
     )
@@ -136,6 +139,90 @@ def _render_create_form(
 
 
 ABILITY_SLOTS = (1, 2, 3)
+NOTE_LABELS = {
+    "Descricao": "description",
+    "Historia": "history",
+    "Personalidade": "personality",
+    "Frases marcantes": "catchphrases",
+    "Observacoes": "general",
+}
+SPECIAL_SYSTEM_LABELS = {
+    "ikisaki": "Ikisaki",
+    "shadow_staff": "Cajado Sombrio",
+}
+SPECIAL_ABILITY_LABELS = {
+    "shadow_switch": "Switch Sombrio",
+}
+
+
+def _character_card_view(character: Character) -> dict:
+    return {
+        "character": character,
+        "health_percent": _health_percent(character),
+        "armor_percent": _armor_percent(character.armor),
+    }
+
+
+def _character_sheet_view(character: Character) -> dict:
+    return {
+        "health_percent": _health_percent(character),
+        "armor_percent": _armor_percent(character.armor),
+        "notes": _split_character_notes(character.notes),
+        "special_systems": _special_systems_for_display(character),
+    }
+
+
+def _health_percent(character: Character) -> int:
+    if character.max_health <= 0:
+        return 0
+    percent = round((character.current_health / character.max_health) * 100)
+    return max(0, min(100, percent))
+
+
+def _armor_percent(armor: int) -> int:
+    return max(0, min(100, armor * 10))
+
+
+def _split_character_notes(notes: list[str]) -> dict[str, list[str]]:
+    grouped = {
+        "description": [],
+        "history": [],
+        "personality": [],
+        "catchphrases": [],
+        "general": [],
+    }
+    for note in notes:
+        label, separator, value = note.partition(":")
+        key = NOTE_LABELS.get(label.strip()) if separator else None
+        if key and value.strip():
+            grouped[key].append(value.strip())
+        else:
+            grouped["general"].append(note)
+    return grouped
+
+
+def _special_systems_for_display(character: Character) -> list[str]:
+    systems: list[str] = []
+    for system_id in character.special_systems:
+        systems.append(SPECIAL_SYSTEM_LABELS.get(system_id, system_id))
+    if character.living_weapon:
+        systems.append(f"Arma viva: {character.living_weapon}")
+    for ability in character.abilities:
+        ability_id = str(ability.get("id", ""))
+        if ability_id in SPECIAL_ABILITY_LABELS:
+            systems.append(SPECIAL_ABILITY_LABELS[ability_id])
+    return _unique_values(systems)
+
+
+def _unique_values(values: list[str]) -> list[str]:
+    unique: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        normalized = value.casefold()
+        if normalized not in seen:
+            unique.append(value)
+            seen.add(normalized)
+    return unique
 
 
 def _clean_form(form) -> dict[str, str]:

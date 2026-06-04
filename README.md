@@ -51,12 +51,17 @@ Acesse:
 http://127.0.0.1:8000
 ```
 
-Na v0.9.1, a tela inicial traz atalhos e o modulo de personagens permite
-listar fichas, abrir a ficha visual e criar personagem com um criador visual
-mais completo. O formulario `/characters/new` agora separa identidade,
-atributos, equipamentos, ate 3 habilidades iniciais e campos de historia e
-interpretacao. Antes de salvar, `/characters/preview` mostra uma revisao da
-ficha montada; a gravacao so acontece quando voce confirma.
+Na v0.9.2, a tela inicial traz atalhos e o modulo de personagens permite
+listar fichas em cards visuais, abrir uma ficha com visual de RPG e criar
+personagem com um criador visual completo. O formulario `/characters/new`
+separa identidade, atributos, equipamentos, ate 3 habilidades iniciais e campos
+de historia e interpretacao. Antes de salvar, `/characters/preview` mostra uma
+revisao da ficha montada; a gravacao so acontece quando voce confirma.
+
+A ficha `/characters/{id}` mostra cabecalho com nome, classe, tags e sistemas
+especiais, barras visuais de vida e armadura, equipamentos em chips,
+habilidades em cards e blocos de historia, personalidade, frases marcantes e
+observacoes.
 
 As habilidades iniciais usam o sistema geral de habilidades do `src/core`, com
 tipo, uso, efeito, custo, limite de uso, teste sugerido e observacoes. Campos de

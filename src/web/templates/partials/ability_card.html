@@ -1,0 +1,41 @@
+<article class="ability-card">
+  <div class="ability-card-head">
+    <div>
+      <strong>{{ ability.name or ability.id }}</strong>
+      <span>{{ ability.type or "tipo nao informado" }} - {{ ability.use or "uso nao informado" }}</span>
+    </div>
+    {% if ability.usage_limit is not none %}
+    <small>{{ ability.remaining_uses }}/{{ ability.usage_limit }}</small>
+    {% endif %}
+  </div>
+  {% if ability.description %}<p>{{ ability.description }}</p>{% endif %}
+  <dl class="ability-facts">
+    {% if ability.effect %}
+    <div>
+      <dt>Efeito:</dt>
+      <dd>{{ ability.effect }}</dd>
+    </div>
+    {% endif %}
+    {% if ability.cost %}
+    <div>
+      <dt>Custo:</dt>
+      <dd>{{ ability.cost }}</dd>
+    </div>
+    {% endif %}
+    {% if ability.suggested_test %}
+    <div>
+      <dt>Teste:</dt>
+      <dd>{{ ability.suggested_test }}</dd>
+    </div>
+    {% endif %}
+    {% if ability.notes %}
+    <div>
+      <dt>Observacoes:</dt>
+      <dd>{{ ability.notes }}</dd>
+    </div>
+    {% endif %}
+  </dl>
+  {% if ability.requires_test %}
+  <p class="ability-note">Exige teste.</p>
+  {% endif %}
+</article>
