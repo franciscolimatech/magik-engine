@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.game import colors
 from src.game.maps.test_map import is_walkable
 from src.game.settings import TILE_SIZE
 
@@ -25,6 +24,7 @@ class Player:
     y: int
     name: str = "Aventureiro"
     direction: Direction = "down"
+    walk_frame: int = 0
 
     @property
     def position(self) -> tuple[int, int]:
@@ -44,19 +44,20 @@ class Player:
             return False
         self.x = target_x
         self.y = target_y
+        self.walk_frame = (self.walk_frame + 1) % 2
         return True
 
     def facing_position(self) -> tuple[int, int]:
         return self.x + self.facing[0], self.y + self.facing[1]
 
-    def draw(self, pygame, surface, camera=None) -> None:
+    def draw(self, pygame, surface, camera=None, assets=None) -> None:
         world_x = self.x * TILE_SIZE
         world_y = self.y * TILE_SIZE
         pixel_x, pixel_y = camera.world_to_screen(world_x, world_y) if camera else (world_x, world_y)
-        shadow = pygame.Rect(pixel_x + 7, pixel_y + 22, 18, 6)
-        body = pygame.Rect(pixel_x + 8, pixel_y + 8, 16, 18)
-        pygame.draw.rect(surface, colors.PLAYER_SHADOW, shadow)
-        pygame.draw.rect(surface, colors.PLAYER, body)
+        if assets:
+            surface.blit(assets.player[self.direction][self.walk_frame], (pixel_x, pixel_y))
+            return
+        pygame.draw.rect(surface, (124, 108, 246), pygame.Rect(pixel_x + 8, pixel_y + 8, 16, 18))
 
 
 def _direction_from_delta(dx: int, dy: int) -> Direction:

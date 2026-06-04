@@ -23,6 +23,7 @@ class OverworldScene(BaseScene):
         self.font = pygame.font.Font(None, 24)
         self.camera = Camera()
         self.hud = HUD(player_name=player_name)
+        self.assets = assets.create_assets(pygame)
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
     def handle_event(self, event) -> None:
@@ -49,10 +50,11 @@ class OverworldScene(BaseScene):
         for y, row in enumerate(self.map_data):
             for x, tile in enumerate(row):
                 screen_x, screen_y = self.camera.tile_to_screen(x, y)
-                assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y)
+                assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y, self.assets)
+        highlighted_npc = self.facing_npc()
         for npc in self.npcs:
-            npc.draw(self.pygame, surface, self.camera)
-        self.player.draw(self.pygame, surface, self.camera)
+            npc.draw(self.pygame, surface, self.camera, self.assets, highlighted=npc == highlighted_npc)
+        self.player.draw(self.pygame, surface, self.camera, self.assets)
         self.hud.draw(self.pygame, surface, self.font)
         if self.dialogue:
             self.dialogue.draw(self.pygame, surface, self.font)

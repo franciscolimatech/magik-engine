@@ -15,8 +15,10 @@ class HUD:
 
     def draw(self, pygame, surface, font) -> None:
         panel = pygame.Rect(8, 8, 430, 54)
+        inner = panel.inflate(-8, -8)
         pygame.draw.rect(surface, (12, 16, 28), panel)
         pygame.draw.rect(surface, colors.DIALOGUE_BORDER, panel, width=2)
+        pygame.draw.rect(surface, (39, 48, 76), inner, width=1)
         name_surface = font.render(f"{self.player_name} - {self.map_name}", False, colors.WHITE)
         hint_surface = font.render(self.controls_hint, False, colors.TEXT_MUTED)
         surface.blit(name_surface, (panel.x + 10, panel.y + 8))

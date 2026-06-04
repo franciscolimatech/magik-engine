@@ -1,9 +1,18 @@
 from src.core.character import Character, create_miko_meu
+from src.game.assets import create_assets
 from src.game.app import load_player_name
 from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
-from src.game.maps.test_map import find_npcs, find_player_start, is_obstacle, load_test_map, map_height, map_width
+from src.game.maps.test_map import (
+    find_npcs,
+    find_player_start,
+    is_obstacle,
+    is_walkable,
+    load_test_map,
+    map_height,
+    map_width,
+)
 from src.game.ui.dialogue_box import DialogueBox
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
@@ -24,6 +33,32 @@ def test_test_map_loads_npcs() -> None:
     assert len(npcs) >= 1
     assert npcs[0].name
     assert npcs[0].dialogue
+
+
+def test_generated_assets_include_tiles_and_sprites() -> None:
+    import pygame
+
+    pygame.init()
+    assets = create_assets(pygame)
+
+    assert assets.wall_tile.get_size() == (32, 32)
+    assert assets.water_tile.get_size() == (32, 32)
+    assert assets.floor_tiles["g"].get_size() == (32, 32)
+    assert assets.npc.get_size() == (32, 32)
+    assert assets.interaction_marker.get_width() > 0
+    pygame.quit()
+
+
+def test_player_sprites_exist_for_each_direction() -> None:
+    import pygame
+
+    pygame.init()
+    assets = create_assets(pygame)
+
+    assert set(assets.player) == {"up", "down", "left", "right"}
+    assert all(len(frames) == 2 for frames in assets.player.values())
+    assert all(frame.get_size() == (32, 32) for frames in assets.player.values() for frame in frames)
+    pygame.quit()
 
 
 def test_collision_blocks_wall() -> None:
@@ -48,6 +83,19 @@ def test_valid_movement_changes_position() -> None:
     assert moved is True
     assert player.position == (2, 1)
     assert player.direction == "right"
+    assert player.walk_frame == 1
+
+
+def test_floor_and_grass_are_walkable_but_water_blocks() -> None:
+    map_data = [
+        "#####",
+        "#.gw#",
+        "#####",
+    ]
+
+    assert is_walkable(map_data, 1, 1) is True
+    assert is_walkable(map_data, 2, 1) is True
+    assert is_obstacle(map_data, 3, 1) is True
 
 
 def test_player_cannot_leave_map() -> None:
@@ -74,6 +122,13 @@ def test_npc_detects_player_facing_it() -> None:
 
     assert npc.is_in_front_of(player) is True
     assert npc.can_interact(player) is True
+
+
+def test_dialogue_box_keeps_speaker_name() -> None:
+    dialogue = DialogueBox("Guarda", "Ola.")
+
+    assert dialogue.speaker == "Guarda"
+    assert dialogue.visible is True
 
 
 def test_player_facing_position_uses_direction() -> None:
