@@ -76,10 +76,10 @@ Narradora aparecem como areas futuras da interface web.
 
 ## Jogo 2D experimental
 
-A v1.3 mantem o prototipo visual em PyGame inspirado em RPGs retro de grid,
+A v1.5 mantem o prototipo visual em PyGame inspirado em RPGs retro de grid,
 sem remover nem substituir terminal ou web. Por enquanto ele e apenas uma
-camada visual jogavel: nao implementa combate visual, nao usa IA e nao salva
-alteracoes no estado do jogo.
+camada visual jogavel: nao implementa combate visual, nao usa IA e nao altera
+personagens, criaturas ou regras oficiais.
 
 Instale as dependencias com:
 
@@ -109,12 +109,31 @@ servem como visual retro temporario, nao como assets finais.
 Na v1.4, NPCs podem ter dialogos com multiplas falas, avancados com
 `Espaco`, `Enter` ou `E`. O mapa tambem possui eventos simples por posicao,
 como mensagens, pressagios e sinais narrativos. Eventos unicos disparam uma vez
-durante a execucao; eventos repetiveis podem aparecer novamente. Nada disso e
-salvo no historico ainda.
+durante a execucao; eventos repetiveis podem aparecer novamente.
+
+Na v1.5, o jogo pode receber contexto opcional de personagem, campanha e sessao
+por variaveis de ambiente. Quando um evento de mapa marcado para historico
+dispara e ha campanha/sessao validas, o texto e registrado como evento
+narrativo com origem `game`, nome do mapa e posicao do player. Sem esse
+contexto, o jogo continua funcionando normalmente e apenas mostra o evento na
+tela. A integracao ainda e experimental e tolerante a ids invalidos.
+
+Exemplo no PowerShell:
+
+```powershell
+$env:MAGIK_GAME_CHARACTER_ID="miko-meu"
+$env:MAGIK_GAME_CAMPAIGN_ID="id-da-campanha"
+$env:MAGIK_GAME_SESSION_ID="id-da-sessao"
+python -m src.game.app
+```
+
+Para voltar ao modo sem campanha ativa, remova as variaveis ou abra um novo
+terminal.
 
 O jogo carrega o nome do Miko Meu de `data/characters.json` apenas para exibir
-no canto da tela. Se Miko nao existir, mostra `Aventureiro`. Nenhum personagem e
-alterado ou salvo pelo prototipo.
+no canto da tela por padrao. Se outro `MAGIK_GAME_CHARACTER_ID` for informado,
+o nome desse personagem sera exibido quando existir; caso contrario, mostra
+`Aventureiro`. Nenhum personagem e alterado ou salvo pelo prototipo.
 
 O terminal mostra o menu:
 

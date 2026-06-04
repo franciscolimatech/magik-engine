@@ -6,26 +6,36 @@ from src.game import assets, colors
 from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
+from src.game.event_registry import register_map_event
+from src.game.game_context import GameContext
 from src.game.maps.events import MapEvent, find_event_at, load_test_events
 from src.game.maps.test_map import find_npcs, find_player_start, load_test_map, map_height, map_width
 from src.game.scenes.base import BaseScene
 from src.game.ui.dialogue_box import DialogueBox
 from src.game.ui.hud import HUD
+from src.storage.types import JsonStore
 
 
 class OverworldScene(BaseScene):
-    def __init__(self, pygame, player_name: str) -> None:
+    def __init__(self, pygame, context: GameContext | str, storage: JsonStore | None = None) -> None:
         self.pygame = pygame
+        self.context = context if isinstance(context, GameContext) else GameContext(player_name=context)
+        self.storage = storage
         self.map_data = load_test_map()
         start_x, start_y = find_player_start(self.map_data)
-        self.player = Player(start_x, start_y, name=player_name)
+        self.player = Player(start_x, start_y, name=self.context.player_name)
         self.npcs = [NPC(item.x, item.y, item.name, item.dialogues) for item in find_npcs(self.map_data)]
         self.events = load_test_events()
         self.triggered_event_ids: set[str] = set()
         self.dialogue: DialogueBox | None = None
         self.font = pygame.font.Font(None, 24)
         self.camera = Camera()
-        self.hud = HUD(player_name=player_name)
+        self.hud = HUD(
+            player_name=self.context.player_name,
+            map_name=self.context.map_name,
+            campaign_label=self.context.campaign_label,
+            session_label=self.context.session_label,
+        )
         self.assets = assets.create_assets(pygame)
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
@@ -87,6 +97,8 @@ class OverworldScene(BaseScene):
         if not event.repeatable:
             self.triggered_event_ids.add(event.id)
         self.dialogue = DialogueBox(event.speaker, event.messages)
+        if self.storage is not None:
+            register_map_event(self.storage, self.context, event, (x, y))
         return event
 
     def _movement_for_key(self, key: int) -> tuple[int, int] | None:

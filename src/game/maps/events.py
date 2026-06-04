@@ -14,9 +14,15 @@ class MapEvent:
     messages: tuple[str, ...]
     speaker: str = "Evento"
     repeatable: bool = False
+    registrar_no_historico: bool = True
+    tags: tuple[str, ...] = ()
 
     def can_trigger(self, triggered_event_ids: set[str]) -> bool:
         return self.repeatable or self.id not in triggered_event_ids
+
+    @property
+    def text(self) -> str:
+        return " ".join(self.messages)
 
 
 TEST_EVENTS = [
@@ -31,6 +37,8 @@ TEST_EVENTS = [
             "Os elos fazem um som baixo, como se rissem por dentro.",
         ),
         repeatable=False,
+        registrar_no_historico=True,
+        tags=("ikisaki", "pressagio"),
     ),
     MapEvent(
         id="old-sign",
@@ -40,6 +48,8 @@ TEST_EVENTS = [
         speaker="Placa antiga",
         messages=("A madeira diz: volte antes que o brejo aprenda seu nome.",),
         repeatable=True,
+        registrar_no_historico=False,
+        tags=("placa", "mensagem"),
     ),
 ]
 

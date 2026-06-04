@@ -1,9 +1,13 @@
 from src.core.character import Character, create_miko_meu
+from src.core.campaigns import create_campaign, create_campaign_session, get_campaign_session
+from src.core.session import list_events
 from src.game.assets import create_assets
 from src.game.app import load_player_name
 from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
+from src.game.event_registry import register_map_event
+from src.game.game_context import GameContext
 from src.game.maps.events import MapEvent, find_event_at
 from src.game.maps.test_map import (
     find_npcs,
@@ -193,6 +197,13 @@ def test_hud_can_be_instantiated() -> None:
 
     assert hud.player_name == "Miko Meu"
     assert hud.map_name == "Mapa de Teste"
+    assert hud.campaign_label == "Sem campanha ativa"
+
+
+def test_hud_shows_campaign_and_session_labels() -> None:
+    hud = HUD(player_name="Miko Meu", campaign_label="Campanha: estrada", session_label="Sessao: estrada-sessao-1")
+
+    assert hud._campaign_text() == "Campanha: estrada | Sessao: estrada-sessao-1"
 
 
 def test_scene_style_movement_blocks_during_dialogue() -> None:
@@ -298,3 +309,95 @@ def test_load_player_name_uses_fallback_without_miko() -> None:
     storage = MemoryStorage({"characters.json": {"characters": [other.to_dict()]}})
 
     assert load_player_name(storage) == "Aventureiro"
+
+
+def test_game_context_loads_defaults_without_environment() -> None:
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+
+    context = GameContext.from_env(env={}, storage=storage)
+
+    assert context.character_id == "miko-meu"
+    assert context.campaign_id is None
+    assert context.campaign_session_id is None
+    assert context.player_name == "Miko Meu"
+    assert context.campaign_label == "Sem campanha ativa"
+
+
+def test_game_context_reads_environment_values() -> None:
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+
+    context = GameContext.from_env(
+        env={
+            "MAGIK_GAME_CHARACTER_ID": "miko-meu",
+            "MAGIK_GAME_CAMPAIGN_ID": "estrada",
+            "MAGIK_GAME_SESSION_ID": "estrada-sessao-1",
+        },
+        storage=storage,
+    )
+
+    assert context.character_id == "miko-meu"
+    assert context.campaign_id == "estrada"
+    assert context.campaign_session_id == "estrada-sessao-1"
+    assert context.has_campaign_session is True
+
+
+def test_map_event_without_campaign_does_not_attempt_registration() -> None:
+    storage = MemoryStorage()
+    context = GameContext(player_name="Miko Meu")
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",))
+
+    def fail_if_called(*args) -> object:
+        raise AssertionError("registrar should not be called")
+
+    assert register_map_event(storage, context, event, (2, 1), registrar=fail_if_called) is False
+
+
+def test_map_event_with_campaign_session_registers_in_core_history() -> None:
+    storage = MemoryStorage()
+    campaign = create_campaign(storage, "Estrada do Viajante")
+    session = create_campaign_session(storage, campaign.id, "Chegada", number=1)
+    context = GameContext(
+        player_name="Miko Meu",
+        campaign_id=campaign.id,
+        campaign_session_id=session.id,
+        map_name="Mapa de Teste",
+    )
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",), tags=("teste",))
+
+    assert register_map_event(storage, context, event, (2, 1)) is True
+
+    history = list_events(storage)
+    updated_session = get_campaign_session(storage, session.id)
+    assert len(history) == 1
+    assert history[0].campaign_id == campaign.id
+    assert history[0].campaign_session_id == session.id
+    assert "origem=game" in history[0].notes
+    assert "posicao=(2,1)" in history[0].notes
+    assert updated_session.events == ["Miko Meu: Evento de mapa - Algo se mexe."]
+
+
+def test_map_event_marked_not_to_register_is_ignored_even_with_context() -> None:
+    storage = MemoryStorage()
+    campaign = create_campaign(storage, "Estrada do Viajante")
+    session = create_campaign_session(storage, campaign.id, "Chegada", number=1)
+    context = GameContext(player_name="Miko Meu", campaign_id=campaign.id, campaign_session_id=session.id)
+    event = MapEvent(
+        "placa",
+        2,
+        1,
+        "mensagem",
+        ("Leia de novo.",),
+        registrar_no_historico=False,
+    )
+
+    assert register_map_event(storage, context, event, (2, 1)) is False
+    assert list_events(storage) == []
+    assert get_campaign_session(storage, session.id).events == []
+
+
+def test_invalid_campaign_context_does_not_crash_game_registration() -> None:
+    storage = MemoryStorage()
+    context = GameContext(player_name="Miko Meu", campaign_id="invalida", campaign_session_id="sessao-invalida")
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",))
+
+    assert register_map_event(storage, context, event, (2, 1)) is False

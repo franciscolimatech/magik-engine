@@ -3,24 +3,16 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
-from src.core.character import MIKO_ID, get_character
-from src.game.settings import FPS, PLAYER_NAME_FALLBACK, SCREEN_HEIGHT, SCREEN_WIDTH, WINDOW_TITLE
+from src.core.character import MIKO_ID
+from src.game.game_context import DATA_PATH, GameContext, load_player_name as load_context_player_name
+from src.game.settings import FPS, SCREEN_HEIGHT, SCREEN_WIDTH, WINDOW_TITLE
 from src.storage.json_storage import JSONStorage
 from src.storage.types import JsonStore
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_PATH = PROJECT_ROOT / "data"
-
-
 def load_player_name(storage: JsonStore | None = None) -> str:
-    resolved_storage = storage or JSONStorage(DATA_PATH)
-    try:
-        return get_character(resolved_storage, MIKO_ID).name
-    except ValueError:
-        return PLAYER_NAME_FALLBACK
+    return load_context_player_name(MIKO_ID, storage)
 
 
 def run_game(max_frames: int | None = None) -> None:
@@ -28,12 +20,14 @@ def run_game(max_frames: int | None = None) -> None:
 
     from src.game.scenes.overworld import OverworldScene
 
+    storage = JSONStorage(DATA_PATH)
+    context = GameContext.from_env(storage=storage)
     pygame.init()
     pygame.key.set_repeat(0)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
-    scene = OverworldScene(pygame, load_player_name())
+    scene = OverworldScene(pygame, context, storage=storage)
     running = True
     frame_count = 0
 
