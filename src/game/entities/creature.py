@@ -68,7 +68,7 @@ class Creature:
                 ),
                 DialogueOption(
                     text="Iniciar combate",
-                    response="Combate visual ainda nao implementado.",
+                    response="Voce se prepara para o combate visual.",
                     tags=("combate",),
                     event="start_combat",
                 ),

@@ -30,6 +30,8 @@ class OverworldScene(BaseScene):
         self.context = context if isinstance(context, GameContext) else GameContext(player_name=context)
         self.storage = storage
         self.should_quit = False
+        self.requested_scene: str | None = None
+        self.requested_creature: Creature | None = None
         self.map_data = load_test_map()
         start_x, start_y = find_player_start(self.map_data)
         self.player = Player(start_x, start_y, name=self.context.player_name)
@@ -75,6 +77,16 @@ class OverworldScene(BaseScene):
             self.pending_event = None
             self.pending_creature = None
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
+
+    def consume_requested_scene(self) -> str | None:
+        requested = self.requested_scene
+        self.requested_scene = None
+        return requested
+
+    def consume_requested_creature(self) -> Creature | None:
+        creature = self.requested_creature
+        self.requested_creature = None
+        return creature
 
     def draw(self, surface) -> None:
         surface.fill(colors.BLACK)
@@ -146,16 +158,22 @@ class OverworldScene(BaseScene):
             )
             self.pending_event = None
         if self.pending_creature is not None:
+            creature = self.pending_creature
             if self.storage is not None:
                 register_creature_encounter(
                     self.storage,
                     self.context,
-                    self.pending_creature,
-                    self.pending_creature.position,
+                    creature,
+                    creature.position,
                     selected_option=selected_option,
                 )
             if selected_option.event == "retreat" and self.dialogue is not None:
                 self.dialogue.close()
+            elif selected_option.event == "start_combat":
+                self.requested_scene = "battle"
+                self.requested_creature = creature
+                if self.dialogue is not None:
+                    self.dialogue.close()
             self.pending_creature = None
 
     def _movement_for_key(self, key: int) -> tuple[int, int] | None:

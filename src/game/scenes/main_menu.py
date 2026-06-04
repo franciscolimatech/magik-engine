@@ -73,6 +73,7 @@ class MainMenuScene(BaseScene):
             "WASD/setas: mover",
             "E/Espaco: interagir",
             "Enter/Espaco/E: avancar dialogo",
+            "Batalha: cima/baixo escolhe, Enter/E confirma",
             "ESC: voltar/sair",
             "",
             "ESC, Enter ou Espaco para voltar",

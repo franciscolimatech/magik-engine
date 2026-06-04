@@ -78,8 +78,8 @@ Narradora aparecem como areas futuras da interface web.
 
 A v1.5 mantem o prototipo visual em PyGame inspirado em RPGs retro de grid,
 sem remover nem substituir terminal ou web. Por enquanto ele e apenas uma
-camada visual jogavel: nao implementa combate visual, nao usa IA e nao altera
-personagens, criaturas ou regras oficiais.
+camada visual jogavel: o combate visual ainda e inicial, nao usa IA e nao
+altera personagens, criaturas ou regras oficiais persistidas.
 
 Instale as dependencias com:
 
@@ -98,6 +98,9 @@ Controles:
 - `WASD` ou setas: mover em tiles.
 - `E` ou `Espaco`: interagir com NPC no tile a frente do personagem.
 - `Enter`, `E` ou `Espaco`: fechar dialogo.
+- Em escolhas e batalha, cima/baixo ou `W`/`S`: navegar opcoes.
+- Em batalha, `Enter`, `E` ou `Espaco`: confirmar acao.
+- Em batalha, `ESC`: fugir/voltar ao mapa.
 - `ESC`: sair.
 
 O mapa de teste agora e maior que a tela. Uma camera simples segue o player,
@@ -124,12 +127,18 @@ mapa registrados no historico incluem a opcao escolhida.
 
 Na v1.8, o mapa tambem pode mostrar criaturas pelo tile `C`. Ao olhar para uma
 criatura e interagir, o jogo abre um encontro narrativo com as opcoes
-`Observar`, `Ameacar`, `Recuar` e `Iniciar combate`. O combate visual ainda nao
-foi implementado: a opcao apenas informa isso e pode registrar o encontro na
-campanha/sessao ativa. Se `data/creatures.json` tiver criaturas cadastradas, o
-prototipo usa a primeira como base visual; caso contrario, usa a criatura de
-teste `Sombra Rastejante`. Nenhum dado da criatura e salvo ou alterado pelo
-jogo 2D nesta etapa.
+`Observar`, `Ameacar`, `Recuar` e `Iniciar combate`. Se `data/creatures.json`
+tiver criaturas cadastradas, o prototipo usa a primeira como base visual; caso
+contrario, usa a criatura de teste `Sombra Rastejante`.
+
+Na v1.9, `Iniciar combate` troca para a primeira tela de combate visual. Ela
+mostra personagem e criatura, vida, armadura, sprites gerados por codigo, log e
+menu com `Atacar`, `Observar` e `Fugir`. `Atacar` usa as funcoes oficiais do
+core para rolar e aplicar dano fisico, incluindo a regra de armadura. A criatura
+responde de forma simples se ainda estiver viva. O dano da `BattleScene` e
+temporario na execucao do jogo 2D: ele nao e salvo de volta em `characters.json`
+ou `creatures.json` nesta etapa. Com campanha/sessao ativa, inicio, fuga e
+vitoria podem ser registrados no historico com origem `game` e tipo `battle`.
 
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara

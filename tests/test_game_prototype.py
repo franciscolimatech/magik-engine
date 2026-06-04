@@ -9,7 +9,7 @@ from src.game.dialogue import DialogueChoice, DialogueOption
 from src.game.entities.creature import Creature, default_creature, load_game_creature
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
-from src.game.event_registry import register_creature_encounter, register_map_event
+from src.game.event_registry import register_battle_event, register_creature_encounter, register_map_event
 from src.game.game_context import GameContext
 from src.game.maps.events import MapEvent, find_event_at
 from src.game.maps.test_map import (
@@ -22,8 +22,9 @@ from src.game.maps.test_map import (
     map_height,
     map_width,
 )
-from src.game.scenes.overworld import OverworldScene
+from src.game.scenes.battle import BattleScene
 from src.game.scenes.main_menu import MainMenuScene
+from src.game.scenes.overworld import OverworldScene
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
@@ -45,6 +46,15 @@ class FakeEvent:
     def __init__(self, key: int) -> None:
         self.type = FakePygame.KEYDOWN
         self.key = key
+
+
+class FakeRng:
+    def __init__(self, values: list[int]) -> None:
+        self.values = list(values)
+
+    def randint(self, a: int, b: int) -> int:
+        value = self.values.pop(0)
+        return max(a, min(value, b))
 
 
 def test_test_map_loads_with_player_start() -> None:
@@ -264,12 +274,126 @@ def test_creature_retreat_option_closes_encounter() -> None:
     assert SceneLike.pending_creature is None
 
 
-def test_creature_start_combat_option_is_not_implemented_message() -> None:
+def test_creature_start_combat_option_prepares_battle() -> None:
     creature = default_creature(3, 2)
     option = creature.encounter_choice().options[3]
 
     assert option.text == "Iniciar combate"
-    assert option.response == "Combate visual ainda nao implementado."
+    assert option.event == "start_combat"
+    assert option.response == "Voce se prepara para o combate visual."
+
+
+def test_battle_scene_instantiates_with_character_and_creature() -> None:
+    character = create_miko_meu()
+    creature = default_creature(3, 2)
+
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature)
+
+    assert scene.character.name == "Miko Meu"
+    assert scene.creature.name == "Sombra Rastejante"
+    assert scene.selected_option == "Atacar"
+
+
+def test_battle_menu_navigation_works() -> None:
+    scene = BattleScene(FakePygame, GameContext(player_name="Miko Meu"), create_miko_meu(), default_creature(3, 2))
+
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+    assert scene.selected_option == "Observar"
+
+    scene.handle_event(FakeEvent(FakePygame.K_UP))
+    assert scene.selected_option == "Atacar"
+
+
+def test_battle_observe_adds_text_to_log() -> None:
+    scene = BattleScene(FakePygame, GameContext(player_name="Miko Meu"), create_miko_meu(), default_creature(3, 2))
+    scene.selected_index = 1
+
+    scene.confirm_selection()
+
+    assert "Vida:" in scene.log[-1]
+    assert "Armadura:" in scene.log[-1]
+
+
+def test_battle_flee_requests_return_to_overworld() -> None:
+    scene = BattleScene(FakePygame, GameContext(player_name="Miko Meu"), create_miko_meu(), default_creature(3, 2))
+    scene.selected_index = 2
+
+    scene.confirm_selection()
+
+    assert scene.consume_requested_scene() == "overworld"
+    assert "fugiu" in scene.log[-1]
+
+
+def test_battle_attack_reduces_creature_armor_with_physical_rule() -> None:
+    character = create_miko_meu()
+    creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=10, max_health=10, armor=3)
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([2, 1]))
+
+    scene.attack()
+
+    assert scene.creature.armor == 1
+    assert scene.creature.current_health == 10
+    assert "causou 2 de dano" in scene.log[-2]
+
+
+def test_battle_creature_responds_when_alive() -> None:
+    character = create_miko_meu()
+    character.armor = 0
+    creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=10, max_health=10, armor=0)
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([2, 3]))
+
+    scene.attack()
+
+    assert scene.creature.current_health == 8
+    assert scene.character.current_health == 22
+    assert "Sombra atacou Miko Meu e causou 3 de dano." in scene.log[-1]
+
+
+def test_battle_detects_victory_when_creature_reaches_zero() -> None:
+    character = create_miko_meu()
+    creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0)
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([1]))
+
+    scene.attack()
+
+    assert scene.victory is True
+    assert scene.creature.current_health == 0
+    assert any("Vitoria!" in line for line in scene.log)
+
+
+def test_battle_event_registers_with_campaign_session() -> None:
+    storage = MemoryStorage()
+    campaign = create_campaign(storage, "Estrada do Viajante")
+    session = create_campaign_session(storage, campaign.id, "Chegada", number=1)
+    context = GameContext(player_name="Miko Meu", campaign_id=campaign.id, campaign_session_id=session.id)
+    creature = default_creature(3, 2)
+
+    assert register_battle_event(storage, context, creature, creature.position, "inicio", "Teste.") is True
+
+    history = list_events(storage)
+    assert history[0].action == "Combate visual"
+    assert "tipo=battle" in history[0].notes
+    assert "evento=inicio" in history[0].notes
+
+
+def test_overworld_start_combat_choice_requests_battle_scene() -> None:
+    creature = default_creature(3, 2)
+    start_option = creature.encounter_choice().options[3]
+
+    class SceneLike:
+        storage = None
+        context = GameContext(player_name="Miko Meu")
+        pending_event = None
+        pending_creature = creature
+        dialogue = DialogueBox(creature.name, creature.encounter_messages(), choice=creature.encounter_choice())
+        requested_scene = None
+        requested_creature = None
+
+    OverworldScene._handle_dialogue_option(SceneLike, start_option)
+
+    assert SceneLike.requested_scene == "battle"
+    assert SceneLike.requested_creature == creature
+    assert SceneLike.pending_creature is None
 
 
 def test_dialogue_box_keeps_speaker_name() -> None:

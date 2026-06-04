@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import os
 
-from src.core.character import MIKO_ID
+from src.core.character import Character, MIKO_ID, get_character
+from src.game.entities.creature import Creature
 from src.game.game_context import DATA_PATH, GameContext, load_player_name as load_context_player_name
 from src.game.settings import FPS, SCREEN_HEIGHT, SCREEN_WIDTH, WINDOW_TITLE
 from src.storage.json_storage import JSONStorage
@@ -18,6 +19,7 @@ def load_player_name(storage: JsonStore | None = None) -> str:
 def run_game(max_frames: int | None = None) -> None:
     import pygame
 
+    from src.game.scenes.battle import BattleScene
     from src.game.scenes.main_menu import MainMenuScene
     from src.game.scenes.overworld import OverworldScene
 
@@ -42,7 +44,18 @@ def run_game(max_frames: int | None = None) -> None:
             running = False
         requested_scene = _consume_requested_scene(scene)
         if requested_scene == "overworld":
-            scene = OverworldScene(pygame, context, storage=storage)
+            scene = getattr(scene, "return_scene", None) or OverworldScene(pygame, context, storage=storage)
+        elif requested_scene == "battle":
+            creature = _consume_requested_creature(scene)
+            if creature is not None:
+                scene = BattleScene(
+                    pygame,
+                    context,
+                    _load_battle_character(storage, context),
+                    creature,
+                    return_scene=scene,
+                    storage=storage,
+                )
         scene.update()
         scene.draw(screen)
         pygame.display.flip()
@@ -59,6 +72,27 @@ def _consume_requested_scene(scene) -> str | None:
     if consume is None:
         return None
     return consume()
+
+
+def _consume_requested_creature(scene) -> Creature | None:
+    consume = getattr(scene, "consume_requested_creature", None)
+    if consume is None:
+        return None
+    return consume()
+
+
+def _load_battle_character(storage: JsonStore, context: GameContext) -> Character:
+    try:
+        return get_character(storage, context.character_id)
+    except ValueError:
+        return Character(
+            id=context.character_id,
+            name=context.player_name,
+            character_class="Aventureiro",
+            max_health=20,
+            current_health=20,
+            armor=0,
+        )
 
 
 def _max_frames_from_env() -> int | None:

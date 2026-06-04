@@ -79,6 +79,35 @@ def register_creature_encounter(
         return False
 
 
+def register_battle_event(
+    storage: JsonStore,
+    context: GameContext,
+    creature: Creature,
+    player_position: tuple[int, int],
+    battle_event: str,
+    detail: str = "",
+    registrar: CampaignEventRegistrar = register_campaign_session_event,
+) -> bool:
+    if not context.has_campaign_session:
+        return False
+
+    try:
+        campaign = get_campaign(storage, context.campaign_id or "")
+        session = get_campaign_session(storage, context.campaign_session_id or "")
+        if session.campaign_id.casefold() != campaign.id.casefold():
+            raise ValueError("Sessao nao pertence a campanha informada.")
+
+        notes = _build_battle_notes(context, creature, player_position, battle_event)
+        result = f"{battle_event}: {creature.name}"
+        if detail.strip():
+            result = f"{result}. {detail.strip()}"
+        registrar(storage, session.id, context.player_name, "Combate visual", result, notes)
+        return True
+    except Exception as exc:  # noqa: BLE001 - the game must not crash because persistence failed.
+        print(f"[MAGIK Game] Nao foi possivel registrar evento de batalha: {exc}")
+        return False
+
+
 def _build_result(event: MapEvent, selected_option: DialogueOption | None) -> str:
     if selected_option is None:
         return event.text
@@ -138,3 +167,22 @@ def _build_creature_notes(
         if selected_option.event:
             parts.append(f"opcao_evento={selected_option.event}")
     return "; ".join(parts)
+
+
+def _build_battle_notes(
+    context: GameContext,
+    creature: Creature,
+    player_position: tuple[int, int],
+    battle_event: str,
+) -> str:
+    x, y = player_position
+    return "; ".join(
+        [
+            "origem=game",
+            "tipo=battle",
+            f"mapa={context.map_name}",
+            f"posicao=({x},{y})",
+            f"criatura={creature.id}",
+            f"evento={battle_event}",
+        ]
+    )
