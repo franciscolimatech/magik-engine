@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Editar personagem</h1>
+    <p>{{ character.name }} - <code>{{ character.id }}</code></p>
+  </div>
+  <div class="form-actions">
+    <a class="button secondary" href="/characters/{{ character.id }}">Voltar para ficha</a>
+    <a class="button secondary" href="/characters/{{ character.id }}/abilities">Editar habilidades</a>
+  </div>
+</div>
+
+{% if success %}<p class="notice success">{{ success }}</p>{% endif %}
+{% if error %}<p class="notice error">{{ error }}</p>{% endif %}
+
+<section class="edit-grid">
+  <article class="card form-card">
+    <h2>Dados gerais</h2>
+    <form method="post" action="/characters/{{ character.id }}/edit">
+      <div class="field-grid">
+        <label>
+          Nome
+          <input name="name" required value="{{ form.get('name', '') }}">
+        </label>
+        <label>
+          Classe
+          <input name="character_class" required value="{{ form.get('character_class', '') }}">
+        </label>
+      </div>
+      <div class="field-grid three">
+        <label>
+          Vida maxima
+          <input name="max_health" type="number" min="1" required value="{{ form.get('max_health', '') }}">
+        </label>
+        <label>
+          Vida atual
+          <input name="current_health" type="number" min="0" required value="{{ form.get('current_health', '') }}">
+        </label>
+        <label>
+          Armadura
+          <input name="armor" type="number" min="0" required value="{{ form.get('armor', '') }}">
+        </label>
+      </div>
+      <label>
+        Tags separadas por virgula
+        <input name="tags" value="{{ form.get('tags', '') }}">
+      </label>
+      <label>
+        Equipamentos separados por virgula
+        <input name="equipment" value="{{ form.get('equipment', '') }}">
+      </label>
+      <label>
+        Status separados por virgula
+        <input name="status" value="{{ form.get('status', '') }}">
+      </label>
+      <label>
+        Observacoes gerais
+        <textarea name="notes" rows="6">{{ form.get('notes', '') }}</textarea>
+      </label>
+      <button class="button" type="submit">Salvar personagem</button>
+    </form>
+  </article>
+
+  <aside class="sheet-column">
+    <section class="card form-card">
+      <h2>Equipamentos</h2>
+      {% if character.equipment %}
+      <div class="editable-list">
+        {% for item in character.equipment %}
+        <form method="post" action="/characters/{{ character.id }}/equipment/remove">
+          <span>{{ item }}</span>
+          <input type="hidden" name="equipment_item" value="{{ item }}">
+          <button class="button danger small" type="submit">Remover</button>
+        </form>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty">Nenhum equipamento cadastrado.</p>
+      {% endif %}
+      <form method="post" action="/characters/{{ character.id }}/equipment/add">
+        <label>
+          Novo equipamento
+          <input name="equipment_item" placeholder="Ex: Amuleto">
+        </label>
+        <button class="button secondary" type="submit">Adicionar equipamento</button>
+      </form>
+    </section>
+
+    <section class="card form-card">
+      <h2>Status</h2>
+      {% if character.status %}
+      <div class="editable-list">
+        {% for item in character.status %}
+        <form method="post" action="/characters/{{ character.id }}/status/remove">
+          <span>{{ item }}</span>
+          <input type="hidden" name="status_item" value="{{ item }}">
+          <button class="button danger small" type="submit">Remover</button>
+        </form>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty">Nenhum status ativo.</p>
+      {% endif %}
+      <form method="post" action="/characters/{{ character.id }}/status/add">
+        <label>
+          Novo status
+          <input name="status_item" placeholder="Ex: ferido">
+        </label>
+        <button class="button secondary" type="submit">Adicionar status</button>
+      </form>
+    </section>
+  </aside>
+</section>
+{% endblock %}

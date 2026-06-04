@@ -217,6 +217,12 @@ h2 {
   border: 1px solid var(--border);
 }
 
+.button.danger {
+  background: rgba(255, 139, 139, 0.14);
+  color: #ffd0d0;
+  border: 1px solid rgba(255, 139, 139, 0.45);
+}
+
 .card {
   padding: 1.25rem;
 }
@@ -246,6 +252,13 @@ h2 {
   display: grid;
   gap: 0.75rem;
   justify-items: end;
+}
+
+.sheet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
 }
 
 .special-stack span,
@@ -574,6 +587,57 @@ code {
   font-weight: 700;
 }
 
+.edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.editable-list,
+.edit-ability-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.editable-list form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.editable-list span {
+  font-weight: 700;
+}
+
+.split-actions {
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+
+.notice {
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.notice.success {
+  border: 1px solid rgba(110, 231, 183, 0.35);
+  background: rgba(110, 231, 183, 0.12);
+  color: #baf7dc;
+}
+
+.notice.error {
+  border: 1px solid rgba(255, 139, 139, 0.38);
+  background: rgba(255, 139, 139, 0.12);
+  color: #ffd0d0;
+}
+
 .form-card form,
 .field-grid {
   display: grid;
@@ -682,6 +746,7 @@ select:focus {
   .sheet-grid,
   .detail-grid,
   .sheet-main-grid,
+  .edit-grid,
   .field-grid,
   .field-grid.three {
     grid-template-columns: 1fr;
@@ -694,6 +759,11 @@ select:focus {
 
   .sheet-hero-side {
     justify-items: start;
+  }
+
+  .sheet-actions,
+  .split-actions {
+    justify-content: flex-start;
   }
 
   .nav {

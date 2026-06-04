@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Editar habilidades</h1>
+    <p>{{ character.name }} - <code>{{ character.id }}</code></p>
+  </div>
+  <div class="form-actions">
+    <a class="button secondary" href="/characters/{{ character.id }}">Voltar para ficha</a>
+    <a class="button secondary" href="/characters/{{ character.id }}/edit">Editar personagem</a>
+  </div>
+</div>
+
+{% if success %}<p class="notice success">{{ success }}</p>{% endif %}
+{% if error %}<p class="notice error">{{ error }}</p>{% endif %}
+
+<section class="card form-card">
+  <h2>Adicionar habilidade</h2>
+  <form method="post" action="/characters/{{ character.id }}/abilities/add">
+    <div class="field-grid">
+      <label>
+        Nome
+        <input name="name" value="{{ form.get('name', '') }}">
+      </label>
+      <label>
+        Tipo
+        <select name="type">
+          {% for type in ability_types %}
+          <option value="{{ type }}" {% if form.get('type', 'utilidade') == type %}selected{% endif %}>{{ type }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        Uso
+        <select name="use">
+          {% for use in ability_uses %}
+          <option value="{{ use }}" {% if form.get('use', 'livre') == use %}selected{% endif %}>{{ use }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        Limite de uso
+        <input name="usage_limit" type="number" min="0" value="{{ form.get('usage_limit', '') }}">
+      </label>
+      <label>
+        Usos restantes
+        <input name="remaining_uses" type="number" min="0" value="{{ form.get('remaining_uses', '') }}">
+      </label>
+      <label>
+        Teste sugerido
+        <input name="suggested_test" value="{{ form.get('suggested_test', '') }}">
+      </label>
+    </div>
+    <label>
+      Descricao
+      <textarea name="description" rows="2">{{ form.get('description', '') }}</textarea>
+    </label>
+    <label>
+      Efeito
+      <textarea name="effect" rows="2">{{ form.get('effect', '') }}</textarea>
+    </label>
+    <label>
+      Custo
+      <input name="cost" value="{{ form.get('cost', '') }}">
+    </label>
+    <label class="checkbox-field">
+      <input name="requires_test" type="checkbox" value="true" {% if form.get('requires_test') %}checked{% endif %}>
+      <span>Exige teste</span>
+    </label>
+    <label>
+      Observacoes
+      <textarea name="notes" rows="2">{{ form.get('notes', '') }}</textarea>
+    </label>
+    <button class="button" type="submit">Adicionar habilidade</button>
+  </form>
+</section>
+
+<section class="edit-ability-list">
+  {% if abilities %}
+  {% for ability in abilities %}
+  <article class="card form-card">
+    <h2>{{ ability.name }}</h2>
+    <form method="post" action="/characters/{{ character.id }}/abilities/{{ ability.id }}/edit">
+      <div class="field-grid">
+        <label>
+          Nome
+          <input name="name" value="{{ ability.name }}">
+        </label>
+        <label>
+          Tipo
+          <select name="type">
+            {% for type in ability_types %}
+            <option value="{{ type }}" {% if ability.type == type %}selected{% endif %}>{{ type }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>
+          Uso
+          <select name="use">
+            {% for use in ability_uses %}
+            <option value="{{ use }}" {% if ability.use == use %}selected{% endif %}>{{ use }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>
+          Limite de uso
+          <input name="usage_limit" type="number" min="0" value="{{ ability.usage_limit if ability.usage_limit is not none else '' }}">
+        </label>
+        <label>
+          Usos restantes
+          <input name="remaining_uses" type="number" min="0" value="{{ ability.remaining_uses if ability.remaining_uses is not none else '' }}">
+        </label>
+        <label>
+          Teste sugerido
+          <input name="suggested_test" value="{{ ability.suggested_test or '' }}">
+        </label>
+      </div>
+      <label>
+        Descricao
+        <textarea name="description" rows="2">{{ ability.description }}</textarea>
+      </label>
+      <label>
+        Efeito
+        <textarea name="effect" rows="2">{{ ability.effect }}</textarea>
+      </label>
+      <label>
+        Custo
+        <input name="cost" value="{{ ability.cost }}">
+      </label>
+      <label class="checkbox-field">
+        <input name="requires_test" type="checkbox" value="true" {% if ability.requires_test %}checked{% endif %}>
+        <span>Exige teste</span>
+      </label>
+      <label>
+        Observacoes
+        <textarea name="notes" rows="2">{{ ability.notes }}</textarea>
+      </label>
+      <div class="form-actions">
+        <button class="button" type="submit">Salvar habilidade</button>
+      </div>
+    </form>
+    <div class="form-actions split-actions">
+      <form method="post" action="/characters/{{ character.id }}/abilities/{{ ability.id }}/restore">
+        <button class="button secondary small" type="submit">Restaurar usos</button>
+      </form>
+      <form method="post" action="/characters/{{ character.id }}/abilities/{{ ability.id }}/remove">
+        <button class="button danger small" type="submit">Remover habilidade</button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+  {% else %}
+  <section class="card">
+    <p class="empty">Nenhuma habilidade cadastrada.</p>
+  </section>
+  {% endif %}
+</section>
+{% endblock %}

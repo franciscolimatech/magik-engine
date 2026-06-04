@@ -63,6 +63,12 @@ especiais, barras visuais de vida e armadura, equipamentos em chips,
 habilidades em cards e blocos de historia, personalidade, frases marcantes e
 observacoes.
 
+Na v0.9.3, a web tambem permite editar personagens sem passar pelo terminal.
+Use `Editar personagem` na ficha para alterar nome, classe, vida, armadura,
+tags, equipamentos, status e observacoes. Use `Editar habilidades` para listar,
+adicionar, editar, remover e restaurar usos de habilidades gerais do
+personagem. Essas telas continuam usando os modelos e validacoes do `src/core`.
+
 As habilidades iniciais usam o sistema geral de habilidades do `src/core`, com
 tipo, uso, efeito, custo, limite de uso, teste sugerido e observacoes. Campos de
 habilidade completamente vazios sao ignorados. Campanhas, combates e IA

@@ -89,6 +89,8 @@ def test_character_detail_shows_character_sheet() -> None:
     assert "Ikisaki" in response.text
     assert "Cajado Sombrio" in response.text
     assert "Switch Sombrio" in response.text
+    assert "Editar personagem" in response.text
+    assert "Editar habilidades" in response.text
 
 
 def test_character_create_saves_and_redirects_to_sheet() -> None:
@@ -313,3 +315,181 @@ def test_character_detail_handles_empty_equipment_and_abilities() -> None:
     assert "Nenhum equipamento cadastrado ainda." in response.text
     assert "Nenhuma habilidade cadastrada." in response.text
     assert "Nenhum sistema especial cadastrado." in response.text
+
+
+def test_character_edit_form_opens() -> None:
+    client, _storage = make_client()
+
+    response = client.get("/characters/miko-meu/edit")
+
+    assert response.status_code == 200
+    assert "Editar personagem" in response.text
+    assert "Miko Meu" in response.text
+    assert "Status separados por virgula" in response.text
+
+
+def test_character_edit_updates_character() -> None:
+    client, storage = make_client()
+
+    response = client.post(
+        "/characters/miko-meu/edit",
+        data={
+            "name": "Miko Meu Revisado",
+            "character_class": "Sombrio",
+            "max_health": "30",
+            "current_health": "22",
+            "armor": "7",
+            "tags": "sombrio, revisado",
+            "equipment": "Cajado, Corrente de Ferro, Amuleto",
+            "status": "alerta",
+            "notes": "Observacao revisada.",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 303
+    updated = get_character(storage, "miko-meu")
+    assert updated.name == "Miko Meu Revisado"
+    assert updated.max_health == 30
+    assert updated.current_health == 22
+    assert updated.armor == 7
+    assert updated.equipment == ["Cajado", "Corrente de Ferro", "Amuleto"]
+    assert updated.status == ["alerta"]
+    assert updated.notes == ["Observacao revisada."]
+
+
+def test_character_edit_rejects_current_health_above_maximum() -> None:
+    client, _storage = make_client()
+
+    response = client.post(
+        "/characters/miko-meu/edit",
+        data={
+            "name": "Miko Meu",
+            "character_class": "Sombrio",
+            "max_health": "10",
+            "current_health": "11",
+            "armor": "5",
+            "tags": "",
+            "equipment": "",
+            "status": "",
+            "notes": "",
+        },
+    )
+
+    assert response.status_code == 400
+    assert "Vida atual nao pode ultrapassar a vida maxima." in response.text
+
+
+def test_character_equipment_add_and_remove() -> None:
+    client, storage = make_client()
+
+    add_response = client.post(
+        "/characters/miko-meu/equipment/add",
+        data={"equipment_item": "Amuleto"},
+        follow_redirects=False,
+    )
+    assert add_response.status_code == 303
+    assert "Amuleto" in get_character(storage, "miko-meu").equipment
+
+    remove_response = client.post(
+        "/characters/miko-meu/equipment/remove",
+        data={"equipment_item": "Amuleto"},
+        follow_redirects=False,
+    )
+    assert remove_response.status_code == 303
+    assert "Amuleto" not in get_character(storage, "miko-meu").equipment
+
+
+def test_character_status_add_and_remove() -> None:
+    client, storage = make_client()
+
+    add_response = client.post(
+        "/characters/miko-meu/status/add",
+        data={"status_item": "alerta"},
+        follow_redirects=False,
+    )
+    assert add_response.status_code == 303
+    assert "alerta" in get_character(storage, "miko-meu").status
+
+    remove_response = client.post(
+        "/characters/miko-meu/status/remove",
+        data={"status_item": "alerta"},
+        follow_redirects=False,
+    )
+    assert remove_response.status_code == 303
+    assert "alerta" not in get_character(storage, "miko-meu").status
+
+
+def test_character_abilities_page_lists_abilities() -> None:
+    client, _storage = make_client()
+
+    response = client.get("/characters/miko-meu/abilities")
+
+    assert response.status_code == 200
+    assert "Editar habilidades" in response.text
+    assert "Roleta Sombria" in response.text
+    assert "Adicionar habilidade" in response.text
+
+
+def test_character_ability_add_edit_restore_and_remove() -> None:
+    client, storage = make_client()
+
+    add_response = client.post(
+        "/characters/miko-meu/abilities/add",
+        data={
+            "name": "Lampejo Frio",
+            "description": "Um brilho curto.",
+            "type": "magia",
+            "use": "limitado",
+            "effect": "Ilumina uma pista.",
+            "cost": "Foco",
+            "usage_limit": "2",
+            "remaining_uses": "1",
+            "requires_test": "true",
+            "suggested_test": "Conhecimento",
+            "notes": "Nao decide resultado sozinho.",
+        },
+        follow_redirects=False,
+    )
+    assert add_response.status_code == 303
+    character = get_character(storage, "miko-meu")
+    added = next(ability for ability in character.abilities if ability["id"] == "lampejo-frio")
+    assert added["name"] == "Lampejo Frio"
+    assert added["remaining_uses"] == 1
+
+    edit_response = client.post(
+        "/characters/miko-meu/abilities/lampejo-frio/edit",
+        data={
+            "name": "Lampejo Gelado",
+            "description": "Um brilho curto e frio.",
+            "type": "magia",
+            "use": "limitado",
+            "effect": "Ilumina duas pistas.",
+            "cost": "Foco",
+            "usage_limit": "2",
+            "remaining_uses": "0",
+            "requires_test": "",
+            "suggested_test": "Conhecimento",
+            "notes": "Editada pela web.",
+        },
+        follow_redirects=False,
+    )
+    assert edit_response.status_code == 303
+    edited = next(ability for ability in get_character(storage, "miko-meu").abilities if ability["id"] == "lampejo-frio")
+    assert edited["name"] == "Lampejo Gelado"
+    assert edited["remaining_uses"] == 0
+
+    restore_response = client.post(
+        "/characters/miko-meu/abilities/lampejo-frio/restore",
+        follow_redirects=False,
+    )
+    assert restore_response.status_code == 303
+    restored = next(ability for ability in get_character(storage, "miko-meu").abilities if ability["id"] == "lampejo-frio")
+    assert restored["remaining_uses"] == 2
+
+    remove_response = client.post(
+        "/characters/miko-meu/abilities/lampejo-frio/remove",
+        follow_redirects=False,
+    )
+    assert remove_response.status_code == 303
+    assert all(ability["id"] != "lampejo-frio" for ability in get_character(storage, "miko-meu").abilities)
