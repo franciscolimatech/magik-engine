@@ -20,6 +20,7 @@ def run_game(max_frames: int | None = None) -> None:
     import pygame
 
     from src.game.scenes.battle import BattleScene
+    from src.game.scenes.character_creator import CharacterCreatorScene
     from src.game.scenes.main_menu import MainMenuScene
     from src.game.scenes.overworld import OverworldScene
 
@@ -46,6 +47,12 @@ def run_game(max_frames: int | None = None) -> None:
         if requested_scene == "overworld":
             context = getattr(scene, "context", context)
             scene = getattr(scene, "return_scene", None) or OverworldScene(pygame, context, storage=storage)
+        elif requested_scene == "character_creator":
+            context = getattr(scene, "context", context)
+            scene = CharacterCreatorScene(pygame, context, storage)
+        elif requested_scene == "main_menu":
+            context = getattr(scene, "context", context)
+            scene = MainMenuScene(pygame, context, storage=storage)
         elif requested_scene == "battle":
             context = getattr(scene, "context", context)
             creature = _consume_requested_creature(scene)

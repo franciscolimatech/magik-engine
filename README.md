@@ -156,6 +156,14 @@ jogo, com nome, classe inicial, vida 25, armadura 0, tag `player-created` e nota
 inicia o overworld com a ficha escolhida. Miko Meu continua existindo como
 personagem de exemplo e fallback, mas nao e obrigatorio para jogar.
 
+Na v1.12, `Novo Jogo` abre um criador completo dentro do PyGame. O fluxo passa
+por nome, classe com descricao, ate 2 equipamentos iniciais, armadura inicial
+entre 0, 2 ou 5, poder especial descrito pelo jogador, personalidade/historia
+curta e confirmacao. O poder especial ainda nao e interpretado por IA e nao cria
+regras automaticas; ele e salvo como texto bruto nas notas e marcado em
+`special_systems` para uma etapa futura. Personagens criados pelo jogo recebem
+as tags `player-created` e `game-created`.
+
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara
 e ha campanha/sessao validas, o texto e registrado como evento narrativo com
@@ -181,9 +189,9 @@ id existente. Pelo menu, o jogador pode carregar qualquer personagem salvo ou
 criar uma ficha simples. Se o id escolhido nao existir, o jogo mostra
 `Aventureiro` como fallback.
 
-Proximos passos planejados para o jogo 2D incluem um criador completo,
-aparencia/origem do personagem e, em etapa futura, apoio de IA para poderes
-especiais sem controlar regras.
+Proximos passos planejados para o jogo 2D incluem IA para interpretar poder
+especial sem controlar regras, aparencia basica, origem/local inicial e save do
+jogador.
 
 O terminal mostra o menu:
 

@@ -2,18 +2,11 @@
 
 from __future__ import annotations
 
-from src.core.character import Character, create_character, list_characters
+from src.core.character import Character, list_characters
 from src.game import colors
 from src.game.game_context import GameContext
 from src.game.scenes.base import BaseScene
 from src.storage.types import JsonStore
-
-
-CLASS_OPTIONS = ("Sombrio", "Guerreiro", "Mago", "Cacador", "Curandeiro", "Inventor")
-NEW_CHARACTER_HEALTH = 25
-NEW_CHARACTER_ARMOR = 0
-ALLOWED_NAME_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_")
-
 
 class MainMenuScene(BaseScene):
     OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Ver Contexto", "Controles", "Sair")
@@ -24,10 +17,7 @@ class MainMenuScene(BaseScene):
         self.storage = storage
         self.selected_index = 0
         self.character_index = 0
-        self.class_index = 0
-        self.confirm_index = 0
         self.mode = "main"
-        self.new_character_name = ""
         self.error_message = ""
         self.requested_scene: str | None = None
         self.should_quit = False
@@ -40,10 +30,6 @@ class MainMenuScene(BaseScene):
         if self.mode == "characters":
             characters = self.available_characters()
             return characters[self.character_index].name if characters else "Nenhum personagem"
-        if self.mode == "class":
-            return CLASS_OPTIONS[self.class_index]
-        if self.mode == "confirm":
-            return ("Confirmar e comecar", "Voltar")[self.confirm_index]
         return self.OPTIONS[self.selected_index]
 
     def consume_requested_scene(self) -> str | None:
@@ -60,12 +46,6 @@ class MainMenuScene(BaseScene):
             self._handle_panel_key(event.key)
         elif self.mode == "characters":
             self._handle_characters_key(event.key)
-        elif self.mode == "name":
-            self._handle_name_key(event)
-        elif self.mode == "class":
-            self._handle_class_key(event.key)
-        elif self.mode == "confirm":
-            self._handle_confirm_key(event.key)
         else:
             self._handle_main_key(event.key)
 
@@ -82,12 +62,6 @@ class MainMenuScene(BaseScene):
             self._draw_panel(surface, "Controles", self.controls_lines())
         elif self.mode == "characters":
             self._draw_panel(surface, "Carregar Personagem", self.character_lines())
-        elif self.mode == "name":
-            self._draw_panel(surface, "Novo Jogo", self.name_lines())
-        elif self.mode == "class":
-            self._draw_panel(surface, "Escolha a Classe", self.class_lines())
-        elif self.mode == "confirm":
-            self._draw_panel(surface, "Confirmar Personagem", self.confirm_lines())
         else:
             self._draw_options(surface)
 
@@ -109,44 +83,6 @@ class MainMenuScene(BaseScene):
             lines.append(f"{marker}{character.name} - {character.character_class}")
         lines.append("")
         lines.append("Enter/Espaco para escolher | ESC para voltar")
-        return lines
-
-    def name_lines(self) -> list[str]:
-        lines = [
-            "Digite o nome do personagem:",
-            self.new_character_name or "_",
-            "",
-            "Letras, numeros, espaco, hifen e underline.",
-            "Enter confirma | Backspace apaga | ESC volta",
-        ]
-        if self.error_message:
-            lines.insert(3, self.error_message)
-        return lines
-
-    def class_lines(self) -> list[str]:
-        lines = []
-        for index, class_name in enumerate(CLASS_OPTIONS):
-            marker = "> " if index == self.class_index else "  "
-            lines.append(f"{marker}{class_name}")
-        lines.append("")
-        lines.append("Enter/Espaco confirma | ESC volta")
-        return lines
-
-    def confirm_lines(self) -> list[str]:
-        tags = "player-created"
-        lines = [
-            f"Nome: {self.new_character_name}",
-            f"Classe: {CLASS_OPTIONS[self.class_index]}",
-            f"Vida: {NEW_CHARACTER_HEALTH}/{NEW_CHARACTER_HEALTH}",
-            f"Armadura: {NEW_CHARACTER_ARMOR}",
-            f"Tags: {tags}",
-            "",
-        ]
-        for index, option in enumerate(("Confirmar e comecar", "Voltar")):
-            marker = "> " if index == self.confirm_index else "  "
-            lines.append(f"{marker}{option}")
-        if self.error_message:
-            lines.append(self.error_message)
         return lines
 
     def context_lines(self) -> list[str]:
@@ -183,26 +119,6 @@ class MainMenuScene(BaseScene):
         self.requested_scene = "overworld"
         return True
 
-    def create_new_character(self) -> Character:
-        if self.storage is None:
-            raise ValueError("Armazenamento indisponivel para criar personagem.")
-        name = self.new_character_name.strip()
-        if not name:
-            raise ValueError("Nome do personagem e obrigatorio.")
-        character = create_character(
-            self.storage,
-            name=name,
-            character_class=CLASS_OPTIONS[self.class_index],
-            max_health=NEW_CHARACTER_HEALTH,
-            armor=NEW_CHARACTER_ARMOR,
-            equipment=[],
-            notes=["Criado pelo jogo 2D"],
-            tags=["player-created"],
-        )
-        self.context = self.context.with_character(character.id, self.storage)
-        self.requested_scene = "overworld"
-        return character
-
     def _handle_main_key(self, key: int) -> None:
         keys = self.pygame
         if key == keys.K_ESCAPE:
@@ -220,8 +136,7 @@ class MainMenuScene(BaseScene):
         if option == "Continuar":
             self.requested_scene = "overworld"
         elif option == "Novo Jogo":
-            self.mode = "name"
-            self.new_character_name = ""
+            self.requested_scene = "character_creator"
         elif option == "Carregar Personagem":
             self.mode = "characters"
             self.character_index = 0
@@ -243,54 +158,6 @@ class MainMenuScene(BaseScene):
             self.character_index = (self.character_index - 1) % len(characters)
         elif key in {keys.K_RETURN, keys.K_SPACE}:
             self.select_character(self.character_index)
-
-    def _handle_name_key(self, event) -> None:
-        key = event.key
-        keys = self.pygame
-        self.error_message = ""
-        if key == keys.K_ESCAPE:
-            self.mode = "main"
-            return
-        if key == keys.K_BACKSPACE:
-            self.new_character_name = self.new_character_name[:-1]
-            return
-        if key == keys.K_RETURN:
-            if not self.new_character_name.strip():
-                self.error_message = "Nome do personagem e obrigatorio."
-                return
-            self.mode = "class"
-            return
-        text = getattr(event, "unicode", "")
-        if text and text in ALLOWED_NAME_CHARS and len(self.new_character_name) < 32:
-            self.new_character_name += text
-
-    def _handle_class_key(self, key: int) -> None:
-        keys = self.pygame
-        if key == keys.K_ESCAPE:
-            self.mode = "name"
-        elif key in {keys.K_DOWN, keys.K_s}:
-            self.class_index = (self.class_index + 1) % len(CLASS_OPTIONS)
-        elif key in {keys.K_UP, keys.K_w}:
-            self.class_index = (self.class_index - 1) % len(CLASS_OPTIONS)
-        elif key in {keys.K_RETURN, keys.K_SPACE}:
-            self.mode = "confirm"
-            self.confirm_index = 0
-
-    def _handle_confirm_key(self, key: int) -> None:
-        keys = self.pygame
-        self.error_message = ""
-        if key == keys.K_ESCAPE:
-            self.mode = "class"
-        elif key in {keys.K_DOWN, keys.K_s, keys.K_UP, keys.K_w}:
-            self.confirm_index = 1 - self.confirm_index
-        elif key in {keys.K_RETURN, keys.K_SPACE}:
-            if self.confirm_index == 1:
-                self.mode = "class"
-                return
-            try:
-                self.create_new_character()
-            except ValueError as exc:
-                self.error_message = str(exc)
 
     def _handle_panel_key(self, key: int) -> None:
         keys = self.pygame

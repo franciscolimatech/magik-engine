@@ -23,6 +23,7 @@ from src.game.maps.test_map import (
     map_width,
 )
 from src.game.scenes.battle import BattleScene
+from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene
 from src.game.scenes.main_menu import MainMenuScene
 from src.game.scenes.overworld import OverworldScene
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
@@ -722,67 +723,142 @@ def test_main_menu_load_existing_character_updates_context() -> None:
     assert scene.consume_requested_scene() == "overworld"
 
 
-def test_main_menu_new_game_requires_name() -> None:
+def test_main_menu_new_game_requests_character_creator() -> None:
     scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
-    scene.mode = "name"
+    scene.selected_index = 1
 
     scene.handle_event(FakeEvent(FakePygame.K_RETURN))
 
-    assert scene.mode == "name"
+    assert scene.consume_requested_scene() == "character_creator"
+
+
+def test_character_creator_instantiates_on_name_step() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    assert scene.step == "name"
+    assert scene.step_title() == "1. Nome"
+
+
+def test_character_creator_rejects_empty_name() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    assert scene.validate_name() is False
     assert scene.error_message == "Nome do personagem e obrigatorio."
 
 
-def test_main_menu_new_game_class_selection_works() -> None:
-    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
-    scene.mode = "class"
+def test_character_creator_rejects_short_name() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.name = "A"
+
+    assert scene.validate_name() is False
+    assert scene.error_message == "Nome precisa ter pelo menos 2 caracteres."
+
+
+def test_character_creator_class_selection_works_and_description_is_available() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.step = "class"
 
     scene.handle_event(FakeEvent(FakePygame.K_DOWN))
 
-    assert scene.selected_option == "Guerreiro"
+    assert scene.selected_class == "Guerreiro"
+    assert scene.class_description() == "Usa forca, tecnica e resistencia."
 
 
-def test_main_menu_new_game_creates_character_with_player_created_tag() -> None:
-    storage = MemoryStorage()
-    scene = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=storage)
-    scene.new_character_name = "Lia Nova"
+def test_character_creator_equipment_can_be_selected_and_unselected() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    assert scene.toggle_equipment() is True
+    assert scene.selected_equipment_names == ["Cajado"]
+
+    assert scene.toggle_equipment() is True
+    assert scene.selected_equipment_names == []
+
+
+def test_character_creator_limits_equipment_to_two() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.equipment_index = 0
+    scene.toggle_equipment()
+    scene.equipment_index = 1
+    scene.toggle_equipment()
+    scene.equipment_index = 2
+
+    assert scene.toggle_equipment() is False
+    assert scene.error_message == "Escolha no maximo 2 equipamentos principais."
+    assert scene.selected_equipment_names == ["Cajado", "Espada curta"]
+
+
+def test_character_creator_armor_only_allows_expected_values() -> None:
+    assert [value for value, _ in ARMOR_OPTIONS] == [0, 2, 5]
+
+
+def test_character_creator_confirmation_summary_contains_choices() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.name = "Lia Nova"
     scene.class_index = 1
+    scene.selected_equipment = {0, 5}
+    scene.armor_index = 2
+    scene.power_text = "Manipula fios de luz."
+    scene.story_text = "Busca uma cidade perdida."
 
-    character = scene.create_new_character()
+    lines = scene.confirm_lines()
+
+    assert "Nome: Lia Nova" in lines
+    assert "Classe: Guerreiro" in lines
+    assert "Armadura: 5" in lines
+    assert "Equipamentos: Cajado, Escudo pequeno" in lines
+    assert "Poder: Manipula fios de luz." in lines
+    assert "Historia: Busca uma cidade perdida." in lines
+
+
+def test_character_creator_creates_complete_character_and_updates_context() -> None:
+    storage = MemoryStorage()
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), storage)
+    scene.name = "Lia Nova"
+    scene.class_index = 1
+    scene.selected_equipment = {0, 5}
+    scene.armor_index = 2
+    scene.power_text = "Manipula fios de luz."
+    scene.story_text = "Busca uma cidade perdida."
+
+    character = scene.create_character_from_selection()
 
     assert character.name == "Lia Nova"
     assert character.character_class == "Guerreiro"
-    assert character.max_health == 25
-    assert character.current_health == 25
-    assert character.armor == 0
+    assert character.equipment == ["Cajado", "Escudo pequeno"]
+    assert character.armor == 5
     assert "player-created" in character.tags
+    assert "game-created" in character.tags
     assert "Criado pelo jogo 2D" in character.notes
+    assert "poder_especial_bruto: Manipula fios de luz." in character.notes
+    assert "personalidade_historia: Busca uma cidade perdida." in character.notes
+    assert "poder_especial_bruto" in character.special_systems
     assert scene.context.character_id == character.id
     assert scene.context.player_name == "Lia Nova"
+    assert scene.consume_requested_scene() == "overworld"
 
 
-def test_main_menu_new_game_generates_unique_id() -> None:
+def test_character_creator_generates_unique_id() -> None:
     storage = MemoryStorage()
-    first = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=storage)
-    first.new_character_name = "Lia Nova"
-    first.create_new_character()
-    second = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=storage)
-    second.new_character_name = "Lia Nova"
+    first = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), storage)
+    first.name = "Lia Nova"
+    first.create_character_from_selection()
+    second = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), storage)
+    second.name = "Lia Nova"
 
-    character = second.create_new_character()
+    character = second.create_character_from_selection()
 
     assert character.id == "lia-nova-2"
 
 
-def test_main_menu_name_input_accepts_allowed_characters() -> None:
-    scene = MainMenuScene(FakePygame, GameContext(player_name="Aventureiro"), storage=MemoryStorage())
-    scene.mode = "name"
+def test_character_creator_name_input_accepts_allowed_characters() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
 
     scene.handle_event(FakeEvent(0, unicode="L"))
     scene.handle_event(FakeEvent(0, unicode="i"))
     scene.handle_event(FakeEvent(FakePygame.K_SPACE, unicode=" "))
     scene.handle_event(FakeEvent(0, unicode="_"))
 
-    assert scene.new_character_name == "Li _"
+    assert scene.name == "Li _"
 
 
 def test_battle_character_loader_uses_selected_context_character() -> None:
