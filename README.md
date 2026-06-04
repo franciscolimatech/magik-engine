@@ -51,9 +51,17 @@ Acesse:
 http://127.0.0.1:8000
 ```
 
-Nesta primeira versao web, a tela inicial traz atalhos e o modulo de
-personagens ja permite listar fichas, abrir a ficha visual e criar personagem.
-Campanhas, combates e IA Narradora aparecem como areas futuras da interface.
+Na v0.9.1, a tela inicial traz atalhos e o modulo de personagens permite
+listar fichas, abrir a ficha visual e criar personagem com um criador visual
+mais completo. O formulario `/characters/new` agora separa identidade,
+atributos, equipamentos, ate 3 habilidades iniciais e campos de historia e
+interpretacao. Antes de salvar, `/characters/preview` mostra uma revisao da
+ficha montada; a gravacao so acontece quando voce confirma.
+
+As habilidades iniciais usam o sistema geral de habilidades do `src/core`, com
+tipo, uso, efeito, custo, limite de uso, teste sugerido e observacoes. Campos de
+habilidade completamente vazios sao ignorados. Campanhas, combates e IA
+Narradora aparecem como areas futuras da interface web.
 
 O terminal mostra o menu:
 

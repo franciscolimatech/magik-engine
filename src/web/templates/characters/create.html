@@ -13,42 +13,142 @@
   {% if error %}
   <p class="error">{{ error }}</p>
   {% endif %}
-  <form method="post" action="/characters/new">
-    <div class="field-grid">
+  <form method="post" action="/characters/preview">
+    <fieldset class="form-section">
+      <legend>Identidade</legend>
+      <div class="field-grid">
+        <label>
+          Nome
+          <input name="name" required value="{{ form.get('name', '') }}">
+        </label>
+        <label>
+          Classe
+          <input name="character_class" required value="{{ form.get('character_class', '') }}">
+        </label>
+      </div>
       <label>
-        Nome
-        <input name="name" required value="{{ form.get('name', '') }}">
+        Descricao curta
+        <textarea name="short_description" rows="3">{{ form.get('short_description', '') }}</textarea>
       </label>
       <label>
-        Classe
-        <input name="character_class" required value="{{ form.get('character_class', '') }}">
-      </label>
-      <label>
-        Vida maxima
-        <input name="max_health" type="number" min="1" required value="{{ form.get('max_health', '20') }}">
-      </label>
-      <label>
-        Vida atual
-        <input name="current_health" type="number" min="0" value="{{ form.get('current_health', '') }}">
-      </label>
-      <label>
-        Armadura
-        <input name="armor" type="number" min="0" value="{{ form.get('armor', '0') }}">
-      </label>
-      <label>
-        Tags separadas por virgula
+        Tags/caracteristicas separadas por virgula
         <input name="tags" value="{{ form.get('tags', '') }}">
       </label>
+    </fieldset>
+
+    <fieldset class="form-section">
+      <legend>Atributos</legend>
+      <div class="field-grid three">
+        <label>
+          Vida maxima
+          <input name="max_health" type="number" min="1" required value="{{ form.get('max_health', '20') }}">
+        </label>
+        <label>
+          Vida atual
+          <input name="current_health" type="number" min="0" value="{{ form.get('current_health', '') }}">
+        </label>
+        <label>
+          Armadura/Escudo
+          <input name="armor" type="number" min="0" value="{{ form.get('armor', '0') }}">
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section">
+      <legend>Equipamentos</legend>
+      <label>
+        Equipamentos separados por virgula
+        <input name="equipment" value="{{ form.get('equipment', '') }}" placeholder="Cajado, Corrente de Ferro, Amuleto">
+        <span class="hint">Exemplo: Cajado, Corrente de Ferro, Amuleto</span>
+      </label>
+    </fieldset>
+
+    <fieldset class="form-section">
+      <legend>Habilidades iniciais</legend>
+      <p class="subtle">Preencha ate 3 habilidades. Blocos vazios serao ignorados.</p>
+      {% for slot in ability_slots %}
+      <div class="ability-panel">
+        <h2>Habilidade {{ slot }}</h2>
+        <div class="field-grid">
+          <label>
+            Nome
+            <input name="ability_name_{{ slot }}" value="{{ form.get('ability_name_' ~ slot, '') }}">
+          </label>
+          <label>
+            Tipo
+            <select name="ability_type_{{ slot }}">
+              {% for type in ability_types %}
+              <option value="{{ type }}" {% if form.get('ability_type_' ~ slot, 'utilidade') == type %}selected{% endif %}>{{ type }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            Uso
+            <select name="ability_use_{{ slot }}">
+              {% for use in ability_uses %}
+              <option value="{{ use }}" {% if form.get('ability_use_' ~ slot, 'livre') == use %}selected{% endif %}>{{ use }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            Limite de uso
+            <input name="ability_usage_limit_{{ slot }}" type="number" min="0" value="{{ form.get('ability_usage_limit_' ~ slot, '') }}">
+          </label>
+        </div>
+        <label>
+          Descricao
+          <textarea name="ability_description_{{ slot }}" rows="2">{{ form.get('ability_description_' ~ slot, '') }}</textarea>
+        </label>
+        <label>
+          Efeito
+          <textarea name="ability_effect_{{ slot }}" rows="2">{{ form.get('ability_effect_' ~ slot, '') }}</textarea>
+        </label>
+        <div class="field-grid">
+          <label>
+            Custo
+            <input name="ability_cost_{{ slot }}" value="{{ form.get('ability_cost_' ~ slot, '') }}">
+          </label>
+          <label>
+            Teste sugerido
+            <input name="ability_suggested_test_{{ slot }}" value="{{ form.get('ability_suggested_test_' ~ slot, '') }}">
+          </label>
+        </div>
+        <label class="checkbox-field">
+          <input name="ability_requires_test_{{ slot }}" type="checkbox" value="true" {% if form.get('ability_requires_test_' ~ slot) %}checked{% endif %}>
+          <span>Exige teste</span>
+        </label>
+        <label>
+          Observacoes
+          <textarea name="ability_notes_{{ slot }}" rows="2">{{ form.get('ability_notes_' ~ slot, '') }}</textarea>
+        </label>
+      </div>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset class="form-section">
+      <legend>Historia e interpretacao</legend>
+      <label>
+        Historia
+        <textarea name="history" rows="4">{{ form.get('history', '') }}</textarea>
+      </label>
+      <label>
+        Personalidade
+        <textarea name="personality" rows="3">{{ form.get('personality', '') }}</textarea>
+      </label>
+      <label>
+        Frases marcantes
+        <textarea name="catchphrases" rows="3">{{ form.get('catchphrases', '') }}</textarea>
+      </label>
+      <label>
+        Observacoes
+        <textarea name="notes" rows="4">{{ form.get('notes', '') }}</textarea>
+      </label>
+    </fieldset>
+
+    <div class="form-actions">
+      <button class="button" type="submit">Revisar personagem</button>
+      <a class="button secondary" href="/characters">Cancelar</a>
     </div>
-    <label>
-      Equipamentos separados por virgula
-      <input name="equipment" value="{{ form.get('equipment', '') }}">
-    </label>
-    <label>
-      Observacoes
-      <textarea name="notes" rows="4">{{ form.get('notes', '') }}</textarea>
-    </label>
-    <button class="button" type="submit">Salvar personagem</button>
   </form>
 </section>
 {% endblock %}

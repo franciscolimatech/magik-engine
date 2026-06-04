@@ -4,6 +4,7 @@
   --bg-soft: #141827;
   --surface: #191f31;
   --surface-strong: #202843;
+  --surface-soft: #111827;
   --border: #313a5d;
   --text: #f3f0ff;
   --muted: #aeb6d6;
@@ -204,6 +205,12 @@ h2 {
   cursor: pointer;
 }
 
+.button.small {
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  font-size: 0.88rem;
+}
+
 .button.secondary {
   background: var(--surface-strong);
   color: var(--text);
@@ -266,6 +273,26 @@ code {
   color: var(--text);
 }
 
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.tag-row span {
+  padding: 0.35rem 0.55rem;
+  border: 1px solid rgba(139, 124, 246, 0.35);
+  border-radius: 999px;
+  background: rgba(139, 124, 246, 0.12);
+  color: #d9ddff;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.tag-row.compact span {
+  font-size: 0.78rem;
+}
+
 .ability-list {
   display: grid;
   gap: 0.75rem;
@@ -299,6 +326,51 @@ code {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.field-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.form-section {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid rgba(81, 167, 255, 0.22);
+  border-radius: 8px;
+  background: rgba(17, 24, 39, 0.56);
+}
+
+.form-section legend {
+  padding: 0 0.45rem;
+  color: var(--accent-2);
+  font-weight: 900;
+}
+
+.ability-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.ability-panel h2 {
+  margin-bottom: 0;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
 label {
   display: grid;
   gap: 0.45rem;
@@ -307,7 +379,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -318,9 +391,21 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: 2px solid rgba(81, 167, 255, 0.45);
   border-color: var(--accent-2);
+}
+
+.checkbox-field {
+  display: inline-flex;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.checkbox-field input {
+  width: auto;
 }
 
 .error {
@@ -338,7 +423,8 @@ textarea:focus {
   .hero,
   .sheet-grid,
   .detail-grid,
-  .field-grid {
+  .field-grid,
+  .field-grid.three {
     grid-template-columns: 1fr;
   }
 

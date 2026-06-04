@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Revisar personagem</h1>
+    <p>Confira a ficha antes de salvar. Nada foi gravado ainda.</p>
+  </div>
+  <a class="button secondary" href="/characters/new">Criar outro</a>
+</div>
+
+<section class="sheet-grid">
+  <article class="card stat-card">
+    <span>Vida</span>
+    <strong>{{ character.current_health }}/{{ character.max_health }}</strong>
+  </article>
+  <article class="card stat-card">
+    <span>Armadura</span>
+    <strong>{{ character.armor }}</strong>
+  </article>
+  <article class="card stat-card">
+    <span>Classe</span>
+    <strong>{{ character.character_class }}</strong>
+  </article>
+</section>
+
+<section class="detail-grid">
+  <article class="card">
+    <h2>Identidade</h2>
+    <p><strong>{{ character.name }}</strong></p>
+    <p class="subtle"><code>{{ character.id }}</code></p>
+    {% set values = character.tags %}
+    {% include "partials/list_values.html" %}
+  </article>
+  <article class="card">
+    <h2>Equipamentos</h2>
+    {% set values = character.equipment %}
+    {% include "partials/list_values.html" %}
+  </article>
+</section>
+
+<section class="card">
+  <h2>Habilidades iniciais</h2>
+  {% if character.abilities %}
+  <div class="ability-list">
+    {% for ability in character.abilities %}
+    <article class="ability">
+      <strong>{{ ability.name }}</strong>
+      <span>{{ ability.type }} - {{ ability.use }}</span>
+      {% if ability.description %}<p>{{ ability.description }}</p>{% endif %}
+      {% if ability.effect %}<p><strong>Efeito:</strong> {{ ability.effect }}</p>{% endif %}
+      {% if ability.cost %}<p><strong>Custo:</strong> {{ ability.cost }}</p>{% endif %}
+      {% if ability.suggested_test %}<p><strong>Teste:</strong> {{ ability.suggested_test }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="empty">Nenhuma habilidade inicial preenchida.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Historia e observacoes</h2>
+  {% set values = character.notes %}
+  {% include "partials/list_values.html" %}
+</section>
+
+<section class="card form-card">
+  <form method="post" action="/characters/confirm">
+    {% for key, value in form.items() %}
+    <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endfor %}
+    <div class="form-actions">
+      <button class="button" type="submit">Confirmar e salvar</button>
+      <button class="button secondary" type="button" onclick="history.back()">Voltar e editar</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

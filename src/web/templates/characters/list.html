@@ -18,7 +18,8 @@
           <th>Classe</th>
           <th>Vida</th>
           <th>Armadura</th>
-          <th>Id</th>
+          <th>Habilidades</th>
+          <th>Tags</th>
           <th></th>
         </tr>
       </thead>
@@ -29,8 +30,19 @@
           <td>{{ character.character_class }}</td>
           <td>{{ character.current_health }}/{{ character.max_health }}</td>
           <td>{{ character.armor }}</td>
-          <td><code>{{ character.id }}</code></td>
-          <td><a class="text-link" href="/characters/{{ character.id }}">Ver ficha</a></td>
+          <td>{{ character.abilities|length }}</td>
+          <td>
+            {% if character.tags %}
+            <div class="tag-row compact">
+              {% for tag in character.tags[:3] %}
+              <span>{{ tag }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            <span class="empty">Sem tags</span>
+            {% endif %}
+          </td>
+          <td><a class="button small" href="/characters/{{ character.id }}">Ver ficha</a></td>
         </tr>
         {% endfor %}
       </tbody>

@@ -11,7 +11,7 @@
 <div class="page-heading">
   <div>
     <h1>{{ character.name }}</h1>
-    <p>{{ character.character_class }} · <code>{{ character.id }}</code></p>
+    <p>{{ character.character_class }} - <code>{{ character.id }}</code></p>
   </div>
   <a class="button secondary" href="/characters">Voltar</a>
 </div>
@@ -34,7 +34,8 @@
 <section class="detail-grid">
   <article class="card">
     <h2>Equipamentos</h2>
-    {% include "partials/list_values.html" with context %}
+    {% set values = character.equipment %}
+    {% include "partials/list_values.html" %}
   </article>
   <article class="card">
     <h2>Status</h2>
@@ -43,8 +44,15 @@
   </article>
   <article class="card">
     <h2>Tags</h2>
-    {% set values = character.tags %}
-    {% include "partials/list_values.html" %}
+    {% if character.tags %}
+    <div class="tag-row">
+      {% for tag in character.tags %}
+      <span>{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">Nenhuma tag cadastrada.</p>
+    {% endif %}
   </article>
   <article class="card">
     <h2>Sistemas especiais</h2>
@@ -63,8 +71,14 @@
     {% for ability in character.abilities %}
     <article class="ability">
       <strong>{{ ability.name or ability.id }}</strong>
-      <span>{{ ability.type or "tipo nao informado" }} · {{ ability.use or "uso nao informado" }}</span>
+      <span>{{ ability.type or "tipo nao informado" }} - {{ ability.use or "uso nao informado" }}</span>
       {% if ability.description %}<p>{{ ability.description }}</p>{% endif %}
+      {% if ability.effect %}<p><strong>Efeito:</strong> {{ ability.effect }}</p>{% endif %}
+      {% if ability.cost %}<p><strong>Custo:</strong> {{ ability.cost }}</p>{% endif %}
+      {% if ability.usage_limit is not none %}<p><strong>Usos:</strong> {{ ability.remaining_uses }}/{{ ability.usage_limit }}</p>{% endif %}
+      {% if ability.requires_test %}<p><strong>Exige teste:</strong> sim</p>{% endif %}
+      {% if ability.suggested_test %}<p><strong>Teste sugerido:</strong> {{ ability.suggested_test }}</p>{% endif %}
+      {% if ability.notes %}<p><strong>Notas:</strong> {{ ability.notes }}</p>{% endif %}
     </article>
     {% endfor %}
   </div>
@@ -74,7 +88,7 @@
 </section>
 
 <section class="card">
-  <h2>Observacoes</h2>
+  <h2>Historia e observacoes</h2>
   {% set values = character.notes %}
   {% include "partials/list_values.html" %}
 </section>
