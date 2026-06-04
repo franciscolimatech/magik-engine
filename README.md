@@ -164,6 +164,30 @@ regras automaticas; ele e salvo como texto bruto nas notas e marcado em
 `special_systems` para uma etapa futura. Personagens criados pelo jogo recebem
 as tags `player-created` e `game-created`.
 
+Na v1.13, o criador interpreta o poder especial bruto com a camada opcional de
+IA. O fluxo tenta Ollama local, depois OpenAI se configurada, e usa fallback
+local quando nenhuma IA estiver disponivel ou quando a chamada falhar. A
+interpretacao gera uma sugestao estruturada com nome, tipo, descricao, efeito
+narrativo, limitacao, custo/preco, uso sugerido e teste sugerido. Ela tambem
+cria uma habilidade inicial segura, sem dano automatico e sem alterar vida,
+armadura ou regras oficiais. A sugestao fica salva nas notas e marcada em
+`special_systems`; o mestre sempre deve aprovar antes de usar em jogo.
+
+Na v1.14, o criador ganhou a etapa `Aparencia Basica` antes da confirmacao.
+Ela permite escolher tipo e cor de cabelo, cor dos olhos, estilo de roupa e cor
+principal da roupa. As opcoes atuais sao simples e experimentais: cabelo curto,
+medio, longo, preso ou careca/coberto; cores de cabelo preto, castanho, loiro,
+branco, vermelho ou azul escuro; olhos castanhos, verdes, azuis, cinza ou roxos;
+e roupas de viajante, aprendiz, guerreiro leve, manto ou roupa simples em preto,
+branco, azul, vermelho, verde, roxo ou marrom. A aparencia e salva nas notas do
+personagem e marcada em `special_systems` como `appearance`.
+
+Os sprites do jogador continuam sendo gerados por codigo com `pygame.Surface`,
+sem assets externos e sem imagem por IA. Quando o personagem atual possui
+aparencia salva, o overworld usa essas escolhas para variar cabelo, olhos, roupa
+e alguns detalhes simples do sprite. Personagens antigos, incluindo Miko Meu,
+continuam usando o sprite padrao.
+
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara
 e ha campanha/sessao validas, o texto e registrado como evento narrativo com
@@ -180,6 +204,17 @@ $env:MAGIK_GAME_SESSION_ID="id-da-sessao"
 python -m src.game.app
 ```
 
+Para testar com Ollama local, deixe o Ollama rodando em `localhost:11434` e,
+opcionalmente, defina:
+
+```powershell
+$env:OLLAMA_MODEL="llama3.2:3b"
+python -m src.game.app
+```
+
+Para OpenAI, configure `OPENAI_API_KEY` no ambiente. Nunca salve a chave no
+codigo ou nos JSONs. Sem Ollama e sem chave, o criador usa fallback local.
+
 Para voltar ao modo sem campanha ativa, remova as variaveis ou abra um novo
 terminal.
 
@@ -189,9 +224,8 @@ id existente. Pelo menu, o jogador pode carregar qualquer personagem salvo ou
 criar uma ficha simples. Se o id escolhido nao existir, o jogo mostra
 `Aventureiro` como fallback.
 
-Proximos passos planejados para o jogo 2D incluem IA para interpretar poder
-especial sem controlar regras, aparencia basica, origem/local inicial e save do
-jogador.
+Proximos passos planejados para o jogo 2D incluem escolha de origem/local
+inicial, sistema de save e mundo modular.
 
 O terminal mostra o menu:
 

@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from src.core.character import get_character
 from src.game import assets, colors
+from src.game.appearance import appearance_from_notes
 from src.game.camera import Camera
 from src.game.entities.creature import Creature, load_game_creature
 from src.game.entities.npc import NPC
@@ -50,7 +52,8 @@ class OverworldScene(BaseScene):
             campaign_label=self.context.campaign_label,
             session_label=self.context.session_label,
         )
-        self.assets = assets.create_assets(pygame)
+        self.player_appearance = load_player_appearance(storage, self.context)
+        self.assets = assets.create_assets(pygame, player_appearance=self.player_appearance)
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
     def handle_event(self, event) -> None:
@@ -187,3 +190,13 @@ class OverworldScene(BaseScene):
         if key in {keys.K_DOWN, keys.K_s}:
             return (0, 1)
         return None
+
+
+def load_player_appearance(storage: JsonStore | None, context: GameContext) -> dict[str, str] | None:
+    if storage is None:
+        return None
+    try:
+        character = get_character(storage, context.character_id)
+    except ValueError:
+        return None
+    return appearance_from_notes(character.notes)

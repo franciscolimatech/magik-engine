@@ -2,7 +2,8 @@ from src.core.character import Character, create_miko_meu
 from src.core.campaigns import create_campaign, create_campaign_session, get_campaign_session
 from src.core.creatures import create_creature
 from src.core.session import list_events
-from src.game.assets import create_assets
+from src.game.appearance import DEFAULT_APPEARANCE, appearance_from_notes, appearance_summary, appearance_to_note
+from src.game.assets import create_assets, create_player_sprites_from_appearance
 from src.game.app import _load_battle_character, _max_frames_from_env, load_player_name
 from src.game.camera import Camera
 from src.game.dialogue import DialogueChoice, DialogueOption
@@ -25,7 +26,7 @@ from src.game.maps.test_map import (
 from src.game.scenes.battle import BattleScene
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene
 from src.game.scenes.main_menu import MainMenuScene
-from src.game.scenes.overworld import OverworldScene
+from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
@@ -42,6 +43,10 @@ class FakePygame:
     K_ESCAPE = 8
     K_e = 9
     K_BACKSPACE = 10
+    K_LEFT = 11
+    K_RIGHT = 12
+    K_a = 13
+    K_d = 14
 
 
 class FakeEvent:
@@ -58,6 +63,26 @@ class FakeRng:
     def randint(self, a: int, b: int) -> int:
         value = self.values.pop(0)
         return max(a, min(value, b))
+
+
+def fake_power_interpreter(**kwargs) -> dict:
+    return {
+        "source": "fallback",
+        "nome": "Fios de Luz",
+        "tipo": "controle",
+        "descricao": kwargs["raw_power"],
+        "efeito_narrativo": "Prende ou ilumina algo de forma narrativa.",
+        "limitacao": "Exige aprovacao do mestre.",
+        "custo_ou_preco": "Pode chamar atencao indesejada.",
+        "uso_sugerido": "Conforme decisao do mestre.",
+        "teste_sugerido": "Vontade",
+        "observacao_do_mestre": "Sugestao nao oficial. O mestre deve aprovar.",
+        "deve_ser_aprovado": True,
+    }
+
+
+def failing_power_interpreter(**kwargs) -> dict:
+    raise RuntimeError("IA indisponivel")
 
 
 def test_test_map_loads_with_player_start() -> None:
@@ -109,6 +134,47 @@ def test_player_sprites_exist_for_each_direction() -> None:
     assert set(assets.player) == {"up", "down", "left", "right"}
     assert all(len(frames) == 2 for frames in assets.player.values())
     assert all(frame.get_size() == (32, 32) for frames in assets.player.values() for frame in frames)
+    pygame.quit()
+
+
+def test_player_sprites_can_be_generated_without_appearance() -> None:
+    import pygame
+
+    pygame.init()
+    sprites = create_player_sprites_from_appearance(pygame)
+
+    assert set(sprites) == {"up", "down", "left", "right"}
+    assert all(len(frames) == 2 for frames in sprites.values())
+    pygame.quit()
+
+
+def test_player_sprites_reflect_basic_appearance_colors() -> None:
+    import pygame
+
+    pygame.init()
+    red_hair_green_outfit = create_player_sprites_from_appearance(
+        pygame,
+        {
+            "hair_style": "curto",
+            "hair_color": "vermelho",
+            "eye_color": "verde",
+            "outfit_style": "viajante",
+            "outfit_color": "verde",
+        },
+    )["down"][0]
+    white_hair_purple_outfit = create_player_sprites_from_appearance(
+        pygame,
+        {
+            "hair_style": "curto",
+            "hair_color": "branco",
+            "eye_color": "roxo",
+            "outfit_style": "viajante",
+            "outfit_color": "roxo",
+        },
+    )["down"][0]
+
+    assert red_hair_green_outfit.get_at((10, 8))[:3] != white_hair_purple_outfit.get_at((10, 8))[:3]
+    assert red_hair_green_outfit.get_at((16, 18))[:3] != white_hair_purple_outfit.get_at((16, 18))[:3]
     pygame.quit()
 
 
@@ -791,8 +857,47 @@ def test_character_creator_armor_only_allows_expected_values() -> None:
     assert [value for value, _ in ARMOR_OPTIONS] == [0, 2, 5]
 
 
-def test_character_creator_confirmation_summary_contains_choices() -> None:
+def test_character_creator_has_appearance_step() -> None:
+    assert "appearance" in CharacterCreatorScene.STEPS
+
+
+def test_character_creator_appearance_defaults() -> None:
     scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    assert scene.selected_appearance() == DEFAULT_APPEARANCE
+    assert "Cabelo: curto / preto" in appearance_summary(scene.appearance)
+
+
+def test_character_creator_appearance_navigation_changes_value() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.step = "appearance"
+
+    scene.handle_event(FakeEvent(FakePygame.K_RIGHT))
+    assert scene.appearance["hair_style"] == "medio"
+
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+    scene.handle_event(FakeEvent(FakePygame.K_RIGHT))
+
+    assert scene.appearance_category_index == 1
+    assert scene.appearance["hair_color"] == "castanho"
+
+
+def test_character_creator_appearance_confirm_goes_to_summary() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.step = "appearance"
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.step == "confirm"
+
+
+def test_character_creator_confirmation_summary_contains_choices() -> None:
+    scene = CharacterCreatorScene(
+        FakePygame,
+        GameContext(player_name="Aventureiro"),
+        MemoryStorage(),
+        power_interpreter=fake_power_interpreter,
+    )
     scene.name = "Lia Nova"
     scene.class_index = 1
     scene.selected_equipment = {0, 5}
@@ -807,18 +912,28 @@ def test_character_creator_confirmation_summary_contains_choices() -> None:
     assert "Armadura: 5" in lines
     assert "Equipamentos: Cajado, Escudo pequeno" in lines
     assert "Poder: Manipula fios de luz." in lines
+    assert "Interpretacao: Fios de Luz (fallback)" in lines
     assert "Historia: Busca uma cidade perdida." in lines
+    assert f"Aparencia: {appearance_summary(scene.appearance)}" in lines
+    assert "Visual basico e experimental." in lines
 
 
 def test_character_creator_creates_complete_character_and_updates_context() -> None:
     storage = MemoryStorage()
-    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), storage)
+    scene = CharacterCreatorScene(
+        FakePygame,
+        GameContext(player_name="Aventureiro"),
+        storage,
+        power_interpreter=fake_power_interpreter,
+    )
     scene.name = "Lia Nova"
     scene.class_index = 1
     scene.selected_equipment = {0, 5}
     scene.armor_index = 2
     scene.power_text = "Manipula fios de luz."
     scene.story_text = "Busca uma cidade perdida."
+    scene.appearance["hair_color"] = "vermelho"
+    scene.appearance["outfit_color"] = "verde"
 
     character = scene.create_character_from_selection()
 
@@ -830,8 +945,16 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     assert "game-created" in character.tags
     assert "Criado pelo jogo 2D" in character.notes
     assert "poder_especial_bruto: Manipula fios de luz." in character.notes
+    assert any(note.startswith("poder_especial_interpretado:") for note in character.notes)
     assert "personalidade_historia: Busca uma cidade perdida." in character.notes
+    assert appearance_from_notes(character.notes)["hair_color"] == "vermelho"
+    assert appearance_from_notes(character.notes)["outfit_color"] == "verde"
     assert "poder_especial_bruto" in character.special_systems
+    assert "poder_especial_interpretado" in character.special_systems
+    assert "appearance" in character.special_systems
+    assert character.abilities[0]["name"] == "Fios de Luz"
+    assert character.abilities[0]["type"] == "controle"
+    assert "aprovar" in character.abilities[0]["notes"]
     assert scene.context.character_id == character.id
     assert scene.context.player_name == "Lia Nova"
     assert scene.consume_requested_scene() == "overworld"
@@ -848,6 +971,24 @@ def test_character_creator_generates_unique_id() -> None:
     character = second.create_character_from_selection()
 
     assert character.id == "lia-nova-2"
+
+
+def test_character_creator_uses_fallback_when_power_interpreter_fails() -> None:
+    storage = MemoryStorage()
+    scene = CharacterCreatorScene(
+        FakePygame,
+        GameContext(player_name="Aventureiro"),
+        storage,
+        power_interpreter=failing_power_interpreter,
+    )
+    scene.name = "Lia Nova"
+    scene.power_text = "Manipula fios de luz."
+
+    character = scene.create_character_from_selection()
+
+    assert character.name == "Lia Nova"
+    assert character.abilities[0]["name"] == "Poder Especial"
+    assert any(note.startswith("poder_especial_interpretado:") for note in character.notes)
 
 
 def test_character_creator_name_input_accepts_allowed_characters() -> None:
@@ -877,6 +1018,38 @@ def test_battle_character_loader_uses_selected_context_character() -> None:
 
     assert character.id == "lia"
     assert character.name == "Lia"
+
+
+def test_overworld_loads_player_appearance_from_selected_character() -> None:
+    appearance = {
+        "hair_style": "longo",
+        "hair_color": "branco",
+        "eye_color": "roxo",
+        "outfit_style": "manto",
+        "outfit_color": "preto",
+    }
+    character = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=1,
+        notes=[appearance_to_note(appearance)],
+        special_systems=["appearance"],
+    )
+    storage = MemoryStorage({"characters.json": {"characters": [character.to_dict()]}})
+
+    loaded = load_player_appearance(storage, GameContext(character_id="lia", player_name="Lia"))
+
+    assert loaded == appearance
+
+
+def test_overworld_player_appearance_falls_back_for_old_characters() -> None:
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+
+    assert load_player_appearance(storage, GameContext(character_id="miko-meu", player_name="Miko Meu")) is None
+    assert load_player_appearance(storage, GameContext(character_id="inexistente", player_name="Aventureiro")) is None
 
 
 def test_main_menu_context_lines_show_context() -> None:

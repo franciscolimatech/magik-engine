@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src.game import colors
+from src.game.appearance import EYE_COLORS, HAIR_COLORS, OUTFIT_COLORS, normalize_appearance
 from src.game.settings import TILE_SIZE
 
 
@@ -20,7 +21,8 @@ class GameAssets:
     player: dict[str, list[object]]
 
 
-def create_assets(pygame) -> GameAssets:
+def create_assets(pygame, player_appearance: dict | None = None) -> GameAssets:
+    player_sprites = create_player_sprites_from_appearance(pygame, player_appearance)
     return GameAssets(
         floor_tiles={
             ".": _floor_tile(pygame, colors.FLOOR),
@@ -36,13 +38,18 @@ def create_assets(pygame) -> GameAssets:
         npc=_npc_sprite(pygame),
         creature=_creature_sprite(pygame),
         interaction_marker=_interaction_marker(pygame),
-        player={
-            "down": [_player_sprite(pygame, "down", 0), _player_sprite(pygame, "down", 1)],
-            "up": [_player_sprite(pygame, "up", 0), _player_sprite(pygame, "up", 1)],
-            "left": [_player_sprite(pygame, "left", 0), _player_sprite(pygame, "left", 1)],
-            "right": [_player_sprite(pygame, "right", 0), _player_sprite(pygame, "right", 1)],
-        },
+        player=player_sprites,
     )
+
+
+def create_player_sprites_from_appearance(pygame, appearance: dict | None = None) -> dict[str, list[object]]:
+    resolved = normalize_appearance(appearance)
+    return {
+        "down": [_player_sprite(pygame, "down", 0, resolved), _player_sprite(pygame, "down", 1, resolved)],
+        "up": [_player_sprite(pygame, "up", 0, resolved), _player_sprite(pygame, "up", 1, resolved)],
+        "left": [_player_sprite(pygame, "left", 0, resolved), _player_sprite(pygame, "left", 1, resolved)],
+        "right": [_player_sprite(pygame, "right", 0, resolved), _player_sprite(pygame, "right", 1, resolved)],
+    }
 
 
 def draw_tile(pygame, surface, tile: str, x: int, y: int, assets: GameAssets | None = None) -> None:
@@ -142,21 +149,61 @@ def _interaction_marker(pygame):
     return surface
 
 
-def _player_sprite(pygame, direction: str, frame: int):
+def _player_sprite(pygame, direction: str, frame: int, appearance: dict | None = None):
+    resolved = normalize_appearance(appearance)
+    outfit_color = OUTFIT_COLORS[resolved["outfit_color"]]
+    hair_color = HAIR_COLORS[resolved["hair_color"]]
+    eye_color = EYE_COLORS[resolved["eye_color"]]
     surface = _surface(pygame)
     step = 1 if frame % 2 else 0
     pygame.draw.ellipse(surface, (4, 6, 12, 100), (6, 23, 20, 6))
-    pygame.draw.rect(surface, colors.PLAYER, (10, 9, 12, 13))
-    pygame.draw.rect(surface, (178, 169, 255), (9, 7, 14, 7))
+    _draw_outfit(pygame, surface, resolved["outfit_style"], outfit_color)
+    _draw_hair(pygame, surface, resolved["hair_style"], hair_color)
     if direction == "up":
-        pygame.draw.rect(surface, (63, 56, 129), (10, 8, 12, 4))
+        pygame.draw.rect(surface, _darken(hair_color), (10, 8, 12, 4))
     elif direction == "left":
-        pygame.draw.rect(surface, colors.WHITE, (11, 11, 2, 2))
+        pygame.draw.rect(surface, eye_color, (11, 11, 2, 2))
     elif direction == "right":
-        pygame.draw.rect(surface, colors.WHITE, (19, 11, 2, 2))
+        pygame.draw.rect(surface, eye_color, (19, 11, 2, 2))
     else:
-        pygame.draw.rect(surface, colors.WHITE, (12, 11, 2, 2))
-        pygame.draw.rect(surface, colors.WHITE, (18, 11, 2, 2))
+        pygame.draw.rect(surface, eye_color, (12, 11, 2, 2))
+        pygame.draw.rect(surface, eye_color, (18, 11, 2, 2))
     pygame.draw.rect(surface, colors.PLAYER_SHADOW, (10, 22, 4, 6 + step))
     pygame.draw.rect(surface, colors.PLAYER_SHADOW, (18, 22, 4, 6 - step))
     return surface
+
+
+def _draw_outfit(pygame, surface, style: str, outfit_color: tuple[int, int, int]) -> None:
+    pygame.draw.rect(surface, outfit_color, (10, 9, 12, 13))
+    if style == "manto":
+        pygame.draw.rect(surface, _darken(outfit_color), (8, 13, 16, 10))
+    elif style == "guerreiro leve":
+        pygame.draw.rect(surface, (190, 196, 208), (11, 10, 10, 4))
+    elif style == "aprendiz":
+        pygame.draw.rect(surface, (238, 218, 128), (15, 9, 2, 13))
+    elif style == "roupa simples":
+        pygame.draw.rect(surface, _darken(outfit_color), (10, 18, 12, 4))
+    else:
+        pygame.draw.rect(surface, _darken(outfit_color), (9, 14, 3, 7))
+
+
+def _draw_hair(pygame, surface, style: str, hair_color: tuple[int, int, int]) -> None:
+    if style == "careca/coberto":
+        pygame.draw.rect(surface, hair_color, (9, 6, 14, 4))
+    elif style == "longo":
+        pygame.draw.rect(surface, hair_color, (8, 7, 16, 10))
+        pygame.draw.rect(surface, hair_color, (7, 14, 4, 8))
+        pygame.draw.rect(surface, hair_color, (21, 14, 4, 8))
+    elif style == "medio":
+        pygame.draw.rect(surface, hair_color, (9, 7, 14, 8))
+        pygame.draw.rect(surface, hair_color, (8, 12, 3, 5))
+        pygame.draw.rect(surface, hair_color, (21, 12, 3, 5))
+    elif style == "preso":
+        pygame.draw.rect(surface, hair_color, (9, 7, 14, 6))
+        pygame.draw.rect(surface, hair_color, (22, 9, 4, 4))
+    else:
+        pygame.draw.rect(surface, hair_color, (9, 7, 14, 7))
+
+
+def _darken(color: tuple[int, int, int]) -> tuple[int, int, int]:
+    return tuple(max(0, int(value * 0.55)) for value in color)
