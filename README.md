@@ -74,6 +74,36 @@ tipo, uso, efeito, custo, limite de uso, teste sugerido e observacoes. Campos de
 habilidade completamente vazios sao ignorados. Campanhas, combates e IA
 Narradora aparecem como areas futuras da interface web.
 
+## Jogo 2D experimental
+
+A v1.1 adiciona um prototipo visual em PyGame inspirado em RPGs retro de grid,
+sem remover nem substituir terminal ou web. Por enquanto ele e apenas uma
+camada visual jogavel: nao implementa combate visual, nao usa IA e nao salva
+alteracoes no estado do jogo.
+
+Instale as dependencias com:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+Rode o prototipo com:
+
+```powershell
+python -m src.game.app
+```
+
+Controles:
+
+- `WASD` ou setas: mover em tiles.
+- `E` ou `Espaco`: interagir com NPC proximo.
+- `Enter`, `E` ou `Espaco`: fechar dialogo.
+- `ESC`: sair.
+
+O jogo carrega o nome do Miko Meu de `data/characters.json` apenas para exibir
+no canto da tela. Se Miko nao existir, mostra `Aventureiro`. Nenhum personagem e
+alterado ou salvo pelo prototipo.
+
 O terminal mostra o menu:
 
 ```text

@@ -1,0 +1,15 @@
+"""Shared color palette for the retro 2D prototype."""
+
+BLACK = (8, 10, 18)
+WHITE = (240, 244, 255)
+FLOOR = (36, 44, 62)
+FLOOR_ALT = (42, 52, 74)
+WALL = (42, 82, 70)
+WALL_DARK = (24, 52, 48)
+PLAYER = (124, 108, 246)
+PLAYER_SHADOW = (72, 64, 142)
+NPC = (81, 167, 255)
+NPC_SHADOW = (28, 76, 128)
+DIALOGUE_BG = (16, 20, 34)
+DIALOGUE_BORDER = (139, 124, 246)
+TEXT_MUTED = (174, 182, 214)
