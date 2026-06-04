@@ -298,7 +298,7 @@ def test_battle_menu_navigation_works() -> None:
     scene = BattleScene(FakePygame, GameContext(player_name="Miko Meu"), create_miko_meu(), default_creature(3, 2))
 
     scene.handle_event(FakeEvent(FakePygame.K_DOWN))
-    assert scene.selected_option == "Observar"
+    assert scene.selected_option == "Habilidade"
 
     scene.handle_event(FakeEvent(FakePygame.K_UP))
     assert scene.selected_option == "Atacar"
@@ -306,22 +306,82 @@ def test_battle_menu_navigation_works() -> None:
 
 def test_battle_observe_adds_text_to_log() -> None:
     scene = BattleScene(FakePygame, GameContext(player_name="Miko Meu"), create_miko_meu(), default_creature(3, 2))
-    scene.selected_index = 1
+    scene.selected_index = 2
 
     scene.confirm_selection()
 
     assert "Vida:" in scene.log[-1]
     assert "Armadura:" in scene.log[-1]
+    assert "Dica:" in scene.log[-1]
 
 
 def test_battle_flee_requests_return_to_overworld() -> None:
     scene = BattleScene(FakePygame, GameContext(player_name="Miko Meu"), create_miko_meu(), default_creature(3, 2))
-    scene.selected_index = 2
+    scene.selected_index = 3
 
     scene.confirm_selection()
 
     assert scene.consume_requested_scene() == "overworld"
     assert "fugiu" in scene.log[-1]
+    assert scene.fled is True
+
+
+def test_battle_menu_includes_ability() -> None:
+    assert BattleScene.OPTIONS == ("Atacar", "Habilidade", "Observar", "Fugir")
+
+
+def test_battle_ability_without_abilities_adds_message() -> None:
+    character = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=0,
+        abilities=[],
+    )
+    scene = BattleScene(FakePygame, GameContext(player_name="Lia"), character, default_creature(3, 2))
+    scene.selected_index = 1
+
+    scene.confirm_selection()
+
+    assert scene.log[-1] == "Nenhuma habilidade disponivel."
+    assert scene.mode == "actions"
+
+
+def test_battle_ability_with_ability_adds_text_to_log_and_consumes_use() -> None:
+    character = create_miko_meu()
+    character.abilities = [
+        {
+            "id": "golpe-sombrio",
+            "name": "Golpe Sombrio",
+            "type": "ataque",
+            "use": "limitado",
+            "effect": "Um golpe envolto em sombra.",
+            "cost": "1 folego",
+            "usage_limit": 1,
+            "remaining_uses": 1,
+        }
+    ]
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, default_creature(3, 2))
+
+    scene.open_abilities()
+    scene.use_selected_ability()
+
+    assert any("Miko Meu usou Golpe Sombrio" in line for line in scene.log)
+    assert any("Usos restantes: 0" in line for line in scene.log)
+    assert character.abilities[0]["remaining_uses"] == 0
+
+
+def test_battle_ability_use_without_campaign_does_not_break() -> None:
+    character = create_miko_meu()
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, default_creature(3, 2))
+
+    scene.open_abilities()
+    scene.use_selected_ability()
+
+    assert scene.mode == "actions"
+    assert any("usou" in line for line in scene.log)
 
 
 def test_battle_attack_reduces_creature_armor_with_physical_rule() -> None:
@@ -357,8 +417,45 @@ def test_battle_detects_victory_when_creature_reaches_zero() -> None:
     scene.attack()
 
     assert scene.victory is True
+    assert scene.turn_state == "vitoria"
     assert scene.creature.current_health == 0
     assert any("Vitoria!" in line for line in scene.log)
+
+
+def test_battle_return_to_map_after_victory() -> None:
+    scene = BattleScene(
+        FakePygame,
+        GameContext(player_name="Miko Meu"),
+        create_miko_meu(),
+        Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0),
+        rng=FakeRng([1]),
+    )
+
+    scene.attack()
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.consume_requested_scene() == "overworld"
+    assert scene.selected_option == "Voltar ao mapa"
+
+
+def test_battle_detects_defeat_when_character_reaches_zero() -> None:
+    character = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=2,
+        current_health=2,
+        armor=0,
+    )
+    creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=10, max_health=10, armor=0)
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([1, 2]))
+
+    scene.attack()
+
+    assert scene.defeat is True
+    assert scene.turn_state == "derrota"
+    assert scene.character.current_health == 0
+    assert any("caiu" in line for line in scene.log)
 
 
 def test_battle_event_registers_with_campaign_session() -> None:

@@ -133,12 +133,20 @@ contrario, usa a criatura de teste `Sombra Rastejante`.
 
 Na v1.9, `Iniciar combate` troca para a primeira tela de combate visual. Ela
 mostra personagem e criatura, vida, armadura, sprites gerados por codigo, log e
-menu com `Atacar`, `Observar` e `Fugir`. `Atacar` usa as funcoes oficiais do
+menu de acoes de batalha. `Atacar` usa as funcoes oficiais do
 core para rolar e aplicar dano fisico, incluindo a regra de armadura. A criatura
 responde de forma simples se ainda estiver viva. O dano da `BattleScene` e
 temporario na execucao do jogo 2D: ele nao e salvo de volta em `characters.json`
 ou `creatures.json` nesta etapa. Com campanha/sessao ativa, inicio, fuga e
 vitoria podem ser registrados no historico com origem `game` e tipo `battle`.
+
+Na v1.10, a tela de combate ganhou indicador de turno, barras separadas de vida
+e armadura, estado de vitoria/derrota/fuga e menu com `Atacar`, `Habilidade`,
+`Observar` e `Fugir`. `Habilidade` lista as habilidades do personagem e usa o
+sistema geral do core para consumir usos em memoria quando houver usos
+restantes. O uso ainda e temporario na `BattleScene`: nao salva o personagem no
+JSON. Se nao houver habilidades, o log mostra `Nenhuma habilidade disponivel`.
+`Observar` mostra nome, descricao, vida, armadura, hostilidade e uma dica curta.
 
 O jogo pode receber contexto opcional de personagem, campanha e sessao por
 variaveis de ambiente. Quando um evento de mapa marcado para historico dispara

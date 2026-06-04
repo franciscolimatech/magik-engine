@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from src.core.abilities import Ability, list_abilities, use_ability
 from src.core.character import Character
 from src.core.combat import apply_physical_damage, roll_damage
 from src.game import assets, colors
@@ -14,7 +15,7 @@ from src.storage.types import JsonStore
 
 
 class BattleScene(BaseScene):
-    OPTIONS = ("Atacar", "Observar", "Fugir")
+    OPTIONS = ("Atacar", "Habilidade", "Observar", "Fugir")
 
     def __init__(
         self,
@@ -34,10 +35,15 @@ class BattleScene(BaseScene):
         self.storage = storage
         self.rng = rng
         self.selected_index = 0
+        self.ability_index = 0
+        self.mode = "actions"
         self.log: list[str] = [f"{character.name} encontrou {creature.name}."]
         self.requested_scene: str | None = None
         self.should_quit = False
         self.victory = False
+        self.defeat = False
+        self.fled = False
+        self.turn_state = "jogador"
         self._font = None
         self._title_font = None
         self._assets = None
@@ -45,7 +51,18 @@ class BattleScene(BaseScene):
 
     @property
     def selected_option(self) -> str:
+        if self.mode == "abilities":
+            abilities = self.available_abilities()
+            if not abilities:
+                return "Habilidade"
+            return abilities[self.ability_index].name
+        if self.battle_ended:
+            return "Voltar ao mapa"
         return self.OPTIONS[self.selected_index]
+
+    @property
+    def battle_ended(self) -> bool:
+        return self.victory or self.defeat or self.fled
 
     def consume_requested_scene(self) -> str | None:
         requested = self.requested_scene
@@ -55,9 +72,12 @@ class BattleScene(BaseScene):
     def handle_event(self, event) -> None:
         if event.type != self.pygame.KEYDOWN:
             return
-        if self.victory:
+        if self.battle_ended:
             if event.key in {self.pygame.K_RETURN, self.pygame.K_SPACE, self.pygame.K_e}:
                 self.requested_scene = "overworld"
+            return
+        if self.mode == "abilities":
+            self._handle_ability_key(event.key)
             return
         if event.key == self.pygame.K_ESCAPE:
             self.flee()
@@ -83,14 +103,53 @@ class BattleScene(BaseScene):
         option = self.selected_option
         if option == "Atacar":
             self.attack()
+        elif option == "Habilidade":
+            self.open_abilities()
         elif option == "Observar":
             self.observe()
         elif option == "Fugir":
             self.flee()
 
-    def attack(self) -> None:
-        if self.victory or self.creature.current_health <= 0:
+    def available_abilities(self) -> list[Ability]:
+        try:
+            return list_abilities(self.character)
+        except ValueError:
+            return []
+
+    def open_abilities(self) -> None:
+        abilities = self.available_abilities()
+        if not abilities:
+            self._add_log("Nenhuma habilidade disponivel.")
             return
+        self.mode = "abilities"
+        self.ability_index = 0
+        self._add_log("Escolha uma habilidade.")
+
+    def use_selected_ability(self) -> None:
+        abilities = self.available_abilities()
+        if not abilities:
+            self.mode = "actions"
+            self._add_log("Nenhuma habilidade disponivel.")
+            return
+        ability = abilities[self.ability_index]
+        try:
+            result = use_ability(self.character, ability.id)
+        except ValueError as exc:
+            self._add_log(str(exc))
+            self.mode = "actions"
+            return
+        self._add_log(f"{self.character.name} usou {result.ability.name}: {result.effect or 'efeito narrativo.'}")
+        if result.cost:
+            self._add_log(f"Custo: {result.cost}")
+        if result.remaining_uses is not None:
+            self._add_log(f"Usos restantes: {result.remaining_uses}")
+        self._register_battle_event("habilidade", f"{self.character.name} usou {result.ability.name}.")
+        self.mode = "actions"
+
+    def attack(self) -> None:
+        if self.battle_ended or self.creature.current_health <= 0:
+            return
+        self.turn_state = "jogador"
         damage = roll_damage(max(self.creature.current_health, 1), self.rng).result
         result = apply_physical_damage(self.creature.current_health, self.creature.armor, damage)
         self.creature.current_health = result.current_health
@@ -104,31 +163,56 @@ class BattleScene(BaseScene):
     def creature_turn(self) -> None:
         if self.creature.current_health <= 0 or self.character.current_health <= 0:
             return
+        self.turn_state = "criatura"
         damage = roll_damage(max(self.character.current_health, 1), self.rng).result
         result = apply_physical_damage(self.character.current_health, self.character.armor, damage)
         self.character.current_health = result.current_health
         self.character.armor = result.armor
         self._add_log(f"{self.creature.name} atacou {self.character.name} e causou {damage} de dano.")
         if self.character.current_health <= 0:
-            self._add_log(f"{self.character.name} caiu. O mestre decide a consequencia.")
+            self._defeat()
+            return
+        self.turn_state = "jogador"
 
     def observe(self) -> None:
         hostile = "hostil" if self.creature.hostile else "nao hostil"
         self._add_log(
-            f"{self.creature.description} Vida: {self.creature.current_health}/{self.creature.max_health}. "
-            f"Armadura: {self.creature.armor}. Estado: {hostile}."
+            f"{self.creature.name}: {self.creature.description} Vida: {self.creature.current_health}/{self.creature.max_health}. "
+            f"Armadura: {self.creature.armor}. Estado: {hostile}. Dica: observe a armadura antes de insistir."
         )
 
     def flee(self) -> None:
         self._add_log(f"{self.character.name} fugiu do encontro com {self.creature.name}.")
+        self.fled = True
+        self.turn_state = "fuga"
         self._register_battle_event("fuga", f"{self.character.name} fugiu de {self.creature.name}.")
         self.requested_scene = "overworld"
 
     def _win(self) -> None:
         self.victory = True
+        self.turn_state = "vitoria"
         self._add_log(f"Vitoria! {self.creature.name} foi derrotada.")
         self._add_log("Pressione Enter ou Espaco para voltar ao mapa.")
         self._register_battle_event("vitoria", f"{self.creature.name} foi derrotada.")
+
+    def _defeat(self) -> None:
+        self.defeat = True
+        self.turn_state = "derrota"
+        self._add_log(f"{self.character.name} caiu. O mestre decide a consequencia.")
+        self._add_log("Pressione Enter ou Espaco para voltar ao mapa.")
+        self._register_battle_event("derrota", f"{self.character.name} chegou a 0 de vida temporaria.")
+
+    def _handle_ability_key(self, key: int) -> None:
+        abilities = self.available_abilities()
+        if key == self.pygame.K_ESCAPE:
+            self.mode = "actions"
+            return
+        if key in {self.pygame.K_DOWN, self.pygame.K_s} and abilities:
+            self.ability_index = (self.ability_index + 1) % len(abilities)
+        elif key in {self.pygame.K_UP, self.pygame.K_w} and abilities:
+            self.ability_index = (self.ability_index - 1) % len(abilities)
+        elif key in {self.pygame.K_RETURN, self.pygame.K_SPACE, self.pygame.K_e}:
+            self.use_selected_ability()
 
     def _add_log(self, text: str) -> None:
         self.log.append(text)
@@ -148,7 +232,7 @@ class BattleScene(BaseScene):
         self._assets = assets.create_assets(self.pygame)
 
     def _draw_title(self, surface) -> None:
-        title = self._title_font.render("Combate Visual Inicial", False, colors.WHITE)
+        title = self._title_font.render(f"Combate Visual - Turno: {self.turn_state}", False, colors.WHITE)
         surface.blit(title, (24, 18))
 
     def _draw_combatants(self, surface) -> None:
@@ -164,11 +248,12 @@ class BattleScene(BaseScene):
     def _draw_stats(self, surface, rect, name: str, health: int, max_health: int, armor: int) -> None:
         name_surface = self._font.render(name, False, colors.WHITE)
         surface.blit(name_surface, (rect.x + 14, rect.y + 12))
-        self._draw_bar(surface, rect.x + 14, rect.y + 40, 130, health, max_health, (114, 207, 142))
+        self._draw_bar(surface, rect.x + 14, rect.y + 38, 130, health, max_health, (114, 207, 142))
+        self._draw_bar(surface, rect.x + 14, rect.y + 52, 130, armor, 10, (139, 124, 246))
         health_surface = self._font.render(f"Vida {health}/{max_health}", False, colors.TEXT_MUTED)
         armor_surface = self._font.render(f"Armadura {armor}", False, colors.TEXT_MUTED)
-        surface.blit(health_surface, (rect.x + 14, rect.y + 62))
-        surface.blit(armor_surface, (rect.x + 14, rect.y + 84))
+        surface.blit(health_surface, (rect.x + 14, rect.y + 68))
+        surface.blit(armor_surface, (rect.x + 14, rect.y + 90))
 
     def _draw_log(self, surface) -> None:
         rect = self.pygame.Rect(24, 196, SCREEN_WIDTH - 48, 142)
@@ -180,14 +265,19 @@ class BattleScene(BaseScene):
     def _draw_menu(self, surface) -> None:
         rect = self.pygame.Rect(24, SCREEN_HEIGHT - 116, SCREEN_WIDTH - 48, 92)
         self._draw_panel(surface, rect)
-        for index, option in enumerate(self.OPTIONS):
-            selected = index == self.selected_index and not self.victory
+        options = tuple(ability.name for ability in self.available_abilities()) if self.mode == "abilities" else self.OPTIONS
+        if self.battle_ended:
+            options = ("Voltar ao mapa",)
+        for index, option in enumerate(options):
+            selected = (index == self.ability_index if self.mode == "abilities" else index == self.selected_index) and not self.battle_ended
             prefix = "> " if selected else "  "
             color = colors.WHITE if selected else colors.TEXT_MUTED
             text = self._font.render(f"{prefix}{option}", False, color)
-            surface.blit(text, (rect.x + 18 + index * 160, rect.y + 22))
+            surface.blit(text, (rect.x + 18 + index * 138, rect.y + 22))
         hint = "Cima/baixo escolhe | Enter/E confirma | ESC fugir"
-        if self.victory:
+        if self.mode == "abilities":
+            hint = "Cima/baixo escolhe habilidade | ESC volta"
+        if self.battle_ended:
             hint = "Enter/Espaco para voltar ao mapa"
         hint_surface = self._font.render(hint, False, colors.TEXT_MUTED)
         surface.blit(hint_surface, (rect.x + 18, rect.y + 58))
