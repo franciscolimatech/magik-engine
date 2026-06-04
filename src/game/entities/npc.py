@@ -3,17 +3,28 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Iterable
 
 from src.game.entities.player import Player
 from src.game.settings import TILE_SIZE
 
 
-@dataclass(frozen=True)
+@dataclass
 class NPC:
     x: int
     y: int
     name: str
-    dialogue: str
+    dialogues: str | Iterable[str]
+
+    def __post_init__(self) -> None:
+        if isinstance(self.dialogues, str):
+            self.dialogues = (self.dialogues,)
+        else:
+            self.dialogues = tuple(self.dialogues)
+
+    @property
+    def dialogue(self) -> str:
+        return self.dialogues[0] if self.dialogues else ""
 
     @property
     def position(self) -> tuple[int, int]:

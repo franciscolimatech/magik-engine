@@ -4,6 +4,7 @@ from src.game.app import load_player_name
 from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
+from src.game.maps.events import MapEvent, find_event_at
 from src.game.maps.test_map import (
     find_npcs,
     find_player_start,
@@ -13,7 +14,7 @@ from src.game.maps.test_map import (
     map_height,
     map_width,
 )
-from src.game.ui.dialogue_box import DialogueBox
+from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
 
@@ -32,7 +33,7 @@ def test_test_map_loads_npcs() -> None:
 
     assert len(npcs) >= 1
     assert npcs[0].name
-    assert npcs[0].dialogue
+    assert npcs[0].dialogues
 
 
 def test_generated_assets_include_tiles_and_sprites() -> None:
@@ -88,14 +89,15 @@ def test_valid_movement_changes_position() -> None:
 
 def test_floor_and_grass_are_walkable_but_water_blocks() -> None:
     map_data = [
-        "#####",
-        "#.gw#",
-        "#####",
+        "######",
+        "#.g?w#",
+        "######",
     ]
 
     assert is_walkable(map_data, 1, 1) is True
     assert is_walkable(map_data, 2, 1) is True
-    assert is_obstacle(map_data, 3, 1) is True
+    assert is_walkable(map_data, 3, 1) is True
+    assert is_obstacle(map_data, 4, 1) is True
 
 
 def test_player_cannot_leave_map() -> None:
@@ -129,6 +131,33 @@ def test_dialogue_box_keeps_speaker_name() -> None:
 
     assert dialogue.speaker == "Guarda"
     assert dialogue.visible is True
+
+
+def test_npc_accepts_multiple_dialogues() -> None:
+    npc = NPC(1, 1, "Velho", ["Primeira fala.", "Segunda fala."])
+
+    assert npc.dialogue == "Primeira fala."
+    assert npc.dialogues == ("Primeira fala.", "Segunda fala.")
+
+
+def test_dialogue_advances_and_closes_after_last_line() -> None:
+    dialogue = DialogueBox("Velho", ["Uma.", "Duas."])
+
+    assert dialogue.current_text == "Uma."
+    assert dialogue.advance() is True
+    assert dialogue.current_text == "Duas."
+    assert dialogue.advance() is False
+    assert dialogue.visible is False
+
+
+def test_wrap_text_returns_multiple_lines_for_long_text() -> None:
+    class FakeFont:
+        def size(self, text: str) -> tuple[int, int]:
+            return len(text) * 8, 12
+
+    lines = wrap_text("A Floresta do Avesso escuta quem fala sozinho.", FakeFont(), max_width=120)
+
+    assert len(lines) > 1
 
 
 def test_player_facing_position_uses_direction() -> None:
@@ -181,6 +210,74 @@ def test_scene_style_movement_blocks_during_dialogue() -> None:
 
     assert scene.try_move_player(1, 0) is False
     assert scene.player.position == (1, 1)
+
+
+def test_map_event_triggers_when_entering_tile() -> None:
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",))
+    triggered: set[str] = set()
+
+    found = find_event_at([event], 2, 1)
+
+    assert found is event
+    assert found.can_trigger(triggered) is True
+
+
+def test_unique_map_event_does_not_trigger_twice() -> None:
+    event = MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",), repeatable=False)
+    triggered = {"pressagio"}
+
+    assert event.can_trigger(triggered) is False
+
+
+def test_repeatable_map_event_can_trigger_more_than_once() -> None:
+    event = MapEvent("placa", 2, 1, "mensagem", ("Leia de novo.",), repeatable=True)
+    triggered = {"placa"}
+
+    assert event.can_trigger(triggered) is True
+
+
+def test_scene_style_unique_event_opens_dialogue_once() -> None:
+    class SceneLike:
+        events = [MapEvent("pressagio", 2, 1, "pressagio", ("Algo se mexe.",), repeatable=False)]
+        triggered_event_ids: set[str] = set()
+        dialogue = None
+
+        def trigger_event_at(self, x: int, y: int):
+            event = find_event_at(self.events, x, y)
+            if event is None or not event.can_trigger(self.triggered_event_ids):
+                return None
+            if not event.repeatable:
+                self.triggered_event_ids.add(event.id)
+            self.dialogue = DialogueBox(event.speaker, event.messages)
+            return event
+
+    scene = SceneLike()
+
+    assert scene.trigger_event_at(2, 1) is not None
+    assert scene.dialogue.current_text == "Algo se mexe."
+    scene.dialogue = None
+    assert scene.trigger_event_at(2, 1) is None
+    assert scene.dialogue is None
+
+
+def test_scene_style_repeatable_event_opens_more_than_once() -> None:
+    class SceneLike:
+        events = [MapEvent("placa", 2, 1, "mensagem", ("Leia de novo.",), repeatable=True)]
+        triggered_event_ids: set[str] = set()
+        dialogue = None
+
+        def trigger_event_at(self, x: int, y: int):
+            event = find_event_at(self.events, x, y)
+            if event is None or not event.can_trigger(self.triggered_event_ids):
+                return None
+            self.dialogue = DialogueBox(event.speaker, event.messages)
+            return event
+
+    scene = SceneLike()
+
+    assert scene.trigger_event_at(2, 1) is not None
+    scene.dialogue = None
+    assert scene.trigger_event_at(2, 1) is not None
 
 
 def test_load_player_name_uses_miko_when_available() -> None:

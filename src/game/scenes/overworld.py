@@ -6,6 +6,7 @@ from src.game import assets, colors
 from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
+from src.game.maps.events import MapEvent, find_event_at, load_test_events
 from src.game.maps.test_map import find_npcs, find_player_start, load_test_map, map_height, map_width
 from src.game.scenes.base import BaseScene
 from src.game.ui.dialogue_box import DialogueBox
@@ -18,7 +19,9 @@ class OverworldScene(BaseScene):
         self.map_data = load_test_map()
         start_x, start_y = find_player_start(self.map_data)
         self.player = Player(start_x, start_y, name=player_name)
-        self.npcs = [NPC(item.x, item.y, item.name, item.dialogue) for item in find_npcs(self.map_data)]
+        self.npcs = [NPC(item.x, item.y, item.name, item.dialogues) for item in find_npcs(self.map_data)]
+        self.events = load_test_events()
+        self.triggered_event_ids: set[str] = set()
         self.dialogue: DialogueBox | None = None
         self.font = pygame.font.Font(None, 24)
         self.camera = Camera()
@@ -31,7 +34,7 @@ class OverworldScene(BaseScene):
             return
         if self.dialogue and self.dialogue.visible:
             if event.key in {self.pygame.K_SPACE, self.pygame.K_e, self.pygame.K_RETURN}:
-                self.dialogue.close()
+                self.dialogue.advance()
             return
         movement = self._movement_for_key(event.key)
         if movement is not None:
@@ -62,17 +65,29 @@ class OverworldScene(BaseScene):
     def try_move_player(self, dx: int, dy: int) -> bool:
         if self.dialogue and self.dialogue.visible:
             return False
-        return self.player.move(dx, dy, self.map_data)
+        moved = self.player.move(dx, dy, self.map_data)
+        if moved:
+            self.trigger_event_at(self.player.x, self.player.y)
+        return moved
 
     def interact(self) -> bool:
         npc = self.facing_npc()
         if npc is None:
             return False
-        self.dialogue = DialogueBox(npc.name, npc.dialogue)
+        self.dialogue = DialogueBox(npc.name, npc.dialogues)
         return True
 
     def facing_npc(self) -> NPC | None:
         return next((npc for npc in self.npcs if npc.can_interact(self.player)), None)
+
+    def trigger_event_at(self, x: int, y: int) -> MapEvent | None:
+        event = find_event_at(self.events, x, y)
+        if event is None or not event.can_trigger(self.triggered_event_ids):
+            return None
+        if not event.repeatable:
+            self.triggered_event_ids.add(event.id)
+        self.dialogue = DialogueBox(event.speaker, event.messages)
+        return event
 
     def _movement_for_key(self, key: int) -> tuple[int, int] | None:
         keys = self.pygame

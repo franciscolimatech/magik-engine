@@ -10,12 +10,12 @@ TEST_MAP = [
     "#.....ggg.........N............#",
     "#..######....gggg..............#",
     "#...........###.........www....#",
-    "#....P....gg......##....www....#",
+    "#....P....gg.?....##....www....#",
     "#..........N............www....#",
     "#..####..................####..#",
     "#..............gggg............#",
     "#......#####...................#",
-    "#.....................gg.......#",
+    "#.....................?g.......#",
     "#....N.................N.......#",
     "#..................######......#",
     "#..........www.................#",
@@ -31,7 +31,7 @@ TEST_MAP = [
 ]
 
 OBSTACLE_TILES = {"#", "w"}
-FLOOR_TILES = {".", "g", "P", "N"}
+FLOOR_TILES = {".", "g", "?", "P", "N"}
 
 
 @dataclass(frozen=True)
@@ -39,13 +39,32 @@ class MapNpc:
     x: int
     y: int
     name: str
-    dialogue: str
+    dialogues: tuple[str, ...]
 
 
 NPC_DIALOGUES = [
-    ("Guarda da Estrada", "A estrada esta estranha hoje. Fique perto da luz."),
-    ("Mercador Azul", "Pedralume compra silencio, mas nao compra sorte."),
-    ("Velha do Brejo", "Se a sombra rir primeiro, nao responda."),
+    (
+        "Guarda da Estrada",
+        (
+            "A estrada esta estranha hoje. Fique perto da luz.",
+            "Se ouvir corrente no mato, finja que nao ouviu.",
+        ),
+    ),
+    (
+        "Mercador Azul",
+        (
+            "Pedralume compra silencio, mas nao compra sorte.",
+            "Tenho mapas que mentem menos que gente.",
+        ),
+    ),
+    (
+        "Velha do Brejo",
+        (
+            "Voce nao devia andar por aqui tao tarde.",
+            "A Floresta do Avesso escuta quem fala sozinho.",
+            "E essa corrente no seu braco... ela tambem escuta?",
+        ),
+    ),
 ]
 
 
@@ -75,8 +94,8 @@ def find_npcs(map_data: list[str]) -> list[MapNpc]:
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
             if tile == "N":
-                name, dialogue = NPC_DIALOGUES[npc_index % len(NPC_DIALOGUES)]
-                npcs.append(MapNpc(x=x, y=y, name=name, dialogue=dialogue))
+                name, dialogues = NPC_DIALOGUES[npc_index % len(NPC_DIALOGUES)]
+                npcs.append(MapNpc(x=x, y=y, name=name, dialogues=dialogues))
                 npc_index += 1
     return npcs
 

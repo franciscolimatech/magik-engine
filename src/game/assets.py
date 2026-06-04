@@ -25,6 +25,7 @@ def create_assets(pygame) -> GameAssets:
             ".": _floor_tile(pygame, colors.FLOOR),
             "P": _floor_tile(pygame, colors.FLOOR),
             "N": _floor_tile(pygame, colors.FLOOR),
+            "?": _event_tile(pygame),
             "g": _grass_tile(pygame),
         },
         wall_tile=_wall_tile(pygame),
@@ -69,6 +70,13 @@ def _grass_tile(pygame):
     for x, y in ((6, 20), (12, 11), (20, 23), (25, 9)):
         pygame.draw.line(surface, (80, 142, 84), (x, y + 4), (x + 2, y), width=2)
         pygame.draw.line(surface, (54, 107, 68), (x + 3, y + 4), (x + 1, y + 1), width=1)
+    return surface
+
+
+def _event_tile(pygame):
+    surface = _floor_tile(pygame, colors.FLOOR)
+    pygame.draw.rect(surface, (139, 124, 246), (14, 9, 4, 4))
+    pygame.draw.rect(surface, (81, 167, 255), (15, 15, 2, 2))
     return surface
 
 

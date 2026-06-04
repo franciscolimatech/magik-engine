@@ -106,6 +106,11 @@ O HUD exibe nome do personagem, nome do mapa e uma dica curta dos controles.
 Os sprites ainda sao gerados por codigo com `pygame.Surface`: player por
 direcao, NPC, tiles de chao, grama, parede, agua e marcador de interacao. Eles
 servem como visual retro temporario, nao como assets finais.
+Na v1.4, NPCs podem ter dialogos com multiplas falas, avancados com
+`Espaco`, `Enter` ou `E`. O mapa tambem possui eventos simples por posicao,
+como mensagens, pressagios e sinais narrativos. Eventos unicos disparam uma vez
+durante a execucao; eventos repetiveis podem aparecer novamente. Nada disso e
+salvo no historico ainda.
 
 O jogo carrega o nome do Miko Meu de `data/characters.json` apenas para exibir
 no canto da tela. Se Miko nao existir, mostra `Aventureiro`. Nenhum personagem e
