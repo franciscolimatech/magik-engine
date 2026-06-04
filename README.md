@@ -76,7 +76,7 @@ Narradora aparecem como areas futuras da interface web.
 
 ## Jogo 2D experimental
 
-A v1.1 adiciona um prototipo visual em PyGame inspirado em RPGs retro de grid,
+A v1.2 mantem o prototipo visual em PyGame inspirado em RPGs retro de grid,
 sem remover nem substituir terminal ou web. Por enquanto ele e apenas uma
 camada visual jogavel: nao implementa combate visual, nao usa IA e nao salva
 alteracoes no estado do jogo.
@@ -96,9 +96,13 @@ python -m src.game.app
 Controles:
 
 - `WASD` ou setas: mover em tiles.
-- `E` ou `Espaco`: interagir com NPC proximo.
+- `E` ou `Espaco`: interagir com NPC no tile a frente do personagem.
 - `Enter`, `E` ou `Espaco`: fechar dialogo.
 - `ESC`: sair.
+
+O mapa de teste agora e maior que a tela. Uma camera simples segue o player,
+converte coordenadas do mundo para a tela e evita mostrar area fora do mapa.
+O HUD exibe nome do personagem, nome do mapa e uma dica curta dos controles.
 
 O jogo carrega o nome do Miko Meu de `data/characters.json` apenas para exibir
 no canto da tela. Se Miko nao existir, mostra `Aventureiro`. Nenhum personagem e

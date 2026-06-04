@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from src.game import assets, colors
+from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
-from src.game.maps.test_map import find_npcs, find_player_start, load_test_map
+from src.game.maps.test_map import find_npcs, find_player_start, load_test_map, map_height, map_width
 from src.game.scenes.base import BaseScene
-from src.game.settings import TILE_SIZE
 from src.game.ui.dialogue_box import DialogueBox
+from src.game.ui.hud import HUD
 
 
 class OverworldScene(BaseScene):
@@ -20,6 +21,9 @@ class OverworldScene(BaseScene):
         self.npcs = [NPC(item.x, item.y, item.name, item.dialogue) for item in find_npcs(self.map_data)]
         self.dialogue: DialogueBox | None = None
         self.font = pygame.font.Font(None, 24)
+        self.camera = Camera()
+        self.hud = HUD(player_name=player_name)
+        self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
     def handle_event(self, event) -> None:
         if event.type != self.pygame.KEYDOWN:
@@ -30,7 +34,7 @@ class OverworldScene(BaseScene):
             return
         movement = self._movement_for_key(event.key)
         if movement is not None:
-            self.player.move(movement[0], movement[1], self.map_data)
+            self.try_move_player(movement[0], movement[1])
             return
         if event.key in {self.pygame.K_SPACE, self.pygame.K_e}:
             self.interact()
@@ -38,27 +42,34 @@ class OverworldScene(BaseScene):
     def update(self) -> None:
         if self.dialogue and not self.dialogue.visible:
             self.dialogue = None
+        self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
 
     def draw(self, surface) -> None:
         surface.fill(colors.BLACK)
         for y, row in enumerate(self.map_data):
             for x, tile in enumerate(row):
-                assets.draw_tile(self.pygame, surface, tile, x * TILE_SIZE, y * TILE_SIZE)
+                screen_x, screen_y = self.camera.tile_to_screen(x, y)
+                assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y)
         for npc in self.npcs:
-            npc.draw(self.pygame, surface)
-        self.player.draw(self.pygame, surface)
-        self._draw_hud(surface)
+            npc.draw(self.pygame, surface, self.camera)
+        self.player.draw(self.pygame, surface, self.camera)
+        self.hud.draw(self.pygame, surface, self.font)
         if self.dialogue:
             self.dialogue.draw(self.pygame, surface, self.font)
 
+    def try_move_player(self, dx: int, dy: int) -> bool:
+        if self.dialogue and self.dialogue.visible:
+            return False
+        return self.player.move(dx, dy, self.map_data)
+
     def interact(self) -> bool:
-        npc = self.nearby_npc()
+        npc = self.facing_npc()
         if npc is None:
             return False
         self.dialogue = DialogueBox(npc.name, npc.dialogue)
         return True
 
-    def nearby_npc(self) -> NPC | None:
+    def facing_npc(self) -> NPC | None:
         return next((npc for npc in self.npcs if npc.can_interact(self.player)), None)
 
     def _movement_for_key(self, key: int) -> tuple[int, int] | None:
@@ -72,7 +83,3 @@ class OverworldScene(BaseScene):
         if key in {keys.K_DOWN, keys.K_s}:
             return (0, 1)
         return None
-
-    def _draw_hud(self, surface) -> None:
-        label = self.font.render(f"Personagem: {self.player.name}", False, colors.WHITE)
-        surface.blit(label, (12, 10))

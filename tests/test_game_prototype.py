@@ -1,8 +1,11 @@
 from src.core.character import Character, create_miko_meu
 from src.game.app import load_player_name
+from src.game.camera import Camera
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
-from src.game.maps.test_map import find_npcs, find_player_start, is_obstacle, load_test_map
+from src.game.maps.test_map import find_npcs, find_player_start, is_obstacle, load_test_map, map_height, map_width
+from src.game.ui.dialogue_box import DialogueBox
+from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
 
 
@@ -11,6 +14,8 @@ def test_test_map_loads_with_player_start() -> None:
 
     assert map_data
     assert find_player_start(map_data) == (5, 4)
+    assert map_width(map_data) > 20
+    assert map_height(map_data) > 15
 
 
 def test_test_map_loads_npcs() -> None:
@@ -31,6 +36,7 @@ def test_collision_blocks_wall() -> None:
 
     assert moved is False
     assert player.position == (1, 1)
+    assert player.direction == "left"
 
 
 def test_valid_movement_changes_position() -> None:
@@ -41,6 +47,7 @@ def test_valid_movement_changes_position() -> None:
 
     assert moved is True
     assert player.position == (2, 1)
+    assert player.direction == "right"
 
 
 def test_player_cannot_leave_map() -> None:
@@ -53,20 +60,72 @@ def test_player_cannot_leave_map() -> None:
     assert player.position == (0, 0)
 
 
-def test_npc_detects_adjacent_player() -> None:
+def test_npc_does_not_interact_by_adjacency_only() -> None:
     player = Player(2, 2)
     npc = NPC(3, 2, "Guarda", "Ola.")
 
     assert npc.is_adjacent_to(player) is True
-    assert npc.can_interact(player) is True
+    assert npc.can_interact(player) is False
 
 
 def test_npc_detects_player_facing_it() -> None:
-    player = Player(2, 2, facing=(0, -1))
+    player = Player(2, 2, direction="up")
     npc = NPC(2, 1, "Guarda", "Ola.")
 
     assert npc.is_in_front_of(player) is True
     assert npc.can_interact(player) is True
+
+
+def test_player_facing_position_uses_direction() -> None:
+    player = Player(4, 5, direction="left")
+
+    assert player.facing_position() == (3, 5)
+
+
+def test_camera_centers_and_converts_world_to_screen() -> None:
+    camera = Camera(screen_width=320, screen_height=240, tile_size=32)
+
+    camera.follow(10, 8, map_width=30, map_height=25)
+
+    assert camera.offset_x == 176
+    assert camera.offset_y == 152
+    assert camera.tile_to_screen(10, 8) == (144, 104)
+
+
+def test_camera_clamps_to_map_bounds() -> None:
+    camera = Camera(screen_width=640, screen_height=480, tile_size=32)
+
+    camera.follow(0, 0, map_width=32, map_height=22)
+    assert camera.offset_x == 0
+    assert camera.offset_y == 0
+
+    camera.follow(31, 21, map_width=32, map_height=22)
+    assert camera.offset_x == 384
+    assert camera.offset_y == 224
+
+
+def test_hud_can_be_instantiated() -> None:
+    hud = HUD(player_name="Miko Meu")
+
+    assert hud.player_name == "Miko Meu"
+    assert hud.map_name == "Mapa de Teste"
+
+
+def test_scene_style_movement_blocks_during_dialogue() -> None:
+    class SceneLike:
+        player = Player(1, 1)
+        map_data = load_test_map()
+        dialogue = DialogueBox("NPC", "Ola.")
+
+        def try_move_player(self, dx: int, dy: int) -> bool:
+            if self.dialogue and self.dialogue.visible:
+                return False
+            return self.player.move(dx, dy, self.map_data)
+
+    scene = SceneLike()
+
+    assert scene.try_move_player(1, 0) is False
+    assert scene.player.position == (1, 1)
 
 
 def test_load_player_name_uses_miko_when_available() -> None:

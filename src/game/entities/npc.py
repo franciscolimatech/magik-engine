@@ -27,11 +27,12 @@ class NPC:
         return self.position == player.facing_position()
 
     def can_interact(self, player: Player) -> bool:
-        return self.is_in_front_of(player) or self.is_adjacent_to(player)
+        return self.is_in_front_of(player)
 
-    def draw(self, pygame, surface) -> None:
-        pixel_x = self.x * TILE_SIZE
-        pixel_y = self.y * TILE_SIZE
+    def draw(self, pygame, surface, camera=None) -> None:
+        world_x = self.x * TILE_SIZE
+        world_y = self.y * TILE_SIZE
+        pixel_x, pixel_y = camera.world_to_screen(world_x, world_y) if camera else (world_x, world_y)
         shadow = pygame.Rect(pixel_x + 7, pixel_y + 22, 18, 6)
         body = pygame.Rect(pixel_x + 9, pixel_y + 9, 14, 17)
         pygame.draw.rect(surface, colors.NPC_SHADOW, shadow)

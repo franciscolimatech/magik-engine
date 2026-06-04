@@ -29,6 +29,7 @@ def run_game(max_frames: int | None = None) -> None:
     from src.game.scenes.overworld import OverworldScene
 
     pygame.init()
+    pygame.key.set_repeat(0)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
