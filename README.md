@@ -1,13 +1,13 @@
 # MAGIK Engine
 
-MAGIK Engine e um projeto pessoal feito por lazer para apoiar partidas de RPG
-de mesa com amigos. Ele ainda esta em producao e muda com frequencia conforme
+MAGIK Engine é um projeto pessoal feito por lazer para apoiar partidas de RPG
+de mesa com amigos. Ele ainda está em produção e muda com frequência conforme
 novas ideias aparecem durante o desenvolvimento.
 
-A ideia principal e simples: o sistema ajuda a controlar fichas, dados,
-habilidades, criaturas, NPCs, combates, campanhas, historico e algumas cenas
-visuais em 2D, mas nao substitui o mestre. As decisoes narrativas, regras finais
-da mesa e aprovacao de consequencias continuam sendo humanas.
+A ideia principal é simples: o sistema ajuda a controlar fichas, dados,
+habilidades, criaturas, NPCs, combates, campanhas, histórico e algumas cenas
+visuais em 2D, mas não substitui o mestre. As decisoes narrativas, regras finais
+da mesa e aprovacão de consequências continuam sendo humanas.
 
 ## Status
 
