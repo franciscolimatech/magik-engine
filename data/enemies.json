@@ -1,0 +1,2779 @@
+{
+  "enemies": [
+    {
+      "id": "goblins-do-veu",
+      "name": "Goblins do véu",
+      "type": "criatura",
+      "description": "São goblins que andam em grupos de 5 ou 6 e que são visíveis apenas através do Anel do véu partido. O anel é usado como o amuleto de Coraline ou das Crônicas de Spiderwick, colocando-o próximo ao olho para observar os goblins. Eles são pequenos e produzem sons de Porcos-Coruja e Galinhas-Nanicas como forma de distração, pois sempre andam perto de tais animais. Não são muito fortes, porém são extremamente ágeis e sorrateiros, além de utilizarem espadas, arcos e flechas envenenadas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [],
+      "max_health": 10,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Flecha Torta",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Veneno Fraco de Goblin",
+          "chance": "1/2"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região desconhecida/diversas regiões",
+        "Regi?o original: Diversas regiões habitadas do país"
+      ]
+    },
+    {
+      "id": "galinhas-nanicas",
+      "name": "Galinhas-Nanicas",
+      "type": "criatura",
+      "description": "Pequenas galinhas do tamanho de um punho fechado. Extremamente comuns em todo o país.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [],
+      "max_health": 5,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pena de Galinha-Nanica",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Ovo de Galinha-Nanica",
+          "chance": "1/2"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região desconhecida/diversas regiões",
+        "Regi?o original: Quase todas as áreas habitadas"
+      ]
+    },
+    {
+      "id": "galinha-nanica-primordial",
+      "name": "Galinha-Nanica Primordial",
+      "type": "criatura",
+      "description": "Uma criatura lendária da qual existem apenas um ou dois registros confiáveis. Apesar do tamanho reduzido, possui penas douradas e uma inteligência comparável à de um humano. Algumas lendas afirmam que todas as Galinhas-Nanicas descendem dela. Seu cacarejo pode ser ouvido a quilômetros de distância e, segundo histórias antigas, é capaz de alterar a sorte de quem o escuta.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [],
+      "max_health": 60,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Pena da Galinha-Nanica Primordial",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Ovo Primordial",
+          "chance": "1/8"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região desconhecida/diversas regiões",
+        "Regi?o original: Desconhecida"
+      ]
+    },
+    {
+      "id": "porcos-coruja",
+      "name": "Porcos-Coruja",
+      "type": "criatura",
+      "description": "Criaturas comuns encontradas em florestas e regiões tranquilas. Possuem corpo de porco, olhos enormes de coruja e asas inúteis por causa do peso. São pacíficos, até alguém tentar atacar.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian",
+        "estrada-do-viajante"
+      ],
+      "max_health": 20,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pena de Porco-Coruja",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Olho de Porco-Coruja",
+          "chance": "1/2"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região desconhecida/diversas regiões",
+        "Regi?o original: Floresta Viridian, Estrada do Viajante e áreas rurais"
+      ]
+    },
+    {
+      "id": "wrym-vermilion",
+      "name": "Wrym Vermilion",
+      "type": "criatura",
+      "description": "É a entidade aprisionada dentro da pérola vermelha. Trata-se de um Wrym de três metros de comprimento coberto por uma pelagem semelhante a brasas vivas. Ao redor de sua cabeça giram presas curvas e afiadas, formando algo semelhante a um capacete de ossos. É responsável pela força sobrenatural concedida pelo colar e pelos pactos realizados através dele. Apenas ataques com resultados superiores a 10 são capazes de atingi-lo. Enquanto permanecer vivo, todos aqueles marcados por seus pactos continuarão sendo perseguidos por monstros atraídos pela marca. Caso seja derrotado, todas as marcas desaparecem e seu corpo se desfaz em cinzas escarlates, restando apenas uma nova pérola vermelha em formato de rosto. Quando oferece um pacto, sua voz ecoa diretamente na alma da vítima: “A morte já tomou seu lugar diante de você. Entregue-me as almas daqueles que o acompanham e arrancarei você de suas feridas.”",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [],
+      "max_health": 150,
+      "armor": 30,
+      "drops": [
+        {
+          "name": "Cinzas Escarlates do Wrym",
+          "chance": "obrigatorio"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região desconhecida/diversas regiões",
+        "Regi?o original: Desconhecida"
+      ]
+    },
+    {
+      "id": "wrym-viridian",
+      "name": "Wrym Viridian",
+      "type": "criatura",
+      "description": "É a entidade que habita a pérola verde. Trata-se de um Wrym de três metros de comprimento coberto por uma pelagem verde-esmeralda escura. De suas costas brotam estruturas semelhantes a galhos e cipós, enquanto presas curvas giram ao redor de sua cabeça formando um capacete em formato de crânio. Seus movimentos são tão rápidos que parecem desafiar a visão. É responsável pela agilidade sobrenatural concedida pelo colar e pelos pactos de sacrifício realizados através dele. Apenas ataques com resultados superiores a 10 conseguem atingi-lo. Enquanto viver, todos aqueles marcados por seus pactos continuarão atraindo monstros e criaturas sobrenaturais. Caso seja derrotado, as marcas desaparecem e seu corpo se desfaz em folhas escuras e raízes secas, restando apenas uma nova pérola verde em formato de rosto. Quando oferece um pacto, sua voz surge como um sussurro vindo do interior da floresta: “A morte já estendeu a mão para seu companheiro. Entregue-me sua alma e eu a retirarei. Um destino por outro. Uma vida por outra.”",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [],
+      "max_health": 140,
+      "armor": 40,
+      "drops": [
+        {
+          "name": "Raiz do Primeiro Pacto",
+          "chance": "obrigatorio"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região desconhecida/diversas regiões",
+        "Regi?o original: Desconhecida"
+      ]
+    },
+    {
+      "id": "gatos-autistas",
+      "name": "Gatos Autistas",
+      "type": "criatura",
+      "description": "Fazem parte de um grupo conhecido como “miaaannn”. São normalmente pacíficos, porém, caso alguém fale os números 6 ou 7, a palavra “brabão” ou a expressão “farmou aura” perto deles, entram em um estado de violência extrema e atacam qualquer um ao redor, inclusive outros gatos do grupo. Vivem na parte Oeste das Montanhas Trippi, onde protegem o Tesouro Peludo escondido em uma caverna. O tesouro é uma bota singular capaz de aumentar a agilidade e os reflexos de quem a utiliza.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi",
+        "vilarejo-dos-gatos-autistas"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pelo Organizado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Anotação Incompreensível",
+          "chance": "1/2"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "gato-autista-alado",
+      "name": "Gato Autista Alado",
+      "type": "criatura",
+      "description": "É um gato que faz careta e altamente perigoso. Possui patas de calopsita, bafo de urubu, asas de dragão e autismo. É o líder do “miaaannn” e o principal guardião do Tesouro Peludo. O gato aparece quando os números 6 ou 7 surgem nos dados durante um confronto contra um Gato Autista. Antes de lutar, ele faz cinco perguntas ao desafiante. As quatro primeiras costumam ser absurdamente fáceis. A quinta, entretanto, é capaz de decidir o destino de um aventureiro.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi",
+        "vilarejo-dos-gatos-autistas"
+      ],
+      "max_health": 75,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Bota do Tesouro Peludo",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Sino do Gato Autista Alado",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi (caverna dos gatos com autismo)"
+      ]
+    },
+    {
+      "id": "gatos-com-tdah",
+      "name": "Gatos com TDAH",
+      "type": "criatura",
+      "description": "Fazem parte do grupo conhecido como... bem, eles esqueceram o nome. São gatos normalmente amigáveis e ainda mais pacíficos do que os Gatos Autistas, porém possuem uma atenção terrível e frequentemente não sabem o que estavam fazendo ou por que estavam ali. Vivem na parte Leste das Montanhas Trippi e protegem um tesouro sem nome escondido em uma caverna. O problema é que não há nada dentro da caverna, pois o responsável por guardar o tesouro esqueceu sua função e acabou usando o próprio tesouro.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi",
+        "vilarejo-dos-gatos-com-tdah"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Novelo Desfeito",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Lista de Afazeres Inacabada",
+          "chance": "1/2"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "gato-com-tdah-alado",
+      "name": "Gato com TDAH Alado",
+      "type": "criatura",
+      "description": "Um gato extremamente confuso e desatento. Possui patas de calopsita, bafo de urubu, asas de dragão e TDAH. Diferente dos demais, ele utiliza o próprio tesouro que deveria proteger. A bota que carrega lhe concede mais força e resistência, tornando-o uma ameaça muito maior do que aparenta ser. Durante o combate, frequentemente parece esquecer o que está fazendo, mas isso não o impede de causar estragos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi",
+        "vilarejo-dos-gatos-com-tdah"
+      ],
+      "max_health": 75,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Tesouro Sem Nome",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Coleira da Atenção Momentânea",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi (caverna dos gatos com TDAH)"
+      ]
+    },
+    {
+      "id": "cabras-peludas",
+      "name": "Cabras Peludas",
+      "type": "criatura",
+      "description": "Cabras cobertas por uma pelagem extremamente espessa. São escaladoras habilidosas e conhecem passagens escondidas entre os penhascos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "max_health": 15,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Lã das Alturas",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Chifre Escalador",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "morcegos-de-tres-asas",
+      "name": "Morcegos de Três Asas",
+      "type": "criatura",
+      "description": "Morcegos incomuns que possuem uma terceira asa nas costas. Seu voo estranho dificulta prever seus movimentos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "max_health": 6,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Asa Ressecada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Membrana Tríplice",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi (nas cavernas)"
+      ]
+    },
+    {
+      "id": "mategato",
+      "name": "Mategato",
+      "type": "criatura",
+      "description": "Um gato mago pertencente aos Gatos Autistas. Utiliza cálculos absurdamente complexos para alterar pequenas probabilidades ao seu redor. Fica imediatamente hostil ao ouvir os números 6 ou 7.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi",
+        "vilarejo-dos-gatos-autistas"
+      ],
+      "max_health": 45,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fórmula Impossível",
+          "chance": "1/3"
+        },
+        {
+          "name": "Compasso das Probabilidades",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi (caverna dos gatos com autismo)"
+      ]
+    },
+    {
+      "id": "arquivista-dos-gatos",
+      "name": "Arquivista dos Gatos",
+      "type": "criatura",
+      "description": "Um enorme gato cheio de pergaminhos e anotações. Ajudante do Bibliotecário das cavernas. Registra todos os acontecimentos importantes das Montanhas Trippi e conhece histórias que ninguém mais lembra (caverna dos gatos com TDAH).",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "max_health": 40,
+      "armor": 0,
+      "drops": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "bibliotecario-das-cavernas",
+      "name": "Bibliotecário das Cavernas",
+      "type": "criatura",
+      "description": "Uma criatura gigantesca semelhante a um gato coberto por pergaminhos, mapas e anotações antigas. Vive nas cavernas mais profundas das Montanhas Trippi catalogando tudo o que encontra. Apesar de extremamente inteligente, entra em fúria caso alguém reorganize sua coleção. Alguns gatos autistas acreditam que ele foi o primeiro membro da montanha.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "max_health": 60,
+      "armor": 15,
+      "drops": [
+        {
+          "name": "Novelo Perfeito",
+          "chance": "1/3"
+        },
+        {
+          "name": "Tomo dos Sete Corredores",
+          "chance": "1/5"
+        },
+        {
+          "name": "Última Página do Primeiro Livro",
+          "chance": "1/6"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Montanhas Trippi",
+        "Regi?o original: Montanhas Trippi (caverna dos gatos com TDAH)"
+      ]
+    },
+    {
+      "id": "viajante",
+      "name": "Viajante",
+      "type": "criatura",
+      "description": "O Viajante: Muito antes da fundação das cidades de Magik, existiu um homem conhecido apenas como O Viajante. Naquela época, as marcas ainda eram pouco compreendidas e grande parte das magias existentes permanecia espalhada pelo mundo. Fascinado pelo conhecimento, o Viajante dedicou sua vida a estudar cada uma delas. Durante décadas percorreu florestas, montanhas, lagos e ruínas, aprendendo diretamente com mestres, criaturas mágicas e estudiosos. Com o passar dos anos, tornou-se o maior mago que Magik já conheceu. Entretanto, sua busca por conhecimento transformou-se lentamente em obsessão. O Viajante passou a acreditar que enquanto as magias permanecessem divididas entre inúmeras pessoas, o mundo continuaria preso ao caos, aos conflitos e à ignorância. Convencido de que apenas ele era capaz de utilizar esse poder corretamente, começou a caçar usuários de magia para roubar suas marcas e incorporar seus conhecimentos. Para fazer isso, remove a região da pele onde a marca está localizada e a costura ao próprio corpo através de antigos rituais. Com o tempo, seu corpo tornou-se uma colcha formada pelas marcas de inúmeros mestres magos. Muitos morreram durante esse período, incluindo os pais de Caligo Thura. Conforme acumulava marcas, seu poder crescia além dos limites naturais de qualquer ser humano. Temendo que sua própria vida chegasse ao fim antes de concluir sua missão, o Viajante criou os Wrym, entidades capazes de armazenar fragmentos de magia, conhecimento e alma. Cada Wrym representa uma parte de seu poder espalhada pelo mundo. Com o passar dos séculos, ele abandonou riquezas, títulos, amizades e até mesmo sua própria identidade. Seu verdadeiro nome já não aparece em nenhum registro conhecido. Alguns estudiosos acreditam que ele o apagou deliberadamente; outros acreditam que simplesmente deixou de utilizá-lo por tanto tempo que acabou sendo esquecido pelo mundo. Quando questionado sobre quem era antes de se tornar O Viajante, ele apenas responde: \"Eu não preciso mais de um nome.\" Hoje, continua percorrendo silenciosamente as estradas de Magik, oferecendo artefatos a viajantes e observando o mundo que pretende governar. Seu objetivo final é reunir todas as magias existentes, recuperar todos os fragmentos de poder espalhados pelos Wrym e impor uma única vontade sobre Magik. Muitos acreditam que deseja conquistar o mundo. Outros acreditam que deseja salvá-lo. O próprio Viajante já não parece enxergar diferença entre as duas coisas. Aparece na Estrada do Viajante, no início da jornada de qualquer jogador, oferecendo dois artefatos misteriosos. O grupo só pode escolher 1. Caso alguém tente matá-lo, ele some e deixa aleatoriamente um dos itens no chão.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "max_health": 250,
+      "armor": 40,
+      "drops": [
+        {
+          "name": "Manto do Homem Sem Nome",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Agulha das Marcas Roubadas",
+          "chance": "1/4"
+        },
+        {
+          "name": "Lâmina do Último Viajante",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Estrada do Viajante",
+        "Regi?o original: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "cao-das-estradas",
+      "name": "Cão das Estradas",
+      "type": "criatura",
+      "description": "Um animal magro, silencioso, que anda em grupo e é encontrado na Estrada do Viajante. Muitos acreditam que ele segue aventureiros durante dias apenas para observar seus destinos. Quando atacado, demonstra uma força surpreendente.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "max_health": 20,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Coleira Gasta",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pegada do Destino",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Estrada do Viajante",
+        "Regi?o original: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "corvo-das-placas",
+      "name": "Corvo das Placas",
+      "type": "criatura",
+      "description": "Corvos incomuns encontrados próximos às placas espalhadas pela Estrada do Viajante. Costumam observar viajantes por longos períodos e frequentemente aparecem antes de encontros estranhos. Alguns juram já ter visto os mesmos corvos em regiões separadas por centenas de quilômetros.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "max_health": 8,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pena de Corvo das Placas",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pedaço de Madeira Entalhada",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Estrada do Viajante",
+        "Regi?o original: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "colecionador-de-pedagios",
+      "name": "Colecionador de Pedágios",
+      "type": "criatura",
+      "description": "Criaturas humanoides cobertas por capas rasgadas que surgem em antigos postos abandonados da Estrada do Viajante. Eles exigem pedágios de qualquer pessoa que passe, mas nunca explicam para onde vai o pagamento. Alguns aceitam moedas. Outros pedem objetos sem valor aparente. Os mais estranhos pedem lembranças, promessas ou informações.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "max_health": 30,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Ficha de Pedágio",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Moeda do Viajante",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Estrada do Viajante",
+        "Regi?o original: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "o-viajante-de-ontem",
+      "name": "O Viajante de Ontem",
+      "type": "criatura",
+      "description": "Uma versão mais antiga, cansada e estranha do próprio Viajante. Ninguém sabe se é uma cópia, um reflexo temporal ou o verdadeiro Viajante em outro momento de sua vida. Ele surge apenas para aventureiros que já percorreram grande parte da Estrada do Viajante.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "max_health": 100,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Mapa Inacabado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Relógio das Estradas Perdidas",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Estrada do Viajante",
+        "Regi?o original: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "wyrmlings-viridian",
+      "name": "Wyrmlings Viridian",
+      "type": "criatura",
+      "description": "Versões jovens do Wrym Viridian. São curiosos, rápidos e costumam observar viajantes escondidos entre as árvores.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 30,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Folha Viridian Espessa",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Maçã Viridian",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "corujas-de-musgo",
+      "name": "Corujas de Musgo",
+      "type": "criatura",
+      "description": "Corujas cobertas por musgo e pequenas plantas. Permanecem imóveis por horas, parecendo parte das árvores.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 12,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pena de Coruja-Musgo",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Olho de Coruja-Musgo",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "veados-de-tres-pernas",
+      "name": "Veados de Três Pernas",
+      "type": "criatura",
+      "description": "Veados velozes que parecem desafiar a lógica ao correr com apenas três pernas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 15,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Casco Assimétrico",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura de Caçador Viridian",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "espiritos-de-folhas",
+      "name": "Espíritos de Folhas",
+      "type": "criatura",
+      "description": "Pequenas entidades que habitam folhas caídas. Podem formar figuras humanoides quando se reúnem em grandes quantidades.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Folha Comum de Viridian",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Folha do Primeiro Caminho",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "lenhador-perdido",
+      "name": "Lenhador Perdido",
+      "type": "criatura",
+      "description": "Uma figura encapuzada vista ocasionalmente na Floresta Viridian. Parece um homem comum até que alguém tente conversar com ele. Ninguém sabe se é humano, espírito ou outra coisa.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 50,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Machado Quebrado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Cajado das Mil Trilhas",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "raiz-andante",
+      "name": "Raiz Andante",
+      "type": "criatura",
+      "description": "Massas de raízes vivas que se deslocam lentamente pelo solo da floresta. Elas atacam principalmente aqueles que danificam árvores antigas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 28,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Raiz Retorcida",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Botas Raiz",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "anciao-das-raizes",
+      "name": "Ancião das Raízes",
+      "type": "criatura",
+      "description": "Uma massa colossal de raízes, galhos e musgos que habita o centro da Floresta Viridian. Muitos acreditam que ele é uma extensão da própria floresta. Seu corpo abriga pássaros, insetos e até pequenos mamíferos",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 90,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Coração de Madeira Viva",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura das Cem Trilhas",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "druida-dos-galhos-antigos",
+      "name": "Druida dos Galhos Antigos",
+      "type": "criatura",
+      "description": "Um velho guardião da Floresta Viridian que raramente aparece para viajantes. Dizem que conhece o nome de todas as árvores da floresta e que conversa com elas diariamente. Marca Concedida: Marca Viridian. Método: Faz uma pequena raiz atravessar a pele próxima ao tornozelo do aprendiz. A raiz desaparece logo em seguida, deixando apenas a marca.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 50,
+      "armor": 20,
+      "drops": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "colecionador-de-musgo",
+      "name": "Colecionador de Musgo",
+      "type": "criatura",
+      "description": "Um estudioso excêntrico maluco que acredita que todo conhecimento do mundo está escondido em espécies raras de musgo. Carrega centenas de amostras consigo.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 35,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Amostra de Musgo Raro",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Manto das Folhas Observadoras",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "porco-coruja-anciao",
+      "name": "Porco-Coruja Ancião",
+      "type": "criatura",
+      "description": "Um dos únicos exemplares conhecidos da espécie. Mede quase três metros de altura e suas penas formam algo semelhante a um manto natural. Dizem que observa o mundo há séculos e conhece caminhos secretos entre as regiões do país. Diferente dos Porcos-Coruja comuns, é capaz de falar frases curtas e enigmáticas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "max_health": 80,
+      "armor": 20,
+      "drops": [
+        {
+          "name": "Pena do Porco-Coruja Ancião",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Botas do Caminho Invisível",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta Viridian",
+        "Regi?o original: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "lobos-de-brasas",
+      "name": "Lobos de Brasas",
+      "type": "criatura",
+      "description": "Lobos cujo pelo parece conter brasas vivas. Suas pegadas permanecem quentes por horas após sua passagem.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 20,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pelo Incandescente",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Flor da Última Palavra",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "coelhos-escarlates",
+      "name": "Coelhos Escarlates",
+      "type": "criatura",
+      "description": "Coelhos vermelhos extremamente rápidos. Muitos viajantes os confundem com espíritos da floresta.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 8,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pelo Escarlate",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Fruto Vermilion Maduro",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "vermes-coracao",
+      "name": "Vermes-Coração",
+      "type": "criatura",
+      "description": "Criaturas alongadas que possuem órgãos brilhantes semelhantes a corações expostos em seu corpo.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 18,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Coração Luminoso",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Fruto Vermilion Maduro",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "wyrmlings-vermilion",
+      "name": "Wyrmlings Vermilion",
+      "type": "criatura",
+      "description": "Filhotes do Wrym Vermilion. Apesar do tamanho reduzido, já demonstram uma força assustadora.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 30,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Escama Rubra",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Fruto Vermilion Ancião",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "carneiros-de-cinzas",
+      "name": "Carneiros de Cinzas",
+      "type": "criatura",
+      "description": "Carneiros cobertos por uma lã acinzentada que parece constantemente queimada pelas pontas. Quando correm, pequenas partículas semelhantes a cinzas ficam suspensas no ar atrás deles. São extremamente territorialistas e frequentemente expulsam predadores maiores de seu território.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 25,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Lã Carbonizada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Manto de Cinzas",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "borboletas-vermilion",
+      "name": "Borboletas Vermilion",
+      "type": "criatura",
+      "description": "Borboletas vermelhas que costumam aparecer em grandes grupos sobre locais onde alguém morreu recentemente. Apesar da aparência delicada, suas asas possuem pequenas escamas afiadas que podem causar cortes quando milhares delas voam juntas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 5,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Asa Vermilion",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Flor da Última Palavra",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "sacerdote-das-brasas",
+      "name": "Sacerdote das Brasas",
+      "type": "criatura",
+      "description": "Um homem que vive entre os campos de flores do Vale Vermilion. Utiliza o próprio sangue para alimentar suas magias e considera cicatrizes símbolos sagrados. Acredita que toda vida nasce da mesma força que alimenta o fogo e o sangue. Dependendo das escolhas dos jogadores, pode se tornar um aliado ou um inimigo. Marca Concedida: Marca Vermilion. Método: Encosta uma pequena brasa na palma da mão do aprendiz. A queimadura desaparece após alguns segundos, deixando apenas a marca.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 50,
+      "armor": 0,
+      "drops": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "florista-vermilion",
+      "name": "Florista Vermilion",
+      "type": "criatura",
+      "description": "Uma pessoa completamente tomada pelas Flores Vermilion. Cipós vermelhos crescem por sua pele e flores brotam de seus braços. Quanto mais luta, mais flores aparecem.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 60,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Flor da Última Palavra",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura de Aço Vermilion",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "lobo-rei-das-brasas",
+      "name": "Lobo-Rei das Brasas",
+      "type": "criatura",
+      "description": "O maior dos Lobos de Brasas já registrado. Seu pelo parece uma fogueira viva e suas pegadas deixam pequenas flores Vermilion crescendo por onde passa. Dizem que ele escolhe quem pode atravessar o vale sem ser atacado.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "max_health": 85,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Coração das Brasas",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Foice da Colheita Escarlate",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Vale Vermilion",
+        "Regi?o original: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "sapos-monges",
+      "name": "Sapos-Monges",
+      "type": "criatura",
+      "description": "Sapos que passam a maior parte do tempo imóveis, como se estivessem meditando. Alguns afirmam que eles conhecem segredos antigos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 12,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pele de Sapo-Monge",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pedra da Última Lembrança",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "nevoas-vivas",
+      "name": "Névoas Vivas",
+      "type": "criatura",
+      "description": "Massas de névoa sencientes que se movem silenciosamente pelo brejo. Costumam causar confusão e perda de memória.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 20,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Frasco de Névoa Viva",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Lanterna da Névoa",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "lesmas-cronologicas",
+      "name": "Lesmas Cronológicas",
+      "type": "criatura",
+      "description": "Lesmas estranhas capazes de alterar levemente a percepção do tempo ao seu redor.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 15,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Muco Cronológico",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Ampulheta Invertida",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "monge-afogado",
+      "name": "Monge Afogado",
+      "type": "criatura",
+      "description": "Uma criatura coberta de lodo que vaga silenciosamente pelo Brejo do Esquecimento. Seus movimentos são lentos, mas sua presença causa uma sensação inexplicável de nostalgia.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 35,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Conta de Oração Enlameada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Chave Sem Fechadura",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "no-temporal",
+      "name": "Nó Temporal",
+      "type": "criatura",
+      "description": "Uma lesma cronológica que viveu por tempo demais e cresceu até se tornar uma anomalia. O tempo parece desacelerar levemente ao seu redor.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 45,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fragmento de Tempo Parado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Ampulheta Invertida",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "lamas-sussurrantes",
+      "name": "Lamas Sussurrantes",
+      "type": "criatura",
+      "description": "Pequenas massas de lama-viva encontradas nas regiões mais profundas do Brejo do Esquecimento. Elas raramente atacam diretamente, preferindo confundir viajantes com vozes, lembranças falsas e informações contraditórias. Muitas vezes repetem frases ditas por pessoas que passaram pelo brejo décadas atrás. Apesar de parecerem inofensivas, podem levar aventureiros para caminhos errados ou fazê-los esquecer detalhes importantes temporariamente. São frequentemente encontradas próximas a locais antigos, memórias perdidas e áreas onde o Colecionador de Memórias já esteve.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 8,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Lama Murmurante",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pedra da Última Lembrança",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "colecionador-de-memorias",
+      "name": "Colecionador de Memórias",
+      "type": "criatura",
+      "description": "criatura alta e encurvada que habita as partes mais profundas do Brejo do Esquecimento. Seu corpo é coberto por pequenos objetos pendurados, como chaves, dentes, fios de cabelo, pedaços de papel e nomes escritos em placas antigas. Cada objeto representa uma lembrança roubada de alguém que se perdeu no brejo. O Colecionador raramente ataca diretamente; prefere confundir suas vítimas, trocar suas memórias de lugar e fazê-las esquecer porque estavam lutando. Quanto mais memórias rouba, mais forte se torna.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 60,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Nome Roubado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Capa do Esquecimento",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento",
+        "Vida original: 60 + 10 de armadura (vida aumenta +5 a cada informação importante que conseguir dos jogadores)"
+      ]
+    },
+    {
+      "id": "memoria-perdida",
+      "name": "Memória Perdida",
+      "type": "criatura",
+      "description": "Uma entidade formada pelas lembranças esquecidas dos viajantes que passaram pelo brejo. Ela assume formas diferentes para cada pessoa que a observa. Algumas vítimas juram ter lutado contra amigos, familiares ou versões mais jovens de si mesmas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "max_health": 80,
+      "armor": 15,
+      "drops": [
+        {
+          "name": "Fragmento de Memória",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Espelho da Infância",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Brejo do Esquecimento",
+        "Regi?o original: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "kriots-terrosos",
+      "name": "Kriots terrosos",
+      "type": "criatura",
+      "description": "São animais com cabeça de casas de pedra que criam uma ilusão de ótica em que o interior de tal casa é maior que o exterior (na verdade, a ilusão é causada por um ângulo capaz de enganar a mente, fazendo com que as vítimas entrem na casa e andem em uma rampa para o subsolo. Entretanto, elas não sabem que estão andando em um solo inclinado, por ser um ângulo muito pequeno.). No fundo da garganta, que se parece com um corredor, há uma luz forte o suficiente para atrair as vítimas, que quando chegam no fundo, não conseguem mais sair. O animal se revela e o corredor, que antes parecia apenas como um túnel de pedra com runas nas paredes, vira uma garganta. As runas viram veias e um líquido viscoso sai delas, fazendo com que seja impossível sair pela porta de entrada. O interior da garganta é sensível o suficiente para ser cortado por dentro, por uma espada ou um objeto afiado. No final da garganta, de baixo da luz (que se parece com uma úvula, depois de ser revelada), há um enorme buraco. No fundo desse buraco se encontra o estômago da criatura, que é cheio de ácido, feito para dissolver qualquer um que lá entre. Eles andam em bandos e acendem/apagam as luzes no fim do túnel de acordo com a fome.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "max_health": 150,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Maçaneta de Pedra",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Porta do Interior Impossível",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Campos dos Kriots",
+        "Regi?o original: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "corvos-mineiros",
+      "name": "Corvos Mineiros",
+      "type": "criatura",
+      "description": "Corvos que coletam pedras e minerais brilhantes para construir ninhos incomuns.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "max_health": 6,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pedra Brilhante Roubada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pena do Corvo Mineiro",
+          "chance": "1/2"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Campos dos Kriots",
+        "Regi?o original: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "minhocas-gigantes",
+      "name": "Minhocas Gigantes",
+      "type": "criatura",
+      "description": "Minhocas do tamanho de cavalos que atravessam o solo das planícies.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "max_health": 30,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Dente de Minhoca Gigante",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Túnel Engarrafado",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Campos dos Kriots",
+        "Regi?o original: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "falsos-espantalhos",
+      "name": "Falsos Espantalhos",
+      "type": "criatura",
+      "description": "Criaturas que permanecem imóveis entre plantações e campos durante dias inteiros. Ninguém sabe se são monstros tentando parecer espantalhos ou espantalhos que se tornaram monstros.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "max_health": 22,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Palha Encantada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Chapéu do Espantalho Solitário",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Campos dos Kriots",
+        "Regi?o original: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "rei-dos-espantalhos",
+      "name": "Rei dos Espantalhos",
+      "type": "criatura",
+      "description": "O primeiro Falso Espantalho. Diferente dos demais, possui inteligência comparável à de um humano e controla bandos inteiros de espantalhos menores. Muitas plantações abandonadas nos Campos dos Kriots pertencem ao seu território.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "max_health": 80,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Coroa de Palha Negra",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura do Primeiro Espantalho",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Campos dos Kriots",
+        "Regi?o original: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "carpas-profetas",
+      "name": "Carpas Profetas",
+      "type": "criatura",
+      "description": "Peixes capazes de responder perguntas. O problema é que nem todas as respostas são verdadeiras.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Escama Profética",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pergaminho Molhado",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "garcas-de-cristal",
+      "name": "Garças de Cristal",
+      "type": "criatura",
+      "description": "Garças elegantes com penas cristalinas que refletem a luz do sol.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 15,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pena de Cristal",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Lágrima de Cristal",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "enguias-filosoficas",
+      "name": "Enguias Filosóficas",
+      "type": "criatura",
+      "description": "Enguias encontradas nas regiões mais profundas do Lago das Carpas Profetas. Diferente das carpas, elas não respondem perguntas. Elas fazem perguntas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 18,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Dente de Enguia Filosófica",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pergunta Sem Resposta",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "tartaruga-oraculo",
+      "name": "Tartaruga Oráculo",
+      "type": "criatura",
+      "description": "Tartarugas gigantes e lentas que carregam inscrições naturais em seus cascos. Alguns estudiosos passam anos tentando decifrá-las.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 35,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fragmento de Casco Oracular",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Placa do Futuro Incompleto",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "enguia-do-fundo-silencioso",
+      "name": "Enguia do Fundo Silencioso",
+      "type": "criatura",
+      "description": "Uma enorme enguia de escamas negras que habita as partes mais profundas do Lago das Carpas Profetas. Seu corpo mede vários metros de comprimento e seus olhos emitem um brilho azul pálido visível mesmo na escuridão absoluta. Dizem que ela surgiu após permanecer séculos ouvindo as profecias das Carpas Profetas até enlouquecer. A criatura absorve sons ao seu redor, criando áreas onde nenhuma voz, passo ou respiração pode ser ouvido. Muitas embarcações desapareceram após atravessar as regiões silenciosas do lago. Algumas lendas afirmam que ela guarda segredos que nem mesmo as carpas ousam revelar.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 60,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Escama do Fundo Silencioso",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Olho da Enguia do Fundo Silencioso",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "oraculo-afogado",
+      "name": "Oráculo Afogado",
+      "type": "criatura",
+      "description": "Um antigo estudioso das Carpas Profetas que passou tantos anos ouvindo previsões que deixou de viver no presente. Ele fala como se tudo já tivesse acontecido. Muitos acreditam que ele já sabe como irá morrer, mas simplesmente não se importa. Ele é o ex ajudante da Bruxa das Águas Calmas.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 35,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Página Encharcada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Relógio das Marés Antigas",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "bruxa-das-aguas-calmas",
+      "name": "Bruxa das Águas Calmas",
+      "type": "criatura",
+      "description": "Uma mulher que vive em uma casa flutuante escondida entre as partes mais silenciosas do lago. Utiliza reflexos da água para lançar magias. Poucas pessoas sabem seu verdadeiro nome. Dizem que ela mora no lago há mais tempo do que qualquer habitante de Brisvale, mas ninguém consegue concordar sobre sua aparência. Alguns afirmam que ela é uma senhora de cabelos brancos, outros juram que viram uma jovem sentada na varanda de sua casa. As Carpas Profetas costumam se reunir próximas à sua casa, mas nunca revelam o motivo. É a principal mestra das magias de Água. Marca Concedida: Marca das Marés. Método: Utiliza uma agulha feita de escama de carpa para realizar um pequeno corte no pulso do aprendiz. Em seguida, derrama algumas gotas de água sobre a ferida, formando a marca.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 70,
+      "armor": 10,
+      "drops": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "mae-das-carpas",
+      "name": "Mãe das Carpas",
+      "type": "criatura",
+      "description": "Uma carpa gigantesca tão antiga que parte de seu corpo parece feita de cristal. Diferente das outras carpas, ela nunca responde perguntas. Ela apenas faz perguntas. Dizem que responder corretamente três delas concede sorte pelo resto da vida.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "max_health": 75,
+      "armor": 15,
+      "drops": [
+        {
+          "name": "Escama da Primeira Profecia",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Olho da Verdade Profunda",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Lago das Carpas Profetas",
+        "Regi?o original: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "sombras-perdidas",
+      "name": "Sombras Perdidas",
+      "type": "criatura",
+      "description": "Sombras que se separaram de seus donos e passaram a vagar pela floresta.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 18,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fragmento de Sombra",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Capa da Sombra Perdida",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "cervos-negativos",
+      "name": "Cervos Negativos",
+      "type": "criatura",
+      "description": "Criaturas cuja aparência lembra uma fotografia invertida.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 20,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Chifre Invertido",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Pedra do Contrário",
+          "chance": "1/6"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "aranhas-bidimensionais",
+      "name": "Aranhas Bidimensionais",
+      "type": "criatura",
+      "description": "Aranhas capazes de se esconder em superfícies planas como desenhos vivos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fio Bidimensional",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Mapa Dobrado",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "espelho-vivo",
+      "name": "Espelho Vivo",
+      "type": "criatura",
+      "description": "Uma criatura da Floresta do Avesso cuja superfície reflete exatamente quem a observa. O problema é que o reflexo continua se movendo mesmo quando a pessoa para, indo em direção ao centro da floresta.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 30,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Estilhaço Reflexivo",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Espelho de Bolso Vivo",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "lobo-invertido",
+      "name": "Lobo Invertido",
+      "type": "criatura",
+      "description": "Um predador cuja anatomia parece errada. Suas patas dobram para lados impossíveis e suas pegadas aparecessem na frente dele, no caminho que deseja trilhar.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 25,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pelo Invertido",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Lâmina da Lua Nova",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "reflexomante",
+      "name": "Reflexomante",
+      "type": "criatura",
+      "description": "Um mago que estudou tanto os Espelhos Vivos que começou a se parecer com eles. Seus olhos refletem tudo ao redor mesmo na escuridão.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 45,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Olho Espelhado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Lanterna Negativa",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "reflexo-perdido",
+      "name": "Reflexo Perdido",
+      "type": "criatura",
+      "description": "Uma manifestação criada pelas sombras da Floresta do Avesso. Cada Reflexo Perdido assume a aparência, voz e parte das memórias do aventureiro que o enfrenta, tornando impossível encontrar dois iguais. A criatura acredita ser a versão verdadeira daquela pessoa e enxerga o aventureiro como uma cópia imperfeita. Seus equipamentos, habilidades e forma de lutar costumam se assemelhar aos do próprio alvo, embora sempre apresentem pequenas distorções causadas pela influência das sombras. Muitos viajantes relatam que conversar com um Reflexo Perdido é mais assustador do que enfrentá-lo em combate.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 1,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Máscara do Reflexo",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura do Reflexo Torto",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso",
+        "Vida original: Duas vezes a vida  e armadura do jogador que o reflexo imita"
+      ]
+    },
+    {
+      "id": "bruxa-do-avesso",
+      "name": "Bruxa do Avesso",
+      "type": "criatura",
+      "description": "Uma feiticeira que realiza magias invertidas. Curas viram ferimentos, fogo vira gelo e portas abertas se fecham.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 60,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Livro Invertido",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Marca da Contradição",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "o-reflexo-original",
+      "name": "O Reflexo Original",
+      "type": "criatura",
+      "description": "Uma criatura da Floresta do Avesso que supostamente deu origem a todas as Sombras Perdidas. Seu corpo parece mudar constantemente para refletir quem o observa. Quanto mais tempo alguém o encara, mais difícil se torna lembrar sua verdadeira aparência.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "max_health": 85,
+      "armor": 20,
+      "drops": [
+        {
+          "name": "Coração Espelhado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura do Reflexo Torto",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Floresta do Avesso",
+        "Regi?o original: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "urubus-de-pedra",
+      "name": "Urubus de Pedra",
+      "type": "criatura",
+      "description": "Grandes aves de aparência rochosa que observam os penhascos do alto.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "max_health": 20,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Pena Petrificada",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Fruto do Último Passo",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Penhascos do Último Passo",
+        "Regi?o original: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "cabras-palidas",
+      "name": "Cabras Pálidas",
+      "type": "criatura",
+      "description": "Cabras silenciosas que costumam permanecer perigosamente próximas às bordas dos penhascos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Chifre Pálido",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Manto dos Ventos Altos",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Penhascos do Último Passo",
+        "Regi?o original: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "sereia-dos-penhascos",
+      "name": "Sereia dos Penhascos",
+      "type": "criatura",
+      "description": "Entidades que aparecem durante tempestades próximas aos Penhascos do Último Passo. Seus cantos atraem viajantes para regiões perigosas das falésias.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "max_health": 40,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Escama da Maré Distante",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Fruto do Eco Perfeito",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Penhascos do Último Passo",
+        "Regi?o original: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "gigante-adormecido",
+      "name": "Gigante Adormecido",
+      "type": "criatura",
+      "description": "Um enorme humanoide de pedra encontrado ocasionalmente deitado entre os penhascos. Felizmente, ele passa a maior parte do tempo dormindo.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "max_health": 40,
+      "armor": 20,
+      "drops": [
+        {
+          "name": "Fragmento de Pedra Sonhadora",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Armadura do Eco Distante",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Penhascos do Último Passo",
+        "Regi?o original: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "eco-mestre",
+      "name": "Eco-Mestre",
+      "type": "criatura",
+      "description": "Um homem que aprendeu a controlar os Ecos Humanos. Consegue capturar vozes em garrafas e libertá-las como feitiços. Alguns acreditam que ele conversa diretamente com a Voz dos Penhascos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "max_health": 60,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Garrafa de Eco",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Lança do Horizonte",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Penhascos do Último Passo",
+        "Regi?o original: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "a-voz-dos-penhascos",
+      "name": "A Voz dos Penhascos",
+      "type": "criatura",
+      "description": "Uma entidade invisível que habita as falésias. Normalmente é percebida apenas através de sussurros e ecos. Quando se manifesta fisicamente, assume a forma de um humanoide feito de vento, névoa e fragmentos de pedra.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "max_health": 80,
+      "armor": 20,
+      "drops": [
+        {
+          "name": "Sussurro Aprisionado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Machado da Gargalhada Final",
+          "chance": "1/5"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Penhascos do Último Passo",
+        "Regi?o original: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "veado-de-cristal",
+      "name": "Veado de Cristal",
+      "type": "criatura",
+      "description": "Veados raros cujos chifres são formados por pequenos cristais semelhantes aos de Pedralume. São extremamente territorialistas e costumam atacar qualquer um que tente coletar seus chifres.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 25,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Chifre de Cristal",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Manto dos Cristais Selvagens",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume e arredores"
+      ]
+    },
+    {
+      "id": "cristalofago",
+      "name": "Cristalófago",
+      "type": "criatura",
+      "description": "Pequenas criaturas semelhantes a tatus feitas de pedra e cristal. Passam o dia escavando túneis e consumindo fragmentos de Pedralume. Costumam fugir quando estão sozinhos, mas atacam em grupo.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 12,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Fragmento Energizado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Poção de Cura Menor",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "morcego-condutor",
+      "name": "Morcego Condutor",
+      "type": "criatura",
+      "description": "Morcegos cristalinos que vivem pendurados nos tetos das minas profundas. Pequenas faíscas percorrem suas asas durante o voo.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 10,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fragmento Energizado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Poção de Cura Menor",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "larva-de-pedralume",
+      "name": "Larva de Pedralume",
+      "type": "criatura",
+      "description": "Larvas transparentes encontradas próximas às maiores concentrações de energia das minas. Alimentam-se dos resíduos produzidos pelos cristais.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 8,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Fragmento Energizado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Poção de Cura Menor",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "sentinela-das-minas",
+      "name": "Sentinela das Minas",
+      "type": "criatura",
+      "description": "Antigos autômatos utilizados pelos fundadores de Pedralume para vigiar galerias importantes. Muitos deixaram de distinguir invasores de mineradores há séculos.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 45,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Fragmento Energizado",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Capacete do Supervisor",
+          "chance": "1/4"
+        },
+        {
+          "name": "Fragmento da Pedralume Primordial",
+          "chance": "1/4"
+        },
+        {
+          "name": "Poção de Cura",
+          "chance": "1/3"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "escorpiao-pedralume",
+      "name": "Escorpião Pedralume",
+      "type": "criatura",
+      "description": "Escorpiões com carapaças de pedralume. Seus ferrões brilham com energia cristalina acumulada após anos vivendo próximos aos cristais da capital.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 15,
+      "armor": 0,
+      "drops": [
+        {
+          "name": "Ferrão de Pedralume",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Fragmento Energizado",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "cristalomante",
+      "name": "Cristalomante",
+      "type": "criatura",
+      "description": "Um estudioso dos cristais de Pedralume que passou décadas pesquisando a energia contida dentro das Pedralumes. Vive isolado próximo às minas e laboratórios da capital. Marca Concedida: Marca Tempestuosa. Método: Encosta um cristal energizado no pescoço do aprendiz. Uma pequena descarga percorre o corpo antes da marca surgir.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 60,
+      "armor": 20,
+      "drops": [
+        {
+          "name": "Fragmento da Pedralume Primordial",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Cajado Tempestuoso",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "mineiro-cristalizado",
+      "name": "Mineiro Cristalizado",
+      "type": "criatura",
+      "description": "Antigo trabalhador das minas de Pedralume que permaneceu exposto à energia dos cristais por tempo demais. Fragmentos brilhantes começaram a crescer sob sua pele até transformarem partes de seu corpo em cristal sólido. Sua mente foi lentamente consumida pelos sussurros das Pedralumes, restando apenas uma obsessão: encontrar mais cristais. Durante o combate, fragmentos podem se desprender de seu corpo e explodir em pequenas descargas elétricas. Alguns ainda carregam ferramentas de mineração transformadas em armas improvisadas. Fica na região sudeste dos túneis de mineração.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 35,
+      "armor": 10,
+      "drops": [
+        {
+          "name": "Fragmento da Condução",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Coração Cristalizado",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "rastreador-condutor",
+      "name": "Rastreador Condutor",
+      "type": "criatura",
+      "description": "Criaturas humanoides que vagam pelos túneis abandonados sob a Cidade de Pedralume. Seus corpos foram alterados pela exposição prolongada aos cristais, fazendo com que consigam sentir campos elétricos e localizar fontes de energia à distância. Seus olhos emitem um brilho azulado constante e seus movimentos são rápidos e inquietos. Costumam atacar qualquer criatura que carregue Pedralumes, acreditando que toda energia encontrada lhes pertence. Fica na região sudoeste dos túneis de mineração.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 30,
+      "armor": 5,
+      "drops": [
+        {
+          "name": "Fragmento da Busca",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Bússola Energizada",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "supervisor-de-escavacao",
+      "name": "Supervisor de Escavação",
+      "type": "criatura",
+      "description": "Antigo responsável por uma das maiores minas de Pedralume do continente. Após um acidente envolvendo uma Pedralume Primordial, seu corpo absorveu uma quantidade absurda de energia. Grandes cristais cresceram em suas costas e braços, tornando-o muito mais resistente que os outros mineradores afetados. Diferente da maioria das criaturas das minas, ele ainda preserva parte da inteligência e costuma comandar Mineiros Cristalizados durante confrontos. Muitos exploradores acreditam que ele guarda mapas de túneis esquecidos e depósitos secretos de Pedralume. Fica na região norte dos túneis de mineração.",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "max_health": 55,
+      "armor": 15,
+      "drops": [
+        {
+          "name": "Fragmento do Acúmulo",
+          "chance": "obrigatorio"
+        },
+        {
+          "name": "Capacete do Supervisor",
+          "chance": "1/4"
+        }
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Poss?veis inimigos.docx",
+        "Se??o original: Região: Cidade de Pedralume",
+        "Regi?o original: Cidade de Pedralume"
+      ]
+    }
+  ]
+}
