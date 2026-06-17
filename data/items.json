@@ -1,0 +1,5051 @@
+{
+  "items": [
+    {
+      "id": "pena-da-galinha-nanica-primordial",
+      "name": "Pena da Galinha-Nanica Primordial",
+      "type": "especial",
+      "description": "Uma pequena pena dourada que brilha discretamente sob qualquer iluminação. Apesar do tamanho reduzido, ela é considerada um dos tesouros mais valiosos do país. Dizem que a Galinha-Nanica Primordial perde apenas algumas poucas penas durante toda sua vida. Muitos reis, magos e aventureiros passaram décadas procurando uma sem jamais encontrá-la.",
+      "origin": "Desconhecida",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, permite repetir qualquer rolagem. O novo resultado deve ser mantido",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "flecha-torta",
+      "name": "Flecha Torta",
+      "type": "especial",
+      "description": "Uma flecha artesanal produzida pelos Goblins do Véu. Apesar da aparência torta, costuma atingir o alvo quando disparada por um goblin.",
+      "origin": "Diversas regiões",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "veneno-fraco-de-goblin",
+      "name": "Veneno Fraco de Goblin",
+      "type": "especial",
+      "description": "Um pequeno frasco contendo um líquido esverdeado utilizado pelos Goblins do Véu. O veneno raramente mata alguém, mas provoca tontura e dificuldade de concentração.",
+      "origin": "Diversas regiões",
+      "rarity": "Comum",
+      "effect": "Pode ser aplicado em uma arma. O próximo alvo atingido recebe -2 em um teste à escolha do mestre",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "ovo-primordial",
+      "name": "Ovo Primordial",
+      "type": "especial",
+      "description": "Um ovo dourado que parece irradiar sorte.",
+      "origin": "Desconhecida",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite repetir um teste de Percepção, Conhecimento ou Persuasão",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "pena-de-porco-coruja",
+      "name": "Pena de Porco-Coruja",
+      "type": "especial",
+      "description": "Uma pena grande e macia retirada de um Porco-Coruja.",
+      "origin": "Diversas regiões",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "olho-de-porco-coruja",
+      "name": "Olho de Porco-Coruja",
+      "type": "especial",
+      "description": "Um olho preservado capaz de continuar refletindo luz mesmo após a morte da criatura.",
+      "origin": "Porcos-Coruja",
+      "rarity": "Incomum",
+      "effect": "Concede +1 em um teste de Percepção realizado durante a noite. Item consumido após o uso",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "raiz-do-primeiro-pacto",
+      "name": "Raiz do Primeiro Pacto",
+      "type": "especial",
+      "description": "Uma raiz verde-escura encontrada apenas nos restos do Wrym Viridian.",
+      "origin": "Desconhecida",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite adicionar +5 a um teste de Agilidade ou Furtividade após a rolagem",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "cinzas-escarlates-do-wrym",
+      "name": "Cinzas Escarlates do Wrym",
+      "type": "especial",
+      "description": "Cinzas quentes que continuam emitindo um brilho vermelho mesmo após a morte da criatura.",
+      "origin": "Desconhecida",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite ignorar completamente uma condição de medo",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "pena-de-galinha-nanica",
+      "name": "Pena de Galinha-Nanica",
+      "type": "especial",
+      "description": "Uma pena minúscula encontrada em praticamente todas as regiões habitadas de Magik.",
+      "origin": "Diversas regiões",
+      "rarity": "Comum",
+      "effect": "Pode ser usado em missões",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "ovo-de-galinha-nanica",
+      "name": "Ovo de Galinha-Nanica",
+      "type": "especial",
+      "description": "Um ovo absurdamente pequeno, mas surpreendentemente nutritivo.",
+      "origin": "Diversas regiões",
+      "rarity": "Comum",
+      "effect": "Recupera 1d4 de vida",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "pedra-ofendida",
+      "name": "Pedra Ofendida",
+      "type": "especial",
+      "description": "À primeira vista, parece uma pedra completamente comum. Entretanto, ela possui sentimentos extremamente frágeis. Sempre que é arremessada, considera o ato uma traição pessoal e passa horas reclamando do usuário. Curiosamente, apenas o portador consegue ouvi-la. Apesar das constantes reclamações, ela ocasionalmente revela informações úteis sem perceber, geralmente enquanto está ocupada insultando quem a jogou.",
+      "origin": "Encontrada em praticamente qualquer região do país",
+      "rarity": "Incomum",
+      "effect": "Pode ser usada normalmente como projétil. Após ser arremessada, passa a conversar e reclamar constantemente com o usuário",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "roupa-reforcada",
+      "name": "Roupa Reforçada",
+      "type": "especial",
+      "description": "Uma roupa comum reforçada com camadas extras de couro, tecido grosso e pequenas placas metálicas. Muito utilizada por viajantes que não possuem dinheiro para comprar uma armadura de verdade.",
+      "origin": "Encontrada em praticamente qualquer região do país",
+      "rarity": "Comum",
+      "effect": "+3 de armadura",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "armadura-dos-peregrinos",
+      "name": "Armadura dos Peregrinos",
+      "type": "especial",
+      "description": "Utilizada por aventureiros que atravessam longas distâncias entre as regiões de Magik. Diversos reparos e remendos revelam histórias de jornadas passadas.",
+      "origin": "Encontrada em praticamente qualquer região do país",
+      "rarity": "Incomum",
+      "effect": "+9 de armadura",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "pocao-de-cura-menor",
+      "name": "Poção de Cura Menor",
+      "type": "especial",
+      "description": "Uma pequena garrafa contendo um líquido vermelho-claro.",
+      "origin": "Encontrada em praticamente qualquer região do país",
+      "rarity": "Incomum",
+      "effect": "Recupera 5 pontos de vida",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "pocao-de-cura",
+      "name": "Poção de Cura",
+      "type": "especial",
+      "description": "Uma das poções mais comuns entre aventureiros.",
+      "origin": "Encontrada em praticamente qualquer região do país",
+      "rarity": "Incomum",
+      "effect": "Recupera 10 pontos de vida",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões"
+      ]
+    },
+    {
+      "id": "pocao-de-cura-maior",
+      "name": "Poção de Cura Maior",
+      "type": "especial",
+      "description": "Uma versão mais potente da poção comum.",
+      "origin": "Produzida principalmente em cidades grandes e centros comerciais",
+      "rarity": "Raro",
+      "effect": "Recupera 20 pontos de vida",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "pocao-de-cura-superior",
+      "name": "Poção de Cura Superior",
+      "type": "especial",
+      "description": "Produzida apenas por alquimistas experientes.",
+      "origin": "Produzida principalmente em cidades grandes e centros comerciais",
+      "rarity": "Épico",
+      "effect": "Recupera 35 pontos de vida",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "elixir-da-vida",
+      "name": "Elixir da Vida",
+      "type": "especial",
+      "description": "Uma poção lendária cuja receita é conhecida por poucos.",
+      "origin": "Desconhecida",
+      "rarity": "Lendário",
+      "effect": "Recupera toda a vida e dá +10 de vida permanente",
+      "region_ids": [],
+      "location_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região desconhecida/diversas regiões",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "colar-com-perola-vermilion-em-formato-de-rosto",
+      "name": "Colar com pérola Vermilion em formato de rosto",
+      "type": "especial",
+      "description": "É um colar que pode ser escolhido aleatoriamente por um personagem do grupo no início da aventura. A pérola possui uma coloração vermelha intensa, semelhante a sangue recém-derramado. Quem o utiliza sente uma força incomum percorrer seu corpo, tornando golpes e esforços físicos mais fáceis (chance de 50% de +4 em testes relacionados à Força). Embora pareça apenas um amuleto estranho, sua verdadeira natureza só se revela quando o usuário está prestes a morrer. Nesse momento, a pérola desperta e a voz do Wrym Vermilion ecoa na mente de todos os presentes. A entidade oferece um pacto cruel: a alma dos aliados do usuário em troca de sua sobrevivência. Caso aceite, os companheiros recebem marcas escarlates que atraem monstros e criaturas sobrenaturais pelo resto de suas vidas. Em troca, o usuário retorna à vida e recebe +5 em qualquer jogada de dado. Enquanto o Wrym existir, os marcados serão perseguidos. Caso recuse, o usuário morre normalmente e cada aliado sofre 5 de dano. A única forma de quebrar o pacto é derrotando o Wrym Vermilion após libertá-lo da pérola.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Relíquia",
+      "effect": "50% de chance de +4 em testes de Força. Em seu pacto, concede +5 em qualquer jogada",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "colar-com-perola-viridian-em-formato-de-rosto",
+      "name": "Colar com pérola Viridian em formato de rosto",
+      "type": "especial",
+      "description": "É um colar que pode ser escolhido aleatoriamente por um personagem do grupo no início da aventura. A pérola possui uma coloração verde profunda, semelhante a uma floresta antiga iluminada. Quem o utiliza sente seus reflexos se tornarem mais rápidos e seus movimentos mais leves (chance de 50% de +4 em testes relacionados à Agilidade). Embora pareça apenas um amuleto incomum, sua verdadeira natureza só se revela quando um aliado do usuário está prestes a morrer. Nesse momento, a pérola desperta e a voz do Wrym Viridian se manifesta. Diferente de seu irmão Vermilion, ele oferece um pacto pessoal: a alma do usuário em troca da vida do amigo. Caso aceite, uma marca verde semelhante a raízes e galhos retorcidos surge em sua pele. Sua alma passa a pertencer ao Wrym, mas o aliado é salvo da morte e fortalecido por uma energia sobrenatural. O usuário recebe +5 em qualquer jogada de dado relacionada à Agilidade. Entretanto, a marca atrai monstros e criaturas sobrenaturais por toda a vida. Enquanto o Wrym existir, o portador será caçado. Caso recuse, o aliado morre normalmente e o colar continua sendo lar do Wrym. A única forma de remover a marca é derrotando o Wrym Viridian. Para isso, a pérola deve ser quebrada, libertando a entidade.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Relíquia",
+      "effect": "50% de chance de +4 em testes de Agilidade. Em seu pacto, concede +5 em jogadas de Agilidade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "coleira-gasta",
+      "name": "Coleira Gasta",
+      "type": "especial",
+      "description": "Uma coleira velha e desgastada. Não possui identificação, apenas marcas de viagens muito antigas.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "pegada-do-destino",
+      "name": "Pegada do Destino",
+      "type": "especial",
+      "description": "Um pequeno fragmento de pedra marcado pela pegada de um Cão das Estradas. Curiosamente, sempre aponta para a estrada mais próxima.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Raro",
+      "effect": "Uma vez por sessão, permite descobrir a direção correta de um destino conhecido",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "besta-da-primeira-flecha",
+      "name": "Besta da Primeira Flecha",
+      "type": "especial",
+      "description": "Uma besta construída por caçadores que acreditavam que uma batalha deveria terminar antes mesmo de começar. Sua corda nunca parece perder tensão e seus mecanismos funcionam mesmo após décadas sem manutenção.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Épico",
+      "effect": "O primeiro ataque do combate recebe +3 de dano",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "manto-do-peregrino",
+      "name": "Manto do Peregrino",
+      "type": "especial",
+      "description": "Um manto resistente utilizado por viajantes experientes que passam meses percorrendo as estradas de Magik.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Comum",
+      "effect": "4 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "armadura-das-longas-jornadas",
+      "name": "Armadura das Longas Jornadas",
+      "type": "especial",
+      "description": "Uma armadura feita para suportar anos de viagem sem necessidade de reparos constantes.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Épico",
+      "effect": "18 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "mapa-inacabado",
+      "name": "Mapa Inacabado",
+      "type": "especial",
+      "description": "Um mapa antigo contendo caminhos que não existem mais. Algumas estradas desenhadas nele nunca apareceram em lugar algum.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Raro",
+      "effect": "Pode revelar uma localização esquecida ou um atalho",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "relogio-das-estradas-perdidas",
+      "name": "Relógio das Estradas Perdidas",
+      "type": "especial",
+      "description": "Um relógio de bolso que às vezes mostra horários impossíveis.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite agir antes de todos os outros participantes de uma cena",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "manto-do-homem-sem-nome",
+      "name": "Manto do Homem Sem Nome",
+      "type": "especial",
+      "description": "Um manto escuro coberto por remendos de tecidos diferentes. Ao observá-lo de perto, é possível perceber que cada remendo possui fragmentos de marcas mágicas costuradas entre os fios.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Lendário",
+      "effect": "Concede +5 em todos os testes de Magia",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "agulha-das-marcas-roubadas",
+      "name": "Agulha das Marcas Roubadas",
+      "type": "especial",
+      "description": "A agulha utilizada pelo Viajante para costurar em si mesmo os fragmentos de pele contendo marcas mágicas. Apesar do tamanho reduzido, parece absurdamente pesada quando segurada.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, permite copiar temporariamente uma habilidade especial utilizada por outro personagem durante uma cena",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "pena-de-corvo-das-placas",
+      "name": "Pena de Corvo das Placas",
+      "type": "especial",
+      "description": "Uma pena escura encontrada nos Corvos das Placas. Quando observada contra a luz, pequenas linhas surgem em sua superfície, formando algo semelhante a estradas, setas e símbolos desconhecidos. Nenhum estudioso conseguiu determinar se as marcas possuem algum significado real ou se são apenas coincidência.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "pedaco-de-madeira-entalhada",
+      "name": "Pedaço de Madeira Entalhada",
+      "type": "especial",
+      "description": "Um fragmento retirado de uma das inúmeras placas espalhadas pela Estrada do Viajante. As inscrições presentes na madeira parecem mudar levemente de posição ao longo dos dias, embora ninguém jamais tenha presenciado a mudança acontecendo.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Raro",
+      "effect": "Uma vez por sessão, o portador pode pedir ao mestre uma dica simples sobre qual caminho parece mais seguro ou promissor durante uma viagem. A resposta nunca revela perigos ocultos completamente, mas costuma apontar uma direção útil",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "ficha-de-pedagio",
+      "name": "Ficha de Pedágio",
+      "type": "especial",
+      "description": "Uma pequena ficha metálica utilizada pelos Colecionadores de Pedágios. Nenhuma cidade de Magik reconhece o símbolo gravado em sua superfície. Alguns comerciantes afirmam que colecionadores costumam trocar informações por essas fichas.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "lamina-do-ultimo-viajante",
+      "name": "Lâmina do Último Viajante",
+      "type": "especial",
+      "description": "Uma espada longa cuja superfície parece refletir estradas infinitas. Dizem que foi carregada pelo Viajante antes mesmo da criação dos Wrym. Seu fio jamais perde o corte e nenhuma ferrugem consegue tocá-la.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Relíquia",
+      "effect": "+5 em ataques corpo a corpo. Uma vez por sessão, o usuário pode repetir uma rolagem de ataque",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "moeda-do-viajante",
+      "name": "Moeda do Viajante",
+      "type": "especial",
+      "description": "Uma moeda antiga feita de um metal desconhecido. Não possui inscrições, símbolos ou marcas de fabricação. Quando girada, parece permanecer no ar por tempo demais. Muitos acreditam que a moeda já pertenceu ao próprio Viajante antes de ele começar a percorrer a estrada. Alguns aventureiros afirmam que ela surge misteriosamente no bolso de pessoas que chamaram sua atenção.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, o usuário pode pedir um favor simples ao mestre",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "mapa-do-lugar-errado",
+      "name": "Mapa do Lugar Errado",
+      "type": "especial",
+      "description": "Um mapa extremamente detalhado que sempre indica um caminho. Infelizmente, ele nunca leva ao destino procurado. Em vez disso, conduz o viajante para algum local inesperado, estranho ou importante. Diversos exploradores famosos afirmam ter encontrado seus maiores tesouros justamente porque o mapa os levou para o lugar errado.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Raro",
+      "effect": "Sempre fornece uma rota alternativa para um destino inesperado",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "peitoral-do-primeiro-guardiao",
+      "name": "Peitoral do Primeiro Guardião",
+      "type": "especial",
+      "description": "Um peitoral extremamente antigo encontrado nas ruínas próximas à Estrada do Viajante. Marcas de centenas de batalhas cobrem sua superfície.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Relíquia",
+      "effect": "Quando um aliado próximo receber dano que o deixaria com 0 de vida, o usuário pode receber esse dano no lugar dele",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "bengala-do-viajante",
+      "name": "Bengala do Viajante",
+      "type": "especial",
+      "description": "Uma bengala antiga cuja madeira parece mais velha do que qualquer árvore conhecida. Alguns afirmam que ela pertenceu ao próprio Viajante. Outros afirmam que pertence ao próximo Viajante.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Relíquia",
+      "effect": "uma vez por sessão, o usuário pode fazer ao mestre uma pergunta sobre o local onde está e receber uma resposta verdadeira",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "bussola-moral",
+      "name": "Bússola Moral",
+      "type": "especial",
+      "description": "Uma bússola de bronze envelhecido que se recusa a apontar para o norte. Em vez disso, aponta constantemente para a pior decisão possível disponível naquele momento. O problema é que ninguém sabe se ela realmente aponta para a pior decisão ou para a decisão mais interessante. Alguns heróis lendários juravam que seguir a bússola era a melhor forma de viver aventuras inesquecíveis.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Lendário",
+      "effect": "O mestre indica qual seria a pior escolha disponível para o grupo naquele momento",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "adaga-do-lugar-errado",
+      "name": "Adaga do Lugar Errado",
+      "type": "especial",
+      "description": "Uma pequena adaga que desaparece frequentemente do bolso do dono para reaparecer em lugares improváveis.",
+      "origin": "Estrada do Viajante",
+      "rarity": "Raro",
+      "effect": "uma vez por sessão, pode surgir instantaneamente na mão do usuário",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Estrada do Viajante"
+      ]
+    },
+    {
+      "id": "espada-da-decepcao-profunda",
+      "name": "Espada da Decepção Profunda",
+      "type": "especial",
+      "description": "Uma espada longa de aço escurecido cuja lâmina parece absorver a luz ao seu redor. Ferimentos causados por ela não são particularmente profundos, mas despertam lembranças de fracassos, arrependimentos e momentos constrangedores da vida da vítima. Muitos guerreiros atingidos por essa arma abandonaram batalhas inteiras apenas para refletir sobre suas próprias escolhas. Alguns estudiosos acreditam que a espada foi criada por um poeta extremamente rancoroso após uma desilusão amorosa.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "Além do dano normal, o alvo recebe -2 em sua próxima rolagem",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "armadura-do-vigia-tempestuoso",
+      "name": "Armadura do Vigia Tempestuoso",
+      "type": "especial",
+      "description": "Uma armadura pesada utilizada por antigos guardas responsáveis por proteger carregamentos de Pedralume durante tempestades. Pequenas marcas de queimaduras cobrem suas placas.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "+20 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "colete-de-mineiro",
+      "name": "Colete de Mineiro",
+      "type": "especial",
+      "description": "Equipamento básico utilizado nas minas da capital. Protege contra quedas pequenas, lascas de pedra e acidentes comuns.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Comum",
+      "effect": "5 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "armadura-condutora",
+      "name": "Armadura Condutora",
+      "type": "especial",
+      "description": "Uma armadura reforçada com fragmentos de Pedralume. Pequenas faíscas percorrem suas placas quando há energia mágica por perto.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "18 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "armadura-de-pedralume-refinada",
+      "name": "Armadura de Pedralume Refinada",
+      "type": "especial",
+      "description": "Fragmentos de Pedralume foram incorporados à estrutura da armadura, tornando-a muito mais resistente que equipamentos convencionais.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "+15 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "bolsa-das-misturas-terriveis",
+      "name": "Bolsa das Misturas Terríveis",
+      "type": "especial",
+      "description": "Uma bolsa cheia de frascos, pós e líquidos que jamais deveriam ser misturados. Apesar disso, os alquimistas insistem em fazê-lo. Pequenas explosões e fumaças coloridas frequentemente escapam de seu interior.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "Uma vez por combate, uma poção ou bomba recebe +2 de dano ou +2 de cura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "fruto-tempestuoso",
+      "name": "Fruto Tempestuoso",
+      "type": "especial",
+      "description": "Uma fruta que acumula pequenas descargas elétricas em sua casca.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "Permite ignorar um requisito de evolução de uma magia relacionada ao Raio",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "coracao-da-tempestade",
+      "name": "Coração da Tempestade",
+      "type": "especial",
+      "description": "O interior desta fruta parece conter uma pequena nuvem.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "Permite evoluir imediatamente uma magia de Raio de Domínio I para Domínio II. O personagem deve possuir a Marca Tempestuosa",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "capacete-do-esquecimento-localizado",
+      "name": "Capacete do Esquecimento Localizado",
+      "type": "especial",
+      "description": "Um capacete extremamente resistente criado por um inventor de Pedralume. O projeto era perfeito, exceto por um pequeno erro mágico que jamais foi corrigido. Sempre que o usuário o remove, esquece imediatamente onde o colocou. Isso fez com que muitos aventureiros passassem anos procurando seus próprios capacetes.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "+2 em testes relacionados à resistência física ou proteção da cabeça. Sempre que removido, exige um teste de Conhecimento para lembrar onde foi deixado",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "martelo-pedralume",
+      "name": "Martelo Pedralume",
+      "type": "especial",
+      "description": "Um enorme martelo utilizado pelos primeiros construtores da Cidade de Pedralume. Pequenos cristais brilham dentro de sua cabeça metálica.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "causa +2 de dano contra armaduras e construções",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "guarda-chuva-de-combate",
+      "name": "Guarda-Chuva de Combate",
+      "type": "especial",
+      "description": "Uma arma extremamente ridícula criada por um inventor de Pedralume. Fechado, funciona como uma espada. Aberto, funciona como escudo.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "uma vez por combate, pode bloquear completamente um ataque",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "armadura-cristalina-de-pedralume",
+      "name": "Armadura Cristalina de Pedralume",
+      "type": "especial",
+      "description": "Uma armadura ornamentada com dezenas de pequenos cristais luminosos. Os cristais reagem às emoções do usuário, mudando levemente de cor.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Lendário",
+      "effect": "Dá + 22 de armadura e o primeiro dano recebido em cada combate é reduzido pela metade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "escudo-do-ultimo-muro",
+      "name": "Escudo do Último Muro",
+      "type": "especial",
+      "description": "Um enorme escudo de pedra criado pelos primeiros habitantes de Pedralume. Dizem que ele já bloqueou um ataque de um Wrym. Sua superfície é coberta por marcas de golpes antigos e rachaduras que jamais aumentam de tamanho, não importa o quanto seja usado.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por combate, o usuário pode anular completamente um ataque direcionado a si ou a um aliado próximo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "ferrao-de-pedralume",
+      "name": "Ferrão de Pedralume",
+      "type": "especial",
+      "description": "Um ferrão brilhante retirado de um Escorpião Pedralume. Pequenas faíscas percorrem sua superfície.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "fragmento-energizado",
+      "name": "Fragmento Energizado",
+      "type": "especial",
+      "description": "Um pequeno cristal carregado com energia acumulada.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "chifre-de-cristal",
+      "name": "Chifre de Cristal",
+      "type": "especial",
+      "description": "Um chifre transparente retirado de um Veado de Cristal.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "coracao-cristalizado",
+      "name": "Coração Cristalizado",
+      "type": "especial",
+      "description": "Um cristal pulsante encontrado no interior de alguns Mineiros Cristalizados.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "Uma vez por sessão, permite repetir um teste relacionado a conhecimento ou investigação",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "bussola-energizada",
+      "name": "Bússola Energizada",
+      "type": "especial",
+      "description": "Uma bússola que vibra quando próxima de grandes concentrações de Pedralume.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "Concede +2 em testes para encontrar objetos, trilhas ou locais ocultos",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "capacete-do-supervisor",
+      "name": "Capacete do Supervisor",
+      "type": "especial",
+      "description": "Um capacete de mineração reforçado por fragmentos de cristal.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "8 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "fragmento-da-pedralume-primordial",
+      "name": "Fragmento da Pedralume Primordial",
+      "type": "especial",
+      "description": "Um pequeno pedaço da antiga Pedralume Primordial utilizada pelo Cristalomante.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite adicionar +2 ao resultado de qualquer rolagem após ver o resultado",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "cajado-tempestuoso",
+      "name": "Cajado Tempestuoso",
+      "type": "especial",
+      "description": "Um cajado construído a partir de fragmentos da Pedralume Primordial. Raios percorrem seu interior constantemente.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Relíquia",
+      "effect": "Magias de Raio causam +2 de dano",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "martelo-do-centesimo-acerto",
+      "name": "Martelo do Centésimo Acerto",
+      "type": "especial",
+      "description": "Um martelo lendário utilizado por um artesão obcecado pela perfeição. Dizem que ele destruía noventa e nove peças antes de aceitar a centésima. Pequenas marcas de tentativa e erro ainda cobrem toda a ferramenta.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, pode reparar completamente uma arma, armadura ou objeto quebrado",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "fragmento-da-busca",
+      "name": "Fragmento da Busca",
+      "type": "especial",
+      "description": "Um cristal amarelo atravessado por linhas que se movem lentamente sob sua superfície. Foi criado para localizar energia dispersa no ambiente e dar início ao funcionamento de antigos circuitos de Pedralume.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "Item de missão. Representa o primeiro estágio do fluxo de energia: Busca",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "fragmento-da-conducao",
+      "name": "Fragmento da Condução",
+      "type": "especial",
+      "description": "Um cristal azul percorrido constantemente por pequenas faíscas. Sua função é transportar energia de forma estável entre diferentes pontos de um circuito, impedindo que ela se dissipe.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "Item de missão. Representa o segundo estágio do fluxo de energia: Condução",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "fragmento-do-acumulo",
+      "name": "Fragmento do Acúmulo",
+      "type": "especial",
+      "description": "Um cristal vermelho que pulsa lentamente como um coração. Foi criado para armazenar grandes quantidades de energia sem permitir vazamentos ou instabilidade.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "Item de missão. Representa o terceiro estágio do fluxo de energia: Acúmulo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "florete-do-segundo-pensamento",
+      "name": "Florete do Segundo Pensamento",
+      "type": "especial",
+      "description": "Um florete extremamente leve criado para duelistas que acreditavam que o primeiro erro não deveria decidir uma luta. Sua lâmina vibra levemente após um golpe errado, como se quisesse tentar novamente.",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "Caso erre um ataque, recebe +2 na próxima tentativa contra o mesmo alvo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume"
+      ]
+    },
+    {
+      "id": "frasco-de-vitalidade-menor",
+      "name": "Frasco de Vitalidade Menor",
+      "type": "especial",
+      "description": "Uma mistura rara utilizada para fortalecer o corpo (só existem 8).",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Raro",
+      "effect": "+3 de Vida Máxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "frasco-de-vitalidade",
+      "name": "Frasco de Vitalidade",
+      "type": "especial",
+      "description": "Uma versão aprimorada do Frasco de Vitalidade Menor (só existem 4).",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Épico",
+      "effect": "+6 de Vida Máxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "frasco-de-vitalidade-superior",
+      "name": "Frasco de Vitalidade Superior",
+      "type": "especial",
+      "description": "Uma das maiores conquistas da alquimia moderna (só existem 2).",
+      "origin": "Cidade de Pedralume",
+      "rarity": "Lendário",
+      "effect": "+10 de Vida Máxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Cidade de Pedralume",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "folha-do-primeiro-caminho",
+      "name": "Folha do Primeiro Caminho",
+      "type": "especial",
+      "description": "Uma folha verde-esmeralda que jamais seca, mesmo após décadas. Quando observada sob a luz correta, revela caminhos ocultos, atalhos e trilhas esquecidas. Muitos acreditam que a própria Floresta Viridian concede essas folhas a viajantes que respeitam suas criaturas.",
+      "origin": "Floresta Viridian",
+      "rarity": "Raro",
+      "effect": "Uma vez por sessão, permite descobrir qual caminho disponível é o menos perigoso",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "folha-comum-de-viridian",
+      "name": "Folha Comum de Viridian",
+      "type": "especial",
+      "description": "Uma folha retirada de um Espírito das Folhas derrotado. Permanece verde durante meses.",
+      "origin": "Floresta Viridian",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "raiz-retorcida",
+      "name": "Raiz Retorcida",
+      "type": "especial",
+      "description": "Um pedaço de raiz ainda vivo que se move lentamente quando ninguém está olhando.",
+      "origin": "Floresta Viridian",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "armadura-de-musgo-vivo",
+      "name": "Armadura de Musgo Vivo",
+      "type": "especial",
+      "description": "Uma armadura leve feita de couro, raízes e musgos resistentes da Floresta Viridian.",
+      "origin": "Floresta Viridian",
+      "rarity": "Incomum",
+      "effect": "8 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "armadura-das-cem-trilhas",
+      "name": "Armadura das Cem Trilhas",
+      "type": "especial",
+      "description": "Uma antiga armadura utilizada pelos guardiões da Floresta Viridian. Dizem que seus donos conheciam todos os caminhos da floresta.",
+      "origin": "Floresta Viridian",
+      "rarity": "Lendário",
+      "effect": "22 de armadura. Uma vez por sessão, permite repetir um teste de Sobrevivência, Percepção ou Furtividade realizado dentro de uma floresta",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "casco-assimetrico",
+      "name": "Casco Assimétrico",
+      "type": "especial",
+      "description": "Um casco incomum adaptado ao equilíbrio peculiar da espécie.",
+      "origin": "Floresta Viridian",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "coracao-de-madeira-viva",
+      "name": "Coração de Madeira Viva",
+      "type": "especial",
+      "description": "Um enorme núcleo de madeira pulsante retirado do centro do corpo do Ancião das Raízes. Mesmo separado da criatura, continua emitindo uma vibração semelhante a um batimento cardíaco.",
+      "origin": "Floresta Viridian",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, recupera 10 pontos de vida",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "amostra-de-musgo-raro",
+      "name": "Amostra de Musgo Raro",
+      "type": "especial",
+      "description": "Um pequeno recipiente contendo uma espécie de musgo que não cresce em nenhum outro lugar conhecido.",
+      "origin": "Floresta Viridian",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "folha-viridian-espessa",
+      "name": "Folha Viridian Espessa",
+      "type": "especial",
+      "description": "Uma folha grossa e resistente encontrada próxima aos locais onde os Wyrmlings descansam.",
+      "origin": "Floresta Viridian",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "machado-quebrado",
+      "name": "Machado Quebrado",
+      "type": "especial",
+      "description": "Restos enferrujados do machado utilizado pelo Lenhador Perdido antes de desaparecer na floresta.",
+      "origin": "Floresta Viridian",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "pena-de-coruja-musgo",
+      "name": "Pena de Coruja-Musgo",
+      "type": "especial",
+      "description": "Uma pena verde-escura coberta por pequenos fragmentos de musgo.",
+      "origin": "Floresta Viridian",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "maca-viridian",
+      "name": "Maçã Viridian",
+      "type": "especial",
+      "description": "Uma fruta verde encontrada nas partes mais antigas da Floresta Viridian.",
+      "origin": "Floresta Viridian",
+      "rarity": "Raro",
+      "effect": "Recupera 20 pontos de vida",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "armadura-de-couro-endurecido",
+      "name": "Armadura de Couro Endurecido",
+      "type": "especial",
+      "description": "Produzida utilizando couro tratado de criaturas resistentes. Leve e confortável, é uma das armaduras favoritas de caçadores e exploradores.",
+      "origin": "Floresta Viridian",
+      "rarity": "Comum",
+      "effect": "+5 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "armadura-das-cem-trilhas-floresta-viridian",
+      "name": "Armadura das Cem Trilhas",
+      "type": "especial",
+      "description": "Dizem que cada arranhão em sua superfície representa uma jornada diferente realizada por antigos exploradores. Nenhum exemplar parece exatamente igual ao outro.",
+      "origin": "Floresta Viridian",
+      "rarity": "Épico",
+      "effect": "+18 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "armadura-de-cacador-viridian",
+      "name": "Armadura de Caçador Viridian",
+      "type": "especial",
+      "description": "Confeccionada com couro reforçado e fibras vegetais resistentes. Sua coloração verde ajuda o usuário a se misturar à vegetação.",
+      "origin": "Floresta Viridian",
+      "rarity": "Incomum",
+      "effect": "+8 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "fruto-do-primeiro-jardim",
+      "name": "Fruto do Primeiro Jardim",
+      "type": "especial",
+      "description": "Uma fruta lendária que supostamente surgiu antes mesmo da Floresta Viridian.",
+      "origin": "Floresta Viridian",
+      "rarity": "Épico",
+      "effect": "+5 de vida permanente",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "botas-raiz",
+      "name": "Botas Raiz",
+      "type": "especial",
+      "description": "Botas feitas de madeira viva e fibras vegetais. Quando o usuário permanece imóvel por alguns segundos, pequenas raízes surgem sob seus pés e se espalham pelo chão. Muitos guardiões da Floresta Viridian utilizavam essas botas para permanecer dias observando o mesmo local.",
+      "origin": "Floresta Viridian",
+      "rarity": "Incomum",
+      "effect": "+2 em testes de resistência e Vontade enquanto estiver imóvel",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "olho-de-coruja-musgo",
+      "name": "Olho de Coruja-Musgo",
+      "type": "especial",
+      "description": "Uma esfera verde retirada de uma Coruja-Musgo extremamente antiga. Mesmo depois da morte da criatura, o olho continua se movendo lentamente dentro da própria órbita, observando pessoas, objetos e paisagens sem que ninguém saiba exatamente o motivo. Muitos exploradores acreditam que ele continua conectado à consciência da floresta. Existem relatos de viajantes que juram ter visto o olho se virar sozinho para encarar perigos escondidos antes mesmo de eles aparecerem. Por esse motivo, o item é extremamente valorizado por caçadores, guardas e aventureiros.",
+      "origin": "Floresta Viridian",
+      "rarity": "Raro",
+      "effect": "+2 em testes de Percepção",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "pena-do-porco-coruja-anciao",
+      "name": "Pena do Porco-Coruja Ancião",
+      "type": "especial",
+      "description": "Uma enorme pena cinzenta caída naturalmente do Porco-Coruja Ancião. Quando segurada, produz sons suaves de vento mesmo em ambientes fechados. Algumas pessoas afirmam ouvir fragmentos de conversas distantes através dela. Os habitantes da Floresta Viridian acreditam que cada pena contém uma pequena parte da sabedoria acumulada pela criatura ao longo dos séculos.",
+      "origin": "Floresta Viridian",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por teste, o usuário pode fazer uma pergunta sobre a região em que está e receber uma resposta útil",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "cajado-das-mil-trilhas",
+      "name": "Cajado das Mil Trilhas",
+      "type": "especial",
+      "description": "Um cajado feito de uma raiz retirada do coração da Floresta Viridian. Sua madeira continua viva e muda lentamente de formato ao longo dos anos. Pequenas folhas surgem em sua superfície quando alguém se perde.",
+      "origin": "Floresta Viridian",
+      "rarity": "Raro",
+      "effect": "concede +2 em testes de Conhecimento relacionados a caminhos, mapas e navegação",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "manto-das-folhas-observadoras",
+      "name": "Manto das Folhas Observadoras",
+      "type": "especial",
+      "description": "Um manto costurado com folhas da Floresta Viridian. Quando ninguém está olhando, as folhas mudam discretamente de posição para observar o ambiente.",
+      "origin": "Floresta Viridian",
+      "rarity": "Épico",
+      "effect": "+2 em Percepção e Furtividade enquanto estiver em áreas naturais",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "botas-do-caminho-invisivel",
+      "name": "Botas do Caminho Invisível",
+      "type": "especial",
+      "description": "Um par de botas confeccionadas com couro e raízes da Floresta Viridian. Nenhuma pegada é deixada para trás quando alguém as utiliza. Caçadores afirmam que elas conhecem caminhos antes mesmo de serem descobertos.",
+      "origin": "Floresta Viridian",
+      "rarity": "Épico",
+      "effect": "+3 em Furtividade e Rastreamento",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta Viridian"
+      ]
+    },
+    {
+      "id": "flor-da-ultima-palavra",
+      "name": "Flor da Última Palavra",
+      "type": "especial",
+      "description": "Uma flor vermelha que cresce apenas sobre locais onde alguém morreu carregando arrependimentos. Suas pétalas permanecem vivas durante décadas e exalam um perfume suave que faz as pessoas se lembrarem de momentos importantes de suas vidas. Em algumas culturas, essas flores são colocadas sobre túmulos para permitir que os mortos \"digam adeus\". A lenda afirma que a primeira dessas flores surgiu quando um guerreiro caiu sem conseguir terminar uma frase.",
+      "origin": "Vale Vermilion",
+      "rarity": "Raro",
+      "effect": "Ao morrer, o usuário pode agir ou falar normalmente durante mais um turno",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "pelo-incandescente",
+      "name": "Pelo Incandescente",
+      "type": "especial",
+      "description": "Um tufo de pelos quentes mesmo horas após a morte do animal.",
+      "origin": "Vale Vermilion",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "pelo-escarlate",
+      "name": "Pelo Escarlate",
+      "type": "especial",
+      "description": "Um pelo vermelho vivo extremamente valorizado por artesãos.",
+      "origin": "Vale Vermilion",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "coracao-luminoso",
+      "name": "Coração Luminoso",
+      "type": "especial",
+      "description": "Um órgão pulsante que continua brilhando mesmo após ser removido da criatura.",
+      "origin": "Vale Vermilion",
+      "rarity": "Incomum",
+      "effect": "Recupera 5 pontos de vida ao ser consumido",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "escama-rubra",
+      "name": "Escama Rubra",
+      "type": "especial",
+      "description": "Uma escama vermelha quente ao toque retirada de um Wyrmling Vermilion.",
+      "origin": "Vale Vermilion",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "la-carbonizada",
+      "name": "Lã Carbonizada",
+      "type": "especial",
+      "description": "Uma lã cinzenta que parece constantemente chamuscada nas extremidades.",
+      "origin": "Vale Vermilion",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "asa-vermilion",
+      "name": "Asa Vermilion",
+      "type": "especial",
+      "description": "Uma asa vermelha extremamente delicada que continua brilhando mesmo após ser removida.",
+      "origin": "Vale Vermilion",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "brasa-sagrada",
+      "name": "Brasa Sagrada",
+      "type": "especial",
+      "description": "Uma pequena brasa que nunca se apaga, mesmo quando mergulhada na água.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, adiciona +2 ao dano de uma magia ou ataque",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "coracao-das-brasas",
+      "name": "Coração das Brasas",
+      "type": "especial",
+      "description": "Um coração que continua queimando mesmo após a morte da criatura.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, ignora uma condição de medo ou intimidação",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "armadura-de-aco-vermilion",
+      "name": "Armadura de Aço Vermilion",
+      "type": "especial",
+      "description": "Forjada utilizando ligas metálicas aquecidas nos fornos do Vale Vermilion. Pequenas manchas avermelhadas cobrem suas placas.",
+      "origin": "Vale Vermilion",
+      "rarity": "Raro",
+      "effect": "+13 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "manto-de-cinzas",
+      "name": "Manto de Cinzas",
+      "type": "especial",
+      "description": "Um manto produzido a partir da lã dos Carneiros de Cinzas. Pequenas partículas cinzentas se desprendem dele durante o uso.",
+      "origin": "Vale Vermilion",
+      "rarity": "Comum",
+      "effect": "4 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "armadura-da-brasa-viva",
+      "name": "Armadura da Brasa Viva",
+      "type": "especial",
+      "description": "Uma armadura feita com placas aquecidas por brasas eternas encontradas no Vale Vermilion.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "19 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "fruto-vermilion-maduro",
+      "name": "Fruto Vermilion Maduro",
+      "type": "especial",
+      "description": "Uma fruta vermelha que cresce próxima a locais marcados por morte e renascimento.",
+      "origin": "Vale Vermilion",
+      "rarity": "Raro",
+      "effect": "+2 de Vida Máxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "fruto-vermilion-anciao",
+      "name": "Fruto Vermilion Ancião",
+      "type": "especial",
+      "description": "Uma versão extremamente rara do Fruto Vermilion.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "+5 de Vida Máxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "espinho-vermilion",
+      "name": "Espinho Vermilion",
+      "type": "especial",
+      "description": "Uma adaga forjada a partir dos espinhos encontrados entre as flores escarlates do Vale Vermilion. Sua lâmina pulsa como um coração vivo e parece absorver pequenas gotas de sangue derramadas ao seu redor. Alguns estudiosos acreditam que cada arma desse tipo possui uma espécie de consciência rudimentar, pois elas frequentemente vibram quando estão próximas de combate. Muitos mercenários a utilizam por acreditarem que ela \"gosta\" de lutar.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "Sempre que causa dano, recupera 1 ponto de vida do usuário",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "mascara-dos-sussurros",
+      "name": "Máscara dos Sussurros",
+      "type": "especial",
+      "description": "Uma máscara feita das pétalas secas das flores do Vale Vermilion. Quando colocada sobre o rosto, vozes distantes começam a surgir nos ouvidos do usuário. Algumas pertencem a espíritos reais. Outras parecem ser apenas ecos de pessoas que passaram pelo local muito tempo atrás. O problema é que ninguém sabe diferenciar umas das outras. Muitos enlouqueceram tentando descobrir.",
+      "origin": "Vale Vermilion",
+      "rarity": "Raro",
+      "effect": "Permite ouvir espíritos e entidades sobrenaturais próximas",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "foice-da-colheita-escarlate",
+      "name": "Foice da Colheita Escarlate",
+      "type": "especial",
+      "description": "Uma foice negra utilizada antigamente para colher flores do Vale Vermilion. Sua lâmina parece ficar mais afiada quanto mais próxima estiver de sangue.",
+      "origin": "Vale Vermilion",
+      "rarity": "Lendário",
+      "effect": "Se o alvo estiver com menos da metade da vida, recebe +3 de dano",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "armadura-do-silencio-escarlate",
+      "name": "Armadura do Silêncio Escarlate",
+      "type": "especial",
+      "description": "Uma armadura negra coberta por pequenas flores Vermilion petrificadas. Nenhum som é produzido quando ela se move.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "+18 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "cajado-das-chamas-impacientes",
+      "name": "Cajado das Chamas Impacientes",
+      "type": "especial",
+      "description": "Um cajado de madeira negra cuja ponta abriga um cristal contendo uma pequena chama viva. O fogo nunca se apaga e parece reagir a qualquer conversa sobre magia, aumentando ou diminuindo de intensidade conforme o humor do portador.",
+      "origin": "Vale Vermilion",
+      "rarity": "Épico",
+      "effect": "A primeira magia ofensiva lançada em cada combate recebe +2 de dano",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Vale Vermilion"
+      ]
+    },
+    {
+      "id": "lanterna-negativa",
+      "name": "Lanterna Negativa",
+      "type": "especial",
+      "description": "Uma lanterna construída utilizando vidro negro e fragmentos de sombras coletadas na Floresta do Avesso. Sua luz funciona de forma oposta à luz comum. Enquanto objetos normais parecem desaparecer sob seu brilho, sombras, fantasmas, ilusões e criaturas invisíveis tornam-se perfeitamente visíveis. Alguns estudiosos afirmam que ela não revela o que está escondido, mas sim aquilo que deveria permanecer oculto.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Épico",
+      "effect": "Revela criaturas invisíveis, ilusões e entidades ocultas",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "fragmento-de-sombra",
+      "name": "Fragmento de Sombra",
+      "type": "especial",
+      "description": "Um pedaço de sombra solidificada. Quando colocado sobre o chão, tenta lentamente retornar para algum objeto próximo.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "livro-invertido",
+      "name": "Livro Invertido",
+      "type": "especial",
+      "description": "Um livro escrito de trás para frente. Algumas páginas parecem responder perguntas antes mesmo de serem feitas.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite ao usuário fazer uma pergunta ao mestre sobre um objeto, local ou criatura. A resposta será verdadeira, mas apresentada de forma invertida, simbólica ou contraditória",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "marca-da-contradicao",
+      "name": "Marca da Contradição",
+      "type": "especial",
+      "description": "Um símbolo vivo que muda de forma constantemente. Dizem que foi criado pela própria Bruxa do Avesso durante seus estudos sobre magias invertidas.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, o usuário pode inverter um único efeito que o afete. Cura pode virar dano, dano pode virar cura, empurrar pode virar puxar, aumentar pode virar reduzir. O resultado final fica a critério do mestre",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "chifre-invertido",
+      "name": "Chifre Invertido",
+      "type": "especial",
+      "description": "Um chifre que parece crescer para dentro em vez de para fora.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "fio-bidimensional",
+      "name": "Fio Bidimensional",
+      "type": "especial",
+      "description": "Um fio extremamente fino retirado de uma Aranha Bidimensional. Quando visto de lado, parece desaparecer completamente.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "mapa-dobrado",
+      "name": "Mapa Dobrado",
+      "type": "especial",
+      "description": "Um pequeno mapa que mostra locais impossíveis de existir.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Raro",
+      "effect": "Uma vez por sessão, revela uma passagem secreta próxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "estilhaco-reflexivo",
+      "name": "Estilhaço Reflexivo",
+      "type": "especial",
+      "description": "Um fragmento de espelho que continua refletindo algo mesmo quando coberto.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "espelho-de-bolso-vivo",
+      "name": "Espelho de Bolso Vivo",
+      "type": "especial",
+      "description": "Um pequeno espelho cuja imagem continua se movendo alguns segundos após o usuário parar.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite repetir um teste de Percepção ou Investigação",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "pelo-invertido",
+      "name": "Pelo Invertido",
+      "type": "especial",
+      "description": "Um pelo que cresce da ponta para a raiz.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "olho-espelhado",
+      "name": "Olho Espelhado",
+      "type": "especial",
+      "description": "Um olho prateado capaz de refletir imagens mesmo na escuridão.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Raro",
+      "effect": "+2 em testes de Percepção",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "mascara-do-reflexo",
+      "name": "Máscara do Reflexo",
+      "type": "especial",
+      "description": "Uma máscara lisa que lentamente assume traços semelhantes aos do usuário.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, concede +2 em um teste social ao imitar a expressão de outra pessoa",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "coracao-espelhado",
+      "name": "Coração Espelhado",
+      "type": "especial",
+      "description": "Um cristal pulsante encontrado apenas no Reflexo Original. Sua superfície mostra versões alternativas de quem o observa.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, permite repetir qualquer rolagem. O usuário deve escolher se usará o novo resultado antes de rolá-lo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "manto-invertido",
+      "name": "Manto Invertido",
+      "type": "especial",
+      "description": "Uma roupa estranha cujo lado interno parece ser o lado externo. Algumas costuras mudam de lugar quando ninguém está olhando.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Incomum",
+      "effect": "8 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "maca-do-avesso",
+      "name": "Maçã do Avesso",
+      "type": "especial",
+      "description": "Por fora parece uma maçã comum. Por dentro possui sementes na casca e polpa ao redor do caroço.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Raro",
+      "effect": "Recupera 25 pontos de vida",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "fruto-da-sombra-perdida",
+      "name": "Fruto da Sombra Perdida",
+      "type": "especial",
+      "description": "Uma fruta negra encontrada apenas em locais onde sombras desaparecem.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Épico",
+      "effect": "+5 de Vida Máxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "pedra-do-contrario",
+      "name": "Pedra do Contrário",
+      "type": "especial",
+      "description": "Uma pequena pedra negra perfeitamente lisa. Sua superfície não reflete o mundo da maneira correta. Em vez disso, ela mostra versões invertidas da realidade. Alguns afirmam que ela é um fragmento arrancado do coração da Floresta do Avesso. Dizem que ela odeia regras, probabilidades e qualquer forma de lógica previsível. Por isso, seu poder consiste em inverter resultados que já aconteceram.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite inverter um resultado. Um 20 vira 1 e um 1 vira 20",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "capa-da-sombra-perdida",
+      "name": "Capa da Sombra Perdida",
+      "type": "especial",
+      "description": "Uma capa confeccionada utilizando a sombra de uma criatura que conseguiu se separar do próprio corpo. A superfície do tecido parece absorver a luz ao seu redor e, em ambientes escuros, torna-se quase impossível distinguir onde a capa termina e onde a escuridão começa. Algumas pessoas juram que ela continua se movendo levemente mesmo quando ninguém está usando.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Raro",
+      "effect": "+3 em testes de Furtividade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "armadura-do-reflexo-torto",
+      "name": "Armadura do Reflexo Torto",
+      "type": "especial",
+      "description": "Uma armadura polida criada na Floresta do Avesso. Quem observa seu reflexo nela vê uma versão ligeiramente diferente de si mesmo.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Lendário",
+      "effect": "+ 23 de armadura e uma vez por sessão, pode inverter um efeito negativo recebido, transformando-o em um efeito positivo equivalente definido pelo mestre",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "lamina-da-lua-nova",
+      "name": "Lâmina da Lua Nova",
+      "type": "especial",
+      "description": "Uma espada curta cuja lâmina desaparece completamente na escuridão. Durante noites sem lua, torna-se tão difícil de enxergar que muitos acreditam que ela deixa de existir por alguns instantes.",
+      "origin": "Floresta do Avesso",
+      "rarity": "Lendário",
+      "effect": "Ataques realizados a partir de furtividade recebem +2 de dano",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Floresta do Avesso"
+      ]
+    },
+    {
+      "id": "garrafa-do-brejo",
+      "name": "Garrafa do Brejo",
+      "type": "especial",
+      "description": "Uma pequena garrafa de vidro opaco contendo água retirada do centro do Brejo do Esquecimento. A água parece completamente comum até ser bebida. Quem a consome perde instantaneamente a memória da última hora. Alguns aventureiros a utilizam para esquecer eventos traumáticos. Outros a utilizam para esconder segredos de si mesmos.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Incomum",
+      "effect": "Quem beber esquece completamente a última hora de acontecimentos",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "pele-de-sapo-monge",
+      "name": "Pele de Sapo-Monge",
+      "type": "especial",
+      "description": "Uma pele fria e úmida retirada de um Sapo-Monge. Estranhamente, ela permanece imóvel mesmo quando colocada sobre água corrente.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "frasco-de-nevoa-viva",
+      "name": "Frasco de Névoa Viva",
+      "type": "especial",
+      "description": "Um pequeno recipiente contendo uma porção de Névoa Viva. A névoa parece tentar escapar sempre que alguém a observa diretamente.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Incomum",
+      "effect": "Pode ser utilizada em missões ou rituais",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "muco-cronologico",
+      "name": "Muco Cronológico",
+      "type": "especial",
+      "description": "Uma substância viscosa retirada de uma Lesma Cronológica. Pequenos objetos mergulhados nela parecem envelhecer ou rejuvenescer por alguns segundos.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "conta-de-oracao-enlameada",
+      "name": "Conta de Oração Enlameada",
+      "type": "especial",
+      "description": "Uma pequena conta de madeira coberta por lodo e musgo. Apesar do estado deteriorado, continua surpreendentemente resistente.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "fragmento-de-tempo-parado",
+      "name": "Fragmento de Tempo Parado",
+      "type": "especial",
+      "description": "Um cristal opaco encontrado próximo ao Nó Temporal. Dentro dele, pequenas bolhas permanecem completamente imóveis.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite repetir uma rolagem de iniciativa",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "lama-murmurante",
+      "name": "Lama Murmurante",
+      "type": "especial",
+      "description": "Uma pequena porção de lama viva que continua sussurrando frases desconexas mesmo após ser retirada do brejo.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "nome-roubado",
+      "name": "Nome Roubado",
+      "type": "especial",
+      "description": "Uma placa antiga contendo um nome que parece impossível de lembrar após alguns segundos de observação.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite ao usuário ignorar temporariamente um efeito mental, ilusão ou encantamento",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "fragmento-de-memoria",
+      "name": "Fragmento de Memória",
+      "type": "especial",
+      "description": "Uma pequena esfera translúcida contendo uma lembrança esquecida por alguém. O conteúdo muda sempre que é observado.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite repetir um teste de Conhecimento, Percepção ou Investigação",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "espelho-da-infancia",
+      "name": "Espelho da Infância",
+      "type": "especial",
+      "description": "Um pequeno espelho de bolso que sempre reflete o usuário como era quando criança.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, o usuário pode fazer uma pergunta ao mestre sobre seu próprio passado ou sobre uma lembrança esquecida de sua jornada. O mestre deve responder de forma verdadeira",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "capa-enlameada",
+      "name": "Capa Enlameada",
+      "type": "especial",
+      "description": "Uma capa pesada feita para suportar a umidade constante do Brejo do Esquecimento. Mesmo molhada, continua protegendo bem o usuário.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Comum",
+      "effect": "4 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "vestes-da-memoria-perdida",
+      "name": "Vestes da Memória Perdida",
+      "type": "especial",
+      "description": "Vestes antigas usadas por exploradores que entravam no brejo carregando anotações sobre quem eram e para onde estavam indo.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Raro",
+      "effect": "14 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "pera-esquecida",
+      "name": "Pera Esquecida",
+      "type": "especial",
+      "description": "Ninguém consegue se lembrar exatamente do sabor desta fruta.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Raro",
+      "effect": "Recupera 30 pontos de vida",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "fruto-das-memorias-perdidas",
+      "name": "Fruto das Memórias Perdidas",
+      "type": "especial",
+      "description": "Ao ser consumido, o usuário vê rapidamente lembranças que não lhe pertencem.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "Permite evoluir imediatamente uma magia de Alteração de Domínio I para Domínio II. O personagem deve possuir a Marca do Esquecimento",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "relogio-sem-ponteiros",
+      "name": "Relógio Sem Ponteiros",
+      "type": "especial",
+      "description": "Um relógio antigo que funciona perfeitamente apesar de não possuir ponteiros. Seu interior produz um som constante de engrenagens girando, mas ninguém consegue explicar como ele mede o tempo. Alguns estudiosos acreditam que ele não mede horas normais, mas momentos importantes da vida de seu portador. Sempre que é ativado, parece \"roubar\" alguns segundos do futuro.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, o usuário age antes de todos os outros em combate",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "livro-das-paginas-inquietas",
+      "name": "Livro das Páginas Inquietas",
+      "type": "especial",
+      "description": "Um grimório que nunca permanece aberto na mesma página por muito tempo. As palavras mudam discretamente quando ninguém está olhando.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "+2 em testes de Conhecimento e Vontade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "sobretudo-do-esquecido",
+      "name": "Sobretudo do Esquecido",
+      "type": "especial",
+      "description": "Um casaco escuro encontrado ocasionalmente no Brejo do Esquecimento. Ninguém sabe quem o criou e quase ninguém lembra de já tê-lo visto antes.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, um inimigo esquece quem é o alvo e precisa escolher outra pessoa para atacar",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "livro-da-pagina-proibida",
+      "name": "Livro da Página Proibida",
+      "type": "especial",
+      "description": "Um livro que sempre parece possuir uma página a mais do que deveria. Nenhum estudioso conseguiu encontrar a mesma última página duas vezes. Alguns afirmam que ela contém segredos impossíveis de serem lembrados.",
+      "origin": "Brejo do Esquecimento",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, pode identificar instantaneamente qualquer criatura, maldição ou item mágico",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Brejo do Esquecimento"
+      ]
+    },
+    {
+      "id": "macaneta-suspeita",
+      "name": "Maçaneta Suspeita",
+      "type": "especial",
+      "description": "Uma maçaneta de bronze arrancada de um Kriot Terroso derrotado. À primeira vista parece um objeto comum, mas ela possui um comportamento inquietante: quando está próxima de uma criatura disfarçada de construção, fica morna ao toque e vibra levemente. Alguns aventureiros a carregam presa ao cinto, pois confiam mais nela do que nos próprios olhos. Histórias antigas contam que as primeiras maçanetas suspeitas foram criadas quando um grupo de sobreviventes decidiu arrancar partes de um Kriot para nunca mais serem enganados por outro.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Incomum",
+      "effect": "Revela instantaneamente se uma casa, cabana ou construção é um Kriot Terroso ou não",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "macaneta-de-pedra",
+      "name": "Maçaneta de Pedra",
+      "type": "especial",
+      "description": "Uma maçaneta retirada de um Kriot Terroso. Apesar de não estar ligada a nenhuma porta, continua girando sozinha ocasionalmente.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "porta-do-interior-impossivel",
+      "name": "Porta do Interior Impossível",
+      "type": "especial",
+      "description": "Uma pequena porta de pedra encontrada dentro de um Kriot Terroso. Quando aberta, revela um espaço maior do que deveria existir.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite armazenar ou recuperar instantaneamente um item de qualquer tamanho que caiba em uma mochila",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "pedra-brilhante-roubada",
+      "name": "Pedra Brilhante Roubada",
+      "type": "especial",
+      "description": "Uma pedra colorida roubada por um Corvo Mineiro para decorar seu ninho.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "pena-do-corvo-mineiro",
+      "name": "Pena do Corvo Mineiro",
+      "type": "especial",
+      "description": "Uma pena escura coberta por pequenos cristais e fragmentos minerais.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "dente-de-minhoca-gigante",
+      "name": "Dente de Minhoca Gigante",
+      "type": "especial",
+      "description": "Um enorme dente achatado utilizado pela criatura para escavar o solo.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "tunel-engarrafado",
+      "name": "Túnel Engarrafado",
+      "type": "especial",
+      "description": "Um pequeno frasco contendo uma porção impossível de um túnel. Quem observa através do vidro vê um corredor subterrâneo que parece não ter fim.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite encontrar uma passagem alternativa ou um atalho próximo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "palha-encantada",
+      "name": "Palha Encantada",
+      "type": "especial",
+      "description": "Um punhado de palha retirado de um Falso Espantalho. Mesmo separado da criatura, continua tentando se reorganizar sozinho.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "chapeu-do-espantalho-solitario",
+      "name": "Chapéu do Espantalho Solitário",
+      "type": "especial",
+      "description": "Um velho chapéu de palha usado por um dos primeiros Falsos Espantalhos.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Raro",
+      "effect": "+2 em testes de Furtividade realizados em plantações, campos ou áreas rurais",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "coroa-de-palha-negra",
+      "name": "Coroa de Palha Negra",
+      "type": "especial",
+      "description": "Uma coroa feita de palha escurecida e madeira antiga. Pertenceu ao primeiro dos espantalhos.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, criaturas com menos de 40 de vida devem passar em um teste para atacar o usuário",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "armadura-do-primeiro-espantalho",
+      "name": "Armadura do Primeiro Espantalho",
+      "type": "especial",
+      "description": "Uma armadura construída com madeira antiga, palha endurecida e fragmentos de pedra dos Campos dos Kriots. Dizem que foi usada pelo primeiro espantalho a despertar.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Lendário",
+      "effect": "22 de armadura. Criaturas com menos de 20 de vida precisam passar em um teste para atacá-lo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "peitoral-de-pedra-polida",
+      "name": "Peitoral de Pedra Polida",
+      "type": "especial",
+      "description": "Uma armadura feita com fragmentos de pedra retirados dos Campos dos Kriots. É pesada, mas bastante resistente.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Incomum",
+      "effect": "9 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "corrente-dos-kriots",
+      "name": "Corrente dos Kriots",
+      "type": "especial",
+      "description": "Uma corrente feita dos tendões petrificados de um Kriot Terroso derrotado. Mesmo quando parada, produz pequenos estalos semelhantes a uma casa se acomodando.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Épico",
+      "effect": "criaturas presas por ela recebem -2 em testes de Agilidade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "armadura-das-mil-portas",
+      "name": "Armadura das Mil Portas",
+      "type": "especial",
+      "description": "Uma armadura construída utilizando fragmentos de portas retiradas de Kriots derrotados. Pequenas maçanetas decoram suas placas e algumas chegam a girar sozinhas durante a noite. Dizem que ela foi criada por um sobrevivente que passou a vida inteira fugindo de casas que tentavam comê-lo.",
+      "origin": "Campos dos Kriots",
+      "rarity": "Épico",
+      "effect": "+18 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Campos dos Kriots"
+      ]
+    },
+    {
+      "id": "escama-profetica",
+      "name": "Escama Profética",
+      "type": "especial",
+      "description": "Uma enorme escama prateada caída naturalmente de uma Carpa Profeta. Quando observada sob a luz da lua, imagens distorcidas aparecem em sua superfície. Algumas mostram eventos futuros, outras mostram eventos que nunca acontecerão. Dizem que as escamas escolhem quais visões revelar e que forçá-las a responder costuma trazer consequências desagradáveis.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, o mestre deve responder uma pergunta com total sinceridade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "pena-de-cristal",
+      "name": "Pena de Cristal",
+      "type": "especial",
+      "description": "Uma pena transparente retirada de uma Garça de Cristal. Ela produz pequenos reflexos coloridos quando exposta ao sol.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "lagrima-de-cristal",
+      "name": "Lágrima de Cristal",
+      "type": "especial",
+      "description": "Uma pequena gota cristalizada encontrada entre as penas de uma Garça de Cristal.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Raro",
+      "effect": "Uma vez por sessão, permite repetir um teste de Percepção",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "dente-de-enguia-filosofica",
+      "name": "Dente de Enguia Filosófica",
+      "type": "especial",
+      "description": "Um dente fino e curvado retirado de uma Enguia Filosófica.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "pergunta-sem-resposta",
+      "name": "Pergunta Sem Resposta",
+      "type": "especial",
+      "description": "Um pequeno pergaminho contendo uma pergunta escrita em uma língua desconhecida. Nenhum estudioso conseguiu traduzi-la completamente.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, o usuário pode fazer uma pergunta ao mestre. O mestre deve responder com outra pergunta que contenha uma pista verdadeira",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "fragmento-de-casco-oracular",
+      "name": "Fragmento de Casco Oracular",
+      "type": "especial",
+      "description": "Um pedaço de casco coberto por símbolos naturais e linhas semelhantes a escrita.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "placa-do-futuro-incompleto",
+      "name": "Placa do Futuro Incompleto",
+      "type": "especial",
+      "description": "Uma placa retirada do casco de uma Tartaruga Oráculo. Parte da inscrição parece ter sido apagada antes de ser concluída.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite ao usuário descobrir uma consequência provável de uma escolha antes de tomá-la",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "escama-do-fundo-silencioso",
+      "name": "Escama do Fundo Silencioso",
+      "type": "especial",
+      "description": "Uma escama negra retirada da Enguia do Fundo Silencioso. Ela absorve pequenos sons ao seu redor.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite ao usuário realizar uma ação sem produzir qualquer som",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "olho-da-enguia-do-fundo-silencioso",
+      "name": "Olho da Enguia do Fundo Silencioso",
+      "type": "especial",
+      "description": "Um olho azul-pálido que continua brilhando mesmo após a morte da criatura.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite perceber uma mentira contada diretamente ao usuário",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "pagina-encharcada",
+      "name": "Página Encharcada",
+      "type": "especial",
+      "description": "Uma página retirada dos registros do Oráculo Afogado. As palavras mudam de posição sempre que o papel seca.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Incomum",
+      "effect": "Pode ser utilizada em missões ou vendida para estudiosos",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "relogio-das-mares-antigas",
+      "name": "Relógio das Marés Antigas",
+      "type": "especial",
+      "description": "Um relógio de bolso enferrujado que continua funcionando mesmo sem mecanismo aparente.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite refazer uma decisão tomada nos últimos minutos, desde que o mestre considere possível",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "escama-da-primeira-profecia",
+      "name": "Escama da Primeira Profecia",
+      "type": "especial",
+      "description": "Uma escama gigantesca azul-prateada retirada da Mãe das Carpas. Diferente das escamas comuns das Carpas Profetas, símbolos aparecem constantemente em sua superfície e desaparecem segundos depois.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite ao usuário pedir uma pista ao mestre sobre uma missão, criatura ou local importante",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "olho-da-verdade-profunda",
+      "name": "Olho da Verdade Profunda",
+      "type": "especial",
+      "description": "Um enorme olho azul-claro que continua observando o ambiente mesmo após ser removido da criatura.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, o usuário pode fazer qualquer pergunta ao mestre sobre um acontecimento futuro possível. O mestre deve responder de forma verdadeira, mas não necessariamente completa",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "manto-das-aguas-calmas",
+      "name": "Manto das Águas Calmas",
+      "type": "especial",
+      "description": "Uma roupa impermeável usada por pescadores experientes do Lago das Carpas Profetas.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Comum",
+      "effect": "4 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "armadura-de-escamas-de-carpa",
+      "name": "Armadura de Escamas de Carpa",
+      "type": "especial",
+      "description": "Produzida com escamas gigantes obtidas das maiores criaturas do Lago das Carpas Profetas. As placas brilham suavemente quando expostas à luz da lua.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Raro",
+      "effect": "+14 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "carpa-maca-profetica",
+      "name": "Carpa-Maçã Profética",
+      "type": "especial",
+      "description": "Uma fruta azulada encontrada próximo ao Lago das Carpas Profetas. Seu sabor muda dependendo de quem a consome.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Raro",
+      "effect": "Permite ignorar um requisito de evolução de uma magia de água",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "pera-das-mil-possibilidades",
+      "name": "Pera das Mil Possibilidades",
+      "type": "especial",
+      "description": "Dizem que cada exemplar desta fruta roxa possui um sabor diferente.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "Permite evoluir imediatamente uma magia de água de Domínio I para Domínio II. O personagem deve possuir a marca correspondente e conhecer a magia de Domínio I",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "anel-do-veu-partido",
+      "name": "Anel do Véu Partido",
+      "type": "especial",
+      "description": "Um anel de prata negra contendo uma pedra translúcida que parece mudar de forma quando observada por muito tempo. Dizem que foi criado por um mago cansado de depender de Porcos-Coruja e Galinhas-Nanicas para encontrar Goblins Trans. Muitos Goblins consideram sua existência uma afronta à privacidade de sua espécie.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "Permite enxergar Goblins Trans permanentemente",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "anzol-do-destino",
+      "name": "Anzol do Destino",
+      "type": "especial",
+      "description": "Um anzol prateado que jamais retorna vazio. Não importa onde seja lançado: em um lago, em uma poça, no mar ou até mesmo em um poço seco. Sempre haverá algo preso a ele quando retornar. O problema é que ninguém consegue prever o que será encontrado. Já foram pescados peixes, armas, chaves, moedas, cartas, sapatos, monstros pequenos e até objetos que ainda nem haviam sido criados.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Raro",
+      "effect": "Sempre pesca alguma coisa. O mestre decide o que foi encontrado",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "arco-das-carpas-profetas",
+      "name": "Arco das Carpas Profetas",
+      "type": "especial",
+      "description": "Um arco construído com madeira retirada da margem do lago e cordas feitas de fibras mergulhadas nas águas proféticas. Toda flecha disparada por ele parece hesitar por um instante antes de escolher seu caminho.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "uma vez por combate, o usuário pode repetir um ataque à distância",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "casco-da-carpa-profeta",
+      "name": "Casco da Carpa Profeta",
+      "type": "especial",
+      "description": "Uma armadura feita utilizando escamas gigantes obtidas no Lago das Carpas Profetas. A superfície parece refletir eventos que ainda não aconteceram.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Épico",
+      "effect": "+14 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "incensario-das-sete-preces",
+      "name": "Incensário das Sete Preces",
+      "type": "especial",
+      "description": "Um pequeno incensário de prata que jamais fica sem fumaça. Cada fio de fumaça sobe formando símbolos estranhos antes de desaparecer. Muitos devotos acreditam que cada espiral representa uma oração atendida.",
+      "origin": "Lago das Carpas Profetas",
+      "rarity": "Relíquia",
+      "effect": "Toda cura realizada pelo usuário recupera +2 pontos de vida adicionais",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Lago das Carpas Profetas"
+      ]
+    },
+    {
+      "id": "novelo-perfeito",
+      "name": "Novelo Perfeito",
+      "type": "especial",
+      "description": "Um novelo dourado extremamente raro e absurdamente macio. Ele parece emitir uma espécie de encanto impossível de ignorar para qualquer felino. Os Gatos Autistas e os Gatos com TDAH consideram esses novelos objetos sagrados e muitos conflitos entre tribos felinas começaram por causa deles. Curiosamente, o novelo nunca acaba, por mais que seja desenrolado.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Raro",
+      "effect": "Qualquer gato encontrado torna-se amigável com o usuário",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "sete-pedrinhas",
+      "name": "Sete Pedrinhas",
+      "type": "especial",
+      "description": "Um pequeno saco contendo exatamente sete pedras comuns. Não há nada de especial nelas além do número. Ninguém sabe quem reuniu as pedras pela primeira vez, mas os Gatos Autistas reagem de maneira extremamente agressiva à sua simples presença. Alguns estudiosos acreditam que o objeto seja uma antiga provocação transformada em artefato.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Épico",
+      "effect": "Gatos Autistas entram imediatamente em combate ao vê-lo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "tesouro-sem-nome",
+      "name": "Tesouro Sem Nome",
+      "type": "especial",
+      "description": "Um artefato lendário guardado pelos Gatos com TDAH. O problema é que ninguém sabe exatamente o que ele é. Alguns dizem que é uma joia. Outros juram que é uma espada. Há quem afirme que se trata apenas de uma pedra comum. O mais estranho é que todas essas descrições parecem corretas ao mesmo tempo. Nem mesmo os gatos responsáveis por protegê-lo conseguem lembrar sua verdadeira aparência. A verdade é que é uma Pedralume Primordial.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Relíquia",
+      "effect": "Concede muito dinheiro ao usuário ou pode conceder mais uma especialização para o jogador",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "ultima-pagina-do-primeiro-livro",
+      "name": "Última Página do Primeiro Livro",
+      "type": "especial",
+      "description": "Uma única folha arrancada de um livro que não existe mais. Segundo os gatos das cavernas, trata-se da última página do primeiro livro já escrito nas Montanhas Trippi. Nenhum estudioso conseguiu descobrir quem o escreveu ou sobre o que o restante da obra tratava.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Relíquia",
+      "effect": "Uma vez por sessão, o jogador pode fazer qualquer pergunta ao mestre sobre o mundo de Magik. O mestre deve responder com uma informação verdadeira, embora não necessariamente completa",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "casaco-de-la-das-alturas",
+      "name": "Casaco de Lã das Alturas",
+      "type": "especial",
+      "description": "Uma armadura grossa feita com a lã das Cabras Peludas. Apesar da aparência simples, é extremamente eficiente contra o frio das montanhas.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Comum",
+      "effect": "5 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "armadura-do-escalador-trippi",
+      "name": "Armadura do Escalador Trippi",
+      "type": "especial",
+      "description": "Uma armadura reforçada com lã compactada e chifres de Cabras Peludas. Foi criada por exploradores que atravessavam os penhascos das Montanhas Trippi.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Raro",
+      "effect": "13 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "bota-do-tesouro-peludo",
+      "name": "Bota do Tesouro Peludo",
+      "type": "especial",
+      "description": "A famosa bota protegida pelos Gatos Autistas. É surpreendentemente confortável.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Lendário",
+      "effect": "+4 em testes de Agilidade",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "pelo-organizado",
+      "name": "Pelo Organizado",
+      "type": "especial",
+      "description": "Uma pequena mecha de pelos perfeitamente alinhados e penteados. Nenhum fio parece estar fora do lugar.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões relacionadas aos gatos das montanhas",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "coleira-da-atencao-momentanea",
+      "name": "Coleira da Atenção Momentânea",
+      "type": "especial",
+      "description": "Uma coleira utilizada por antigos líderes dos gatos com TDAH.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, permite repetir um teste de Conhecimento ou Percepção",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "tomo-dos-sete-corredores",
+      "name": "Tomo dos Sete Corredores",
+      "type": "especial",
+      "description": "Um livro gigantesco contendo mapas de túneis e passagens esquecidas das montanhas.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Lendário",
+      "effect": "Uma vez por sessão, revela uma passagem secreta próxima",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Lendária"
+      ]
+    },
+    {
+      "id": "novelo-desfeito",
+      "name": "Novelo Desfeito",
+      "type": "especial",
+      "description": "Um novelo parcialmente destruído abandonado no meio de alguma atividade esquecida.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "anotacao-incompreensivel",
+      "name": "Anotação Incompreensível",
+      "type": "especial",
+      "description": "Um papel coberto por observações extremamente específicas sobre algum assunto aparentemente aleatório.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Incomum",
+      "effect": "+1 em um teste de Conhecimento relacionado ao assunto descrito",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "la-das-alturas",
+      "name": "Lã das Alturas",
+      "type": "especial",
+      "description": "Uma lã extremamente resistente ao frio e aos ventos das montanhas.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "asa-ressecada",
+      "name": "Asa Ressecada",
+      "type": "especial",
+      "description": "Uma asa preservada de um Morcego de Três Asas.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "formula-impossivel",
+      "name": "Fórmula Impossível",
+      "type": "especial",
+      "description": "Uma folha coberta por cálculos absurdamente complexos e praticamente ilegíveis.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Raro",
+      "effect": "+1 em um teste de Conhecimento",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "compasso-das-probabilidades",
+      "name": "Compasso das Probabilidades",
+      "type": "especial",
+      "description": "Um compasso que gira sozinho quando alguém toma uma decisão arriscada.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite adicionar +2 a uma rolagem antes do resultado ser revelado",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "pergaminho-catalogado",
+      "name": "Pergaminho Catalogado",
+      "type": "especial",
+      "description": "Um registro detalhado sobre criaturas, cavernas ou histórias esquecidas das montanhas.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Raro",
+      "effect": "Permite descobrir uma informação útil sobre a região",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "registro-perdido-das-montanhas",
+      "name": "Registro Perdido das Montanhas",
+      "type": "especial",
+      "description": "Um dos documentos mais antigos preservados pelos gatos das cavernas.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Épico",
+      "effect": "Revela um segredo histórico da região",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "membrana-triplice",
+      "name": "Membrana Tríplice",
+      "type": "especial",
+      "description": "Uma membrana rara retirada de um exemplar saudável.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Raro",
+      "effect": "Pode substituir ingredientes raros em certas missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "chifre-escalador",
+      "name": "Chifre Escalador",
+      "type": "especial",
+      "description": "Um chifre naturalmente curvado utilizado pelas cabras para subir encostas quase verticais.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Raro",
+      "effect": "+1 em testes relacionados a escalada",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "lista-de-afazeres-inacabada",
+      "name": "Lista de Afazeres Inacabada",
+      "type": "especial",
+      "description": "Uma folha contendo dezenas de tarefas começadas e nenhuma concluída.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida por um valor maior para colecionadores",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "sino-do-gato-autista-alado",
+      "name": "Sino do Gato Autista Alado",
+      "type": "especial",
+      "description": "Um pequeno sino retirado de um antigo altar das Montanhas Trippi. O som produzido por ele é quase imperceptível para humanos.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Épico",
+      "effect": "todos os gatos próximos ficam imediatamente atentos ao usuário",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "armadura-do-gato-com-tdah-alado",
+      "name": "Armadura do Gato com TDAH Alado",
+      "type": "especial",
+      "description": "Uma armadura composta por dezenas de peças incompatíveis que, por algum motivo, funcionam perfeitamente juntas. Pequenos objetos aparecem e desaparecem em seus bolsos sem explicação.",
+      "origin": "Montanhas Trippi",
+      "rarity": "Relíquia",
+      "effect": "+28 de armadura e uma vez por sessão, o usuário pode usar um item épico que não possui, desde que faça sentido estar carregando aquilo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "montanhas-trippi"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Montanhas Trippi"
+      ]
+    },
+    {
+      "id": "machado-do-ultimo-argumento",
+      "name": "Machado do Último Argumento",
+      "type": "especial",
+      "description": "Um machado enorme cuja lâmina possui palavras gravadas em uma língua desconhecida. Dizem que ele pertenceu a um Bárbaro que resolvia todas as discussões da mesma maneira. Quanto mais longa for uma conversa antes do combate começar, mais pesado o machado parece ficar nas mãos do usuário.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Épico",
+      "effect": "causa +2 de dano caso o combate tenha começado após uma conversa ou negociação fracassada",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "fruto-do-ultimo-passo",
+      "name": "Fruto do Último Passo",
+      "type": "especial",
+      "description": "Uma fruta cinzenta encontrada próxima aos Penhascos do Último Passo. Algumas pessoas afirmam ouvir sussurros ao segurá-la.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Raro",
+      "effect": "Permite ignorar um requisito de evolução de uma magia de Manipulação",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "pena-petrificada",
+      "name": "Pena Petrificada",
+      "type": "especial",
+      "description": "Uma pena retirada de um Urubu de Pedra. Apesar da aparência rochosa, continua leve como uma pena comum.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Comum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "chifre-palido",
+      "name": "Chifre Pálido",
+      "type": "especial",
+      "description": "Um chifre branco acinzentado encontrado nas Cabras Pálidas.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Comum",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "escama-da-mare-distante",
+      "name": "Escama da Maré Distante",
+      "type": "especial",
+      "description": "Uma escama azul-clara encontrada nas Sereias dos Penhascos. Quando encostada ao ouvido, é possível ouvir ondas distantes.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Incomum",
+      "effect": "Pode ser vendida ou utilizada em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "fragmento-de-pedra-sonhadora",
+      "name": "Fragmento de Pedra Sonhadora",
+      "type": "especial",
+      "description": "Um pedaço de rocha retirado do Gigante Adormecido. Durante a noite, ele ocasionalmente murmura palavras incompreensíveis.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Raro",
+      "effect": "Pode ser vendido ou utilizado em missões",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "garrafa-de-eco",
+      "name": "Garrafa de Eco",
+      "type": "especial",
+      "description": "Um pequeno recipiente contendo um eco capturado pelo Eco-Mestre.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, permite reproduzir perfeitamente uma frase ouvida anteriormente",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "sussurro-aprisionado",
+      "name": "Sussurro Aprisionado",
+      "type": "especial",
+      "description": "Um fragmento da Voz dos Penhascos mantido dentro de uma pedra translúcida. Aproximá-lo do ouvido revela fragmentos de conversas impossíveis.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Épico",
+      "effect": "Uma vez por sessão, o usuário pode pedir ao mestre uma dica sobre um perigo próximo",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "manto-dos-ventos-altos",
+      "name": "Manto dos Ventos Altos",
+      "type": "especial",
+      "description": "Um manto reforçado usado por viajantes que atravessam os Penhascos do Último Passo.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Comum",
+      "effect": "5 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "armadura-do-eco-distante",
+      "name": "Armadura do Eco Distante",
+      "type": "especial",
+      "description": "Uma armadura reforçada com pedra dos penhascos. Quando atingida, produz um som baixo semelhante a um eco distante.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Raro",
+      "effect": "13 de armadura",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo",
+        "Raridade original: Rara"
+      ]
+    },
+    {
+      "id": "fruto-do-eco-perfeito",
+      "name": "Fruto do Eco Perfeito",
+      "type": "especial",
+      "description": "Uma fruta extremamente rara que parece repetir sons produzidos ao seu redor.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Épico",
+      "effect": "Permite evoluir imediatamente uma magia de Manipulação de Domínio I para Domínio II. O personagem deve possuir a Marca da Voz Distante",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo",
+        "Raridade original: Épica"
+      ]
+    },
+    {
+      "id": "lanca-do-horizonte",
+      "name": "Lança do Horizonte",
+      "type": "especial",
+      "description": "Uma lança encontrada próxima aos Penhascos do Último Passo. Sua ponta parece sempre apontar para algum lugar distante.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Épico",
+      "effect": "o primeiro ataque realizado em cada combate recebe +2",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    },
+    {
+      "id": "machado-da-gargalhada-final",
+      "name": "Machado da Gargalhada Final",
+      "type": "especial",
+      "description": "Um machado enorme coberto por marcas de mordidas, rachaduras e reparos improvisados. Seu antigo dono costumava rir toda vez que era atingido durante uma batalha.",
+      "origin": "Penhascos do Último Passo",
+      "rarity": "Relíquia",
+      "effect": "Quando estiver com menos da metade da vida, dá +3 de dano",
+      "region_ids": [
+        "pais-de-magik"
+      ],
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Itens especiais.docx",
+        "Seção original: Região: Penhascos do Último Passo"
+      ]
+    }
+  ]
+}
