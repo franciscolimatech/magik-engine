@@ -7,6 +7,7 @@ from src.core.world import (
     list_locations,
     list_official_locations,
     list_regions,
+    validate_location_connections,
     validate_unique_ids,
 )
 from src.storage.json_storage import JSONStorage
@@ -61,7 +62,8 @@ def test_get_official_location_by_id(tmp_path) -> None:
 
     assert location.name == "Floresta Viridian"
     assert location.type == "bioma"
-    assert "árvores" in location.description
+    assert location.description
+    assert "avelgard" in location.connections
 
 
 def test_missing_or_empty_official_location_json_uses_safe_default(tmp_path) -> None:
@@ -118,3 +120,66 @@ def test_duplicate_official_location_ids_are_rejected() -> None:
 
     with pytest.raises(ValueError, match="duplicado"):
         validate_unique_ids(list_official_locations(storage))
+
+
+def test_official_location_connections_point_to_existing_ids(tmp_path) -> None:
+    storage = JSONStorage(tmp_path)
+
+    locations = list_official_locations(storage)
+
+    validate_location_connections(locations)
+
+
+def test_empty_location_connections_are_allowed() -> None:
+    storage = MemoryStorage(
+        {
+            "locations.json": {
+                "locations": [
+                    {
+                        "id": "local-isolado",
+                        "name": "Local Isolado",
+                        "type": "bioma",
+                        "connections": [],
+                    }
+                ]
+            }
+        }
+    )
+
+    locations = list_official_locations(storage)
+
+    assert locations[0].connections == []
+
+
+def test_invalid_location_connection_is_rejected() -> None:
+    storage = MemoryStorage(
+        {
+            "locations.json": {
+                "locations": [
+                    {
+                        "id": "local-a",
+                        "name": "Local A",
+                        "type": "bioma",
+                        "connections": ["local-inexistente"],
+                    }
+                ]
+            }
+        }
+    )
+
+    with pytest.raises(ValueError, match="Conexao invalida"):
+        list_official_locations(storage)
+
+
+def test_core_world_connections_match_expected_safe_graph(tmp_path) -> None:
+    storage = JSONStorage(tmp_path)
+
+    pedralume = get_location_by_id(storage, "cidade-de-pedralume")
+    estrada = get_location_by_id(storage, "estrada-do-viajante")
+    penhascos = get_location_by_id(storage, "penhascos-do-ultimo-passo")
+
+    assert {"estrada-do-viajante", "floresta-viridian", "brejo-do-esquecimento"}.issubset(
+        set(pedralume.connections)
+    )
+    assert {"cidade-de-pedralume", "brisvale", "norwick", "varnhollow"}.issubset(set(estrada.connections))
+    assert {"velharth", "stonewatch", "redmoor", "arkenford"}.issubset(set(penhascos.connections))

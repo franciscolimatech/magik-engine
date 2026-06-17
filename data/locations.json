@@ -9,7 +9,12 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "vilarejo-dos-gatos-autistas",
+        "vilarejo-dos-gatos-com-tdah",
+        "cidade-de-pedralume",
+        "brejo-do-esquecimento"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -22,7 +27,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "avelgard",
+        "varnhollow",
+        "cidade-de-pedralume"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -35,7 +44,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "thornwick",
+        "redmoor",
+        "brejo-do-esquecimento"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -48,7 +61,13 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "cidade-de-pedralume",
+        "eldermoor",
+        "vale-vermilion",
+        "floresta-do-avesso",
+        "montanhas-trippi"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -61,7 +80,14 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "estrada-do-viajante",
+        "floresta-viridian",
+        "montanhas-trippi",
+        "brejo-do-esquecimento",
+        "varnhollow",
+        "brisvale"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -74,7 +100,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "varnhollow",
+        "corvenn",
+        "floresta-viridian"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -87,7 +117,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "brisvale",
+        "corvenn",
+        "dunwall"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -100,7 +134,12 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "brisvale",
+        "norwick",
+        "arkenford",
+        "brejo-do-esquecimento"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -113,7 +152,12 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "velharth",
+        "stonewatch",
+        "redmoor",
+        "arkenford"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -126,7 +170,12 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "cidade-de-pedralume",
+        "brisvale",
+        "norwick",
+        "varnhollow"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -139,7 +188,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "floresta-viridian",
+        "varnhollow",
+        "cidade-de-pedralume"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -152,7 +205,13 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "lago-das-carpas-profetas",
+        "cidade-de-pedralume",
+        "estrada-do-viajante",
+        "floresta-do-avesso",
+        "norwick"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -165,7 +224,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "penhascos-do-ultimo-passo",
+        "stonewatch",
+        "arkenford"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -178,7 +241,14 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "cidade-de-pedralume",
+        "campos-dos-kriots",
+        "floresta-viridian",
+        "avelgard",
+        "corvenn",
+        "estrada-do-viajante"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -191,7 +261,12 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "campos-dos-kriots",
+        "lago-das-carpas-profetas",
+        "varnhollow",
+        "dunwall"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -204,7 +279,10 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "lago-das-carpas-profetas",
+        "corvenn"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -217,7 +295,10 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "brejo-do-esquecimento",
+        "cidade-de-pedralume"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -230,7 +311,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "floresta-do-avesso",
+        "penhascos-do-ultimo-passo",
+        "velharth"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -243,7 +328,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "estrada-do-viajante",
+        "brisvale",
+        "floresta-do-avesso"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -256,7 +345,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "penhascos-do-ultimo-passo",
+        "velharth",
+        "redmoor"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -269,7 +362,12 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "vale-vermilion",
+        "penhascos-do-ultimo-passo",
+        "stonewatch",
+        "thornwick"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -282,7 +380,11 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "vale-vermilion",
+        "redmoor",
+        "brejo-do-esquecimento"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -295,7 +397,9 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "montanhas-trippi"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     },
@@ -308,7 +412,9 @@
         "oficial",
         "lore"
       ],
-      "connections": [],
+      "connections": [
+        "montanhas-trippi"
+      ],
       "notes": [],
       "region_id": "pais-de-magik"
     }

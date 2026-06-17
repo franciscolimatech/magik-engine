@@ -148,6 +148,139 @@ OFFICIAL_MAGIK_LOCATION_IDS: tuple[str, ...] = (
     "vilarejo-dos-gatos-com-tdah",
 )
 
+OFFICIAL_LOCATION_CONNECTIONS: dict[str, tuple[str, ...]] = {
+    "montanhas-trippi": (
+        "vilarejo-dos-gatos-autistas",
+        "vilarejo-dos-gatos-com-tdah",
+        "cidade-de-pedralume",
+        "brejo-do-esquecimento",
+    ),
+    "floresta-viridian": (
+        "avelgard",
+        "varnhollow",
+        "cidade-de-pedralume",
+    ),
+    "vale-vermilion": (
+        "thornwick",
+        "redmoor",
+        "brejo-do-esquecimento",
+    ),
+    "brejo-do-esquecimento": (
+        "cidade-de-pedralume",
+        "eldermoor",
+        "vale-vermilion",
+        "floresta-do-avesso",
+        "montanhas-trippi",
+    ),
+    "cidade-de-pedralume": (
+        "estrada-do-viajante",
+        "floresta-viridian",
+        "montanhas-trippi",
+        "brejo-do-esquecimento",
+        "varnhollow",
+        "brisvale",
+    ),
+    "campos-dos-kriots": (
+        "varnhollow",
+        "corvenn",
+        "floresta-viridian",
+    ),
+    "lago-das-carpas-profetas": (
+        "brisvale",
+        "corvenn",
+        "dunwall",
+    ),
+    "floresta-do-avesso": (
+        "brisvale",
+        "norwick",
+        "arkenford",
+        "brejo-do-esquecimento",
+    ),
+    "penhascos-do-ultimo-passo": (
+        "velharth",
+        "stonewatch",
+        "redmoor",
+        "arkenford",
+    ),
+    "estrada-do-viajante": (
+        "cidade-de-pedralume",
+        "brisvale",
+        "norwick",
+        "varnhollow",
+    ),
+    "avelgard": (
+        "floresta-viridian",
+        "varnhollow",
+        "cidade-de-pedralume",
+    ),
+    "brisvale": (
+        "lago-das-carpas-profetas",
+        "cidade-de-pedralume",
+        "estrada-do-viajante",
+        "floresta-do-avesso",
+        "norwick",
+    ),
+    "velharth": (
+        "penhascos-do-ultimo-passo",
+        "stonewatch",
+        "arkenford",
+    ),
+    "varnhollow": (
+        "cidade-de-pedralume",
+        "campos-dos-kriots",
+        "floresta-viridian",
+        "avelgard",
+        "corvenn",
+        "estrada-do-viajante",
+    ),
+    "corvenn": (
+        "campos-dos-kriots",
+        "lago-das-carpas-profetas",
+        "varnhollow",
+        "dunwall",
+    ),
+    "dunwall": (
+        "lago-das-carpas-profetas",
+        "corvenn",
+    ),
+    "eldermoor": (
+        "brejo-do-esquecimento",
+        "cidade-de-pedralume",
+    ),
+    "arkenford": (
+        "floresta-do-avesso",
+        "penhascos-do-ultimo-passo",
+        "velharth",
+    ),
+    "norwick": (
+        "estrada-do-viajante",
+        "brisvale",
+        "floresta-do-avesso",
+    ),
+    "stonewatch": (
+        "penhascos-do-ultimo-passo",
+        "velharth",
+        "redmoor",
+    ),
+    "redmoor": (
+        "vale-vermilion",
+        "penhascos-do-ultimo-passo",
+        "stonewatch",
+        "thornwick",
+    ),
+    "thornwick": (
+        "vale-vermilion",
+        "redmoor",
+        "brejo-do-esquecimento",
+    ),
+    "vilarejo-dos-gatos-autistas": (
+        "montanhas-trippi",
+    ),
+    "vilarejo-dos-gatos-com-tdah": (
+        "montanhas-trippi",
+    ),
+}
+
 OFFICIAL_REGIONS: tuple[OfficialRegion, ...] = (
     OfficialRegion(
         id="pais-de-magik",
@@ -363,7 +496,7 @@ def default_regions_data() -> dict[str, Any]:
 
 
 def default_locations_data() -> dict[str, Any]:
-    return {"locations": [location.to_dict() for location in OFFICIAL_LOCATIONS]}
+    return {"locations": [_with_default_connections(location).to_dict() for location in OFFICIAL_LOCATIONS]}
 
 
 def ensure_world_state(storage: JsonStore) -> dict[str, Any]:
@@ -419,6 +552,7 @@ def list_official_locations(storage: JsonStore) -> list[OfficialLocation]:
         locations_data = data["locations"]
     locations = [OfficialLocation.from_dict(location) for location in locations_data]
     validate_unique_ids(locations)
+    validate_location_connections(locations)
     return locations
 
 
@@ -440,6 +574,29 @@ def validate_unique_ids(items: list[OfficialRegion] | list[OfficialLocation]) ->
         if normalized in seen:
             raise ValueError(f"Id oficial duplicado: {item.id}.")
         seen.add(normalized)
+
+
+def validate_location_connections(locations: list[OfficialLocation]) -> None:
+    valid_ids = {location.id for location in locations}
+    for location in locations:
+        for connection_id in location.connections:
+            if connection_id not in valid_ids:
+                raise ValueError(f"Conexao invalida em {location.id}: {connection_id}.")
+
+
+def _with_default_connections(location: OfficialLocation) -> OfficialLocation:
+    if location.connections:
+        return location
+    return OfficialLocation(
+        id=location.id,
+        name=location.name,
+        type=location.type,
+        description=location.description,
+        tags=list(location.tags),
+        connections=list(OFFICIAL_LOCATION_CONNECTIONS.get(location.id, ())),
+        notes=list(location.notes),
+        region_id=location.region_id,
+    )
 
 
 def _read_collection(data: Any, key: str, filename: str) -> list[dict[str, Any]]:
