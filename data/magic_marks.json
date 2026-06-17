@@ -1,0 +1,116 @@
+{
+  "magic_marks": [
+    {
+      "id": "marca-das-mares",
+      "name": "Marca das Marés",
+      "school": "Água",
+      "location_on_body": "Pulso",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    },
+    {
+      "id": "marca-vermilion",
+      "name": "Marca Vermilion",
+      "school": "Sangue e Brasas",
+      "location_on_body": "Palma da mão",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    },
+    {
+      "id": "marca-viridian",
+      "name": "Marca Viridian",
+      "school": "Natureza",
+      "location_on_body": "Pés e tornozelos",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    },
+    {
+      "id": "marca-tempestuosa",
+      "name": "Marca Tempestuosa",
+      "school": "Raio",
+      "location_on_body": "Pescoço",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    },
+    {
+      "id": "marca-sombria",
+      "name": "Marca Sombria",
+      "school": "Sombras",
+      "location_on_body": "Costelas",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    },
+    {
+      "id": "marca-do-esquecimento",
+      "name": "Marca do Esquecimento",
+      "school": "Alteração",
+      "location_on_body": "Ombro",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    },
+    {
+      "id": "marca-da-voz-distante",
+      "name": "Marca da Voz Distante",
+      "school": "Manipulação",
+      "location_on_body": "Ao redor dos olhos",
+      "description": "",
+      "grants_basic_spells": true,
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: RPG MAGIK Sistema de combate e transporte.docx",
+        "Marcas não são conectadas a personagens automaticamente nesta etapa."
+      ]
+    }
+  ]
+}

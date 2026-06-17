@@ -1,0 +1,1233 @@
+{
+  "spells": [
+    {
+      "id": "faisca",
+      "name": "Faísca",
+      "school": "Sangue e Brasas",
+      "domain": 1,
+      "region": "Vale Vermilion",
+      "description": "Uma pequena centelha surge na ponta dos dedos do conjurador. Apesar da simplicidade, muitos habitantes do Vale Vermilion acreditam que toda grande chama começa com uma Faísca.",
+      "effect": "Uma pequena centelha surge na ponta dos dedos do conjurador. Apesar da simplicidade, muitos habitantes do Vale Vermilion acreditam que toda grande chama começa com uma Faísca.",
+      "evolves_to": "bola-de-fogo",
+      "evolution_requirements": [
+        "Acender 3 fontes de fogo diferentes.",
+        "Causar dano a 5 criaturas usando Faísca.",
+        "Sobreviver a um combate utilizando a magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "bola-de-fogo",
+      "name": "Bola de Fogo",
+      "school": "Sangue e Brasas",
+      "domain": 2,
+      "region": "Vale Vermilion",
+      "description": "Lança uma esfera flamejante contra um alvo. É uma das magias mais conhecidas do Vale Vermilion.",
+      "effect": "Lança uma esfera flamejante contra um alvo. É uma das magias mais conhecidas do Vale Vermilion.",
+      "evolves_to": "sol-de-bolso",
+      "evolution_requirements": [
+        "Derrotar 10 criaturas utilizando Bola de Fogo.",
+        "Incendiar uma estrutura ou objeto grande.",
+        "Derrotar uma criatura do Vale Vermilion usando a magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "sol-de-bolso",
+      "name": "Sol de Bolso",
+      "school": "Sangue e Brasas",
+      "domain": 3,
+      "region": "Vale Vermilion",
+      "description": "Cria uma esfera semelhante a um pequeno sol que flutua ao redor do conjurador. A esfera ilumina uma área inteira, aquece o ambiente e pode ser lançada contra um ponto escolhido. Após alguns segundos, explode numa onda de fogo capaz de atingir vários inimigos ao mesmo tempo.",
+      "effect": "Cria uma esfera semelhante a um pequeno sol que flutua ao redor do conjurador. A esfera ilumina uma área inteira, aquece o ambiente e pode ser lançada contra um ponto escolhido. Após alguns segundos, explode numa onda de fogo capaz de atingir vários inimigos ao mesmo tempo.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "brasa-viva",
+      "name": "Brasa Viva",
+      "school": "Sangue e Brasas",
+      "domain": 1,
+      "region": "Vale Vermilion",
+      "description": "Cria uma pequena chama flutuante que pode ser movida lentamente pelo conjurador. Muitos viajantes a utilizam como lanterna.",
+      "effect": "Cria uma pequena chama flutuante que pode ser movida lentamente pelo conjurador. Muitos viajantes a utilizam como lanterna.",
+      "evolves_to": "muralha-de-brasas",
+      "evolution_requirements": [
+        "Utilizar a magia para iluminar 3 locais diferentes.",
+        "Queimar ou bloquear o caminho de um inimigo.",
+        "Manter a chama ativa durante uma cena inteira."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "muralha-de-brasas",
+      "name": "Muralha de Brasas",
+      "school": "Sangue e Brasas",
+      "domain": 2,
+      "region": "Vale Vermilion",
+      "description": "Cria uma parede de fogo que bloqueia passagem e causa dano a quem atravessar.",
+      "effect": "Cria uma parede de fogo que bloqueia passagem e causa dano a quem atravessar.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "sangue-quente",
+      "name": "Sangue Quente",
+      "school": "Sangue e Brasas",
+      "domain": 1,
+      "region": "Vale Vermilion",
+      "description": "Acelera a circulação do próprio sangue, aumentando a resistência ao frio e ao cansaço.",
+      "effect": "Acelera a circulação do próprio sangue, aumentando a resistência ao frio e ao cansaço.",
+      "evolves_to": "combustao",
+      "evolution_requirements": [
+        "Utilizar a magia para ajudar alguém.",
+        "Resistir a uma condição extrema.",
+        "Utilizar a magia durante 3 combates."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "combustao",
+      "name": "Combustão",
+      "school": "Sangue e Brasas",
+      "domain": 2,
+      "region": "Vale Vermilion",
+      "description": "Faz sangue, brasas ou matéria inflamável entrarem em combustão instantaneamente.",
+      "effect": "Faz sangue, brasas ou matéria inflamável entrarem em combustão instantaneamente.",
+      "evolves_to": "incendio-controlado",
+      "evolution_requirements": [
+        "Iniciar e apagar incêndios sem perder o controle.",
+        "Queimar simultaneamente 3 alvos diferentes.",
+        "Derrotar uma criatura ligada ao fogo ou às brasas."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "incendio-controlado",
+      "name": "Incêndio Controlado",
+      "school": "Sangue e Brasas",
+      "domain": 3,
+      "region": "Vale Vermilion",
+      "description": "Permite controlar qualquer fogo já existente numa grande área. O conjurador pode fazer as chamas crescerem, diminuírem, mudarem de direção ou até formarem figuras simples.",
+      "effect": "Permite controlar qualquer fogo já existente numa grande área. O conjurador pode fazer as chamas crescerem, diminuírem, mudarem de direção ou até formarem figuras simples.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "gota-flutuante",
+      "name": "Gota Flutuante",
+      "school": "Água",
+      "domain": 1,
+      "region": "Lago das Carpas Profetas",
+      "description": "Permite criar e controlar uma pequena esfera de água. Crianças das vilas próximas ao lago costumam aprender versões rudimentares desta magia.",
+      "effect": "Permite criar e controlar uma pequena esfera de água. Crianças das vilas próximas ao lago costumam aprender versões rudimentares desta magia.",
+      "evolves_to": "chicote-d-agua",
+      "evolution_requirements": [
+        "Apagar 3 fontes de fogo.",
+        "Utilizar a magia para ajudar alguém.",
+        "Acertar uma criatura usando a gota."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "chicote-d-agua",
+      "name": "Chicote d'Água",
+      "school": "Água",
+      "domain": 2,
+      "region": "Lago das Carpas Profetas",
+      "description": "Cria um chicote feito de água capaz de atingir inimigos ou puxar objetos.",
+      "effect": "Cria um chicote feito de água capaz de atingir inimigos ou puxar objetos.",
+      "evolves_to": "mare-repentina",
+      "evolution_requirements": [
+        "Derrotar 5 criaturas utilizando a magia.",
+        "Empurrar um inimigo para fora de combate.",
+        "Utilizar a magia para salvar alguém de um perigo."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "mare-repentina",
+      "name": "Maré Repentina",
+      "school": "Água",
+      "domain": 3,
+      "region": "Lago das Carpas Profetas",
+      "description": "Invoca uma enorme onda de água que atravessa o campo de batalha. A onda pode derrubar criaturas, apagar incêndios, destruir construções frágeis e arrastar inimigos por dezenas de metros.",
+      "effect": "Invoca uma enorme onda de água que atravessa o campo de batalha. A onda pode derrubar criaturas, apagar incêndios, destruir construções frágeis e arrastar inimigos por dezenas de metros.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "nevoa",
+      "name": "Névoa",
+      "school": "Água",
+      "domain": 1,
+      "region": "Lago das Carpas Profetas",
+      "description": "Cria uma pequena nuvem de névoa ao redor do conjurador.",
+      "effect": "Cria uma pequena nuvem de névoa ao redor do conjurador.",
+      "evolves_to": "nevoa-densa",
+      "evolution_requirements": [
+        "Esconder-se com sucesso utilizando a magia.",
+        "Ajudar um aliado a escapar de um perigo.",
+        "Utilizar a névoa em três situações diferentes."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "nevoa-densa",
+      "name": "Névoa Densa",
+      "school": "Água",
+      "domain": 2,
+      "region": "Lago das Carpas Profetas",
+      "description": "Cria uma área coberta por névoa espessa, dificultando a visão.",
+      "effect": "Cria uma área coberta por névoa espessa, dificultando a visão.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "purificar-agua",
+      "name": "Purificar Água",
+      "school": "Água",
+      "domain": 1,
+      "region": "Lago das Carpas Profetas",
+      "description": "Remove sujeira, venenos simples e impurezas de líquidos.",
+      "effect": "Remove sujeira, venenos simples e impurezas de líquidos.",
+      "evolves_to": "fonte-ambulante",
+      "evolution_requirements": [
+        "Purificar água em 5 ocasiões diferentes.",
+        "Utilizar a magia para ajudar outras pessoas.",
+        "Purificar água em uma região perigosa."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "fonte-ambulante",
+      "name": "Fonte Ambulante",
+      "school": "Água",
+      "domain": 2,
+      "region": "Lago das Carpas Profetas",
+      "description": "Permite criar continuamente pequenas quantidades de água limpa.",
+      "effect": "Permite criar continuamente pequenas quantidades de água limpa.",
+      "evolves_to": "chuva-local",
+      "evolution_requirements": [
+        "Fornecer água para uma comunidade ou grupo.",
+        "Utilizar a magia durante uma jornada longa.",
+        "Ajudar alguém a sobreviver graças à água criada."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "chuva-local",
+      "name": "Chuva Local",
+      "school": "Água",
+      "domain": 3,
+      "region": "Lago das Carpas Profetas",
+      "description": "Cria uma nuvem escura sobre uma área escolhida. Durante alguns minutos, uma chuva constante cai sobre o local. Além de fornecer água, a magia pode apagar incêndios, dificultar a visão e transformar terrenos secos em lama.",
+      "effect": "Cria uma nuvem escura sobre uma área escolhida. Durante alguns minutos, uma chuva constante cai sobre o local. Além de fornecer água, a magia pode apagar incêndios, dificultar a visão e transformar terrenos secos em lama.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "espinho",
+      "name": "Espinho",
+      "school": "Natureza",
+      "domain": 1,
+      "region": "Floresta Viridian",
+      "description": "Faz um pequeno espinho surgir do chão ou de uma planta próxima.",
+      "effect": "Faz um pequeno espinho surgir do chão ou de uma planta próxima.",
+      "evolves_to": "lanca-de-cipo",
+      "evolution_requirements": [
+        "Ferir 5 criaturas usando Espinho.",
+        "Utilizar a magia para abrir caminho numa floresta.",
+        "Ajudar uma planta ou árvore usando magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "lanca-de-cipo",
+      "name": "Lança de Cipó",
+      "school": "Natureza",
+      "domain": 2,
+      "region": "Floresta Viridian",
+      "description": "Cipós reforçados atacam um alvo à distância.",
+      "effect": "Cipós reforçados atacam um alvo à distância.",
+      "evolves_to": "prisao-de-raizes",
+      "evolution_requirements": [
+        "Imobilizar 5 criaturas.",
+        "Derrotar uma Raiz Andante.",
+        "Utilizar a magia para proteger alguém."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "prisao-de-raizes",
+      "name": "Prisão de Raízes",
+      "school": "Natureza",
+      "domain": 3,
+      "region": "Floresta Viridian",
+      "description": "Raízes gigantes emergem do solo em todas as direções. Elas se enrolam em criaturas, construções e árvores próximas, formando uma verdadeira fortaleza vegetal.",
+      "effect": "Raízes gigantes emergem do solo em todas as direções. Elas se enrolam em criaturas, construções e árvores próximas, formando uma verdadeira fortaleza vegetal.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "crescimento",
+      "name": "Crescimento",
+      "school": "Natureza",
+      "domain": 1,
+      "region": "Floresta Viridian",
+      "description": "Acelera levemente o crescimento de plantas.",
+      "effect": "Acelera levemente o crescimento de plantas.",
+      "evolves_to": "crescimento-rapido",
+      "evolution_requirements": [
+        "Fazer crescer 5 plantas diferentes.",
+        "Utilizar a magia para produzir alimento.",
+        "Ajudar alguém utilizando uma planta criada."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "crescimento-rapido",
+      "name": "Crescimento Rápido",
+      "school": "Natureza",
+      "domain": 2,
+      "region": "Floresta Viridian",
+      "description": "Permite criar arbustos, vinhas e pequenas árvores em poucos segundos.",
+      "effect": "Permite criar arbustos, vinhas e pequenas árvores em poucos segundos.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "bosque-errante",
+      "name": "Bosque Errante",
+      "school": "Natureza",
+      "domain": 3,
+      "region": "Floresta Viridian",
+      "description": "A vegetação ao redor do conjurador desperta por alguns minutos. Árvores arrancam as próprias raízes do solo, arbustos caminham lentamente e cipós se movem como serpentes obedientes. O Bosque Errante pode transportar objetos, construir barreiras naturais, bloquear caminhos ou auxiliar aliados durante uma jornada. Alguns dizem que, durante a magia, a própria Floresta Viridian observa através das folhas.",
+      "effect": "A vegetação ao redor do conjurador desperta por alguns minutos. Árvores arrancam as próprias raízes do solo, arbustos caminham lentamente e cipós se movem como serpentes obedientes. O Bosque Errante pode transportar objetos, construir barreiras naturais, bloquear caminhos ou auxiliar aliados durante uma jornada. Alguns dizem que, durante a magia, a própria Floresta Viridian observa através das folhas.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "folha-cortante",
+      "name": "Folha Cortante",
+      "school": "Natureza",
+      "domain": 1,
+      "region": "Floresta Viridian",
+      "description": "Arremessa uma folha endurecida como uma lâmina.",
+      "effect": "Arremessa uma folha endurecida como uma lâmina.",
+      "evolves_to": "tempestade-de-folhas",
+      "evolution_requirements": [
+        "Acertar 10 criaturas.",
+        "Derrotar um Espírito de Folhas.",
+        "Acertar 3 alvos num mesmo combate."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "tempestade-de-folhas",
+      "name": "Tempestade de Folhas",
+      "school": "Natureza",
+      "domain": 3,
+      "region": "Floresta Viridian",
+      "description": "Milhares de folhas endurecidas surgem ao redor do conjurador e são lançadas como uma tempestade cortante capaz de atingir uma área inteira.",
+      "effect": "Milhares de folhas endurecidas surgem ao redor do conjurador e são lançadas como uma tempestade cortante capaz de atingir uma área inteira.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "estalo",
+      "name": "Estalo",
+      "school": "Raio",
+      "domain": 1,
+      "region": "Cidade de Pedralume",
+      "description": "Produz uma pequena descarga elétrica capaz de assustar criaturas menores.",
+      "effect": "Produz uma pequena descarga elétrica capaz de assustar criaturas menores.",
+      "evolves_to": "raio",
+      "evolution_requirements": [
+        "Acertar 5 criaturas.",
+        "Energizar algum objeto.",
+        "Sobreviver a uma tempestade."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "raio",
+      "name": "Raio",
+      "school": "Raio",
+      "domain": 2,
+      "region": "Cidade de Pedralume",
+      "description": "Dispara um raio concentrado contra um alvo.",
+      "effect": "Dispara um raio concentrado contra um alvo.",
+      "evolves_to": "tempestade-local",
+      "evolution_requirements": [
+        "Derrotar 10 criaturas.",
+        "Acertar dois inimigos num mesmo combate.",
+        "Derrotar um Escorpião Pedralume."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "tempestade-local",
+      "name": "Tempestade Local",
+      "school": "Raio",
+      "domain": 3,
+      "region": "Cidade de Pedralume",
+      "description": "Nuvens carregadas surgem sobre uma área escolhida. Raios começam a cair aleatoriamente enquanto ventos violentos dificultam a movimentação dos inimigos.",
+      "effect": "Nuvens carregadas surgem sobre uma área escolhida. Raios começam a cair aleatoriamente enquanto ventos violentos dificultam a movimentação dos inimigos.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "magnetismo",
+      "name": "Magnetismo",
+      "school": "Raio",
+      "domain": 1,
+      "region": "Cidade de Pedralume",
+      "description": "Permite atrair ou repelir pequenos objetos metálicos.",
+      "effect": "Permite atrair ou repelir pequenos objetos metálicos.",
+      "evolves_to": "campo-magnetico",
+      "evolution_requirements": [
+        "Mover 20 objetos usando a magia.",
+        "Utilizar a magia para resolver um problema.",
+        "Desarmar um inimigo."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "campo-magnetico",
+      "name": "Campo Magnético",
+      "school": "Raio",
+      "domain": 2,
+      "region": "Cidade de Pedralume",
+      "description": "Manipula grandes quantidades de metal.",
+      "effect": "Manipula grandes quantidades de metal.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "carga-eletrica",
+      "name": "Carga Elétrica",
+      "school": "Raio",
+      "domain": 1,
+      "region": "Cidade de Pedralume",
+      "description": "Carrega uma arma ou objeto com energia elétrica.",
+      "effect": "Carrega uma arma ou objeto com energia elétrica.",
+      "evolves_to": "sobrecarga",
+      "evolution_requirements": [
+        "Carregar 10 objetos.",
+        "Aumentar o dano de aliados.",
+        "Utilizar a magia em três combates."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "sobrecarga",
+      "name": "Sobrecarga",
+      "school": "Raio",
+      "domain": 2,
+      "region": "Cidade de Pedralume",
+      "description": "Libera toda a energia acumulada numa explosão elétrica.",
+      "effect": "Libera toda a energia acumulada numa explosão elétrica.",
+      "evolves_to": "circuito",
+      "evolution_requirements": [
+        "Derrotar uma criatura usando Sobrecarga.",
+        "Absorver energia de uma fonte poderosa.",
+        "Encontrar um Cristalomante."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx",
+        "Documento cita evolução para Núcleo Tempestuoso, mas a entrada seguinte aparece como Circuito."
+      ]
+    },
+    {
+      "id": "circuito",
+      "name": "Circuito",
+      "school": "Raio",
+      "domain": 3,
+      "region": "Cidade de Pedralume",
+      "description": "O conjurador conecta até três criaturas, objetos ou estruturas por fios invisíveis de energia. Tudo que acontecer com um deles afeta parcialmente os demais.",
+      "effect": "O conjurador conecta até três criaturas, objetos ou estruturas por fios invisíveis de energia. Tudo que acontecer com um deles afeta parcialmente os demais.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "sugestao",
+      "name": "Sugestão",
+      "school": "Manipulação",
+      "domain": 1,
+      "region": "Penhascos do Último Passo",
+      "description": "Implanta uma ideia simples na mente de uma criatura. A vítima acredita que a ideia surgiu naturalmente, como se fosse um pensamento próprio.",
+      "effect": "Implanta uma ideia simples na mente de uma criatura. A vítima acredita que a ideia surgiu naturalmente, como se fosse um pensamento próprio.",
+      "evolves_to": "comando",
+      "evolution_requirements": [
+        "Influenciar 5 criaturas diferentes.",
+        "Convencer alguém usando a magia.",
+        "Utilizar a magia sem ser descoberto."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "comando",
+      "name": "Comando",
+      "school": "Manipulação",
+      "domain": 2,
+      "region": "Penhascos do Último Passo",
+      "description": "A vítima sente uma forte necessidade de realizar uma ação simples ordenada pelo conjurador. A ordem não pode ser extremamente complexa, mas pode mudar o rumo de uma cena.",
+      "effect": "A vítima sente uma forte necessidade de realizar uma ação simples ordenada pelo conjurador. A ordem não pode ser extremamente complexa, mas pode mudar o rumo de uma cena.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "desconfianca",
+      "name": "Desconfiança",
+      "school": "Manipulação",
+      "domain": 1,
+      "region": "Penhascos do Último Passo",
+      "description": "Faz uma criatura começar a suspeitar de alguém próximo. A magia não controla totalmente a mente do alvo, mas planta uma dúvida incômoda.",
+      "effect": "Faz uma criatura começar a suspeitar de alguém próximo. A magia não controla totalmente a mente do alvo, mas planta uma dúvida incômoda.",
+      "evolves_to": "paranoia",
+      "evolution_requirements": [
+        "Fazer uma criatura desconfiar de um aliado.",
+        "Usar a magia para evitar um combate.",
+        "Utilizar a magia em 3 situações sociais diferentes."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "paranoia",
+      "name": "Paranoia",
+      "school": "Manipulação",
+      "domain": 2,
+      "region": "Penhascos do Último Passo",
+      "description": "A vítima começa a enxergar ameaças onde não existem. Ela pode hesitar, atacar o alvo errado ou se afastar dos próprios aliados.",
+      "effect": "A vítima começa a enxergar ameaças onde não existem. Ela pode hesitar, atacar o alvo errado ou se afastar dos próprios aliados.",
+      "evolves_to": "ruptura",
+      "evolution_requirements": [
+        "Fazer um grupo inimigo se desorganizar.",
+        "Usar a magia contra um inimigo importante.",
+        "Fazer uma criatura abandonar seus aliados temporariamente."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "ruptura",
+      "name": "Ruptura",
+      "school": "Manipulação",
+      "domain": 3,
+      "region": "Penhascos do Último Passo",
+      "description": "A vítima perde completamente a confiança em seus companheiros por alguns instantes. Para ela, qualquer gesto parece suspeito e qualquer palavra parece uma mentira.",
+      "effect": "A vítima perde completamente a confiança em seus companheiros por alguns instantes. Para ela, qualquer gesto parece suspeito e qualquer palavra parece uma mentira.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "fascinio",
+      "name": "Fascínio",
+      "school": "Manipulação",
+      "domain": 1,
+      "region": "Penhascos do Último Passo",
+      "description": "Faz uma criatura prestar atenção quase total no conjurador. A vítima não fica hipnotizada, mas sente dificuldade em ignorá-lo.",
+      "effect": "Faz uma criatura prestar atenção quase total no conjurador. A vítima não fica hipnotizada, mas sente dificuldade em ignorá-lo.",
+      "evolves_to": "encantamento",
+      "evolution_requirements": [
+        "Distrair 5 criaturas usando a magia.",
+        "Impedir que alguém perceba outro acontecimento.",
+        "Usar a magia para ganhar tempo em uma cena perigosa."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "encantamento",
+      "name": "Encantamento",
+      "school": "Manipulação",
+      "domain": 2,
+      "region": "Penhascos do Último Passo",
+      "description": "A vítima passa a enxergar o conjurador como alguém confiável por alguns instantes. Ela ainda pode desconfiar se algo muito absurdo acontecer.",
+      "effect": "A vítima passa a enxergar o conjurador como alguém confiável por alguns instantes. Ela ainda pode desconfiar se algo muito absurdo acontecer.",
+      "evolves_to": "marionete-breve",
+      "evolution_requirements": [
+        "Fazer uma criatura protegê-lo ou ajudá-lo.",
+        "Usar a magia em uma negociação importante.",
+        "Influenciar uma criatura durante um combate."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "marionete-breve",
+      "name": "Marionete Breve",
+      "school": "Manipulação",
+      "domain": 3,
+      "region": "Penhascos do Último Passo",
+      "description": "Por poucos segundos, o conjurador interfere nos movimentos da vítima como se puxasse fios invisíveis. Não é controle total, mas pode fazê-la soltar algo, hesitar, errar um golpe ou dar alguns passos na direção desejada.",
+      "effect": "Por poucos segundos, o conjurador interfere nos movimentos da vítima como se puxasse fios invisíveis. Não é controle total, mas pode fazê-la soltar algo, hesitar, errar um golpe ou dar alguns passos na direção desejada.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "troca-simples",
+      "name": "Troca Simples",
+      "school": "Alteração",
+      "domain": 1,
+      "region": "Brejo do Esquecimento",
+      "description": "Permite trocar a posição de dois pequenos objetos que estejam próximos um do outro. Os objetos devem ser semelhantes em tamanho.",
+      "effect": "Permite trocar a posição de dois pequenos objetos que estejam próximos um do outro. Os objetos devem ser semelhantes em tamanho.",
+      "evolves_to": "troca-inesperada",
+      "evolution_requirements": [
+        "Trocar 10 pares de objetos.",
+        "Utilizar a magia para resolver um problema.",
+        "Enganar alguém usando a magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "troca-inesperada",
+      "name": "Troca Inesperada",
+      "school": "Alteração",
+      "domain": 2,
+      "region": "Brejo do Esquecimento",
+      "description": "Permite trocar a posição de dois objetos maiores ou de um objeto e uma criatura pequena.",
+      "effect": "Permite trocar a posição de dois objetos maiores ou de um objeto e uma criatura pequena.",
+      "evolves_to": "inversao-de-destinos",
+      "evolution_requirements": [
+        "Utilizar a magia em um combate importante.",
+        "Trocar a posição de uma criatura hostil.",
+        "Resolver uma situação impossível usando a magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "inversao-de-destinos",
+      "name": "Inversão de Destinos",
+      "school": "Alteração",
+      "domain": 3,
+      "region": "Brejo do Esquecimento",
+      "description": "Por alguns instantes, duas criaturas trocam de lugar instantaneamente, mesmo que estejam relativamente distantes uma da outra.",
+      "effect": "Por alguns instantes, duas criaturas trocam de lugar instantaneamente, mesmo que estejam relativamente distantes uma da outra.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "esquecimento-breve",
+      "name": "Esquecimento Breve",
+      "school": "Alteração",
+      "domain": 1,
+      "region": "Brejo do Esquecimento",
+      "description": "Faz uma criatura esquecer os últimos segundos de sua própria vida.",
+      "effect": "Faz uma criatura esquecer os últimos segundos de sua própria vida.",
+      "evolves_to": "memoria-embaralhada",
+      "evolution_requirements": [
+        "Utilizar a magia em 5 criaturas diferentes.",
+        "Evitar um combate usando a magia.",
+        "Fazer alguém repetir uma ação sem perceber."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "memoria-embaralhada",
+      "name": "Memória Embaralhada",
+      "school": "Alteração",
+      "domain": 2,
+      "region": "Brejo do Esquecimento",
+      "description": "A vítima mistura lembranças recentes e passa a ter dificuldade para compreender o que acabou de acontecer.",
+      "effect": "A vítima mistura lembranças recentes e passa a ter dificuldade para compreender o que acabou de acontecer.",
+      "evolves_to": "roubo-de-memoria",
+      "evolution_requirements": [
+        "Utilizar a magia contra um inimigo importante.",
+        "Fazer uma criatura esquecer uma informação útil.",
+        "Sobreviver a um combate utilizando a magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "roubo-de-memoria",
+      "name": "Roubo de Memória",
+      "school": "Alteração",
+      "domain": 3,
+      "region": "Brejo do Esquecimento",
+      "description": "Permite apagar temporariamente uma lembrança específica da vítima, como um rosto, um caminho ou uma informação importante.",
+      "effect": "Permite apagar temporariamente uma lembrança específica da vítima, como um rosto, um caminho ou uma informação importante.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "reflexo-torto",
+      "name": "Reflexo Torto",
+      "school": "Alteração",
+      "domain": 1,
+      "region": "Brejo do Esquecimento",
+      "description": "Altera levemente a aparência de um objeto, fazendo-o parecer outra coisa.",
+      "effect": "Altera levemente a aparência de um objeto, fazendo-o parecer outra coisa.",
+      "evolves_to": "forma-instavel",
+      "evolution_requirements": [
+        "Enganar 5 criaturas usando a magia.",
+        "Disfarçar um objeto importante.",
+        "Utilizar a magia em três situações diferentes."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "forma-instavel",
+      "name": "Forma Instável",
+      "school": "Alteração",
+      "domain": 2,
+      "region": "Brejo do Esquecimento",
+      "description": "Permite alterar temporariamente a aparência de pequenos objetos ou criaturas.",
+      "effect": "Permite alterar temporariamente a aparência de pequenos objetos ou criaturas.",
+      "evolves_to": "mascara-da-realidade",
+      "evolution_requirements": [
+        "Enganar uma criatura poderosa.",
+        "Utilizar a magia durante uma missão importante.",
+        "Manter uma transformação por uma cena inteira."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "mascara-da-realidade",
+      "name": "Máscara da Realidade",
+      "school": "Alteração",
+      "domain": 3,
+      "region": "Brejo do Esquecimento",
+      "description": "Permite alterar temporariamente a aparência de uma criatura inteira, incluindo voz, roupas e pequenos detalhes físicos.",
+      "effect": "Permite alterar temporariamente a aparência de uma criatura inteira, incluindo voz, roupas e pequenos detalhes físicos.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "maos-sombrias",
+      "name": "Mãos Sombrias",
+      "school": "Sombras",
+      "domain": 1,
+      "region": "Floresta do Avesso",
+      "description": "Cria sombra com forma parcial e que pode interagir com pequenos objetos próximos.",
+      "effect": "Cria sombra com forma parcial e que pode interagir com pequenos objetos próximos.",
+      "evolves_to": "servo-sombrio",
+      "evolution_requirements": [
+        "Resolver um problema importante utilizando a magia.",
+        "Manipular 20 objetos usando a sombra.",
+        "Ajudar um aliado utilizando a magia."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "servo-sombrio",
+      "name": "Servo Sombrio",
+      "school": "Sombras",
+      "domain": 2,
+      "region": "Floresta do Avesso",
+      "description": "A sombra se desprende parcialmente do conjurador e passa a agir de forma independente por alguns instantes, podendo carregar objetos, abrir portas e realizar tarefas simples.",
+      "effect": "A sombra se desprende parcialmente do conjurador e passa a agir de forma independente por alguns instantes, podendo carregar objetos, abrir portas e realizar tarefas simples.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "escuridao-local",
+      "name": "Escuridão Local",
+      "school": "Sombras",
+      "domain": 1,
+      "region": "Floresta do Avesso",
+      "description": "Cria uma pequena área de penumbra ao redor do conjurador.",
+      "effect": "Cria uma pequena área de penumbra ao redor do conjurador.",
+      "evolves_to": "veu-sombrio",
+      "evolution_requirements": [
+        "Esconder-se utilizando a magia.",
+        "Ajudar alguém a escapar de um perigo.",
+        "Utilizar a magia durante 3 combates."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "veu-sombrio",
+      "name": "Véu Sombrio",
+      "school": "Sombras",
+      "domain": 2,
+      "region": "Floresta do Avesso",
+      "description": "Uma camada de sombras envolve o conjurador, dificultando que inimigos o percebam ou acertem seus ataques.",
+      "effect": "Uma camada de sombras envolve o conjurador, dificultando que inimigos o percebam ou acertem seus ataques.",
+      "evolves_to": "noite-passageira",
+      "evolution_requirements": [
+        "Escapar de uma criatura poderosa.",
+        "Permanecer oculto durante uma cena inteira.",
+        "Utilizar a magia para proteger um aliado."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "noite-passageira",
+      "name": "Noite Passageira",
+      "school": "Sombras",
+      "domain": 3,
+      "region": "Floresta do Avesso",
+      "description": "As sombras se espalham por uma área inteira, mergulhando-a numa escuridão sobrenatural onde até fontes normais de luz parecem enfraquecidas. O usuário e seus aliados são os únicos que podem enxergar.",
+      "effect": "As sombras se espalham por uma área inteira, mergulhando-a numa escuridão sobrenatural onde até fontes normais de luz parecem enfraquecidas. O usuário e seus aliados são os únicos que podem enxergar.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "marca-sombria",
+      "name": "Marca Sombria",
+      "school": "Sombras",
+      "domain": 1,
+      "region": "Floresta do Avesso",
+      "description": "Marca discretamente uma criatura ou objeto com uma pequena sombra visível apenas para o conjurador.",
+      "effect": "Marca discretamente uma criatura ou objeto com uma pequena sombra visível apenas para o conjurador.",
+      "evolves_to": "rastreador-sombrio",
+      "evolution_requirements": [
+        "Marcar 10 criaturas ou objetos diferentes.",
+        "Encontrar algo utilizando a marca.",
+        "Utilizar a magia durante uma exploração."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "rastreador-sombrio",
+      "name": "Rastreador Sombrio",
+      "school": "Sombras",
+      "domain": 2,
+      "region": "Floresta do Avesso",
+      "description": "Permite sentir a direção aproximada de uma marca sombria, mesmo através de obstáculos.",
+      "effect": "Permite sentir a direção aproximada de uma marca sombria, mesmo através de obstáculos.",
+      "evolves_to": "caminho-das-sombras",
+      "evolution_requirements": [
+        "Encontrar uma criatura importante utilizando a magia.",
+        "Viajar por uma região perigosa guiando-se pelas marcas.",
+        "Utilizar a magia em uma missão importante."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "caminho-das-sombras",
+      "name": "Caminho das Sombras",
+      "school": "Sombras",
+      "domain": 3,
+      "region": "Floresta do Avesso",
+      "description": "O conjurador pode atravessar brevemente uma sombra marcada e surgir por outra próxima que também esteja marcada, percorrendo distâncias médias instantaneamente.",
+      "effect": "O conjurador pode atravessar brevemente uma sombra marcada e surgir por outra próxima que também esteja marcada, percorrendo distâncias médias instantaneamente.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "olhos-na-escuridao",
+      "name": "Olhos na Escuridão",
+      "school": "Sombras",
+      "domain": 1,
+      "region": "Floresta do Avesso",
+      "description": "O conjurador consegue enxergar perfeitamente através de sombras, penumbras e locais pouco iluminados durante alguns minutos. Muitos exploradores da Floresta do Avesso dependem desta magia para não se perder entre as árvores.",
+      "effect": "O conjurador consegue enxergar perfeitamente através de sombras, penumbras e locais pouco iluminados durante alguns minutos. Muitos exploradores da Floresta do Avesso dependem desta magia para não se perder entre as árvores.",
+      "evolves_to": "visao-profunda",
+      "evolution_requirements": [
+        "Enxergar algo escondido utilizando a magia.",
+        "Utilizar a magia durante 5 explorações.",
+        "Evitar um perigo graças à visão obtida."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "visao-profunda",
+      "name": "Visão Profunda",
+      "school": "Sombras",
+      "domain": 2,
+      "region": "Floresta do Avesso",
+      "description": "O conjurador passa a enxergar através de neblina, fumaça e outras obstruções visuais simples, além de perceber movimentações sutis ao seu redor.",
+      "effect": "O conjurador passa a enxergar através de neblina, fumaça e outras obstruções visuais simples, além de perceber movimentações sutis ao seu redor.",
+      "evolves_to": "olhar-do-abismo",
+      "evolution_requirements": [
+        "Descobrir um segredo utilizando a magia.",
+        "Sobreviver a uma situação perigosa graças à visão obtida.",
+        "Utilizar a magia durante uma missão importante."
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    },
+    {
+      "id": "olhar-do-abismo",
+      "name": "Olhar do Abismo",
+      "school": "Sombras",
+      "domain": 3,
+      "region": "Floresta do Avesso",
+      "description": "As sombras passam a revelar fragmentos do que ocorreu recentemente em um local. O conjurador pode observar breves ecos visuais de acontecimentos passados, como pegadas desaparecidas, batalhas antigas ou a passagem de criaturas.",
+      "effect": "As sombras passam a revelar fragmentos do que ocorreu recentemente em um local. O conjurador pode observar breves ecos visuais de acontecimentos passados, como pegadas desaparecidas, batalhas antigas ou a passagem de criaturas.",
+      "evolves_to": null,
+      "evolution_requirements": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Documento: MAGIK Grimório.docx"
+      ]
+    }
+  ]
+}
