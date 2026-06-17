@@ -1,0 +1,40 @@
+{
+  "regions": [
+    {
+      "id": "pais-de-magik",
+      "name": "País de Magik",
+      "description": "País conhecido do cenário oficial atual do RPG MAGIK.",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "locations": [
+        "montanhas-trippi",
+        "floresta-viridian",
+        "vale-vermilion",
+        "brejo-do-esquecimento",
+        "cidade-de-pedralume",
+        "campos-dos-kriots",
+        "lago-das-carpas-profetas",
+        "floresta-do-avesso",
+        "penhascos-do-ultimo-passo",
+        "estrada-do-viajante",
+        "avelgard",
+        "brisvale",
+        "velharth",
+        "varnhollow",
+        "corvenn",
+        "dunwall",
+        "eldermoor",
+        "arkenford",
+        "norwick",
+        "stonewatch",
+        "redmoor",
+        "thornwick",
+        "vilarejo-dos-gatos-autistas",
+        "vilarejo-dos-gatos-com-tdah"
+      ],
+      "notes": []
+    }
+  ]
+}
