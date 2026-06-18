@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.game.assets import blit_scaled
 from src.game.maps.test_map import is_walkable
 from src.game.settings import TILE_SIZE
 
@@ -51,11 +52,10 @@ class Player:
         return self.x + self.facing[0], self.y + self.facing[1]
 
     def draw(self, pygame, surface, camera=None, assets=None) -> None:
-        world_x = self.x * TILE_SIZE
-        world_y = self.y * TILE_SIZE
-        pixel_x, pixel_y = camera.world_to_screen(world_x, world_y) if camera else (world_x, world_y)
+        tile_size = camera.tile_size if camera else TILE_SIZE
+        pixel_x, pixel_y = camera.tile_to_screen(self.x, self.y) if camera else (self.x * TILE_SIZE, self.y * TILE_SIZE)
         if assets:
-            surface.blit(assets.player[self.direction][self.walk_frame], (pixel_x, pixel_y))
+            blit_scaled(pygame, surface, assets.player[self.direction][self.walk_frame], (pixel_x, pixel_y), tile_size)
             return
         pygame.draw.rect(surface, (124, 108, 246), pygame.Rect(pixel_x + 8, pixel_y + 8, 16, 18))
 

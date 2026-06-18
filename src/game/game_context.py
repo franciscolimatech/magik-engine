@@ -9,6 +9,7 @@ from typing import Mapping
 
 from src.core.character import MIKO_ID, get_character
 from src.core.world import get_location_by_id
+from src.game.maps.area_registry import DEFAULT_AREA_ID, get_area
 from src.game.save import DEFAULT_LOCATION_ID, DEFAULT_SAVE_ID, get_game_save
 from src.game.settings import PLAYER_NAME_FALLBACK
 from src.storage.json_storage import JSONStorage
@@ -26,6 +27,7 @@ class GameContext:
     campaign_id: str | None = None
     campaign_session_id: str | None = None
     location_id: str = DEFAULT_LOCATION_ID
+    area_id: str = DEFAULT_AREA_ID
     map_name: str = DEFAULT_MAP_NAME
     player_name: str = PLAYER_NAME_FALLBACK
 
@@ -45,11 +47,13 @@ class GameContext:
             _env_text(values, "MAGIK_GAME_LOCATION_ID") or _save_location_id(default_save),
             storage,
         )
+        area_id = _resolve_area_id(_env_text(values, "MAGIK_GAME_AREA_ID") or _save_area_id(default_save))
         return cls(
             character_id=character_id,
             campaign_id=campaign_id,
             campaign_session_id=campaign_session_id,
             location_id=location_id,
+            area_id=area_id,
             map_name=map_name,
             player_name=load_player_name(character_id, storage),
         )
@@ -77,6 +81,7 @@ class GameContext:
             campaign_id=self.campaign_id,
             campaign_session_id=self.campaign_session_id,
             location_id=self.location_id,
+            area_id=self.area_id,
             map_name=self.map_name,
             player_name=load_player_name(cleaned_id, storage),
         )
@@ -87,6 +92,18 @@ class GameContext:
             campaign_id=self.campaign_id,
             campaign_session_id=self.campaign_session_id,
             location_id=location_id.strip() or DEFAULT_LOCATION_ID,
+            area_id=self.area_id,
+            map_name=self.map_name,
+            player_name=self.player_name,
+        )
+
+    def with_area(self, area_id: str) -> "GameContext":
+        return GameContext(
+            character_id=self.character_id,
+            campaign_id=self.campaign_id,
+            campaign_session_id=self.campaign_session_id,
+            location_id=self.location_id,
+            area_id=_resolve_area_id(area_id),
             map_name=self.map_name,
             player_name=self.player_name,
         )
@@ -130,6 +147,10 @@ def _save_location_id(save) -> str | None:
     return save.location_id if save is not None and save.location_id.strip() else None
 
 
+def _save_area_id(save) -> str | None:
+    return save.area_id if save is not None and save.area_id.strip() else None
+
+
 def _resolve_location_id(location_id: str | None, storage: JsonStore | None) -> str:
     candidate = (location_id or DEFAULT_LOCATION_ID).strip() or DEFAULT_LOCATION_ID
     if _is_valid_location_id(candidate, storage):
@@ -145,3 +166,11 @@ def _is_valid_location_id(location_id: str, storage: JsonStore | None) -> bool:
         return True
     except ValueError:
         return False
+
+
+def _resolve_area_id(area_id: str | None) -> str:
+    candidate = (area_id or DEFAULT_AREA_ID).strip() or DEFAULT_AREA_ID
+    try:
+        return get_area(candidate).id
+    except ValueError:
+        return DEFAULT_AREA_ID

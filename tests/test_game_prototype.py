@@ -17,6 +17,13 @@ from src.game.entities.npc import NPC
 from src.game.entities.player import Player
 from src.game.event_registry import register_battle_event, register_creature_encounter, register_map_event
 from src.game.game_context import GameContext
+from src.game.maps.area_registry import (
+    DEFAULT_AREA_ID,
+    find_transition_at,
+    get_area,
+    get_spawn,
+    validate_area_registry,
+)
 from src.game.maps.events import MapEvent, find_event_at
 from src.game.maps.test_map import (
     find_creatures,
@@ -39,8 +46,8 @@ from src.game.scenes.main_menu import (
     SETTINGS_MODAL_SCRIM_COLOR,
     MainMenuScene,
 )
-from src.game.scenes.overworld import OverworldScene, load_player_appearance
-from src.game.save import get_game_save
+from src.game.scenes.overworld import OverworldScene, calculate_overworld_tile_size, load_player_appearance
+from src.game.save import DEFAULT_SAVE_ID, GameSave, get_game_save
 from src.game.settings import (
     DISPLAY_MODE_BORDERLESS,
     DISPLAY_MODE_FULLSCREEN,
@@ -146,6 +153,27 @@ def test_test_map_loads_creatures() -> None:
 
     assert len(creatures) >= 1
     assert load_test_map()[creatures[0].y][creatures[0].x] == "C"
+
+
+def test_area_registry_validates_transitions() -> None:
+    validate_area_registry()
+
+
+def test_default_area_loads_current_entry_map() -> None:
+    area = get_area(DEFAULT_AREA_ID)
+
+    assert area.location_id == "floresta-do-avesso"
+    assert area.map_data == tuple(load_test_map())
+    assert get_spawn(area, "entrada").position == (5, 4)
+
+
+def test_area_transition_points_to_existing_area_and_spawn() -> None:
+    area = get_area(DEFAULT_AREA_ID)
+    transition = find_transition_at(area, 30, 20)
+
+    assert transition is not None
+    assert transition.target_area_id == "floresta-do-avesso-clareira"
+    assert get_spawn(get_area(transition.target_area_id), transition.target_spawn_id).position == (2, 2)
 
 
 def test_generated_assets_include_tiles_and_sprites() -> None:
@@ -771,6 +799,28 @@ def test_camera_clamps_to_map_bounds() -> None:
     assert camera.offset_y == 224
 
 
+def test_camera_centers_map_when_viewport_is_larger() -> None:
+    camera = Camera(screen_width=1280, screen_height=720, tile_size=32)
+
+    camera.follow(4, 4, map_width=32, map_height=22)
+
+    assert camera.offset_x == -128
+    assert camera.offset_y == -8
+    assert camera.tile_to_screen(0, 0) == (128, 8)
+
+
+def test_camera_resize_updates_viewport_and_tile_size() -> None:
+    camera = Camera(screen_width=640, screen_height=480, tile_size=32)
+
+    camera.resize(1366, 768, tile_size=34)
+    camera.follow(4, 4, map_width=32, map_height=22)
+
+    assert camera.screen_width == 1366
+    assert camera.screen_height == 768
+    assert camera.tile_size == 34
+    assert camera.tile_to_screen(0, 0) == (139, 10)
+
+
 def test_hud_can_be_instantiated() -> None:
     hud = HUD(player_name="Miko Meu")
 
@@ -783,6 +833,193 @@ def test_hud_shows_campaign_and_session_labels() -> None:
     hud = HUD(player_name="Miko Meu", campaign_label="Campanha: estrada", session_label="Sessao: estrada-sessao-1")
 
     assert hud._campaign_text() == "Campanha: estrada | Sessao: estrada-sessao-1"
+
+
+def test_overworld_tile_size_uses_more_of_large_viewports() -> None:
+    map_data = load_test_map()
+
+    assert calculate_overworld_tile_size(1280, 720, map_width(map_data), map_height(map_data)) == 32
+    assert calculate_overworld_tile_size(1366, 768, map_width(map_data), map_height(map_data)) == 34
+    assert calculate_overworld_tile_size(1920, 1080, map_width(map_data), map_height(map_data)) == 49
+
+
+def test_overworld_draws_using_fuller_viewport_at_1280x720() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+
+    scene.draw(surface)
+
+    assert scene.camera.screen_width == 1280
+    assert scene.camera.screen_height == 720
+    assert scene.camera.tile_size == 32
+    assert scene.camera.offset_x < 0
+    assert scene.camera.offset_y < 0
+    assert scene.camera.tile_to_screen(0, 0) == (128, 8)
+    pygame.quit()
+
+
+def test_overworld_draws_using_fuller_viewport_at_1366x768() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1366, 768))
+    scene = OverworldScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+
+    scene.draw(surface)
+
+    assert scene.camera.screen_width == 1366
+    assert scene.camera.screen_height == 768
+    assert scene.camera.tile_size == 34
+    assert scene.camera.tile_to_screen(0, 0) == (139, 10)
+    pygame.quit()
+
+
+def test_overworld_draws_using_fuller_viewport_at_1920x1080() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1920, 1080))
+    scene = OverworldScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+
+    scene.draw(surface)
+
+    assert scene.camera.screen_width == 1920
+    assert scene.camera.screen_height == 1080
+    assert scene.camera.tile_size == 49
+    assert scene.camera.tile_to_screen(0, 0) == (176, 1)
+    pygame.quit()
+
+
+def test_overworld_movement_and_collision_still_use_tile_grid() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1920, 1080))
+    scene = OverworldScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    scene.draw(surface)
+    start = scene.player.position
+
+    assert scene.try_move_player(1, 0) is True
+    assert scene.player.position == (start[0] + 1, start[1])
+    scene.player.x = 2
+    scene.player.y = 2
+    assert scene.try_move_player(1, 0) is False
+    assert scene.player.direction == "right"
+    assert scene.camera.tile_size == 49
+    pygame.quit()
+
+
+def test_overworld_interaction_detection_still_uses_tile_grid() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1366, 768))
+    scene = OverworldScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    npc = scene.npcs[0]
+    scene.player.x = npc.x
+    scene.player.y = npc.y + 1
+    scene.player.direction = "up"
+    scene.draw(surface)
+
+    assert scene.facing_npc() == npc
+    pygame.quit()
+
+
+def test_overworld_loads_area_from_save() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        player_position={"x": 2, "y": 2},
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    assert scene.area_id == "floresta-do-avesso-clareira"
+    assert scene.location_id == "floresta-do-avesso"
+    assert scene.player.position == (2, 2)
+    pygame.quit()
+
+
+def test_overworld_invalid_area_uses_default() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="area-inexistente",
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    assert scene.area_id == DEFAULT_AREA_ID
+    assert get_game_save(storage).area_id == DEFAULT_AREA_ID
+    pygame.quit()
+
+
+def test_overworld_transition_changes_area_and_saves_position() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.x = 29
+    scene.player.y = 20
+    scene.player.direction = "right"
+
+    assert scene.try_move_player(1, 0) is True
+
+    save = get_game_save(storage)
+    assert scene.area_id == "floresta-do-avesso-clareira"
+    assert scene.player.position == (2, 2)
+    assert save.area_id == "floresta-do-avesso-clareira"
+    assert save.position == (2, 2)
+    assert save.location_id == "floresta-do-avesso"
+    pygame.quit()
+
+
+def test_overworld_draws_after_area_transition() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.x = 29
+    scene.player.y = 20
+
+    scene.try_move_player(1, 0)
+    scene.draw(surface)
+
+    assert scene.area_id == "floresta-do-avesso-clareira"
+    assert scene.camera.screen_width == 1280
+    assert scene.camera.screen_height == 720
+    pygame.quit()
 
 
 def test_main_menu_scene_instantiates_without_error() -> None:

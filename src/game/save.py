@@ -11,6 +11,7 @@ from typing import Any
 
 from src.core.character import MIKO_ID
 from src.core.world import get_location_by_id
+from src.game.maps.area_registry import DEFAULT_AREA_ID, resolve_area
 from src.storage.types import JsonStore
 
 
@@ -27,6 +28,7 @@ class GameSave:
     campaign_id: str | None = None
     session_id: str | None = None
     location_id: str = DEFAULT_LOCATION_ID
+    area_id: str = DEFAULT_AREA_ID
     player_position: dict[str, int] = field(default_factory=lambda: _position_dict(DEFAULT_PLAYER_POSITION))
     visited_locations: list[str] = field(default_factory=list)
     triggered_events: list[str] = field(default_factory=list)
@@ -57,6 +59,7 @@ class GameSave:
                 campaign_id=data.get("campaign_id"),
                 session_id=data.get("session_id"),
                 location_id=str(data.get("location_id", DEFAULT_LOCATION_ID)),
+                area_id=_resolve_valid_area_id(data.get("area_id", DEFAULT_AREA_ID)),
                 player_position=_normalize_position(data.get("player_position", {})),
                 visited_locations=list(data.get("visited_locations", [])),
                 triggered_events=list(data.get("triggered_events", [])),
@@ -86,6 +89,7 @@ def create_default_game_save(
     campaign_id: str | None = None,
     session_id: str | None = None,
     location_id: str = DEFAULT_LOCATION_ID,
+    area_id: str = DEFAULT_AREA_ID,
     position: tuple[int, int] = DEFAULT_PLAYER_POSITION,
 ) -> GameSave:
     return GameSave(
@@ -94,6 +98,7 @@ def create_default_game_save(
         campaign_id=campaign_id,
         session_id=session_id,
         location_id=location_id or DEFAULT_LOCATION_ID,
+        area_id=_resolve_valid_area_id(area_id),
         player_position=_position_dict(position),
         visited_locations=_unique_strings([location_id or DEFAULT_LOCATION_ID]),
     )
@@ -129,6 +134,7 @@ def load_or_create_default_game_save(
     campaign_id: str | None = None,
     session_id: str | None = None,
     location_id: str = DEFAULT_LOCATION_ID,
+    area_id: str = DEFAULT_AREA_ID,
 ) -> GameSave:
     saves = load_game_saves(storage)
     for save in saves:
@@ -139,6 +145,7 @@ def load_or_create_default_game_save(
         campaign_id=campaign_id,
         session_id=session_id,
         location_id=location_id,
+        area_id=area_id,
     )
     saves.append(save)
     save_game_saves(storage, saves)
@@ -152,12 +159,14 @@ def sync_game_save_context(
     campaign_id: str | None = None,
     session_id: str | None = None,
     location_id: str = DEFAULT_LOCATION_ID,
+    area_id: str | None = None,
 ) -> GameSave:
     save = _get_or_create_save(storage, save_id, character_id, campaign_id, session_id, location_id)
     save.character_id = character_id or MIKO_ID
     save.campaign_id = campaign_id
     save.session_id = session_id
     save.location_id = location_id or DEFAULT_LOCATION_ID
+    save.area_id = _resolve_valid_area_id(area_id or save.area_id)
     if save.location_id not in save.visited_locations:
         save.visited_locations.append(save.location_id)
     _replace_save(storage, save)
@@ -214,6 +223,37 @@ def update_player_position(
 ) -> GameSave:
     save = _get_or_create_save(storage, save_id)
     save.player_position = _position_dict((x, y))
+    _replace_save(storage, save)
+    return save
+
+
+def register_current_area(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    area_id: str = DEFAULT_AREA_ID,
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    save.area_id = _resolve_valid_area_id(area_id)
+    _replace_save(storage, save)
+    return save
+
+
+def update_area_and_player_position(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    area_id: str = DEFAULT_AREA_ID,
+    x: int = DEFAULT_PLAYER_POSITION[0],
+    y: int = DEFAULT_PLAYER_POSITION[1],
+    location_id: str | None = None,
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    save.area_id = _resolve_valid_area_id(area_id)
+    save.player_position = _position_dict((x, y))
+    if location_id is not None:
+        cleaned_location = location_id.strip() or DEFAULT_LOCATION_ID
+        save.location_id = cleaned_location
+        if cleaned_location not in save.visited_locations:
+            save.visited_locations.append(cleaned_location)
     _replace_save(storage, save)
     return save
 
@@ -390,6 +430,8 @@ def validate_game_save(save: GameSave) -> None:
         raise ValueError("character_id do save e obrigatorio.")
     if not save.location_id.strip():
         raise ValueError("location_id do save e obrigatorio.")
+    if not save.area_id.strip():
+        raise ValueError("area_id do save e obrigatorio.")
     _normalize_position(save.player_position)
     for field_name in (
         "visited_locations",
@@ -421,13 +463,14 @@ def _get_or_create_save(
     campaign_id: str | None = None,
     session_id: str | None = None,
     location_id: str = DEFAULT_LOCATION_ID,
+    area_id: str = DEFAULT_AREA_ID,
 ) -> GameSave:
     saves = load_game_saves(storage)
     normalized = save_id.strip().casefold()
     for save in saves:
         if save.id.casefold() == normalized:
             return save
-    save = create_default_game_save(character_id, campaign_id, session_id, location_id)
+    save = create_default_game_save(character_id, campaign_id, session_id, location_id, area_id)
     save.id = save_id.strip() or DEFAULT_SAVE_ID
     saves.append(save)
     save_game_saves(storage, saves)
@@ -524,3 +567,7 @@ def _resolve_valid_location_id(storage: JsonStore, candidate: Any, fallback: str
         except ValueError:
             continue
     return DEFAULT_LOCATION_ID
+
+
+def _resolve_valid_area_id(candidate: Any) -> str:
+    return resolve_area(str(candidate or DEFAULT_AREA_ID)).id

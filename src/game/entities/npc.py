@@ -7,6 +7,7 @@ from typing import Iterable
 
 from src.game.dialogue import DialogueChoice
 from src.game.entities.player import Player
+from src.game.assets import blit_scaled
 from src.game.settings import TILE_SIZE
 
 
@@ -44,12 +45,16 @@ class NPC:
         return self.is_in_front_of(player)
 
     def draw(self, pygame, surface, camera=None, assets=None, highlighted: bool = False) -> None:
-        world_x = self.x * TILE_SIZE
-        world_y = self.y * TILE_SIZE
-        pixel_x, pixel_y = camera.world_to_screen(world_x, world_y) if camera else (world_x, world_y)
+        tile_size = camera.tile_size if camera else TILE_SIZE
+        scale = tile_size / TILE_SIZE
+        pixel_x, pixel_y = camera.tile_to_screen(self.x, self.y) if camera else (self.x * TILE_SIZE, self.y * TILE_SIZE)
         if assets:
             if highlighted:
-                surface.blit(assets.interaction_marker, (pixel_x + 10, pixel_y - 10))
-            surface.blit(assets.npc, (pixel_x, pixel_y))
+                marker_size = (
+                    max(1, int(assets.interaction_marker.get_width() * scale)),
+                    max(1, int(assets.interaction_marker.get_height() * scale)),
+                )
+                blit_scaled(pygame, surface, assets.interaction_marker, (pixel_x + int(10 * scale), pixel_y - int(10 * scale)), marker_size)
+            blit_scaled(pygame, surface, assets.npc, (pixel_x, pixel_y), tile_size)
             return
         pygame.draw.rect(surface, (81, 167, 255), pygame.Rect(pixel_x + 9, pixel_y + 9, 14, 17))

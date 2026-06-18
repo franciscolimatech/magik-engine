@@ -4,6 +4,7 @@ from src.ai.narrator import AIConfig, NarrationResult
 from src.core.character import create_miko_meu
 from src.game.ai_narration import GAME_AI_NARRATION_ENV
 from src.game.game_context import GameContext
+from src.game.maps.area_registry import DEFAULT_AREA_ID
 from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
@@ -20,12 +21,14 @@ from src.game.save import (
     list_relevant_flags,
     load_game_saves,
     load_or_create_default_game_save,
+    register_current_area,
     register_current_location,
     register_important_choice,
     register_narrative_consequence,
     register_triggered_event,
     save_game_saves,
     sync_game_save_context,
+    update_area_and_player_position,
     update_player_position,
 )
 from src.game.scenes.overworld import OverworldScene
@@ -89,12 +92,34 @@ def test_old_game_save_without_flags_loads_with_safe_defaults() -> None:
     assert save.consequence_log == []
 
 
+def test_old_game_save_without_area_id_loads_with_safe_default() -> None:
+    storage = MemoryStorage(
+        {
+            "game_saves.json": {
+                "saves": [
+                    {
+                        "id": DEFAULT_SAVE_ID,
+                        "character_id": "miko-meu",
+                        "location_id": DEFAULT_LOCATION_ID,
+                        "player_position": {"x": 5, "y": 4},
+                    }
+                ]
+            }
+        }
+    )
+
+    save = get_game_save(storage)
+
+    assert save.area_id == DEFAULT_AREA_ID
+
+
 def test_create_default_game_save() -> None:
     save = create_default_game_save()
 
     assert save.id == DEFAULT_SAVE_ID
     assert save.character_id == "miko-meu"
     assert save.location_id == DEFAULT_LOCATION_ID
+    assert save.area_id == DEFAULT_AREA_ID
     assert save.position == (5, 4)
     assert save.visited_locations == [DEFAULT_LOCATION_ID]
     assert save.story_flags == []
@@ -119,6 +144,40 @@ def test_update_player_position() -> None:
 
     assert save.position == (7, 8)
     assert get_game_save(storage).position == (7, 8)
+
+
+def test_register_current_area() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    save = register_current_area(storage, DEFAULT_SAVE_ID, "floresta-do-avesso-clareira")
+
+    assert save.area_id == "floresta-do-avesso-clareira"
+    assert get_game_save(storage).area_id == "floresta-do-avesso-clareira"
+
+
+def test_invalid_current_area_uses_default() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    save = register_current_area(storage, DEFAULT_SAVE_ID, "area-inexistente")
+
+    assert save.area_id == DEFAULT_AREA_ID
+
+
+def test_update_area_and_player_position() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    save = update_area_and_player_position(
+        storage,
+        DEFAULT_SAVE_ID,
+        "floresta-do-avesso-clareira",
+        2,
+        2,
+        location_id=DEFAULT_LOCATION_ID,
+    )
+
+    assert save.area_id == "floresta-do-avesso-clareira"
+    assert save.position == (2, 2)
+    assert save.location_id == DEFAULT_LOCATION_ID
 
 
 def test_register_triggered_event_without_duplicate() -> None:
@@ -414,6 +473,49 @@ def test_game_context_uses_default_save_when_environment_is_absent() -> None:
     assert context.campaign_id == "campanha-1"
     assert context.campaign_session_id == "sessao-1"
     assert context.location_id == DEFAULT_LOCATION_ID
+    assert context.area_id == DEFAULT_AREA_ID
+
+
+def test_game_context_reads_area_id_from_save() -> None:
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        area_id="floresta-do-avesso-clareira",
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+
+    context = GameContext.from_env(env={}, storage=storage)
+
+    assert context.area_id == "floresta-do-avesso-clareira"
+
+
+def test_game_context_invalid_area_id_uses_default() -> None:
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        area_id="area-inexistente",
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+
+    context = GameContext.from_env(env={}, storage=storage)
+
+    assert context.area_id == DEFAULT_AREA_ID
 
 
 def test_game_context_environment_overrides_save() -> None:

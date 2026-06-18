@@ -21,13 +21,20 @@ from src.game.entities.npc import NPC
 from src.game.entities.player import Player
 from src.game.event_registry import register_creature_encounter, register_map_event
 from src.game.game_context import GameContext
-from src.game.maps.events import MapEvent, find_event_at, load_test_events
+from src.game.maps.area_registry import (
+    DEFAULT_AREA_ID,
+    AreaTransition,
+    GameArea,
+    find_transition_at,
+    get_spawn,
+    resolve_area,
+)
+from src.game.maps.events import MapEvent, find_event_at
 from src.game.maps.test_map import (
     find_creatures,
     find_npcs,
     find_player_start,
     is_walkable,
-    load_test_map,
     map_height,
     map_width,
 )
@@ -36,6 +43,7 @@ from src.game.npc_reactions import (
     apply_npc_interaction_effects_to_storage,
     get_npc_dialogue_for_state,
 )
+from src.game.settings import TILE_SIZE
 from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
@@ -45,6 +53,7 @@ from src.game.save import (
     register_current_location,
     register_triggered_event,
     sync_game_save_context,
+    update_area_and_player_position,
     update_player_position,
 )
 from src.game.scenes.base import BaseScene
@@ -79,27 +88,15 @@ class OverworldScene(BaseScene):
         self.should_quit = False
         self.requested_scene: str | None = None
         self.requested_creature: Creature | None = None
-        self.map_data = load_test_map()
         self.location_id = self._resolve_location_id()
+        self.game_save = self._load_game_save()
+        self.area = self._resolve_area()
+        self.area_id = self.area.id
         self.lore_summary = self._load_lore_summary(self.location_id)
         self.location_display_name = self._location_display_name()
-        self.game_save = self._load_game_save()
+        self._load_area_content(self.area)
         start_x, start_y = self._starting_position()
         self.player = Player(start_x, start_y, name=self.context.player_name)
-        self.npcs = [
-            NPC(
-                item.x,
-                item.y,
-                item.name,
-                item.dialogues,
-                choice=item.choice,
-                npc_id=item.npc_id,
-                location_id=item.location_id,
-            )
-            for item in find_npcs(self.map_data)
-        ]
-        self.creatures = [load_game_creature(storage, item.x, item.y) for item in find_creatures(self.map_data)]
-        self.events = load_test_events()
         self.triggered_event_ids: set[str] = set(self.game_save.triggered_events if self.game_save else [])
         self.dialogue: DialogueBox | None = None
         self.pending_event: MapEvent | None = None
@@ -154,11 +151,12 @@ class OverworldScene(BaseScene):
         return creature
 
     def draw(self, surface) -> None:
+        self._sync_camera_to_surface(surface)
         surface.fill(colors.BLACK)
         for y, row in enumerate(self.map_data):
             for x, tile in enumerate(row):
                 screen_x, screen_y = self.camera.tile_to_screen(x, y)
-                assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y, self.assets)
+                assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y, self.assets, size=self.camera.tile_size)
         highlighted_npc = self.facing_npc()
         highlighted_creature = self.facing_creature()
         for npc in self.npcs:
@@ -175,6 +173,8 @@ class OverworldScene(BaseScene):
             return False
         moved = self.player.move(dx, dy, self.map_data)
         if moved:
+            if self._try_area_transition():
+                return True
             self.persist_state()
             self.trigger_event_at(self.player.x, self.player.y)
         return moved
@@ -341,6 +341,14 @@ class OverworldScene(BaseScene):
         try:
             update_player_position(self.storage, DEFAULT_SAVE_ID, self.player.x, self.player.y)
             register_current_location(self.storage, DEFAULT_SAVE_ID, self.location_id)
+            self.game_save = update_area_and_player_position(
+                self.storage,
+                DEFAULT_SAVE_ID,
+                self.area_id,
+                self.player.x,
+                self.player.y,
+                location_id=self.location_id,
+            )
         except Exception as exc:  # noqa: BLE001 - save failures must not crash the prototype.
             print(f"[MAGIK Game] Nao foi possivel salvar progresso do jogo: {exc}")
 
@@ -354,6 +362,7 @@ class OverworldScene(BaseScene):
                 campaign_id=self.context.campaign_id,
                 session_id=self.context.campaign_session_id,
                 location_id=self.location_id,
+                area_id=self.context.area_id,
             )
             return sync_game_save_context(
                 self.storage,
@@ -362,6 +371,7 @@ class OverworldScene(BaseScene):
                 self.context.campaign_id,
                 self.context.campaign_session_id,
                 self.location_id,
+                area_id=save.area_id,
             )
         except Exception as exc:  # noqa: BLE001 - save failures must not block the game.
             print(f"[MAGIK Game] Nao foi possivel carregar save do jogo: {exc}")
@@ -392,6 +402,57 @@ class OverworldScene(BaseScene):
             return location_id
         return DEFAULT_LOCATION_ID
 
+    def _resolve_area(self) -> GameArea:
+        if self.game_save is not None:
+            return resolve_area(self.game_save.area_id)
+        return resolve_area(self.context.area_id)
+
+    def _load_area_content(self, area: GameArea) -> None:
+        self.map_data = list(area.map_data)
+        self.npcs = [
+            NPC(
+                item.x,
+                item.y,
+                item.name,
+                item.dialogues,
+                choice=item.choice,
+                npc_id=item.npc_id,
+                location_id=item.location_id,
+            )
+            for item in find_npcs(self.map_data)
+        ]
+        self.creatures = [load_game_creature(self.storage, item.x, item.y) for item in find_creatures(self.map_data)]
+        self.events = list(area.events)
+
+    def _try_area_transition(self) -> bool:
+        transition = find_transition_at(self.area, self.player.x, self.player.y)
+        if transition is None:
+            return False
+        self._apply_area_transition(transition)
+        return True
+
+    def _apply_area_transition(self, transition: AreaTransition) -> None:
+        target_area = resolve_area(transition.target_area_id)
+        spawn = get_spawn(target_area, transition.target_spawn_id)
+        self.area = target_area
+        self.area_id = target_area.id
+        self.location_id = transition.target_location_id or self.location_id
+        self.lore_summary = self._load_lore_summary(self.location_id)
+        self.location_display_name = self._location_display_name()
+        self._load_area_content(target_area)
+        self.player.x, self.player.y = spawn.position
+        self.context = self.context.with_location(self.location_id).with_area(self.area_id)
+        self.hud = HUD(
+            player_name=self.context.player_name,
+            map_name=self.location_display_name,
+            campaign_label=self.context.campaign_label,
+            session_label=self.context.session_label,
+        )
+        self.dialogue = None
+        self.pending_event = None
+        self.pending_creature = None
+        self.persist_state()
+
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
         if self.storage is None:
             return None
@@ -408,6 +469,16 @@ class OverworldScene(BaseScene):
             return str(location.get("name") or self.context.map_name)
         return self.context.map_name
 
+    def _sync_camera_to_surface(self, surface) -> None:
+        visual_tile_size = calculate_overworld_tile_size(
+            surface.get_width(),
+            surface.get_height(),
+            map_width(self.map_data),
+            map_height(self.map_data),
+        )
+        self.camera.resize(surface.get_width(), surface.get_height(), visual_tile_size)
+        self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
+
 
 def load_player_appearance(storage: JsonStore | None, context: GameContext) -> dict[str, str] | None:
     if storage is None:
@@ -417,6 +488,21 @@ def load_player_appearance(storage: JsonStore | None, context: GameContext) -> d
     except ValueError:
         return None
     return appearance_from_notes(character.notes)
+
+
+def calculate_overworld_tile_size(
+    screen_width: int,
+    screen_height: int,
+    map_tiles_width: int,
+    map_tiles_height: int,
+    base_tile_size: int = TILE_SIZE,
+) -> int:
+    if screen_width <= 0 or screen_height <= 0 or map_tiles_width <= 0 or map_tiles_height <= 0:
+        return base_tile_size
+    width_fit = screen_width // map_tiles_width
+    height_fit = screen_height // map_tiles_height
+    fitted_tile_size = min(width_fit, height_fit)
+    return max(base_tile_size, fitted_tile_size)
 
 
 def _effects_for_selected_option(effects: dict[str, Any], selected_option=None) -> dict[str, Any]:

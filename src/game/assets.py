@@ -12,6 +12,7 @@ from src.game.settings import TILE_SIZE
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TITLE_BACKGROUND_PATH = PROJECT_ROOT / "assets" / "images" / "title_background.png"
+_SCALED_SURFACE_CACHE: dict[tuple[int, tuple[int, int]], object] = {}
 
 
 @dataclass
@@ -57,15 +58,28 @@ def create_player_sprites_from_appearance(pygame, appearance: dict | None = None
     }
 
 
-def draw_tile(pygame, surface, tile: str, x: int, y: int, assets: GameAssets | None = None) -> None:
+def draw_tile(pygame, surface, tile: str, x: int, y: int, assets: GameAssets | None = None, size: int = TILE_SIZE) -> None:
     if assets is None:
         assets = create_assets(pygame)
     if tile == "#":
-        surface.blit(assets.wall_tile, (x, y))
+        blit_scaled(pygame, surface, assets.wall_tile, (x, y), size)
     elif tile == "w":
-        surface.blit(assets.water_tile, (x, y))
+        blit_scaled(pygame, surface, assets.water_tile, (x, y), size)
     else:
-        surface.blit(assets.floor_tiles.get(tile, assets.floor_tiles["."]), (x, y))
+        blit_scaled(pygame, surface, assets.floor_tiles.get(tile, assets.floor_tiles["."]), (x, y), size)
+
+
+def blit_scaled(pygame, surface, sprite, position: tuple[int, int], size: int | tuple[int, int]) -> None:
+    target_size = (size, size) if isinstance(size, int) else size
+    if sprite.get_size() == target_size:
+        surface.blit(sprite, position)
+        return
+    cache_key = (id(sprite), target_size)
+    scaled = _SCALED_SURFACE_CACHE.get(cache_key)
+    if scaled is None:
+        scaled = pygame.transform.scale(sprite, target_size)
+        _SCALED_SURFACE_CACHE[cache_key] = scaled
+    surface.blit(scaled, position)
 
 
 def load_optional_image(pygame, path: str | Path):
