@@ -48,6 +48,14 @@ ARMOR_OPTIONS: tuple[tuple[int, str], ...] = (
     (2, "Protecao leve"),
     (5, "Escudo/armadura simples"),
 )
+ORIGIN_OPTIONS: tuple[tuple[str, str], ...] = (
+    ("cidade-de-pedralume", "Cidade de Pedralume"),
+    ("floresta-viridian", "Floresta Viridian"),
+    ("vale-vermilion", "Vale Vermilion"),
+    ("floresta-do-avesso", "Floresta do Avesso"),
+    ("montanhas-trippi", "Montanhas Trippi"),
+    ("estrada-do-viajante", "Estrada do Viajante"),
+)
 ALLOWED_NAME_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_")
 TEXT_LIMITS = {"name": 32, "power": 140, "story": 140}
 
@@ -56,7 +64,7 @@ PowerInterpreter = Callable[..., dict[str, Any]]
 
 
 class CharacterCreatorScene(BaseScene):
-    STEPS = ("name", "class", "equipment", "armor", "power", "story", "appearance", "confirm")
+    STEPS = ("name", "class", "origin", "equipment", "armor", "power", "story", "appearance", "confirm")
 
     def __init__(
         self,
@@ -72,6 +80,7 @@ class CharacterCreatorScene(BaseScene):
         self.step = "name"
         self.name = ""
         self.class_index = 0
+        self.origin_index = 0
         self.equipment_index = 0
         self.selected_equipment: set[int] = set()
         self.armor_index = 0
@@ -96,6 +105,14 @@ class CharacterCreatorScene(BaseScene):
         return ARMOR_OPTIONS[self.armor_index][0]
 
     @property
+    def selected_origin_id(self) -> str:
+        return ORIGIN_OPTIONS[self.origin_index][0]
+
+    @property
+    def selected_origin_name(self) -> str:
+        return ORIGIN_OPTIONS[self.origin_index][1]
+
+    @property
     def selected_equipment_names(self) -> list[str]:
         return [EQUIPMENT_OPTIONS[index] for index in sorted(self.selected_equipment)]
 
@@ -103,6 +120,8 @@ class CharacterCreatorScene(BaseScene):
     def selected_option(self) -> str:
         if self.step == "class":
             return self.selected_class
+        if self.step == "origin":
+            return self.selected_origin_name
         if self.step == "equipment":
             return EQUIPMENT_OPTIONS[self.equipment_index]
         if self.step == "armor":
@@ -124,6 +143,8 @@ class CharacterCreatorScene(BaseScene):
             self._handle_name_key(event)
         elif self.step == "class":
             self._handle_class_key(event.key)
+        elif self.step == "origin":
+            self._handle_origin_key(event.key)
         elif self.step == "equipment":
             self._handle_equipment_key(event.key)
         elif self.step == "armor":
@@ -150,18 +171,20 @@ class CharacterCreatorScene(BaseScene):
         return {
             "name": "1. Nome",
             "class": "2. Classe",
-            "equipment": "3. Equipamentos",
-            "armor": "4. Armadura/Escudo",
-            "power": "5. Poder Especial",
-            "story": "6. Personalidade/Historia",
-            "appearance": "7. Aparencia Basica",
-            "confirm": "8. Confirmacao",
+            "origin": "3. Origem",
+            "equipment": "4. Equipamentos",
+            "armor": "5. Armadura/Escudo",
+            "power": "6. Poder Especial",
+            "story": "7. Personalidade/Historia",
+            "appearance": "8. Aparencia Basica",
+            "confirm": "9. Confirmacao",
         }[self.step]
 
     def step_lines(self) -> list[str]:
         lines_by_step = {
             "name": self.name_lines,
             "class": self.class_lines,
+            "origin": self.origin_lines,
             "equipment": self.equipment_lines,
             "armor": self.armor_lines,
             "power": self.power_lines,
@@ -191,6 +214,20 @@ class CharacterCreatorScene(BaseScene):
             marker = "> " if index == self.class_index else "  "
             lines.append(f"{marker}{name}")
         lines.extend(["", self.class_description(), "Enter/Espaco confirma | ESC volta"])
+        return lines
+
+    def origin_lines(self) -> list[str]:
+        lines = []
+        for index, (_, name) in enumerate(ORIGIN_OPTIONS):
+            marker = "> " if index == self.origin_index else "  "
+            lines.append(f"{marker}{name}")
+        lines.extend(
+            [
+                "",
+                "Origem e identidade narrativa; nao concede bonus mecanico.",
+                "Enter/Espaco confirma | ESC volta",
+            ]
+        )
         return lines
 
     def equipment_lines(self) -> list[str]:
@@ -252,6 +289,7 @@ class CharacterCreatorScene(BaseScene):
         lines = [
             f"Nome: {self.name.strip()}",
             f"Classe: {self.selected_class}",
+            f"Origem: {self.selected_origin_name}",
             "Vida: 25/25",
             f"Armadura: {self.selected_armor}",
             f"Equipamentos: {equipment}",
@@ -304,6 +342,7 @@ class CharacterCreatorScene(BaseScene):
             notes.append(f"poder_especial_bruto: {self.power_text.strip()}")
         if interpretation:
             notes.append(f"poder_especial_interpretado: {json.dumps(interpretation, ensure_ascii=False)}")
+        notes.append(f"origem_personagem: {self.selected_origin_name} ({self.selected_origin_id})")
         if self.story_text.strip():
             notes.append(f"personalidade_historia: {self.story_text.strip()}")
         notes.append(appearance_to_note(self.appearance))
@@ -324,6 +363,9 @@ class CharacterCreatorScene(BaseScene):
             notes=notes,
             tags=["player-created", "game-created"],
             special_systems=special_systems,
+            origin_location_id=self.selected_origin_id,
+            background_summary=self.story_text.strip(),
+            personal_goal="",
         )
         self.context = self.context.with_character(character.id, self.storage)
         self.requested_scene = "overworld"
@@ -381,12 +423,23 @@ class CharacterCreatorScene(BaseScene):
         elif key in {keys.K_UP, keys.K_w}:
             self.class_index = (self.class_index - 1) % len(CLASS_OPTIONS)
         elif key in {keys.K_RETURN, keys.K_SPACE}:
+            self.step = "origin"
+
+    def _handle_origin_key(self, key: int) -> None:
+        keys = self.pygame
+        if key == keys.K_ESCAPE:
+            self.step = "class"
+        elif key in {keys.K_DOWN, keys.K_s}:
+            self.origin_index = (self.origin_index + 1) % len(ORIGIN_OPTIONS)
+        elif key in {keys.K_UP, keys.K_w}:
+            self.origin_index = (self.origin_index - 1) % len(ORIGIN_OPTIONS)
+        elif key in {keys.K_RETURN, keys.K_SPACE}:
             self.step = "equipment"
 
     def _handle_equipment_key(self, key: int) -> None:
         keys = self.pygame
         if key == keys.K_ESCAPE:
-            self.step = "class"
+            self.step = "origin"
         elif key in {keys.K_DOWN, keys.K_s}:
             self.equipment_index = (self.equipment_index + 1) % len(EQUIPMENT_OPTIONS)
         elif key in {keys.K_UP, keys.K_w}:
@@ -437,12 +490,12 @@ class CharacterCreatorScene(BaseScene):
     def _handle_confirm_key(self, key: int) -> None:
         keys = self.pygame
         if key == keys.K_ESCAPE:
-            self.step = "story"
+            self.step = "appearance"
         elif key in {keys.K_DOWN, keys.K_s, keys.K_UP, keys.K_w}:
             self.confirm_index = 1 - self.confirm_index
         elif key in {keys.K_RETURN, keys.K_SPACE}:
             if self.confirm_index == 1:
-                self.step = "story"
+                self.step = "appearance"
                 return
             try:
                 self.create_character_from_selection()
@@ -493,11 +546,13 @@ class CharacterCreatorScene(BaseScene):
         title_surface = self._font.render(title, False, colors.WHITE)
         surface.blit(title_surface, (rect.x + 18, rect.y + 14))
         y = rect.y + 46
-        for line in lines[:12]:
+        max_lines = 14 if self.step == "confirm" else 12
+        line_gap = 20 if self.step == "confirm" else 22
+        for line in lines[:max_lines]:
             color = colors.WHITE if line.startswith("> ") else colors.TEXT_MUTED
             text = self._font.render(line, False, color)
             surface.blit(text, (rect.x + 18, y))
-            y += 22
+            y += line_gap
 
     def _draw_centered(self, surface, font, text: str, y: int, color: tuple[int, int, int]) -> None:
         rendered = font.render(text, False, color)

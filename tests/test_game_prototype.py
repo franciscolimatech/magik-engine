@@ -24,7 +24,7 @@ from src.game.maps.test_map import (
     map_width,
 )
 from src.game.scenes.battle import BattleScene
-from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene
+from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
 from src.game.scenes.main_menu import MainMenuScene
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
@@ -857,6 +857,33 @@ def test_character_creator_armor_only_allows_expected_values() -> None:
     assert [value for value, _ in ARMOR_OPTIONS] == [0, 2, 5]
 
 
+def test_character_creator_has_origin_step() -> None:
+    assert "origin" in CharacterCreatorScene.STEPS
+
+
+def test_character_creator_origin_defaults_to_official_location() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    assert ORIGIN_OPTIONS[0] == ("cidade-de-pedralume", "Cidade de Pedralume")
+    assert scene.selected_origin_id == "cidade-de-pedralume"
+    assert scene.selected_origin_name == "Cidade de Pedralume"
+    assert "Origem e identidade narrativa; nao concede bonus mecanico." in scene.origin_lines()
+
+
+def test_character_creator_origin_navigation_changes_origin() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.step = "origin"
+
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+    assert scene.selected_origin_id == "floresta-viridian"
+
+    scene.handle_event(FakeEvent(FakePygame.K_UP))
+    assert scene.selected_origin_id == "cidade-de-pedralume"
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+    assert scene.step == "equipment"
+
+
 def test_character_creator_has_appearance_step() -> None:
     assert "appearance" in CharacterCreatorScene.STEPS
 
@@ -891,6 +918,15 @@ def test_character_creator_appearance_confirm_goes_to_summary() -> None:
     assert scene.step == "confirm"
 
 
+def test_character_creator_confirmation_back_returns_to_appearance() -> None:
+    scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+    scene.step = "confirm"
+
+    scene.handle_event(FakeEvent(FakePygame.K_ESCAPE))
+
+    assert scene.step == "appearance"
+
+
 def test_character_creator_confirmation_summary_contains_choices() -> None:
     scene = CharacterCreatorScene(
         FakePygame,
@@ -900,6 +936,7 @@ def test_character_creator_confirmation_summary_contains_choices() -> None:
     )
     scene.name = "Lia Nova"
     scene.class_index = 1
+    scene.origin_index = 3
     scene.selected_equipment = {0, 5}
     scene.armor_index = 2
     scene.power_text = "Manipula fios de luz."
@@ -909,6 +946,7 @@ def test_character_creator_confirmation_summary_contains_choices() -> None:
 
     assert "Nome: Lia Nova" in lines
     assert "Classe: Guerreiro" in lines
+    assert "Origem: Floresta do Avesso" in lines
     assert "Armadura: 5" in lines
     assert "Equipamentos: Cajado, Escudo pequeno" in lines
     assert "Poder: Manipula fios de luz." in lines
@@ -928,6 +966,7 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     )
     scene.name = "Lia Nova"
     scene.class_index = 1
+    scene.origin_index = 3
     scene.selected_equipment = {0, 5}
     scene.armor_index = 2
     scene.power_text = "Manipula fios de luz."
@@ -939,6 +978,9 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
 
     assert character.name == "Lia Nova"
     assert character.character_class == "Guerreiro"
+    assert character.origin_location_id == "floresta-do-avesso"
+    assert character.origin_region_id == "pais-de-magik"
+    assert character.background_summary == "Busca uma cidade perdida."
     assert character.equipment == ["Cajado", "Escudo pequeno"]
     assert character.armor == 5
     assert "player-created" in character.tags
@@ -946,6 +988,7 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     assert "Criado pelo jogo 2D" in character.notes
     assert "poder_especial_bruto: Manipula fios de luz." in character.notes
     assert any(note.startswith("poder_especial_interpretado:") for note in character.notes)
+    assert "origem_personagem: Floresta do Avesso (floresta-do-avesso)" in character.notes
     assert "personalidade_historia: Busca uma cidade perdida." in character.notes
     assert appearance_from_notes(character.notes)["hair_color"] == "vermelho"
     assert appearance_from_notes(character.notes)["outfit_color"] == "verde"

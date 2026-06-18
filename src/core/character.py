@@ -7,6 +7,7 @@ import re
 from typing import Any
 
 from src.core.abilities import Ability
+from src.core.world import get_location_by_id
 from src.storage.types import JsonStore
 
 
@@ -32,6 +33,10 @@ class Character:
     chain_debts: int = 0
     last_ikisaki_result: int | None = None
     ikisaki_available: bool = True
+    origin_location_id: str | None = None
+    origin_region_id: str | None = None
+    background_summary: str = ""
+    personal_goal: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
@@ -57,6 +62,10 @@ class Character:
             payload.setdefault("chain_debts", 0)
             payload.setdefault("last_ikisaki_result", None)
             payload.setdefault("ikisaki_available", True)
+            payload.setdefault("origin_location_id", None)
+            payload.setdefault("origin_region_id", None)
+            payload.setdefault("background_summary", "")
+            payload.setdefault("personal_goal", "")
             return cls(**payload)
         except KeyError as exc:
             raise ValueError(f"Ficha de personagem invalida: campo ausente {exc}.") from exc
@@ -198,6 +207,10 @@ def create_character(
     status: list[str] | None = None,
     tags: list[str] | None = None,
     special_systems: list[str] | None = None,
+    origin_location_id: str | None = None,
+    origin_region_id: str | None = None,
+    background_summary: str = "",
+    personal_goal: str = "",
 ) -> Character:
     if not name.strip():
         raise ValueError("Nome do personagem e obrigatorio.")
@@ -215,6 +228,13 @@ def create_character(
             raise ValueError(f"Id de personagem duplicado: {new_id}.")
     else:
         new_id = _unique_character_id(characters, generate_character_id(name))
+    resolved_origin_location_id = _clean_optional_text(origin_location_id)
+    resolved_origin_region_id = _clean_optional_text(origin_region_id)
+    if resolved_origin_location_id is not None:
+        location = get_location_by_id(storage, resolved_origin_location_id)
+        resolved_origin_location_id = location.id
+        if resolved_origin_region_id is None:
+            resolved_origin_region_id = location.region_id
     character = Character(
         id=new_id,
         name=name.strip(),
@@ -228,6 +248,10 @@ def create_character(
         status=status or [],
         tags=tags or [],
         special_systems=special_systems or [],
+        origin_location_id=resolved_origin_location_id,
+        origin_region_id=resolved_origin_region_id,
+        background_summary=background_summary.strip(),
+        personal_goal=personal_goal.strip(),
     )
     characters.append(character)
     save_characters(storage, characters)
@@ -359,3 +383,10 @@ def _normalize_ascii(value: str) -> str:
 
     normalized = unicodedata.normalize("NFKD", value.strip().casefold())
     return "".join(character for character in normalized if not unicodedata.combining(character))
+
+
+def _clean_optional_text(value: str | None) -> str | None:
+    if value is None:
+        return None
+    cleaned = value.strip()
+    return cleaned or None

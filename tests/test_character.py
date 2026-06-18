@@ -14,6 +14,7 @@ from src.core.character import (
     update_character_armor,
     update_character_health,
 )
+from src.core.combat import apply_physical_damage
 from src.storage.json_storage import JSONStorage
 from src.storage.memory import MemoryStorage
 from src.systems.ikisaki import use_shadow_roulette
@@ -87,6 +88,69 @@ def test_create_character_generates_unique_id() -> None:
 
     assert first.id == "lia"
     assert second.id == "lia-2"
+
+
+def test_old_character_without_origin_still_loads() -> None:
+    miko_data = create_miko_meu().to_dict()
+    for field_name in ("origin_location_id", "origin_region_id", "background_summary", "personal_goal"):
+        miko_data.pop(field_name, None)
+    storage = MemoryStorage({"characters.json": {"characters": [miko_data]}})
+
+    character = get_character(storage, "miko-meu")
+
+    assert character.origin_location_id is None
+    assert character.origin_region_id is None
+    assert character.background_summary == ""
+    assert character.personal_goal == ""
+
+
+def test_create_character_can_store_official_origin() -> None:
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+
+    character = create_character(
+        storage,
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        origin_location_id="floresta-do-avesso",
+        background_summary="Nasceu ouvindo arvores que nao deveriam falar.",
+        personal_goal="Descobrir por que a floresta chamou seu nome.",
+    )
+
+    assert character.origin_location_id == "floresta-do-avesso"
+    assert character.origin_region_id == "pais-de-magik"
+    assert character.background_summary == "Nasceu ouvindo arvores que nao deveriam falar."
+    assert character.personal_goal == "Descobrir por que a floresta chamou seu nome."
+
+
+def test_create_character_rejects_invalid_origin_location() -> None:
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+
+    with pytest.raises(ValueError, match="Local oficial nao encontrado"):
+        create_character(
+            storage,
+            name="Lia",
+            character_class="Guia",
+            max_health=20,
+            origin_location_id="lugar-inexistente",
+        )
+
+
+def test_character_origin_does_not_change_combat_rule() -> None:
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    character = create_character(
+        storage,
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        armor=5,
+        origin_location_id="cidade-de-pedralume",
+    )
+
+    result = apply_physical_damage(character.current_health, character.armor, 8)
+
+    assert result.current_health == 20
+    assert result.armor == 0
 
 
 def test_create_character_rejects_duplicate_explicit_id() -> None:
