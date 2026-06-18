@@ -31,10 +31,23 @@ PANEL_LABEL_COLOR = (220, 177, 83)
 PANEL_VALUE_COLOR = (232, 224, 207)
 PANEL_FOOTER_COLOR = (166, 156, 135)
 SELECT_FIELD_BG_COLOR = (13, 15, 22, 174)
-SELECT_FIELD_HOVER_COLOR = (220, 177, 83, 28)
+SELECT_FIELD_HOVER_COLOR = (220, 177, 83, 12)
 SELECT_FIELD_DISABLED_COLOR = (22, 23, 28, 120)
 SELECT_FIELD_BORDER_COLOR = (170, 138, 72, 96)
 SELECT_FIELD_DISABLED_BORDER_COLOR = (120, 112, 96, 54)
+SETTINGS_ACTION_BG_COLOR = (10, 12, 18, 118)
+SETTINGS_ACTION_BORDER_COLOR = (150, 128, 82, 70)
+SELECT_FIELD_PADDING_X = 14
+SELECT_FIELD_PADDING_Y = 5
+SELECT_FIELD_INDICATOR_WIDTH = 28
+SETTINGS_ROW_GAP = 54
+SETTINGS_DROPDOWN_ITEM_HEIGHT = 32
+SETTINGS_DROPDOWN_PADDING = 12
+SETTINGS_DROPDOWN_MAX_VISIBLE = 6
+SETTINGS_FOOTER_CLEARANCE = 58
+SETTINGS_MODAL_BG_COLOR = (5, 6, 10, 246)
+SETTINGS_MODAL_SHADOW_COLOR = (0, 0, 0, 130)
+SETTINGS_MODAL_SCRIM_COLOR = (0, 0, 0, 82)
 GLOBAL_BACKGROUND_OVERLAY_ALPHA = 38
 MENU_BACKDROP_MAX_ALPHA = 165
 
@@ -75,6 +88,8 @@ class MainMenuScene(BaseScene):
         self.resolution_index = self.available_resolutions.index(self.window_resolution)
         self.settings_row_index = 0
         self.settings_dropdown_open: str | None = None
+        self.settings_dropdown_focus_index: int | None = None
+        self.settings_dropdown_visible_start: int | None = None
         self.resolution_dropdown_open = False
         self.error_message = ""
         self.requested_scene: str | None = None
@@ -92,6 +107,8 @@ class MainMenuScene(BaseScene):
         self._settings_hitboxes = []
         self._resolution_option_hitboxes = []
         self._mode_option_hitboxes = []
+        self._settings_dropdown_rect = None
+        self._settings_dropdown_visible_count = 0
 
     @property
     def selected_option(self) -> str:
@@ -116,13 +133,19 @@ class MainMenuScene(BaseScene):
         return requested
 
     def handle_event(self, event) -> None:
+        if event.type == getattr(self.pygame, "MOUSEWHEEL", None):
+            if self.mode == "settings" and self.settings_dropdown_open is not None:
+                self._handle_settings_wheel(getattr(event, "y", 0))
+            return
         if event.type == getattr(self.pygame, "MOUSEMOTION", None):
             if self.mode == "main":
                 self._select_main_option_at(event.pos)
             elif self.mode == "characters":
                 self._select_character_at(event.pos)
             elif self.mode == "settings":
-                if not self._select_settings_dropdown_item_at(event.pos):
+                if self.settings_dropdown_open is not None:
+                    self._focus_settings_dropdown_item_at(event.pos)
+                else:
                     self._select_settings_item_at(event.pos)
             return
         if event.type == getattr(self.pygame, "MOUSEBUTTONDOWN", None):
@@ -209,10 +232,10 @@ class MainMenuScene(BaseScene):
             f"{saved['window_width']}x{saved['window_height']}" if saved is not None else self._resolution_label(self.window_resolution)
         )
         return [
-            ("Modo de tela", display_mode_label(selected_mode)),
+            ("Modo de tela", self._display_mode_menu_label(selected_mode)),
             ("Resolucao", self._resolution_label(selected_resolution)),
             ("Resolucao atual", f"{surface.get_width()}x{surface.get_height()}"),
-            ("Preferencia salva", f"{display_mode_label(self.display_mode)} / {saved_resolution}"),
+            ("Preferencia salva", f"{self._display_mode_menu_label(self.display_mode)} / {saved_resolution}"),
         ]
 
     def select_character(self, index: int) -> bool:
@@ -324,7 +347,13 @@ class MainMenuScene(BaseScene):
         elif key in {keys.K_DOWN, keys.K_s, keys.K_RIGHT, keys.K_d}:
             self._move_settings_dropdown_selection(1)
         elif key in {keys.K_RETURN, keys.K_SPACE, keys.K_e}:
+            self._confirm_settings_dropdown_selection()
             self._close_settings_dropdown()
+
+    def _handle_settings_wheel(self, wheel_y: int) -> None:
+        if wheel_y == 0:
+            return
+        self._move_settings_dropdown_selection(-1 if wheel_y > 0 else 1)
 
     def _change_selected_settings_value(self, delta: int) -> None:
         if self.settings_row_index == 0:
@@ -488,34 +517,16 @@ class MainMenuScene(BaseScene):
         self._settings_hitboxes = []
         self._resolution_option_hitboxes = []
         self._mode_option_hitboxes = []
-        row_gap = 54
+        self._settings_dropdown_rect = None
+        self._settings_dropdown_visible_count = 0
         rows = self._settings_rows()
         y = rect.y + 100
         for index, row in enumerate(rows):
-            selected = index == self.settings_row_index
-            enabled = bool(row["enabled"])
             row_rect = self.pygame.Rect(rect.x + 28, y - 8, rect.width - 56, 44)
-            self._settings_hitboxes.append((index, row_rect))
-            if selected:
-                self.pygame.draw.rect(surface, SELECT_FIELD_HOVER_COLOR, row_rect)
-            label_color = SELECTED_OPTION_COLOR if selected and enabled else (PANEL_LABEL_COLOR if enabled else OPTION_MUTED_COLOR)
-            label_surface = self._small_font.render(str(row["label"]).upper(), True, label_color)
-            surface.blit(label_surface, (rect.x + 34, y + 7))
-            if row["kind"] in {"mode", "resolution"}:
-                self._draw_select_field(
-                    surface,
-                    self.pygame.Rect(rect.x + 252, y - 4, rect.width - 312, 38),
-                    str(row["value"]),
-                    enabled=enabled,
-                    open=self.settings_dropdown_open == row["kind"],
-                )
-            else:
-                button_color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
-                button_surface = self._font.render(str(row["value"]), True, button_color)
-                surface.blit(button_surface, (rect.x + 260, y + 2))
-            y += row_gap
-        self._draw_active_settings_dropdown(surface, rect)
+            self._draw_settings_row(surface, rect, index, row, row_rect, y)
+            y += SETTINGS_ROW_GAP
         self._draw_panel_footer(surface, rect, "Setas/WASD navegam | Enter abre/seleciona | ESC volta | Mouse seleciona")
+        self._draw_active_settings_dropdown(surface, rect)
 
     def _draw_characters_panel(self, surface) -> None:
         rect = self._draw_panel_frame(surface, "Carregar Personagem")
@@ -559,36 +570,80 @@ class MainMenuScene(BaseScene):
         self._draw_labeled_rows(surface, self.pygame.Rect(summary_x, summary_y, rect.right - summary_x - 28, 180), summary_rows, summary_y)
         self._draw_panel_footer(surface, rect, "Enter/Espaco para escolher | ESC para voltar")
 
-    def _draw_select_field(self, surface, field_rect, value: str, *, enabled: bool, open: bool) -> None:
+    def _draw_settings_row(self, surface, rect, index: int, row: dict[str, object], row_rect, y: int) -> None:
+        selected = index == self.settings_row_index
+        enabled = bool(row["enabled"])
+        self._settings_hitboxes.append((index, row_rect))
+        if selected:
+            self.pygame.draw.rect(surface, self._settings_marker_color(enabled), self._settings_selection_marker_rect(row_rect))
+        self._draw_settings_label(surface, rect, row, y, selected=selected, enabled=enabled)
+        if row["kind"] in {"mode", "resolution"}:
+            self._draw_select_field(
+                surface,
+                self._settings_field_rect(rect, index),
+                str(row["value"]),
+                enabled=enabled,
+                open=self.settings_dropdown_open == row["kind"],
+                selected=selected,
+            )
+            return
+        self._draw_settings_action(surface, rect, row, y, selected=selected)
+
+    def _draw_settings_label(self, surface, rect, row: dict[str, object], y: int, *, selected: bool, enabled: bool) -> None:
+        label_color = SELECTED_OPTION_COLOR if selected and enabled else (PANEL_LABEL_COLOR if enabled else OPTION_MUTED_COLOR)
+        label_surface = self._small_font.render(str(row["label"]).upper(), True, label_color)
+        surface.blit(label_surface, (rect.x + 34, y + 7))
+
+    def _draw_settings_action(self, surface, rect, row: dict[str, object], y: int, *, selected: bool) -> None:
+        action_rect = self._settings_action_rect(rect, y)
+        border = SELECTED_OPTION_COLOR if selected else SETTINGS_ACTION_BORDER_COLOR
+        self.pygame.draw.rect(surface, SETTINGS_ACTION_BG_COLOR, action_rect)
+        self.pygame.draw.rect(surface, border, action_rect, width=1)
+        if selected:
+            self.pygame.draw.line(surface, SELECTED_OPTION_COLOR, (action_rect.x + 8, action_rect.bottom - 5), (action_rect.right - 8, action_rect.bottom - 5), width=1)
+        text_color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
+        rendered = self._font.render(str(row["value"]), True, text_color)
+        surface.blit(rendered, (action_rect.x + 14, action_rect.centery - rendered.get_height() // 2))
+
+    def _draw_select_field(self, surface, field_rect, value: str, *, enabled: bool, open: bool, selected: bool = False) -> None:
         fill = SELECT_FIELD_BG_COLOR if enabled else SELECT_FIELD_DISABLED_COLOR
-        border = SELECTED_OPTION_COLOR if open and enabled else (SELECT_FIELD_BORDER_COLOR if enabled else SELECT_FIELD_DISABLED_BORDER_COLOR)
+        border = SELECTED_OPTION_COLOR if (open or selected) and enabled else (SELECT_FIELD_BORDER_COLOR if enabled else SELECT_FIELD_DISABLED_BORDER_COLOR)
         self.pygame.draw.rect(surface, fill, field_rect)
         self.pygame.draw.rect(surface, border, field_rect, width=1)
+        if selected and enabled:
+            self.pygame.draw.line(surface, SELECTED_OPTION_COLOR, (field_rect.x + 8, field_rect.bottom - 5), (field_rect.right - 8, field_rect.bottom - 5), width=1)
         value_color = PANEL_VALUE_COLOR if enabled else OPTION_MUTED_COLOR
-        rendered = self._font.render(value, True, value_color)
-        surface.blit(rendered, (field_rect.x + 14, field_rect.y + 7))
+        font = self._small_font if len(value) > 18 else self._font
+        content_rect = self._select_field_content_rect(field_rect)
+        text = self._fit_text(value, font, content_rect.width)
+        rendered = font.render(text, True, value_color)
+        text_rect = self._select_field_text_rect(text, font, field_rect)
+        surface.blit(rendered, text_rect.topleft)
         indicator = "v" if not open else "^"
         indicator_surface = self._small_font.render(indicator if enabled else "-", True, SELECTED_OPTION_COLOR if enabled else OPTION_MUTED_COLOR)
-        surface.blit(indicator_surface, (field_rect.right - 24, field_rect.y + 10))
+        indicator_rect = indicator_surface.get_rect(center=self._select_field_indicator_rect(field_rect).center)
+        surface.blit(indicator_surface, indicator_rect.topleft)
 
     def _draw_active_settings_dropdown(self, surface, rect) -> None:
         if self.settings_dropdown_open == "mode":
+            self._draw_settings_modal_scrim(surface, rect)
             self._draw_settings_dropdown(
                 surface,
                 rect,
-                row_index=0,
                 items=[(index, self._display_mode_menu_label(mode)) for index, mode in enumerate(DISPLAY_MODES)],
-                selected_index=self.display_mode_index,
+                selected_index=self._current_settings_dropdown_selection(),
                 target="mode",
+                title="Escolher modo de tela",
             )
         elif self.settings_dropdown_open == "resolution" and self._resolution_select_enabled():
+            self._draw_settings_modal_scrim(surface, rect)
             self._draw_settings_dropdown(
                 surface,
                 rect,
-                row_index=1,
                 items=[(index, self._resolution_label(self.available_resolutions[index])) for index in self._resolution_dropdown_indices()],
-                selected_index=self.resolution_index,
+                selected_index=self._current_settings_dropdown_selection(),
                 target="resolution",
+                title="Escolher resolucao",
             )
 
     def _draw_settings_dropdown(
@@ -596,35 +651,58 @@ class MainMenuScene(BaseScene):
         surface,
         rect,
         *,
-        row_index: int,
         items: list[tuple[int, str]],
         selected_index: int,
         target: str,
+        title: str,
     ) -> None:
         if not items:
             return
-        width = max(260, rect.width - 312)
-        x = rect.x + 252
-        y = rect.y + 100 + row_index * 54 + 38
-        visible = items[:8]
-        dropdown = self.pygame.Rect(x, y, width, 32 * len(visible) + 12)
+        dropdown, visible_count = self._settings_dropdown_geometry(rect, len(items))
+        self._settings_dropdown_rect = dropdown
+        self._settings_dropdown_visible_count = visible_count
+        self.settings_dropdown_visible_start = self._clamp_settings_dropdown_visible_start(items, selected_index, visible_count)
+        visible = self._visible_dropdown_items(items, visible_count)
+        shadow = self.pygame.Surface((dropdown.width + 14, dropdown.height + 14), self.pygame.SRCALPHA)
+        shadow.fill(SETTINGS_MODAL_SHADOW_COLOR)
+        surface.blit(shadow, (dropdown.x + 7, dropdown.y + 7))
         panel = self.pygame.Surface((dropdown.width, dropdown.height), self.pygame.SRCALPHA)
-        panel.fill((8, 9, 14, 232))
+        panel.fill(SETTINGS_MODAL_BG_COLOR)
         surface.blit(panel, (dropdown.x, dropdown.y))
         self.pygame.draw.rect(surface, PANEL_BORDER_COLOR, dropdown, width=1)
+        title_surface = self._small_font.render(title.upper(), True, PANEL_LABEL_COLOR)
+        surface.blit(title_surface, (dropdown.x + 18, dropdown.y + 14))
+        divider_y = dropdown.y + 44
+        self.pygame.draw.line(surface, PANEL_DIVIDER_COLOR, (dropdown.x + 14, divider_y), (dropdown.right - 14, divider_y), width=1)
+        has_previous = visible and visible[0][0] != items[0][0]
+        has_next = visible and visible[-1][0] != items[-1][0]
+        if has_previous:
+            up = self._small_font.render("^", True, OPTION_MUTED_COLOR)
+            surface.blit(up, (dropdown.right - 28, dropdown.y + 12))
+        if has_next:
+            down = self._small_font.render("v", True, OPTION_MUTED_COLOR)
+            surface.blit(down, (dropdown.right - 28, dropdown.bottom - 26))
         for position, (item_index, label) in enumerate(visible):
-            option_y = dropdown.y + 8 + position * 32
-            option_rect = self.pygame.Rect(dropdown.x + 8, option_y - 3, dropdown.width - 16, 28)
+            option_y = dropdown.y + 58 + position * SETTINGS_DROPDOWN_ITEM_HEIGHT
+            option_rect = self.pygame.Rect(dropdown.x + 14, option_y - 3, dropdown.width - 28, 28)
             if target == "mode":
                 self._mode_option_hitboxes.append((item_index, option_rect))
             else:
                 self._resolution_option_hitboxes.append((item_index, option_rect))
-            selected = item_index == selected_index
-            if selected:
-                self.pygame.draw.rect(surface, (220, 177, 83, 34), option_rect)
-            color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
-            rendered = self._small_font.render(label, True, color)
-            surface.blit(rendered, (option_rect.x + 8, option_rect.y + 4))
+            self._draw_settings_dropdown_item(surface, option_rect, label, selected=item_index == selected_index)
+
+    def _draw_settings_dropdown_item(self, surface, option_rect, label: str, *, selected: bool) -> None:
+        if selected:
+            self.pygame.draw.rect(surface, SELECTED_OPTION_COLOR, self._settings_dropdown_marker_rect(option_rect))
+            self.pygame.draw.rect(surface, SELECT_FIELD_BORDER_COLOR, option_rect, width=1)
+        color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
+        rendered = self._small_font.render(label, True, color)
+        surface.blit(rendered, (option_rect.x + 12, option_rect.y + 4))
+
+    def _draw_settings_modal_scrim(self, surface, rect) -> None:
+        scrim = self.pygame.Surface((rect.width - 2, rect.height - 2), self.pygame.SRCALPHA)
+        scrim.fill(SETTINGS_MODAL_SCRIM_COLOR)
+        surface.blit(scrim, (rect.x + 1, rect.y + 1))
 
     def _click_panel_at(self, position: tuple[int, int]) -> bool:
         if self._panel_footer_hitbox is not None and self._panel_footer_hitbox.collidepoint(position):
@@ -674,19 +752,76 @@ class MainMenuScene(BaseScene):
         return self._click_panel_at(position)
 
     def _select_settings_dropdown_item_at(self, position: tuple[int, int]) -> bool:
+        index = self._settings_dropdown_index_at(position)
+        if index is not None:
+            self._apply_settings_dropdown_selection(index)
+            return True
+        return False
+
+    def _focus_settings_dropdown_item_at(self, position: tuple[int, int]) -> bool:
+        index = self._settings_dropdown_index_at(position)
+        if index is not None:
+            self.settings_dropdown_focus_index = index
+            return True
+        return False
+
+    def _settings_dropdown_index_at(self, position: tuple[int, int]) -> int | None:
         if self.settings_dropdown_open == "mode":
             for index, rect in self._mode_option_hitboxes:
                 if rect.collidepoint(position):
-                    self.display_mode_index = index
-                    self.settings_row_index = 0
-                    return True
+                    return index
         if self.settings_dropdown_open == "resolution":
             for index, rect in self._resolution_option_hitboxes:
                 if rect.collidepoint(position):
-                    self.resolution_index = index
-                    self.settings_row_index = 1
-                    return True
-        return False
+                    return index
+        return self._settings_dropdown_index_from_geometry(position)
+
+    def _settings_dropdown_index_from_geometry(self, position: tuple[int, int]) -> int | None:
+        if self._settings_dropdown_rect is None or self._settings_dropdown_visible_count <= 0:
+            return None
+        dropdown = self._settings_dropdown_rect
+        if not dropdown.collidepoint(position):
+            return None
+        items = self._current_settings_dropdown_items()
+        if not items:
+            return None
+        visible = self._visible_dropdown_items(items, self._settings_dropdown_visible_count)
+        list_top = dropdown.y + 55
+        relative_y = position[1] - list_top
+        if relative_y < 0:
+            return None
+        visible_position = relative_y // SETTINGS_DROPDOWN_ITEM_HEIGHT
+        if visible_position < 0 or visible_position >= len(visible):
+            return None
+        option_y = dropdown.y + 58 + visible_position * SETTINGS_DROPDOWN_ITEM_HEIGHT
+        option_rect = self.pygame.Rect(dropdown.x + 14, option_y - 3, dropdown.width - 28, 28)
+        if not option_rect.collidepoint(position):
+            return None
+        return visible[visible_position][0]
+
+    def _current_settings_dropdown_items(self) -> list[tuple[int, str]]:
+        if self.settings_dropdown_open == "mode":
+            return [(index, self._display_mode_menu_label(mode)) for index, mode in enumerate(DISPLAY_MODES)]
+        if self.settings_dropdown_open == "resolution" and self._resolution_select_enabled():
+            return [(index, self._resolution_label(self.available_resolutions[index])) for index in self._resolution_dropdown_indices()]
+        return []
+
+    def _current_settings_dropdown_selection(self) -> int:
+        if self.settings_dropdown_focus_index is not None:
+            return self.settings_dropdown_focus_index
+        if self.settings_dropdown_open == "mode":
+            return self.display_mode_index
+        if self.settings_dropdown_open == "resolution":
+            return self.resolution_index
+        return 0
+
+    def _apply_settings_dropdown_selection(self, index: int) -> None:
+        if self.settings_dropdown_open == "mode":
+            self.display_mode_index = index
+            self.settings_row_index = 0
+        elif self.settings_dropdown_open == "resolution" and self._resolution_select_enabled():
+            self.resolution_index = index
+            self.settings_row_index = 1
 
     def _toggle_settings_dropdown(self, dropdown: str) -> None:
         if dropdown == "resolution" and not self._resolution_select_enabled():
@@ -696,19 +831,29 @@ class MainMenuScene(BaseScene):
             self._close_settings_dropdown()
             return
         self.settings_dropdown_open = dropdown
+        self.settings_dropdown_focus_index = self._current_settings_dropdown_selection()
+        self.settings_dropdown_visible_start = None
         self.resolution_dropdown_open = dropdown == "resolution"
 
     def _close_settings_dropdown(self) -> None:
         self.settings_dropdown_open = None
+        self.settings_dropdown_focus_index = None
+        self.settings_dropdown_visible_start = None
         self.resolution_dropdown_open = False
 
     def _move_settings_dropdown_selection(self, delta: int) -> None:
         if self.settings_dropdown_open == "mode":
-            self.display_mode_index = (self.display_mode_index + delta) % len(DISPLAY_MODES)
+            self.settings_dropdown_focus_index = (self._current_settings_dropdown_selection() + delta) % len(DISPLAY_MODES)
         elif self.settings_dropdown_open == "resolution" and self._resolution_select_enabled():
             indices = self._resolution_dropdown_indices()
-            current_position = indices.index(self.resolution_index) if self.resolution_index in indices else 0
-            self.resolution_index = indices[(current_position + delta) % len(indices)]
+            current = self._current_settings_dropdown_selection()
+            current_position = indices.index(current) if current in indices else 0
+            self.settings_dropdown_focus_index = indices[(current_position + delta) % len(indices)]
+        self._ensure_settings_dropdown_focus_visible()
+
+    def _confirm_settings_dropdown_selection(self) -> None:
+        if self.settings_dropdown_focus_index is not None:
+            self._apply_settings_dropdown_selection(self.settings_dropdown_focus_index)
 
     def _settings_rows(self) -> list[dict[str, object]]:
         resolution_enabled = self._resolution_select_enabled()
@@ -743,6 +888,103 @@ class MainMenuScene(BaseScene):
 
     def _resolution_label(self, resolution: tuple[int, int]) -> str:
         return f"{resolution[0]}x{resolution[1]}"
+
+    def _settings_selection_marker_rect(self, row_rect):
+        return self.pygame.Rect(row_rect.x, row_rect.y + 8, 3, row_rect.height - 16)
+
+    def _settings_marker_color(self, enabled: bool):
+        return SELECTED_OPTION_COLOR if enabled else OPTION_MUTED_COLOR
+
+    def _settings_dropdown_marker_rect(self, option_rect):
+        return self.pygame.Rect(option_rect.x + 1, option_rect.y + 5, 3, option_rect.height - 10)
+
+    def _settings_action_rect(self, rect, y: int):
+        return self.pygame.Rect(rect.x + 252, y - 4, rect.width - 312, 38)
+
+    def _settings_field_rect(self, rect, row_index: int):
+        y = rect.y + 100 + row_index * SETTINGS_ROW_GAP
+        return self.pygame.Rect(rect.x + 252, y - 4, rect.width - 312, 38)
+
+    def _select_field_content_rect(self, field_rect):
+        return self.pygame.Rect(
+            field_rect.x + SELECT_FIELD_PADDING_X,
+            field_rect.y + SELECT_FIELD_PADDING_Y,
+            max(1, field_rect.width - SELECT_FIELD_PADDING_X * 2 - SELECT_FIELD_INDICATOR_WIDTH),
+            max(1, field_rect.height - SELECT_FIELD_PADDING_Y * 2),
+        )
+
+    def _select_field_indicator_rect(self, field_rect):
+        return self.pygame.Rect(
+            field_rect.right - SELECT_FIELD_PADDING_X - SELECT_FIELD_INDICATOR_WIDTH,
+            field_rect.y + SELECT_FIELD_PADDING_Y,
+            SELECT_FIELD_INDICATOR_WIDTH,
+            max(1, field_rect.height - SELECT_FIELD_PADDING_Y * 2),
+        )
+
+    def _select_field_text_rect(self, text: str, font, field_rect):
+        content_rect = self._select_field_content_rect(field_rect)
+        rendered_width, rendered_height = font.size(self._fit_text(text, font, content_rect.width))
+        return self.pygame.Rect(
+            content_rect.x,
+            content_rect.centery - rendered_height // 2,
+            min(rendered_width, content_rect.width),
+            rendered_height,
+        )
+
+    def _settings_dropdown_geometry(self, rect, item_count: int):
+        width = _clamp(int(rect.width * 0.58), 340, rect.width - 72)
+        safe_top = rect.y + 90
+        safe_bottom = rect.bottom - SETTINGS_FOOTER_CLEARANCE
+        available_height = max(110, safe_bottom - safe_top)
+        visible_count = self._visible_dropdown_count(item_count, available_height - 58)
+        height = min(available_height, 58 + visible_count * SETTINGS_DROPDOWN_ITEM_HEIGHT + SETTINGS_DROPDOWN_PADDING)
+        x = rect.x + (rect.width - width) // 2
+        y = safe_top + max(0, (available_height - height) // 2)
+        return self.pygame.Rect(x, y, width, height), visible_count
+
+    def _visible_dropdown_count(self, item_count: int, available_height: int) -> int:
+        if item_count <= 0 or available_height < SETTINGS_DROPDOWN_ITEM_HEIGHT + SETTINGS_DROPDOWN_PADDING:
+            return 0
+        fit = (available_height - SETTINGS_DROPDOWN_PADDING) // SETTINGS_DROPDOWN_ITEM_HEIGHT
+        return max(1, min(item_count, SETTINGS_DROPDOWN_MAX_VISIBLE, fit))
+
+    def _visible_dropdown_items(self, items: list[tuple[int, str]], visible_count: int) -> list[tuple[int, str]]:
+        visible_count = max(1, min(len(items), visible_count))
+        start = self.settings_dropdown_visible_start if self.settings_dropdown_visible_start is not None else 0
+        start = max(0, min(start, len(items) - visible_count))
+        return items[start : start + visible_count]
+
+    def _clamp_settings_dropdown_visible_start(self, items: list[tuple[int, str]], selected_index: int, visible_count: int) -> int:
+        visible_count = max(1, min(len(items), visible_count))
+        max_start = max(0, len(items) - visible_count)
+        if self.settings_dropdown_visible_start is None:
+            selected_position = next((position for position, item in enumerate(items) if item[0] == selected_index), 0)
+            return max(0, min(selected_position - visible_count // 2, max_start))
+        return max(0, min(self.settings_dropdown_visible_start, max_start))
+
+    def _ensure_settings_dropdown_focus_visible(self) -> None:
+        items = self._current_settings_dropdown_items()
+        visible_count = max(1, min(len(items), self._settings_dropdown_visible_count)) if items and self._settings_dropdown_visible_count > 0 else 0
+        if not items or visible_count <= 0:
+            return
+        focus = self._current_settings_dropdown_selection()
+        focus_position = next((position for position, item in enumerate(items) if item[0] == focus), None)
+        if focus_position is None:
+            return
+        start = self.settings_dropdown_visible_start if self.settings_dropdown_visible_start is not None else 0
+        if focus_position < start:
+            self.settings_dropdown_visible_start = focus_position
+        elif focus_position >= start + visible_count:
+            self.settings_dropdown_visible_start = focus_position - visible_count + 1
+
+    def _fit_text(self, text: str, font, max_width: int) -> str:
+        if font.size(text)[0] <= max_width:
+            return text
+        suffix = "..."
+        trimmed = text
+        while trimmed and font.size(f"{trimmed}{suffix}")[0] > max_width:
+            trimmed = trimmed[:-1]
+        return f"{trimmed}{suffix}" if trimmed else suffix
 
     def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]):
         x, y = position

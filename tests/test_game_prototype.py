@@ -30,7 +30,15 @@ from src.game.maps.test_map import (
 )
 from src.game.scenes.battle import BattleScene
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
-from src.game.scenes.main_menu import GLOBAL_BACKGROUND_OVERLAY_ALPHA, MENU_BACKDROP_MAX_ALPHA, MainMenuScene
+from src.game.scenes.main_menu import (
+    GLOBAL_BACKGROUND_OVERLAY_ALPHA,
+    MENU_BACKDROP_MAX_ALPHA,
+    OPTION_MUTED_COLOR,
+    SELECT_FIELD_HOVER_COLOR,
+    SETTINGS_MODAL_BG_COLOR,
+    SETTINGS_MODAL_SCRIM_COLOR,
+    MainMenuScene,
+)
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.save import get_game_save
 from src.game.settings import (
@@ -61,6 +69,7 @@ class FakePygame:
     KEYDOWN = 1
     MOUSEMOTION = 15
     MOUSEBUTTONDOWN = 16
+    MOUSEWHEEL = 17
     FULLSCREEN = 32
     NOFRAME = 64
     K_DOWN = 2
@@ -1040,6 +1049,65 @@ def test_main_menu_options_screen_draws_without_error() -> None:
 
     assert ("Modo de tela", "Janela") in scene.display_settings_items(surface)
     assert ("Resolucao", "1280x720") in scene.display_settings_items(surface)
+    assert scene._settings_rows()[0]["value"] == "Janela"
+    assert scene._settings_rows()[1]["value"] == "1280x720"
+    pygame.quit()
+
+
+def test_main_menu_options_select_field_text_stays_inside_box() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    panel_rect = scene._secondary_panel_rect(surface)
+    field_rect = scene._settings_field_rect(panel_rect, 1)
+    content_rect = scene._select_field_content_rect(field_rect)
+    text_rect = scene._select_field_text_rect("1920x1080", scene._font, field_rect)
+    indicator_rect = scene._select_field_indicator_rect(field_rect)
+
+    assert field_rect.contains(content_rect)
+    assert field_rect.contains(text_rect)
+    assert field_rect.contains(indicator_rect)
+    assert text_rect.right < indicator_rect.left
+    assert abs(text_rect.centery - field_rect.centery) <= 1
+    pygame.quit()
+
+
+def test_main_menu_options_hitboxes_follow_drawn_rows() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    panel_rect = scene._secondary_panel_rect(surface)
+    field_rect = scene._settings_field_rect(panel_rect, 0)
+    _, row_rect = scene._settings_hitboxes[0]
+
+    assert row_rect.collidepoint(field_rect.center)
+    assert row_rect.left < field_rect.left
+    assert row_rect.right > field_rect.right
+    pygame.quit()
+
+
+def test_main_menu_options_actions_use_subtle_action_box() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    panel_rect = scene._secondary_panel_rect(surface)
+    action_rect = scene._settings_action_rect(panel_rect, panel_rect.y + 100 + 2 * 54)
+    _, apply_hitbox = scene._settings_hitboxes[2]
+
+    assert apply_hitbox.contains(action_rect)
+    assert action_rect.width == scene._settings_field_rect(panel_rect, 0).width
     pygame.quit()
 
 
@@ -1050,6 +1118,38 @@ def test_main_menu_options_change_display_mode_with_keyboard() -> None:
     scene.handle_event(FakeEvent(FakePygame.K_RIGHT))
 
     assert scene.display_mode_index == 1
+
+
+def test_main_menu_options_keyboard_opens_display_mode_dropdown() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    scene.mode = "settings"
+    scene.settings_row_index = 0
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.display_mode_index == 1
+    assert scene.settings_dropdown_open is None
+    assert scene.resolution_dropdown_open is False
+
+
+def test_main_menu_options_keyboard_opens_resolution_dropdown() -> None:
+    scene = MainMenuScene(
+        FakePygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        available_resolutions=[(1280, 720), (1366, 768), (1600, 900)],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+    scene.handle_event(FakeEvent(FakePygame.K_DOWN))
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.settings_dropdown_open is None
+    assert scene.resolution_index == 2
 
 
 def test_main_menu_options_apply_saves_preference_and_requests_display_change() -> None:
@@ -1133,7 +1233,7 @@ def test_main_menu_options_mouse_can_choose_resolution_and_apply() -> None:
     _, resolution_rect = scene._settings_hitboxes[1]
     scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": resolution_rect.center, "button": 1}))
     scene.draw(surface)
-    _, option_rect = scene._resolution_option_hitboxes[2]
+    _, option_rect = next(item for item in scene._resolution_option_hitboxes if item[0] == 2)
 
     scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": option_rect.center, "button": 1}))
     scene.draw(surface)
@@ -1143,6 +1243,585 @@ def test_main_menu_options_mouse_can_choose_resolution_and_apply() -> None:
     assert load_game_settings(storage)["window_width"] == 1600
     assert load_game_settings(storage)["window_height"] == 900
     assert scene.consume_requested_window_resolution() == (1600, 900)
+    pygame.quit()
+
+
+def test_main_menu_options_mouse_can_choose_display_mode() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, mode_rect = scene._settings_hitboxes[0]
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": mode_rect.center, "button": 1}))
+    scene.draw(surface)
+    _, fullscreen_rect = next(item for item in scene._mode_option_hitboxes if item[0] == 1)
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": fullscreen_rect.center, "button": 1}))
+
+    assert scene.display_mode_index == 1
+    assert scene.settings_dropdown_open is None
+    pygame.quit()
+
+
+def test_main_menu_options_selection_marker_is_subtle() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.settings_row_index = 0
+    scene.draw(surface)
+    _, row_rect = scene._settings_hitboxes[0]
+    marker_rect = scene._settings_selection_marker_rect(row_rect)
+
+    assert marker_rect.width <= 3
+    assert marker_rect.height < row_rect.height
+    assert SELECT_FIELD_HOVER_COLOR[3] <= 16
+    pygame.quit()
+
+
+def test_main_menu_options_dropdown_item_marker_is_subtle() -> None:
+    import pygame
+
+    pygame.init()
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    option_rect = pygame.Rect(100, 100, 260, 28)
+    marker_rect = scene._settings_dropdown_marker_rect(option_rect)
+
+    assert marker_rect.width <= 3
+    assert marker_rect.height < option_rect.height
+    assert option_rect.contains(marker_rect)
+    pygame.quit()
+
+
+def test_main_menu_options_selector_modal_uses_opaque_layer() -> None:
+    assert SETTINGS_MODAL_BG_COLOR[3] >= 230
+    assert SETTINGS_MODAL_SCRIM_COLOR[3] >= 60
+
+
+def test_main_menu_options_resolution_dropdown_stays_inside_panel() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+
+    assert scene._settings_dropdown_rect is not None
+    assert scene._panel_footer_hitbox is not None
+    assert scene._settings_dropdown_rect.bottom < scene._panel_footer_hitbox.top
+    assert scene._settings_dropdown_visible_count <= 6
+    assert len(scene._resolution_option_hitboxes) == scene._settings_dropdown_visible_count
+    pygame.quit()
+
+
+def test_main_menu_options_modal_hover_focuses_display_mode_item_without_closing() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, mode_rect = scene._settings_hitboxes[0]
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": mode_rect.center, "button": 1}))
+    scene.draw(surface)
+    _, fullscreen_rect = next(item for item in scene._mode_option_hitboxes if item[0] == 1)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": fullscreen_rect.center}))
+
+    assert scene.display_mode_index == 0
+    assert scene._current_settings_dropdown_selection() == 1
+    assert scene.settings_dropdown_open == "mode"
+    pygame.quit()
+
+
+def test_main_menu_options_modal_hover_focuses_resolution_item_without_closing() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[(1280, 720), (1366, 768), (1600, 900)],
+    )
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, resolution_rect = scene._settings_hitboxes[1]
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": resolution_rect.center, "button": 1}))
+    scene.draw(surface)
+    _, option_rect = next(item for item in scene._resolution_option_hitboxes if item[0] == 2)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": option_rect.center}))
+
+    assert scene.resolution_index == 0
+    assert scene._current_settings_dropdown_selection() == 2
+    assert scene.settings_dropdown_open == "resolution"
+    pygame.quit()
+
+
+def test_main_menu_options_modal_hover_after_scroll_uses_real_resolution_index() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 7
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+    scene.handle_event(pygame.event.Event(pygame.MOUSEWHEEL, {"y": -1}))
+    scene.draw(surface)
+    _, visible_rect = next(item for item in scene._resolution_option_hitboxes if item[0] == 5)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": visible_rect.center}))
+
+    assert scene.resolution_index == 7
+    assert scene._current_settings_dropdown_selection() == 5
+    assert scene.settings_dropdown_open == "resolution"
+    pygame.quit()
+
+
+def test_main_menu_options_modal_hover_does_not_scroll_resolution_list() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 7
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+    visible_before = [index for index, _ in scene._resolution_option_hitboxes]
+    _, bottom_visible_rect = scene._resolution_option_hitboxes[-1]
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": bottom_visible_rect.center}))
+    scene.draw(surface)
+    visible_after = [index for index, _ in scene._resolution_option_hitboxes]
+
+    assert scene._current_settings_dropdown_selection() == visible_before[-1]
+    assert visible_after == visible_before
+    pygame.quit()
+
+
+def test_main_menu_options_modal_repeated_hover_does_not_scroll_resolution_list() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 7
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+    visible_before = [index for index, _ in scene._resolution_option_hitboxes]
+    first_rect = scene._resolution_option_hitboxes[0][1]
+    last_rect = scene._resolution_option_hitboxes[-1][1]
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": last_rect.center}))
+    scene.draw(surface)
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": first_rect.center}))
+    scene.draw(surface)
+
+    assert [index for index, _ in scene._resolution_option_hitboxes] == visible_before
+    assert scene._current_settings_dropdown_selection() == visible_before[0]
+    pygame.quit()
+
+
+def test_main_menu_options_mouse_wheel_can_scroll_resolution_list_window() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 7
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+    visible_before = [index for index, _ in scene._resolution_option_hitboxes]
+
+    for _ in range(6):
+        scene.handle_event(pygame.event.Event(pygame.MOUSEWHEEL, {"y": -1}))
+    scene.draw(surface)
+
+    assert scene._current_settings_dropdown_selection() == 1
+    assert [index for index, _ in scene._resolution_option_hitboxes] != visible_before
+    assert any(index == 1 for index, _ in scene._resolution_option_hitboxes)
+    pygame.quit()
+
+
+def test_main_menu_options_modal_hover_outside_items_keeps_current_focus() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, mode_rect = scene._settings_hitboxes[0]
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": mode_rect.center, "button": 1}))
+    scene.draw(surface)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": (scene._settings_dropdown_rect.x + 20, scene._settings_dropdown_rect.y + 46)}))
+
+    assert scene.display_mode_index == 0
+    assert scene._current_settings_dropdown_selection() == 0
+    assert scene.settings_dropdown_open == "mode"
+    pygame.quit()
+
+
+def test_main_menu_options_enter_confirms_hovered_dropdown_item() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, mode_rect = scene._settings_hitboxes[0]
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": mode_rect.center, "button": 1}))
+    scene.draw(surface)
+    _, borderless_rect = next(item for item in scene._mode_option_hitboxes if item[0] == 2)
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": borderless_rect.center}))
+
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+
+    assert scene.display_mode_index == 2
+    assert scene.settings_dropdown_open is None
+    pygame.quit()
+
+
+def test_main_menu_options_click_outside_after_hover_closes_without_confirming_focus() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, mode_rect = scene._settings_hitboxes[0]
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": mode_rect.center, "button": 1}))
+    scene.draw(surface)
+    _, fullscreen_rect = next(item for item in scene._mode_option_hitboxes if item[0] == 1)
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": fullscreen_rect.center}))
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": (surface.get_width() - 20, 20), "button": 1}))
+
+    assert scene.display_mode_index == 0
+    assert scene.settings_dropdown_open is None
+    assert scene.settings_dropdown_focus_index is None
+    pygame.quit()
+
+
+def test_main_menu_options_modal_closes_with_escape() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    scene.mode = "settings"
+    scene.settings_row_index = 0
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.settings_dropdown_open == "mode"
+
+    scene.handle_event(FakeEvent(FakePygame.K_ESCAPE))
+
+    assert scene.settings_dropdown_open is None
+    assert scene.mode == "settings"
+
+
+def test_main_menu_options_resolution_dropdown_keeps_selected_item_visible() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 0
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+
+    assert any(index == 0 for index, _ in scene._resolution_option_hitboxes)
+    pygame.quit()
+
+
+def test_main_menu_options_mouse_wheel_scrolls_resolution_modal() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 7
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEWHEEL, {"y": -1}))
+    scene.draw(surface)
+
+    assert scene.resolution_index == 7
+    assert scene._current_settings_dropdown_selection() == 6
+    assert any(index == 6 for index, _ in scene._resolution_option_hitboxes)
+    pygame.quit()
+
+
+def test_main_menu_options_click_after_scroll_selects_visible_resolution() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 7
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEWHEEL, {"y": -1}))
+    scene.draw(surface)
+    _, visible_rect = next(item for item in scene._resolution_option_hitboxes if item[0] == 5)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": visible_rect.center, "button": 1}))
+
+    assert scene.resolution_index == 5
+    assert scene.available_resolutions[scene.resolution_index] == (1366, 768)
+    assert scene.settings_dropdown_open is None
+    pygame.quit()
+
+
+def test_main_menu_options_click_uses_modal_geometry_when_hitboxes_are_stale() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        storage=MemoryStorage(),
+        load_title_background=False,
+        available_resolutions=[
+            (800, 450),
+            (960, 540),
+            (1024, 576),
+            (1152, 648),
+            (1280, 720),
+            (1366, 768),
+            (1600, 900),
+            (1920, 1080),
+        ],
+    )
+    scene.mode = "settings"
+    scene.settings_row_index = 1
+    scene.resolution_index = 6
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+    scene.draw(surface)
+    _, visible_rect = next(item for item in scene._resolution_option_hitboxes if item[0] == 4)
+    scene._resolution_option_hitboxes = []
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": visible_rect.center, "button": 1}))
+
+    assert scene.resolution_index == 4
+    assert scene.settings_dropdown_open is None
+    pygame.quit()
+
+
+def test_main_menu_options_click_outside_closes_dropdown() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.draw(surface)
+    _, mode_rect = scene._settings_hitboxes[0]
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": mode_rect.center, "button": 1}))
+
+    assert scene.settings_dropdown_open == "mode"
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": (surface.get_width() - 20, 20), "button": 1}))
+
+    assert scene.settings_dropdown_open is None
+    pygame.quit()
+
+
+def test_main_menu_options_borderless_disables_resolution_dropdown_without_overwriting_window_choice() -> None:
+    storage = MemoryStorage()
+    scene = MainMenuScene(
+        FakePygame,
+        GameContext(player_name="Miko Meu"),
+        storage=storage,
+        available_resolutions=[(1280, 720), (1366, 768), (1600, 900)],
+    )
+    scene.mode = "settings"
+    scene.resolution_index = 1
+    scene.display_mode_index = 2
+    scene.settings_row_index = 1
+
+    scene.handle_event(FakeEvent(FakePygame.K_RETURN))
+
+    assert scene.settings_dropdown_open is None
+    assert scene._settings_rows()[0]["value"] == "Sem borda"
+    assert scene._settings_rows()[1]["enabled"] is False
+    assert scene._settings_rows()[1]["value"] == "Usa resolucao nativa do monitor"
+    assert scene._settings_marker_color(False) == OPTION_MUTED_COLOR
+
+    scene.apply_display_mode_selection()
+
+    assert load_game_settings(storage)["display_mode"] == DISPLAY_MODE_BORDERLESS
+    assert load_game_settings(storage)["window_width"] == 1366
+    assert load_game_settings(storage)["window_height"] == 768
+
+    scene.display_mode_index = 0
+    assert scene._settings_rows()[1]["value"] == "1366x768"
+
+
+def test_main_menu_options_borderless_resolution_click_does_not_open_modal() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+    scene.display_mode_index = 2
+    scene.draw(surface)
+    _, resolution_rect = scene._settings_hitboxes[1]
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": resolution_rect.center, "button": 1}))
+
+    assert scene.settings_dropdown_open is None
     pygame.quit()
 
 
