@@ -14,6 +14,12 @@ SELECTED_OPTION_COLOR = (220, 177, 83)
 OPTION_COLOR = (218, 210, 190)
 OPTION_MUTED_COLOR = (156, 143, 116)
 TEXT_SHADOW_COLOR = (0, 0, 0)
+PANEL_BG_COLOR = (8, 9, 14, 198)
+PANEL_BORDER_COLOR = (170, 138, 72, 120)
+PANEL_DIVIDER_COLOR = (170, 138, 72, 64)
+PANEL_LABEL_COLOR = (220, 177, 83)
+PANEL_VALUE_COLOR = (232, 224, 207)
+PANEL_FOOTER_COLOR = (166, 156, 135)
 GLOBAL_BACKGROUND_OVERLAY_ALPHA = 38
 MENU_BACKDROP_MAX_ALPHA = 165
 
@@ -46,6 +52,8 @@ class MainMenuScene(BaseScene):
         self.should_quit = False
         self._font = None
         self._menu_font = None
+        self._small_font = None
+        self._panel_title_font = None
         self._font_key: tuple[int, int] | None = None
         self._option_hitboxes = []
 
@@ -88,11 +96,11 @@ class MainMenuScene(BaseScene):
         self._ensure_fonts(surface.get_height())
         self._draw_background(surface)
         if self.mode == "context":
-            self._draw_panel(surface, "Contexto", self.context_lines())
+            self._draw_context_panel(surface)
         elif self.mode == "controls":
-            self._draw_panel(surface, "Controles", self.controls_lines())
+            self._draw_controls_panel(surface)
         elif self.mode == "characters":
-            self._draw_panel(surface, "Carregar Personagem", self.character_lines())
+            self._draw_characters_panel(surface)
         else:
             self._draw_options(surface)
 
@@ -139,6 +147,27 @@ class MainMenuScene(BaseScene):
             "ESC: voltar/sair",
             "",
             "ESC, Enter ou Espaco para voltar",
+        ]
+
+    def context_items(self) -> list[tuple[str, str]]:
+        status = "Com campanha ativa" if self.context.has_campaign_session else "Sem campanha ativa"
+        return [
+            ("Personagem", self.context.player_name),
+            ("Character ID", self.context.character_id),
+            ("Campanha", self.context.campaign_id or "-"),
+            ("Sessao", self.context.campaign_session_id or "-"),
+            ("Local atual", self.context.location_id),
+            ("Mapa inicial", self.context.map_name),
+            ("Status", status),
+        ]
+
+    def controls_items(self) -> list[tuple[str, str]]:
+        return [
+            ("Movimento", "WASD / Setas"),
+            ("Interagir", "E / Espaco"),
+            ("Avancar dialogo", "Enter / Espaco / E"),
+            ("Escolher opcao", "Cima / Baixo"),
+            ("Voltar ou sair", "ESC"),
         ]
 
     def select_character(self, index: int) -> bool:
@@ -227,6 +256,8 @@ class MainMenuScene(BaseScene):
         self._font_key = key
         self._font = self._make_font(_clamp(int(screen_height * 0.036), 24, 34))
         self._menu_font = self._make_font(menu_font_size)
+        self._small_font = self._make_font(_clamp(int(screen_height * 0.028), 18, 24))
+        self._panel_title_font = self._make_font(_clamp(int(screen_height * 0.052), 30, 46))
 
     def _make_font(self, size: int):
         if hasattr(self.pygame.font, "SysFont"):
@@ -280,18 +311,94 @@ class MainMenuScene(BaseScene):
             self.pygame.draw.line(panel, (0, 0, 0, alpha), (column, 0), (column, height))
         surface.blit(panel, (x, y))
 
-    def _draw_panel(self, surface, title: str, lines: list[str]) -> None:
-        rect = self.pygame.Rect(64, 138, surface.get_width() - 128, 300)
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BG, rect)
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BORDER, rect, width=2)
-        title_surface = self._font.render(title, False, colors.WHITE)
-        surface.blit(title_surface, (rect.x + 18, rect.y + 16))
-        y = rect.y + 54
-        for line in lines[:10]:
-            color = colors.WHITE if line.startswith("> ") else colors.TEXT_MUTED
-            text = self._font.render(line, False, color)
-            surface.blit(text, (rect.x + 18, y))
-            y += 24
+    def _secondary_panel_rect(self, surface):
+        width = _clamp(int(surface.get_width() * 0.52), 520, 780)
+        height = _clamp(int(surface.get_height() * 0.58), 330, 470)
+        x = max(42, int(surface.get_width() * 0.08))
+        y = max(54, (surface.get_height() - height) // 2)
+        return self.pygame.Rect(x, y, width, height)
+
+    def _draw_panel_frame(self, surface, title: str):
+        rect = self._secondary_panel_rect(surface)
+        panel = self.pygame.Surface((rect.width, rect.height), self.pygame.SRCALPHA)
+        panel.fill(PANEL_BG_COLOR)
+        surface.blit(panel, (rect.x, rect.y))
+        self.pygame.draw.rect(surface, PANEL_BORDER_COLOR, rect, width=1)
+        self.pygame.draw.line(
+            surface,
+            PANEL_DIVIDER_COLOR,
+            (rect.x + 28, rect.y + 74),
+            (rect.right - 28, rect.y + 74),
+            width=1,
+        )
+        title_surface = self._panel_title_font.render(title, True, PANEL_VALUE_COLOR)
+        surface.blit(title_surface, (rect.x + 28, rect.y + 24))
+        return rect
+
+    def _draw_panel_footer(self, surface, rect, text: str = "ESC, Enter ou Espaco para voltar") -> None:
+        rendered = self._small_font.render(text, True, PANEL_FOOTER_COLOR)
+        surface.blit(rendered, (rect.x + 28, rect.bottom - 38))
+
+    def _draw_labeled_rows(self, surface, rect, rows: list[tuple[str, str]], start_y: int | None = None) -> None:
+        y = start_y if start_y is not None else rect.y + 104
+        label_x = rect.x + 34
+        value_x = rect.x + max(210, int(rect.width * 0.35))
+        row_gap = max(34, int(rect.height * 0.084))
+        for label, value in rows:
+            label_surface = self._small_font.render(label.upper(), True, PANEL_LABEL_COLOR)
+            value_surface = self._font.render(value, True, PANEL_VALUE_COLOR)
+            surface.blit(label_surface, (label_x, y + 4))
+            surface.blit(value_surface, (value_x, y))
+            y += row_gap
+
+    def _draw_context_panel(self, surface) -> None:
+        rect = self._draw_panel_frame(surface, "Contexto Atual")
+        self._draw_labeled_rows(surface, rect, self.context_items())
+        self._draw_panel_footer(surface, rect)
+
+    def _draw_controls_panel(self, surface) -> None:
+        rect = self._draw_panel_frame(surface, "Controles")
+        self._draw_labeled_rows(surface, rect, self.controls_items())
+        self._draw_panel_footer(surface, rect)
+
+    def _draw_characters_panel(self, surface) -> None:
+        rect = self._draw_panel_frame(surface, "Carregar Personagem")
+        characters = self.available_characters()
+        if not characters:
+            message = self._font.render("Nenhum personagem encontrado.", True, PANEL_VALUE_COLOR)
+            surface.blit(message, (rect.x + 34, rect.y + 112))
+            self._draw_panel_footer(surface, rect, "ESC para voltar")
+            return
+
+        list_x = rect.x + 34
+        list_y = rect.y + 104
+        list_gap = max(32, int(rect.height * 0.078))
+        for index, character in enumerate(characters[:8]):
+            selected = index == self.character_index
+            name = character.name.upper() if selected else character.name
+            marker = "> " if selected else "  "
+            color = SELECTED_OPTION_COLOR if selected else OPTION_COLOR
+            rendered = self._font.render(f"{marker}{name}", True, color)
+            surface.blit(rendered, (list_x, list_y + index * list_gap))
+
+        selected = characters[max(0, min(self.character_index, len(characters) - 1))]
+        summary_x = rect.x + int(rect.width * 0.53)
+        summary_y = rect.y + 106
+        self.pygame.draw.line(
+            surface,
+            PANEL_DIVIDER_COLOR,
+            (summary_x - 24, rect.y + 96),
+            (summary_x - 24, rect.bottom - 64),
+            width=1,
+        )
+        summary_rows = [
+            ("Nome", selected.name),
+            ("ID", selected.id),
+            ("Classe", selected.character_class),
+            ("Origem", selected.origin_location_id or "-"),
+        ]
+        self._draw_labeled_rows(surface, self.pygame.Rect(summary_x, summary_y, rect.right - summary_x - 28, 180), summary_rows, summary_y)
+        self._draw_panel_footer(surface, rect, "Enter/Espaco para escolher | ESC para voltar")
 
     def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]):
         x, y = position

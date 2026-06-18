@@ -1352,6 +1352,67 @@ def test_main_menu_draws_without_background_image() -> None:
     pygame.quit()
 
 
+def test_main_menu_draws_context_panel_without_error() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    context = GameContext(
+        character_id="miko-meu",
+        player_name="Miko Meu",
+        campaign_id="campanha",
+        campaign_session_id="sessao-1",
+    )
+    scene = MainMenuScene(pygame, context, load_title_background=False)
+    scene.mode = "context"
+
+    scene.draw(surface)
+
+    rect = scene._secondary_panel_rect(surface)
+    assert rect.width < surface.get_width()
+    assert rect.height < surface.get_height()
+    pygame.quit()
+
+
+def test_main_menu_draws_controls_panel_without_error() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), load_title_background=False)
+    scene.mode = "controls"
+
+    scene.draw(surface)
+
+    assert ("Movimento", "WASD / Setas") in scene.controls_items()
+    pygame.quit()
+
+
+def test_main_menu_draws_character_loading_panel_without_error() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    other = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=1,
+        origin_location_id="floresta-do-avesso",
+    )
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict(), other.to_dict()]}})
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=storage, load_title_background=False)
+    scene.mode = "characters"
+    scene.character_index = 1
+
+    scene.draw(surface)
+
+    assert scene.selected_option == "Lia"
+    pygame.quit()
+
+
 def test_main_menu_draws_with_fake_background_image() -> None:
     import pygame
 
