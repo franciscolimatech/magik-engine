@@ -7,7 +7,7 @@ import os
 from src.core.character import Character, MIKO_ID, get_character
 from src.game.entities.creature import Creature
 from src.game.game_context import DATA_PATH, GameContext, load_player_name as load_context_player_name
-from src.game.settings import FPS, SCREEN_HEIGHT, SCREEN_WIDTH, WINDOW_TITLE
+from src.game.settings import FPS, WINDOW_TITLE, get_game_resolution
 from src.storage.json_storage import JSONStorage
 from src.storage.types import JsonStore
 
@@ -28,7 +28,7 @@ def run_game(max_frames: int | None = None) -> None:
     context = GameContext.from_env(storage=storage)
     pygame.init()
     pygame.key.set_repeat(0)
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode(get_game_resolution())
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
     scene = MainMenuScene(pygame, context, storage=storage)

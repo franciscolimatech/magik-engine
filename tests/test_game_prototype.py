@@ -33,6 +33,7 @@ from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorSce
 from src.game.scenes.main_menu import MainMenuScene
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.save import get_game_save
+from src.game.settings import SCREEN_HEIGHT, SCREEN_WIDTH, get_game_resolution
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
@@ -1242,6 +1243,43 @@ def test_main_menu_draws_with_fake_background_image() -> None:
 
     assert scene.title_background is background
     pygame.quit()
+
+
+def test_game_resolution_uses_default_without_env() -> None:
+    assert get_game_resolution({}) == (SCREEN_WIDTH, SCREEN_HEIGHT)
+
+
+def test_game_resolution_accepts_1366x768() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1366", "MAGIK_GAME_HEIGHT": "768"}) == (1366, 768)
+
+
+def test_game_resolution_accepts_1920x1080() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1920", "MAGIK_GAME_HEIGHT": "1080"}) == (1920, 1080)
+
+
+def test_game_resolution_invalid_values_use_default() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "abc", "MAGIK_GAME_HEIGHT": "768"}) == (
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+    )
+
+
+def test_game_resolution_missing_dimension_uses_default() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1366"}) == (SCREEN_WIDTH, SCREEN_HEIGHT)
+
+
+def test_game_resolution_too_small_values_use_default() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "799", "MAGIK_GAME_HEIGHT": "449"}) == (
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+    )
+
+
+def test_game_resolution_too_large_values_use_default() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "3841", "MAGIK_GAME_HEIGHT": "2161"}) == (
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+    )
 
 
 def test_max_frames_from_env_still_supports_smoke_test(monkeypatch) -> None:
