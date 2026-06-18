@@ -46,6 +46,7 @@ class MainMenuScene(BaseScene):
         self._font = None
         self._menu_font = None
         self._font_key: tuple[int, int] | None = None
+        self._option_hitboxes = []
 
     @property
     def selected_option(self) -> str:
@@ -60,6 +61,14 @@ class MainMenuScene(BaseScene):
         return requested
 
     def handle_event(self, event) -> None:
+        if event.type == getattr(self.pygame, "MOUSEMOTION", None):
+            if self.mode == "main":
+                self._select_main_option_at(event.pos)
+            return
+        if event.type == getattr(self.pygame, "MOUSEBUTTONDOWN", None):
+            if self.mode == "main" and getattr(event, "button", None) == 1 and self._select_main_option_at(event.pos):
+                self._confirm_main_selection()
+            return
         if event.type != self.pygame.KEYDOWN:
             return
         if self.mode == "context":
@@ -169,6 +178,13 @@ class MainMenuScene(BaseScene):
         elif option == "Sair":
             self.should_quit = True
 
+    def _select_main_option_at(self, position: tuple[int, int]) -> bool:
+        for index, rect in self._option_hitboxes:
+            if rect.collidepoint(position):
+                self.selected_index = index
+                return True
+        return False
+
     def _handle_characters_key(self, key: int) -> None:
         keys = self.pygame
         characters = self.available_characters()
@@ -226,13 +242,15 @@ class MainMenuScene(BaseScene):
     def _draw_options(self, surface) -> None:
         layout = self._menu_layout(surface.get_width(), surface.get_height())
         self._draw_menu_backdrop(surface, layout)
+        self._option_hitboxes = []
         for index, option in enumerate(self.OPTIONS):
             selected = index == self.selected_index
             marker = "> " if selected else "  "
             label = f"{marker}{option.upper()}"
             color = SELECTED_OPTION_COLOR if selected else OPTION_COLOR
             y = layout["y"] + index * layout["gap"]
-            self._draw_text_shadow(surface, self._menu_font, label, (layout["x"], y), color)
+            rect = self._draw_text_shadow(surface, self._menu_font, label, (layout["x"], y), color)
+            self._option_hitboxes.append((index, rect.inflate(18, 12)))
 
     def _draw_menu_backdrop(self, surface, layout: dict[str, int]) -> None:
         width = min(int(surface.get_width() * 0.42), 680)
@@ -258,12 +276,13 @@ class MainMenuScene(BaseScene):
             surface.blit(text, (rect.x + 18, y))
             y += 24
 
-    def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]) -> None:
+    def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]):
         x, y = position
         shadow = font.render(text, True, TEXT_SHADOW_COLOR)
         surface.blit(shadow, (x + 3, y + 3))
         rendered = font.render(text, True, color)
         surface.blit(rendered, (x, y))
+        return rendered.get_rect(topleft=(x, y))
 
 
 def _clamp(value: int, minimum: int, maximum: int) -> int:

@@ -46,6 +46,8 @@ from src.storage.memory import MemoryStorage
 
 class FakePygame:
     KEYDOWN = 1
+    MOUSEMOTION = 15
+    MOUSEBUTTONDOWN = 16
     K_DOWN = 2
     K_s = 3
     K_UP = 4
@@ -798,6 +800,71 @@ def test_main_menu_start_game_requests_overworld() -> None:
 
     assert scene.consume_requested_scene() == "overworld"
     assert scene.consume_requested_scene() is None
+
+
+def test_main_menu_mouse_motion_selects_hovered_option() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), load_title_background=False)
+    scene.draw(surface)
+    _, new_game_rect = scene._option_hitboxes[1]
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEMOTION, {"pos": new_game_rect.center}))
+
+    assert scene.selected_option == "Novo Jogo"
+    pygame.quit()
+
+
+def test_main_menu_left_click_executes_hovered_option() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), load_title_background=False)
+    scene.draw(surface)
+    _, new_game_rect = scene._option_hitboxes[1]
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": new_game_rect.center, "button": 1}))
+
+    assert scene.consume_requested_scene() == "character_creator"
+    pygame.quit()
+
+
+def test_main_menu_click_outside_options_does_nothing() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), load_title_background=False)
+    scene.draw(surface)
+
+    scene.handle_event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {"pos": (surface.get_width() - 10, 10), "button": 1}))
+
+    assert scene.consume_requested_scene() is None
+    assert scene.should_quit is False
+    assert scene.selected_option == "Continuar"
+    pygame.quit()
+
+
+def test_main_menu_hitboxes_recalculate_with_resolution() -> None:
+    import pygame
+
+    pygame.init()
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), load_title_background=False)
+    small_surface = pygame.Surface((800, 450))
+    large_surface = pygame.Surface((1600, 900))
+
+    scene.draw(small_surface)
+    small_first_rect = scene._option_hitboxes[0][1].copy()
+    scene.draw(large_surface)
+    large_first_rect = scene._option_hitboxes[0][1].copy()
+
+    assert large_first_rect.x > small_first_rect.x
+    assert large_first_rect.y > small_first_rect.y
+    assert large_first_rect.height >= small_first_rect.height
+    pygame.quit()
 
 
 def test_main_menu_exit_requests_quit() -> None:
