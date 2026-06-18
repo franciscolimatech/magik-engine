@@ -33,7 +33,12 @@ from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorSce
 from src.game.scenes.main_menu import MainMenuScene
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.save import get_game_save
-from src.game.settings import SCREEN_HEIGHT, SCREEN_WIDTH, get_game_resolution
+from src.game.settings import (
+    FALLBACK_WINDOW_HEIGHT,
+    FALLBACK_WINDOW_WIDTH,
+    calculate_auto_window_size,
+    get_game_resolution,
+)
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
@@ -1245,40 +1250,64 @@ def test_main_menu_draws_with_fake_background_image() -> None:
     pygame.quit()
 
 
-def test_game_resolution_uses_default_without_env() -> None:
-    assert get_game_resolution({}) == (SCREEN_WIDTH, SCREEN_HEIGHT)
+def test_game_resolution_uses_final_fallback_without_env_or_display() -> None:
+    assert get_game_resolution({}) == (FALLBACK_WINDOW_WIDTH, FALLBACK_WINDOW_HEIGHT)
 
 
 def test_game_resolution_accepts_1366x768() -> None:
-    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1366", "MAGIK_GAME_HEIGHT": "768"}) == (1366, 768)
+    assert get_game_resolution(
+        {"MAGIK_GAME_WIDTH": "1366", "MAGIK_GAME_HEIGHT": "768"},
+        display_size=(1920, 1080),
+    ) == (1366, 768)
 
 
 def test_game_resolution_accepts_1920x1080() -> None:
-    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1920", "MAGIK_GAME_HEIGHT": "1080"}) == (1920, 1080)
+    assert get_game_resolution(
+        {"MAGIK_GAME_WIDTH": "1920", "MAGIK_GAME_HEIGHT": "1080"},
+        display_size=(1366, 768),
+    ) == (1920, 1080)
 
 
-def test_game_resolution_invalid_values_use_default() -> None:
-    assert get_game_resolution({"MAGIK_GAME_WIDTH": "abc", "MAGIK_GAME_HEIGHT": "768"}) == (
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
+def test_game_resolution_uses_auto_size_when_display_is_known() -> None:
+    assert get_game_resolution({}, display_size=(1920, 1080)) == (1728, 972)
+
+
+def test_auto_window_size_for_1366x768_is_proportional_and_fits_monitor() -> None:
+    width, height = calculate_auto_window_size(1366, 768)
+
+    assert width <= 1366
+    assert height <= 768
+    assert width >= 1200
+    assert height >= 675
+    assert abs((width / height) - (16 / 9)) < 0.01
+
+
+def test_auto_window_size_invalid_monitor_uses_final_fallback() -> None:
+    assert calculate_auto_window_size(0, 0) == (FALLBACK_WINDOW_WIDTH, FALLBACK_WINDOW_HEIGHT)
+
+
+def test_game_resolution_invalid_manual_values_use_auto_when_available() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "abc", "MAGIK_GAME_HEIGHT": "768"}, display_size=(1280, 720)) == (
+        1152,
+        648,
     )
 
 
-def test_game_resolution_missing_dimension_uses_default() -> None:
-    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1366"}) == (SCREEN_WIDTH, SCREEN_HEIGHT)
+def test_game_resolution_missing_dimension_uses_auto_when_available() -> None:
+    assert get_game_resolution({"MAGIK_GAME_WIDTH": "1366"}, display_size=(1280, 720)) == (1152, 648)
 
 
-def test_game_resolution_too_small_values_use_default() -> None:
+def test_game_resolution_too_small_values_use_fallback_without_display() -> None:
     assert get_game_resolution({"MAGIK_GAME_WIDTH": "799", "MAGIK_GAME_HEIGHT": "449"}) == (
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
+        FALLBACK_WINDOW_WIDTH,
+        FALLBACK_WINDOW_HEIGHT,
     )
 
 
-def test_game_resolution_too_large_values_use_default() -> None:
+def test_game_resolution_too_large_values_use_fallback_without_display() -> None:
     assert get_game_resolution({"MAGIK_GAME_WIDTH": "3841", "MAGIK_GAME_HEIGHT": "2161"}) == (
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
+        FALLBACK_WINDOW_WIDTH,
+        FALLBACK_WINDOW_HEIGHT,
     )
 
 

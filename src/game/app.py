@@ -28,7 +28,7 @@ def run_game(max_frames: int | None = None) -> None:
     context = GameContext.from_env(storage=storage)
     pygame.init()
     pygame.key.set_repeat(0)
-    screen = pygame.display.set_mode(get_game_resolution())
+    screen = pygame.display.set_mode(get_game_resolution(display_size=_detect_display_size(pygame)))
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
     scene = MainMenuScene(pygame, context, storage=storage)
@@ -114,6 +114,18 @@ def _persist_scene_state(scene) -> None:
     persist = getattr(scene, "persist_state", None)
     if persist is not None:
         persist()
+
+
+def _detect_display_size(pygame) -> tuple[int, int] | None:
+    try:
+        info = pygame.display.Info()
+        width = int(getattr(info, "current_w", 0))
+        height = int(getattr(info, "current_h", 0))
+    except Exception:
+        return None
+    if width <= 0 or height <= 0:
+        return None
+    return width, height
 
 
 def _max_frames_from_env() -> int | None:
