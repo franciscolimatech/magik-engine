@@ -9,10 +9,13 @@ from src.game.save import DEFAULT_SAVE_ID, sync_game_save_context
 from src.game.scenes.base import BaseScene
 from src.game.settings import (
     DISPLAY_MODES,
+    choose_window_resolution,
     display_mode_label,
     get_game_display_mode,
+    get_window_resolution,
+    load_game_settings,
     normalize_display_mode,
-    save_game_display_mode,
+    save_game_display_preferences,
 )
 from src.storage.types import JsonStore
 
@@ -32,7 +35,7 @@ MENU_BACKDROP_MAX_ALPHA = 165
 
 
 class MainMenuScene(BaseScene):
-    OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Ver Contexto", "Controles", "Opcoes", "Sair")
+    OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Controles", "Opcoes", "Sair")
 
     def __init__(
         self,
@@ -43,6 +46,8 @@ class MainMenuScene(BaseScene):
         title_background=None,
         load_title_background: bool = True,
         display_mode: str | None = None,
+        window_resolution: tuple[int, int] | None = None,
+        available_resolutions: list[tuple[int, int]] | None = None,
     ) -> None:
         self.pygame = pygame
         self.context = context
@@ -57,9 +62,18 @@ class MainMenuScene(BaseScene):
         self.mode = "main"
         self.display_mode = normalize_display_mode(display_mode or get_game_display_mode(storage=storage))
         self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
+        self.available_resolutions = list(available_resolutions or [(1280, 720)])
+        self.window_resolution = choose_window_resolution(
+            window_resolution or get_window_resolution(storage=storage),
+            self.available_resolutions,
+        )
+        self.resolution_index = self.available_resolutions.index(self.window_resolution)
+        self.settings_row_index = 0
+        self.resolution_dropdown_open = False
         self.error_message = ""
         self.requested_scene: str | None = None
         self.requested_display_mode: str | None = None
+        self.requested_window_resolution: tuple[int, int] | None = None
         self.should_quit = False
         self._font = None
         self._menu_font = None
@@ -67,6 +81,10 @@ class MainMenuScene(BaseScene):
         self._panel_title_font = None
         self._font_key: tuple[int, int] | None = None
         self._option_hitboxes = []
+        self._panel_footer_hitbox = None
+        self._character_hitboxes = []
+        self._settings_hitboxes = []
+        self._resolution_option_hitboxes = []
 
     @property
     def selected_option(self) -> str:
@@ -85,20 +103,33 @@ class MainMenuScene(BaseScene):
         self.requested_display_mode = None
         return requested
 
+    def consume_requested_window_resolution(self) -> tuple[int, int] | None:
+        requested = self.requested_window_resolution
+        self.requested_window_resolution = None
+        return requested
+
     def handle_event(self, event) -> None:
         if event.type == getattr(self.pygame, "MOUSEMOTION", None):
             if self.mode == "main":
                 self._select_main_option_at(event.pos)
+            elif self.mode == "characters":
+                self._select_character_at(event.pos)
+            elif self.mode == "settings":
+                self._select_settings_item_at(event.pos)
             return
         if event.type == getattr(self.pygame, "MOUSEBUTTONDOWN", None):
             if self.mode == "main" and getattr(event, "button", None) == 1 and self._select_main_option_at(event.pos):
                 self._confirm_main_selection()
+            elif self.mode == "controls" and getattr(event, "button", None) == 1:
+                self._click_panel_at(event.pos)
+            elif self.mode == "characters" and getattr(event, "button", None) == 1:
+                self._click_characters_at(event.pos)
+            elif self.mode == "settings" and getattr(event, "button", None) == 1:
+                self._click_settings_at(event.pos)
             return
         if event.type != self.pygame.KEYDOWN:
             return
-        if self.mode == "context":
-            self._handle_panel_key(event.key)
-        elif self.mode == "controls":
+        if self.mode == "controls":
             self._handle_panel_key(event.key)
         elif self.mode == "characters":
             self._handle_characters_key(event.key)
@@ -113,9 +144,7 @@ class MainMenuScene(BaseScene):
     def draw(self, surface) -> None:
         self._ensure_fonts(surface.get_height())
         self._draw_background(surface)
-        if self.mode == "context":
-            self._draw_context_panel(surface)
-        elif self.mode == "controls":
+        if self.mode == "controls":
             self._draw_controls_panel(surface)
         elif self.mode == "characters":
             self._draw_characters_panel(surface)
@@ -144,20 +173,6 @@ class MainMenuScene(BaseScene):
         lines.append("Enter/Espaco para escolher | ESC para voltar")
         return lines
 
-    def context_lines(self) -> list[str]:
-        status = "Com campanha ativa" if self.context.has_campaign_session else "Sem campanha ativa"
-        return [
-            f"Personagem: {self.context.player_name}",
-            f"Character ID: {self.context.character_id}",
-            f"Campaign ID: {self.context.campaign_id or '-'}",
-            f"Session ID: {self.context.campaign_session_id or '-'}",
-            f"Location ID: {self.context.location_id}",
-            f"Mapa inicial: {self.context.map_name}",
-            f"Status: {status}",
-            "",
-            "ESC, Enter ou Espaco para voltar",
-        ]
-
     def controls_lines(self) -> list[str]:
         return [
             "WASD/setas: mover",
@@ -167,18 +182,6 @@ class MainMenuScene(BaseScene):
             "ESC: voltar/sair",
             "",
             "ESC, Enter ou Espaco para voltar",
-        ]
-
-    def context_items(self) -> list[tuple[str, str]]:
-        status = "Com campanha ativa" if self.context.has_campaign_session else "Sem campanha ativa"
-        return [
-            ("Personagem", self.context.player_name),
-            ("Character ID", self.context.character_id),
-            ("Campanha", self.context.campaign_id or "-"),
-            ("Sessao", self.context.campaign_session_id or "-"),
-            ("Local atual", self.context.location_id),
-            ("Mapa inicial", self.context.map_name),
-            ("Status", status),
         ]
 
     def controls_items(self) -> list[tuple[str, str]]:
@@ -192,10 +195,16 @@ class MainMenuScene(BaseScene):
 
     def display_settings_items(self, surface) -> list[tuple[str, str]]:
         selected_mode = DISPLAY_MODES[self.display_mode_index]
+        selected_resolution = self.available_resolutions[self.resolution_index]
+        saved = load_game_settings(self.storage) if self.storage is not None else None
+        saved_resolution = (
+            f"{saved['window_width']}x{saved['window_height']}" if saved is not None else self._resolution_label(self.window_resolution)
+        )
         return [
             ("Modo de tela", display_mode_label(selected_mode)),
+            ("Resolucao", self._resolution_label(selected_resolution)),
             ("Resolucao atual", f"{surface.get_width()}x{surface.get_height()}"),
-            ("Preferencia salva", display_mode_label(self.display_mode)),
+            ("Preferencia salva", f"{display_mode_label(self.display_mode)} / {saved_resolution}"),
         ]
 
     def select_character(self, index: int) -> bool:
@@ -245,8 +254,6 @@ class MainMenuScene(BaseScene):
         elif option == "Carregar Personagem":
             self.mode = "characters"
             self.character_index = 0
-        elif option == "Ver Contexto":
-            self.mode = "context"
         elif option == "Controles":
             self.mode = "controls"
         elif option == "Opcoes":
@@ -282,26 +289,70 @@ class MainMenuScene(BaseScene):
     def _handle_settings_key(self, key: int) -> None:
         keys = self.pygame
         if key == keys.K_ESCAPE:
-            self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
+            if self.resolution_dropdown_open:
+                self.resolution_dropdown_open = False
+                return
+            self._reset_pending_display_preferences()
             self.mode = "main"
-        elif key in {keys.K_LEFT, keys.K_a, keys.K_UP, keys.K_w}:
-            self.display_mode_index = (self.display_mode_index - 1) % len(DISPLAY_MODES)
-        elif key in {keys.K_RIGHT, keys.K_d, keys.K_DOWN, keys.K_s}:
-            self.display_mode_index = (self.display_mode_index + 1) % len(DISPLAY_MODES)
+        elif key in {keys.K_UP, keys.K_w}:
+            self.settings_row_index = (self.settings_row_index - 1) % 4
+            self.resolution_dropdown_open = False
+        elif key in {keys.K_DOWN, keys.K_s}:
+            self.settings_row_index = (self.settings_row_index + 1) % 4
+            self.resolution_dropdown_open = False
+        elif key in {keys.K_LEFT, keys.K_a}:
+            self._change_selected_settings_value(-1)
+        elif key in {keys.K_RIGHT, keys.K_d}:
+            self._change_selected_settings_value(1)
         elif key in {keys.K_RETURN, keys.K_SPACE, keys.K_e}:
+            self._confirm_settings_row()
+
+    def _change_selected_settings_value(self, delta: int) -> None:
+        if self.settings_row_index == 0:
+            self.display_mode_index = (self.display_mode_index - 1) % len(DISPLAY_MODES)
+            if delta > 0:
+                self.display_mode_index = (self.display_mode_index + 2) % len(DISPLAY_MODES)
+        elif self.settings_row_index == 1:
+            self.resolution_index = (self.resolution_index + delta) % len(self.available_resolutions)
+
+    def _confirm_settings_row(self) -> None:
+        if self.settings_row_index == 0:
+            self.display_mode_index = (self.display_mode_index + 1) % len(DISPLAY_MODES)
+        elif self.settings_row_index == 1:
+            self.resolution_dropdown_open = not self.resolution_dropdown_open
+        elif self.settings_row_index == 2:
             self.apply_display_mode_selection()
+        elif self.settings_row_index == 3:
+            self._reset_pending_display_preferences()
+            self.mode = "main"
 
     def apply_display_mode_selection(self) -> str:
         selected_mode = DISPLAY_MODES[self.display_mode_index]
+        selected_resolution = self.available_resolutions[self.resolution_index]
         self.display_mode = selected_mode
+        self.window_resolution = selected_resolution
         if self.storage is not None:
             try:
-                self.display_mode = save_game_display_mode(self.storage, selected_mode)
+                settings = save_game_display_preferences(self.storage, selected_mode, selected_resolution)
+                self.display_mode = settings["display_mode"]
+                self.window_resolution = (settings["window_width"], settings["window_height"])
             except Exception as exc:  # noqa: BLE001 - display preference must not crash the menu.
                 print(f"[MAGIK Game] Nao foi possivel salvar configuracao de tela: {exc}")
         self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
+        self.resolution_index = self.available_resolutions.index(
+            choose_window_resolution(self.window_resolution, self.available_resolutions)
+        )
         self.requested_display_mode = self.display_mode
+        self.requested_window_resolution = self.window_resolution
+        self.resolution_dropdown_open = False
         return self.display_mode
+
+    def _reset_pending_display_preferences(self) -> None:
+        self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
+        self.resolution_index = self.available_resolutions.index(
+            choose_window_resolution(self.window_resolution, self.available_resolutions)
+        )
+        self.resolution_dropdown_open = False
 
     def _ensure_fonts(self, screen_height: int = 480) -> None:
         menu_font_size = self._menu_font_size(screen_height)
@@ -392,7 +443,9 @@ class MainMenuScene(BaseScene):
 
     def _draw_panel_footer(self, surface, rect, text: str = "ESC, Enter ou Espaco para voltar") -> None:
         rendered = self._small_font.render(text, True, PANEL_FOOTER_COLOR)
-        surface.blit(rendered, (rect.x + 28, rect.bottom - 38))
+        position = (rect.x + 28, rect.bottom - 38)
+        surface.blit(rendered, position)
+        self._panel_footer_hitbox = rendered.get_rect(topleft=position).inflate(18, 14)
 
     def _draw_labeled_rows(self, surface, rect, rows: list[tuple[str, str]], start_y: int | None = None) -> None:
         y = start_y if start_y is not None else rect.y + 104
@@ -406,11 +459,6 @@ class MainMenuScene(BaseScene):
             surface.blit(value_surface, (value_x, y))
             y += row_gap
 
-    def _draw_context_panel(self, surface) -> None:
-        rect = self._draw_panel_frame(surface, "Contexto Atual")
-        self._draw_labeled_rows(surface, rect, self.context_items())
-        self._draw_panel_footer(surface, rect)
-
     def _draw_controls_panel(self, surface) -> None:
         rect = self._draw_panel_frame(surface, "Controles")
         self._draw_labeled_rows(surface, rect, self.controls_items())
@@ -418,11 +466,32 @@ class MainMenuScene(BaseScene):
 
     def _draw_settings_panel(self, surface) -> None:
         rect = self._draw_panel_frame(surface, "Opcoes")
-        self._draw_labeled_rows(surface, rect, self.display_settings_items(surface))
-        selected_mode = DISPLAY_MODES[self.display_mode_index]
-        hint = self._font.render(f"< {display_mode_label(selected_mode)} >", True, SELECTED_OPTION_COLOR)
-        surface.blit(hint, (rect.x + 34, rect.y + 238))
-        self._draw_panel_footer(surface, rect, "Esquerda/direita altera | Enter aplica | ESC volta")
+        self._settings_hitboxes = []
+        self._resolution_option_hitboxes = []
+        rows = [
+            ("Modo de tela", f"< {display_mode_label(DISPLAY_MODES[self.display_mode_index])} >"),
+            ("Resolucao", f"< {self._resolution_label(self.available_resolutions[self.resolution_index])} >"),
+            ("Aplicar", ""),
+            ("Voltar", ""),
+        ]
+        y = rect.y + 104
+        row_gap = 42
+        for index, (label, value) in enumerate(rows):
+            selected = index == self.settings_row_index
+            row_rect = self.pygame.Rect(rect.x + 28, y - 6, rect.width - 56, 34)
+            self._settings_hitboxes.append((index, row_rect))
+            if selected:
+                self.pygame.draw.rect(surface, (220, 177, 83, 28), row_rect)
+            color = SELECTED_OPTION_COLOR if selected else PANEL_LABEL_COLOR
+            label_surface = self._small_font.render(label.upper(), True, color)
+            surface.blit(label_surface, (rect.x + 34, y + 4))
+            if value:
+                value_surface = self._font.render(value, True, PANEL_VALUE_COLOR)
+                surface.blit(value_surface, (rect.x + 260, y))
+            y += row_gap
+        if self.resolution_dropdown_open:
+            self._draw_resolution_dropdown(surface, rect)
+        self._draw_panel_footer(surface, rect, "Setas/WASD alteram | Enter aplica | ESC volta | Mouse seleciona")
 
     def _draw_characters_panel(self, surface) -> None:
         rect = self._draw_panel_frame(surface, "Carregar Personagem")
@@ -436,13 +505,16 @@ class MainMenuScene(BaseScene):
         list_x = rect.x + 34
         list_y = rect.y + 104
         list_gap = max(32, int(rect.height * 0.078))
+        self._character_hitboxes = []
         for index, character in enumerate(characters[:8]):
             selected = index == self.character_index
             name = character.name.upper() if selected else character.name
             marker = "> " if selected else "  "
             color = SELECTED_OPTION_COLOR if selected else OPTION_COLOR
             rendered = self._font.render(f"{marker}{name}", True, color)
-            surface.blit(rendered, (list_x, list_y + index * list_gap))
+            position = (list_x, list_y + index * list_gap)
+            surface.blit(rendered, position)
+            self._character_hitboxes.append((index, rendered.get_rect(topleft=position).inflate(18, 10)))
 
         selected = characters[max(0, min(self.character_index, len(characters) - 1))]
         summary_x = rect.x + int(rect.width * 0.53)
@@ -462,6 +534,77 @@ class MainMenuScene(BaseScene):
         ]
         self._draw_labeled_rows(surface, self.pygame.Rect(summary_x, summary_y, rect.right - summary_x - 28, 180), summary_rows, summary_y)
         self._draw_panel_footer(surface, rect, "Enter/Espaco para escolher | ESC para voltar")
+
+    def _draw_resolution_dropdown(self, surface, rect) -> None:
+        width = min(260, rect.width - 80)
+        x = rect.x + 260
+        y = rect.y + 184
+        visible = self.available_resolutions[:8]
+        dropdown = self.pygame.Rect(x, y, width, 30 * len(visible) + 12)
+        panel = self.pygame.Surface((dropdown.width, dropdown.height), self.pygame.SRCALPHA)
+        panel.fill((8, 9, 14, 232))
+        surface.blit(panel, (dropdown.x, dropdown.y))
+        self.pygame.draw.rect(surface, PANEL_BORDER_COLOR, dropdown, width=1)
+        for index, resolution in enumerate(visible):
+            option_y = dropdown.y + 8 + index * 30
+            option_rect = self.pygame.Rect(dropdown.x + 8, option_y - 3, dropdown.width - 16, 26)
+            self._resolution_option_hitboxes.append((index, option_rect))
+            selected = index == self.resolution_index
+            if selected:
+                self.pygame.draw.rect(surface, (220, 177, 83, 34), option_rect)
+            color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
+            rendered = self._small_font.render(self._resolution_label(resolution), True, color)
+            surface.blit(rendered, (option_rect.x + 8, option_rect.y + 4))
+
+    def _click_panel_at(self, position: tuple[int, int]) -> bool:
+        if self._panel_footer_hitbox is not None and self._panel_footer_hitbox.collidepoint(position):
+            self.mode = "main"
+            return True
+        return False
+
+    def _select_character_at(self, position: tuple[int, int]) -> bool:
+        for index, rect in self._character_hitboxes:
+            if rect.collidepoint(position):
+                self.character_index = index
+                return True
+        return False
+
+    def _click_characters_at(self, position: tuple[int, int]) -> bool:
+        if self._select_character_at(position):
+            self.select_character(self.character_index)
+            return True
+        return self._click_panel_at(position)
+
+    def _select_settings_item_at(self, position: tuple[int, int]) -> bool:
+        for index, rect in self._settings_hitboxes:
+            if rect.collidepoint(position):
+                self.settings_row_index = index
+                return True
+        return False
+
+    def _click_settings_at(self, position: tuple[int, int]) -> bool:
+        if self.resolution_dropdown_open:
+            for index, rect in self._resolution_option_hitboxes:
+                if rect.collidepoint(position):
+                    self.resolution_index = index
+                    self.settings_row_index = 1
+                    self.resolution_dropdown_open = False
+                    return True
+        if self._select_settings_item_at(position):
+            if self.settings_row_index == 0:
+                self.display_mode_index = (self.display_mode_index + 1) % len(DISPLAY_MODES)
+            elif self.settings_row_index == 1:
+                self.resolution_dropdown_open = not self.resolution_dropdown_open
+            elif self.settings_row_index == 2:
+                self.apply_display_mode_selection()
+            elif self.settings_row_index == 3:
+                self._reset_pending_display_preferences()
+                self.mode = "main"
+            return True
+        return self._click_panel_at(position)
+
+    def _resolution_label(self, resolution: tuple[int, int]) -> str:
+        return f"{resolution[0]}x{resolution[1]}"
 
     def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]):
         x, y = position

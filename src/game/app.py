@@ -10,9 +10,10 @@ from src.game.game_context import DATA_PATH, GameContext, load_player_name as lo
 from src.game.settings import (
     FPS,
     WINDOW_TITLE,
+    available_window_resolutions,
     display_flags_for_mode,
     get_game_display_mode,
-    get_game_resolution,
+    get_window_resolution,
     resolution_for_display_mode,
 )
 from src.storage.json_storage import JSONStorage
@@ -37,10 +38,19 @@ def run_game(max_frames: int | None = None) -> None:
     pygame.key.set_repeat(0)
     display_size = _detect_display_size(pygame)
     display_mode = get_game_display_mode(storage=storage)
-    screen = _set_display_mode(pygame, display_mode, display_size)
+    available_resolutions = _detect_available_resolutions(pygame, display_size)
+    windowed_resolution = get_window_resolution(storage=storage, display_size=display_size)
+    screen = _set_display_mode(pygame, display_mode, windowed_resolution, display_size)
     pygame.display.set_caption(WINDOW_TITLE)
     clock = pygame.time.Clock()
-    scene = MainMenuScene(pygame, context, storage=storage, display_mode=display_mode)
+    scene = MainMenuScene(
+        pygame,
+        context,
+        storage=storage,
+        display_mode=display_mode,
+        window_resolution=windowed_resolution,
+        available_resolutions=available_resolutions,
+    )
     running = True
     frame_count = 0
 
@@ -56,8 +66,10 @@ def run_game(max_frames: int | None = None) -> None:
         requested_display_mode = _consume_requested_display_mode(scene)
         if requested_display_mode is not None:
             display_mode = requested_display_mode
+            windowed_resolution = _consume_requested_window_resolution(scene) or windowed_resolution
             display_size = _detect_display_size(pygame) or display_size
-            screen = _set_display_mode(pygame, display_mode, display_size)
+            available_resolutions = _detect_available_resolutions(pygame, display_size)
+            screen = _set_display_mode(pygame, display_mode, windowed_resolution, display_size)
             pygame.display.set_caption(WINDOW_TITLE)
         requested_scene = _consume_requested_scene(scene)
         if requested_scene == "overworld":
@@ -71,7 +83,14 @@ def run_game(max_frames: int | None = None) -> None:
         elif requested_scene == "main_menu":
             _persist_scene_state(scene)
             context = getattr(scene, "context", context)
-            scene = MainMenuScene(pygame, context, storage=storage, display_mode=display_mode)
+            scene = MainMenuScene(
+                pygame,
+                context,
+                storage=storage,
+                display_mode=display_mode,
+                window_resolution=windowed_resolution,
+                available_resolutions=available_resolutions,
+            )
         elif requested_scene == "battle":
             _persist_scene_state(scene)
             context = getattr(scene, "context", context)
@@ -118,6 +137,13 @@ def _consume_requested_display_mode(scene) -> str | None:
     return consume()
 
 
+def _consume_requested_window_resolution(scene) -> tuple[int, int] | None:
+    consume = getattr(scene, "consume_requested_window_resolution", None)
+    if consume is None:
+        return None
+    return consume()
+
+
 def _load_battle_character(storage: JsonStore, context: GameContext) -> Character:
     try:
         return get_character(storage, context.character_id)
@@ -138,8 +164,12 @@ def _persist_scene_state(scene) -> None:
         persist()
 
 
-def _set_display_mode(pygame, display_mode: str, display_size: tuple[int, int] | None = None):
-    windowed_resolution = get_game_resolution(display_size=display_size)
+def _set_display_mode(
+    pygame,
+    display_mode: str,
+    windowed_resolution: tuple[int, int],
+    display_size: tuple[int, int] | None = None,
+):
     resolution = resolution_for_display_mode(display_mode, windowed_resolution, display_size)
     flags = display_flags_for_mode(pygame, display_mode)
     try:
@@ -158,6 +188,14 @@ def _detect_display_size(pygame) -> tuple[int, int] | None:
     if width <= 0 or height <= 0:
         return None
     return width, height
+
+
+def _detect_available_resolutions(pygame, display_size: tuple[int, int] | None) -> list[tuple[int, int]]:
+    try:
+        listed_modes = pygame.display.list_modes()
+    except Exception:
+        listed_modes = None
+    return available_window_resolutions(display_size, listed_modes)
 
 
 def _max_frames_from_env() -> int | None:
