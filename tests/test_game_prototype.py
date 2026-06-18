@@ -30,7 +30,7 @@ from src.game.maps.test_map import (
 )
 from src.game.scenes.battle import BattleScene
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
-from src.game.scenes.main_menu import MainMenuScene
+from src.game.scenes.main_menu import GLOBAL_BACKGROUND_OVERLAY_ALPHA, MENU_BACKDROP_MAX_ALPHA, MainMenuScene
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.save import get_game_save
 from src.game.settings import (
@@ -838,6 +838,11 @@ def test_main_menu_font_size_scales_with_resolution() -> None:
     assert small >= 32
     assert large > small
     assert 48 <= large <= 60
+
+
+def test_main_menu_uses_subtle_global_overlay_and_stronger_menu_backdrop() -> None:
+    assert GLOBAL_BACKGROUND_OVERLAY_ALPHA <= 45
+    assert MENU_BACKDROP_MAX_ALPHA > GLOBAL_BACKGROUND_OVERLAY_ALPHA
 
 
 def test_game_context_can_switch_character_and_player_name() -> None:
