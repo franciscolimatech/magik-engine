@@ -803,6 +803,37 @@ def test_main_menu_exit_requests_quit() -> None:
     assert scene.should_quit is True
 
 
+def test_main_menu_layout_for_1080p_sits_lower_left() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    layout = scene._menu_layout(1920, 1080)
+
+    assert 150 <= layout["x"] <= 220
+    assert 610 <= layout["y"] <= 680
+    assert 48 <= layout["font_size"] <= 60
+
+
+def test_main_menu_layout_scales_for_1366x768() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    layout = scene._menu_layout(1366, 768)
+
+    assert 0.08 <= layout["x"] / 1366 <= 0.11
+    assert 0.56 <= layout["y"] / 768 <= 0.63
+    assert 32 <= layout["font_size"] < 58
+
+
+def test_main_menu_font_size_scales_with_resolution() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
+
+    small = scene._menu_font_size(720)
+    large = scene._menu_font_size(1080)
+
+    assert small >= 32
+    assert large > small
+    assert 48 <= large <= 60
+
+
 def test_game_context_can_switch_character_and_player_name() -> None:
     other = Character(
         id="lia",
@@ -1191,6 +1222,25 @@ def test_main_menu_draws_without_background_image() -> None:
     scene.draw(surface)
 
     assert scene.title_background is None
+    pygame.quit()
+
+
+def test_main_menu_draws_with_fake_background_image() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1366, 768))
+    background = pygame.Surface((1920, 1080))
+    background.fill((30, 24, 42))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        title_background=background,
+    )
+
+    scene.draw(surface)
+
+    assert scene.title_background is background
     pygame.quit()
 
 

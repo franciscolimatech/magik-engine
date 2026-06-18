@@ -9,6 +9,12 @@ from src.game.scenes.base import BaseScene
 from src.storage.types import JsonStore
 
 
+SELECTED_OPTION_COLOR = (220, 177, 83)
+OPTION_COLOR = (218, 210, 190)
+OPTION_MUTED_COLOR = (156, 143, 116)
+TEXT_SHADOW_COLOR = (0, 0, 0)
+
+
 class MainMenuScene(BaseScene):
     OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Ver Contexto", "Controles", "Sair")
 
@@ -38,6 +44,8 @@ class MainMenuScene(BaseScene):
         self._title_font = None
         self._subtitle_font = None
         self._font = None
+        self._menu_font = None
+        self._font_key: tuple[int, int] | None = None
 
     @property
     def selected_option(self) -> str:
@@ -67,7 +75,7 @@ class MainMenuScene(BaseScene):
         return
 
     def draw(self, surface) -> None:
-        self._ensure_fonts()
+        self._ensure_fonts(surface.get_height())
         self._draw_background(surface)
         self._draw_title(surface)
         if self.mode == "context":
@@ -179,12 +187,35 @@ class MainMenuScene(BaseScene):
         if key in {keys.K_ESCAPE, keys.K_RETURN, keys.K_SPACE, keys.K_e}:
             self.mode = "main"
 
-    def _ensure_fonts(self) -> None:
-        if self._font is not None:
+    def _ensure_fonts(self, screen_height: int = 480) -> None:
+        menu_font_size = self._menu_font_size(screen_height)
+        key = (screen_height, menu_font_size)
+        if self._font is not None and self._font_key == key:
             return
-        self._title_font = self.pygame.font.Font(None, 58)
-        self._subtitle_font = self.pygame.font.Font(None, 30)
-        self._font = self.pygame.font.Font(None, 28)
+        self._font_key = key
+        self._title_font = self._make_font(_clamp(int(screen_height * 0.07), 44, 78))
+        self._subtitle_font = self._make_font(_clamp(int(screen_height * 0.036), 22, 36))
+        self._font = self._make_font(_clamp(int(screen_height * 0.036), 24, 34))
+        self._menu_font = self._make_font(menu_font_size)
+
+    def _make_font(self, size: int):
+        if hasattr(self.pygame.font, "SysFont"):
+            return self.pygame.font.SysFont("georgia", size)
+        return self.pygame.font.Font(None, size)
+
+    def _menu_font_size(self, screen_height: int) -> int:
+        return _clamp(int(screen_height * 0.052), 32, 58)
+
+    def _menu_layout(self, screen_width: int, screen_height: int) -> dict[str, int]:
+        font_size = self._menu_font_size(screen_height)
+        gap = max(int(font_size * 1.25), 38)
+        menu_height = (len(self.OPTIONS) - 1) * gap + font_size
+        x = max(int(screen_width * 0.09), 48)
+        preferred_y = int(screen_height * 0.585)
+        bottom_margin = max(int(screen_height * 0.04), 22)
+        max_y = max(int(screen_height * 0.28), screen_height - menu_height - bottom_margin)
+        y = min(preferred_y, max_y)
+        return {"x": x, "y": y, "gap": gap, "font_size": font_size, "height": menu_height}
 
     def _draw_title(self, surface) -> None:
         self._draw_centered(surface, self._title_font, "MAGIK Engine", 60, colors.WHITE)
@@ -200,23 +231,26 @@ class MainMenuScene(BaseScene):
         surface.blit(overlay, (0, 0))
 
     def _draw_options(self, surface) -> None:
-        box_width = 360
-        box_height = 36
-        start_y = 150
-        screen_width = surface.get_width()
+        layout = self._menu_layout(surface.get_width(), surface.get_height())
+        self._draw_menu_backdrop(surface, layout)
         for index, option in enumerate(self.OPTIONS):
-            x = (screen_width - box_width) // 2
-            y = start_y + index * 44
-            rect = self.pygame.Rect(x, y, box_width, box_height)
             selected = index == self.selected_index
-            bg = (39, 48, 76) if selected else colors.DIALOGUE_BG
-            border = colors.DIALOGUE_BORDER if selected else (68, 78, 112)
-            text_color = colors.WHITE if selected else colors.TEXT_MUTED
-            self.pygame.draw.rect(surface, bg, rect)
-            self.pygame.draw.rect(surface, border, rect, width=2)
-            prefix = "> " if selected else "  "
-            label = self._font.render(f"{prefix}{option}", False, text_color)
-            surface.blit(label, (rect.x + 18, rect.y + 8))
+            marker = "> " if selected else "  "
+            label = f"{marker}{option.upper()}"
+            color = SELECTED_OPTION_COLOR if selected else OPTION_COLOR
+            y = layout["y"] + index * layout["gap"]
+            self._draw_text_shadow(surface, self._menu_font, label, (layout["x"], y), color)
+
+    def _draw_menu_backdrop(self, surface, layout: dict[str, int]) -> None:
+        width = min(int(surface.get_width() * 0.42), 680)
+        height = layout["height"] + max(28, layout["gap"] // 2)
+        x = max(0, layout["x"] - int(surface.get_width() * 0.035))
+        y = max(0, layout["y"] - layout["gap"] // 3)
+        panel = self.pygame.Surface((width, height), self.pygame.SRCALPHA)
+        for column in range(width):
+            alpha = max(0, int(135 * (1 - column / max(1, width))))
+            self.pygame.draw.line(panel, (0, 0, 0, alpha), (column, 0), (column, height))
+        surface.blit(panel, (x, y))
 
     def _draw_panel(self, surface, title: str, lines: list[str]) -> None:
         rect = self.pygame.Rect(64, 138, surface.get_width() - 128, 300)
@@ -235,3 +269,14 @@ class MainMenuScene(BaseScene):
         rendered = font.render(text, False, color)
         x = (surface.get_width() - rendered.get_width()) // 2
         surface.blit(rendered, (x, y))
+
+    def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]) -> None:
+        x, y = position
+        shadow = font.render(text, True, TEXT_SHADOW_COLOR)
+        surface.blit(shadow, (x + 3, y + 3))
+        rendered = font.render(text, True, color)
+        surface.blit(rendered, (x, y))
+
+
+def _clamp(value: int, minimum: int, maximum: int) -> int:
+    return max(minimum, min(value, maximum))
