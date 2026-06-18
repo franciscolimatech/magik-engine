@@ -13,6 +13,8 @@ SELECTED_OPTION_COLOR = (220, 177, 83)
 OPTION_COLOR = (218, 210, 190)
 OPTION_MUTED_COLOR = (156, 143, 116)
 TEXT_SHADOW_COLOR = (0, 0, 0)
+GLOBAL_BACKGROUND_OVERLAY_ALPHA = 38
+MENU_BACKDROP_MAX_ALPHA = 165
 
 
 class MainMenuScene(BaseScene):
@@ -41,8 +43,6 @@ class MainMenuScene(BaseScene):
         self.error_message = ""
         self.requested_scene: str | None = None
         self.should_quit = False
-        self._title_font = None
-        self._subtitle_font = None
         self._font = None
         self._menu_font = None
         self._font_key: tuple[int, int] | None = None
@@ -77,7 +77,6 @@ class MainMenuScene(BaseScene):
     def draw(self, surface) -> None:
         self._ensure_fonts(surface.get_height())
         self._draw_background(surface)
-        self._draw_title(surface)
         if self.mode == "context":
             self._draw_panel(surface, "Contexto", self.context_lines())
         elif self.mode == "controls":
@@ -193,8 +192,6 @@ class MainMenuScene(BaseScene):
         if self._font is not None and self._font_key == key:
             return
         self._font_key = key
-        self._title_font = self._make_font(_clamp(int(screen_height * 0.07), 44, 78))
-        self._subtitle_font = self._make_font(_clamp(int(screen_height * 0.036), 22, 36))
         self._font = self._make_font(_clamp(int(screen_height * 0.036), 24, 34))
         self._menu_font = self._make_font(menu_font_size)
 
@@ -217,17 +214,13 @@ class MainMenuScene(BaseScene):
         y = min(preferred_y, max_y)
         return {"x": x, "y": y, "gap": gap, "font_size": font_size, "height": menu_height}
 
-    def _draw_title(self, surface) -> None:
-        self._draw_centered(surface, self._title_font, "MAGIK Engine", 60, colors.WHITE)
-        self._draw_centered(surface, self._subtitle_font, "RPG 2D Experimental", 106, colors.TEXT_MUTED)
-
     def _draw_background(self, surface) -> None:
         if self.title_background is None:
             surface.fill(colors.BLACK)
             return
         assets.draw_cover_background(self.pygame, surface, self.title_background)
         overlay = self.pygame.Surface((surface.get_width(), surface.get_height()), self.pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 115))
+        overlay.fill((0, 0, 0, GLOBAL_BACKGROUND_OVERLAY_ALPHA))
         surface.blit(overlay, (0, 0))
 
     def _draw_options(self, surface) -> None:
@@ -248,7 +241,7 @@ class MainMenuScene(BaseScene):
         y = max(0, layout["y"] - layout["gap"] // 3)
         panel = self.pygame.Surface((width, height), self.pygame.SRCALPHA)
         for column in range(width):
-            alpha = max(0, int(135 * (1 - column / max(1, width))))
+            alpha = max(0, int(MENU_BACKDROP_MAX_ALPHA * (1 - column / max(1, width))))
             self.pygame.draw.line(panel, (0, 0, 0, alpha), (column, 0), (column, height))
         surface.blit(panel, (x, y))
 
@@ -264,11 +257,6 @@ class MainMenuScene(BaseScene):
             text = self._font.render(line, False, color)
             surface.blit(text, (rect.x + 18, y))
             y += 24
-
-    def _draw_centered(self, surface, font, text: str, y: int, color: tuple[int, int, int]) -> None:
-        rendered = font.render(text, False, color)
-        x = (surface.get_width() - rendered.get_width()) // 2
-        surface.blit(rendered, (x, y))
 
     def _draw_text_shadow(self, surface, font, text: str, position: tuple[int, int], color: tuple[int, int, int]) -> None:
         x, y = position
