@@ -1067,6 +1067,7 @@ def test_main_menu_context_lines_show_context() -> None:
     assert "Personagem: Miko Meu" in lines
     assert "Campaign ID: estrada" in lines
     assert "Session ID: estrada-sessao-1" in lines
+    assert "Location ID: floresta-do-avesso" in lines
     assert "Status: Com campanha ativa" in lines
 
 
@@ -1207,6 +1208,7 @@ def test_game_context_loads_defaults_without_environment() -> None:
     assert context.character_id == "miko-meu"
     assert context.campaign_id is None
     assert context.campaign_session_id is None
+    assert context.location_id == "floresta-do-avesso"
     assert context.player_name == "Miko Meu"
     assert context.campaign_label == "Sem campanha ativa"
 
@@ -1219,6 +1221,7 @@ def test_game_context_reads_environment_values() -> None:
             "MAGIK_GAME_CHARACTER_ID": "miko-meu",
             "MAGIK_GAME_CAMPAIGN_ID": "estrada",
             "MAGIK_GAME_SESSION_ID": "estrada-sessao-1",
+            "MAGIK_GAME_LOCATION_ID": "cidade-de-pedralume",
         },
         storage=storage,
     )
@@ -1226,6 +1229,7 @@ def test_game_context_reads_environment_values() -> None:
     assert context.character_id == "miko-meu"
     assert context.campaign_id == "estrada"
     assert context.campaign_session_id == "estrada-sessao-1"
+    assert context.location_id == "cidade-de-pedralume"
     assert context.has_campaign_session is True
 
 

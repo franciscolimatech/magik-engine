@@ -3,6 +3,7 @@ from pathlib import Path
 from src.core.character import create_miko_meu
 from src.game.game_context import GameContext
 from src.game.save import (
+    DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
     GameSave,
     create_default_game_save,
@@ -45,9 +46,9 @@ def test_create_default_game_save() -> None:
 
     assert save.id == DEFAULT_SAVE_ID
     assert save.character_id == "miko-meu"
-    assert save.location_id == "mapa-de-teste"
+    assert save.location_id == DEFAULT_LOCATION_ID
     assert save.position == (5, 4)
-    assert save.visited_locations == ["mapa-de-teste"]
+    assert save.visited_locations == [DEFAULT_LOCATION_ID]
 
 
 def test_get_game_save_by_id() -> None:
@@ -147,6 +148,7 @@ def test_game_context_uses_default_save_when_environment_is_absent() -> None:
     assert context.character_id == "miko-meu"
     assert context.campaign_id == "campanha-1"
     assert context.campaign_session_id == "sessao-1"
+    assert context.location_id == DEFAULT_LOCATION_ID
 
 
 def test_game_context_environment_overrides_save() -> None:
@@ -170,6 +172,7 @@ def test_game_context_environment_overrides_save() -> None:
             "MAGIK_GAME_CHARACTER_ID": "lia",
             "MAGIK_GAME_CAMPAIGN_ID": "campanha-2",
             "MAGIK_GAME_SESSION_ID": "sessao-2",
+            "MAGIK_GAME_LOCATION_ID": "cidade-de-pedralume",
         },
         storage=storage,
     )
@@ -177,6 +180,28 @@ def test_game_context_environment_overrides_save() -> None:
     assert context.character_id == "lia"
     assert context.campaign_id == "campanha-2"
     assert context.campaign_session_id == "sessao-2"
+    assert context.location_id == "cidade-de-pedralume"
+
+
+def test_game_context_invalid_location_uses_safe_fallback() -> None:
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="local-inexistente",
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+
+    context = GameContext.from_env(env={}, storage=storage)
+
+    assert context.location_id == DEFAULT_LOCATION_ID
 
 
 def test_overworld_uses_saved_position_when_available() -> None:
@@ -201,6 +226,11 @@ def test_overworld_uses_saved_position_when_available() -> None:
     scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
 
     assert scene.player.position == (6, 4)
+    assert scene.location_id == DEFAULT_LOCATION_ID
+    assert scene.location_display_name == "Floresta do Avesso"
+    assert scene.lore_summary is not None
+    assert scene.lore_summary["location"]["id"] == DEFAULT_LOCATION_ID
+    assert scene.hud.map_name == "Floresta do Avesso"
     pygame.quit()
 
 

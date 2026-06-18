@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from src.core.character import get_character
+from src.core.lore import get_lore_summary_for_location
 from src.game import assets, colors
 from src.game.appearance import appearance_from_notes
 from src.game.camera import Camera
@@ -46,6 +49,9 @@ class OverworldScene(BaseScene):
         self.requested_scene: str | None = None
         self.requested_creature: Creature | None = None
         self.map_data = load_test_map()
+        self.location_id = self._resolve_location_id()
+        self.lore_summary = self._load_lore_summary(self.location_id)
+        self.location_display_name = self._location_display_name()
         self.game_save = self._load_game_save()
         start_x, start_y = self._starting_position()
         self.player = Player(start_x, start_y, name=self.context.player_name)
@@ -60,7 +66,7 @@ class OverworldScene(BaseScene):
         self.camera = Camera()
         self.hud = HUD(
             player_name=self.context.player_name,
-            map_name=self.context.map_name,
+            map_name=self.location_display_name,
             campaign_label=self.context.campaign_label,
             session_label=self.context.session_label,
         )
@@ -212,7 +218,7 @@ class OverworldScene(BaseScene):
             return
         try:
             update_player_position(self.storage, DEFAULT_SAVE_ID, self.player.x, self.player.y)
-            register_current_location(self.storage, DEFAULT_SAVE_ID, DEFAULT_LOCATION_ID)
+            register_current_location(self.storage, DEFAULT_SAVE_ID, self.location_id)
         except Exception as exc:  # noqa: BLE001 - save failures must not crash the prototype.
             print(f"[MAGIK Game] Nao foi possivel salvar progresso do jogo: {exc}")
 
@@ -225,7 +231,7 @@ class OverworldScene(BaseScene):
                 character_id=self.context.character_id,
                 campaign_id=self.context.campaign_id,
                 session_id=self.context.campaign_session_id,
-                location_id=DEFAULT_LOCATION_ID,
+                location_id=self.location_id,
             )
             return sync_game_save_context(
                 self.storage,
@@ -233,7 +239,7 @@ class OverworldScene(BaseScene):
                 self.context.character_id,
                 self.context.campaign_id,
                 self.context.campaign_session_id,
-                DEFAULT_LOCATION_ID,
+                self.location_id,
             )
         except Exception as exc:  # noqa: BLE001 - save failures must not block the game.
             print(f"[MAGIK Game] Nao foi possivel carregar save do jogo: {exc}")
@@ -255,6 +261,30 @@ class OverworldScene(BaseScene):
             register_triggered_event(self.storage, DEFAULT_SAVE_ID, event_id)
         except Exception as exc:  # noqa: BLE001 - save failures must not block event display.
             print(f"[MAGIK Game] Nao foi possivel salvar evento disparado: {exc}")
+
+    def _resolve_location_id(self) -> str:
+        location_id = self.context.location_id.strip() or DEFAULT_LOCATION_ID
+        if self.storage is None:
+            return location_id if location_id == DEFAULT_LOCATION_ID else DEFAULT_LOCATION_ID
+        if self._load_lore_summary(location_id) is not None:
+            return location_id
+        return DEFAULT_LOCATION_ID
+
+    def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
+        if self.storage is None:
+            return None
+        try:
+            return get_lore_summary_for_location(self.storage, location_id)
+        except ValueError:
+            return None
+
+    def _location_display_name(self) -> str:
+        if not self.lore_summary:
+            return self.context.map_name
+        location = self.lore_summary.get("location")
+        if isinstance(location, dict):
+            return str(location.get("name") or self.context.map_name)
+        return self.context.map_name
 
 
 def load_player_appearance(storage: JsonStore | None, context: GameContext) -> dict[str, str] | None:

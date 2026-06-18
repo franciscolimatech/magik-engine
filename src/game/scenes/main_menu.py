@@ -92,6 +92,7 @@ class MainMenuScene(BaseScene):
             f"Character ID: {self.context.character_id}",
             f"Campaign ID: {self.context.campaign_id or '-'}",
             f"Session ID: {self.context.campaign_session_id or '-'}",
+            f"Location ID: {self.context.location_id}",
             f"Mapa inicial: {self.context.map_name}",
             f"Status: {status}",
             "",

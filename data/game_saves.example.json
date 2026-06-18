@@ -5,13 +5,13 @@
       "character_id": "miko-meu",
       "campaign_id": null,
       "session_id": null,
-      "location_id": "mapa-de-teste",
+      "location_id": "floresta-do-avesso",
       "player_position": {
         "x": 5,
         "y": 4
       },
       "visited_locations": [
-        "mapa-de-teste"
+        "floresta-do-avesso"
       ],
       "triggered_events": [],
       "known_quest_ids": [],

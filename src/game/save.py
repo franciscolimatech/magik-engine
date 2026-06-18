@@ -15,7 +15,7 @@ from src.storage.types import JsonStore
 
 SAVE_FILENAME = "game_saves.json"
 DEFAULT_SAVE_ID = "default"
-DEFAULT_LOCATION_ID = "mapa-de-teste"
+DEFAULT_LOCATION_ID = "floresta-do-avesso"
 DEFAULT_PLAYER_POSITION = (5, 4)
 
 

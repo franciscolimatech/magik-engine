@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Mapping
 
 from src.core.character import MIKO_ID, get_character
-from src.game.save import DEFAULT_SAVE_ID, get_game_save
+from src.core.world import get_location_by_id
+from src.game.save import DEFAULT_LOCATION_ID, DEFAULT_SAVE_ID, get_game_save
 from src.game.settings import PLAYER_NAME_FALLBACK
 from src.storage.json_storage import JSONStorage
 from src.storage.types import JsonStore
@@ -24,6 +25,7 @@ class GameContext:
     character_id: str = MIKO_ID
     campaign_id: str | None = None
     campaign_session_id: str | None = None
+    location_id: str = DEFAULT_LOCATION_ID
     map_name: str = DEFAULT_MAP_NAME
     player_name: str = PLAYER_NAME_FALLBACK
 
@@ -39,10 +41,15 @@ class GameContext:
         character_id = _env_text(values, "MAGIK_GAME_CHARACTER_ID") or _save_character_id(default_save) or MIKO_ID
         campaign_id = _env_text(values, "MAGIK_GAME_CAMPAIGN_ID") or _save_campaign_id(default_save)
         campaign_session_id = _env_text(values, "MAGIK_GAME_SESSION_ID") or _save_session_id(default_save)
+        location_id = _resolve_location_id(
+            _env_text(values, "MAGIK_GAME_LOCATION_ID") or _save_location_id(default_save),
+            storage,
+        )
         return cls(
             character_id=character_id,
             campaign_id=campaign_id,
             campaign_session_id=campaign_session_id,
+            location_id=location_id,
             map_name=map_name,
             player_name=load_player_name(character_id, storage),
         )
@@ -69,6 +76,7 @@ class GameContext:
             character_id=cleaned_id,
             campaign_id=self.campaign_id,
             campaign_session_id=self.campaign_session_id,
+            location_id=self.location_id,
             map_name=self.map_name,
             player_name=load_player_name(cleaned_id, storage),
         )
@@ -106,3 +114,24 @@ def _save_campaign_id(save) -> str | None:
 
 def _save_session_id(save) -> str | None:
     return save.session_id if save is not None else None
+
+
+def _save_location_id(save) -> str | None:
+    return save.location_id if save is not None and save.location_id.strip() else None
+
+
+def _resolve_location_id(location_id: str | None, storage: JsonStore | None) -> str:
+    candidate = (location_id or DEFAULT_LOCATION_ID).strip() or DEFAULT_LOCATION_ID
+    if _is_valid_location_id(candidate, storage):
+        return candidate
+    return DEFAULT_LOCATION_ID
+
+
+def _is_valid_location_id(location_id: str, storage: JsonStore | None) -> bool:
+    if storage is None:
+        return location_id == DEFAULT_LOCATION_ID
+    try:
+        get_location_by_id(storage, location_id)
+        return True
+    except ValueError:
+        return False
