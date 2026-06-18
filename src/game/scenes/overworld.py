@@ -24,10 +24,12 @@ from src.game.maps.test_map import (
     map_height,
     map_width,
 )
+from src.game.narrative_conditions import apply_narrative_effects_to_storage, conditions_met
 from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
     GameSave,
+    get_game_save,
     load_or_create_default_game_save,
     register_current_location,
     register_triggered_event,
@@ -160,7 +162,7 @@ class OverworldScene(BaseScene):
 
     def trigger_event_at(self, x: int, y: int) -> MapEvent | None:
         event = find_event_at(self.events, x, y)
-        if event is None or not event.can_trigger(self.triggered_event_ids):
+        if event is None or not self._event_can_run_here(event) or not event.can_trigger(self.triggered_event_ids):
             return None
         if not event.repeatable:
             self.triggered_event_ids.add(event.id)
@@ -169,11 +171,13 @@ class OverworldScene(BaseScene):
         if event.choice is not None:
             self.pending_event = event
         elif self.storage is not None:
+            self._apply_narrative_event_effects(event)
             register_map_event(self.storage, self.context, event, (x, y))
         return event
 
     def _handle_dialogue_option(self, selected_option) -> None:
         if self.pending_event is not None and self.storage is not None:
+            self._apply_narrative_event_effects(self.pending_event, selected_option)
             register_map_event(
                 self.storage,
                 self.context,
@@ -212,6 +216,34 @@ class OverworldScene(BaseScene):
         if key in {keys.K_DOWN, keys.K_s}:
             return (0, 1)
         return None
+
+    def _event_can_run_here(self, event: MapEvent) -> bool:
+        if event.location_id is not None and event.location_id != self.location_id:
+            return False
+        if not event.narrative_conditions:
+            return True
+        save = self._current_game_save()
+        if save is None:
+            return False
+        return conditions_met(save, event.narrative_conditions)
+
+    def _apply_narrative_event_effects(self, event: MapEvent, selected_option=None) -> None:
+        if self.storage is None or not event.narrative_effects:
+            return
+        effects = _effects_for_selected_option(event.narrative_effects, selected_option)
+        try:
+            self.game_save = apply_narrative_effects_to_storage(self.storage, DEFAULT_SAVE_ID, effects)
+        except Exception as exc:  # noqa: BLE001 - narrative state must not crash exploration.
+            print(f"[MAGIK Game] Nao foi possivel aplicar efeito narrativo: {exc}")
+
+    def _current_game_save(self) -> GameSave | None:
+        if self.storage is None:
+            return self.game_save
+        try:
+            self.game_save = get_game_save(self.storage, DEFAULT_SAVE_ID)
+            return self.game_save
+        except Exception:
+            return self.game_save
 
     def persist_state(self) -> None:
         if self.storage is None:
@@ -295,3 +327,15 @@ def load_player_appearance(storage: JsonStore | None, context: GameContext) -> d
     except ValueError:
         return None
     return appearance_from_notes(character.notes)
+
+
+def _effects_for_selected_option(effects: dict[str, Any], selected_option=None) -> dict[str, Any]:
+    if selected_option is None:
+        return dict(effects)
+    resolved_effects = dict(effects)
+    important_choice = resolved_effects.get("important_choice")
+    if isinstance(important_choice, dict):
+        choice_payload = dict(important_choice)
+        choice_payload["choice"] = selected_option.text
+        resolved_effects["important_choice"] = choice_payload
+    return resolved_effects

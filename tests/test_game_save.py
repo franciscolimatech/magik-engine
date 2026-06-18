@@ -493,3 +493,111 @@ def test_overworld_registers_triggered_event_in_save() -> None:
     assert event is not None
     assert "ikisaki-stir" in save.triggered_events
     pygame.quit()
+
+
+def test_overworld_shadow_event_applies_narrative_flags_and_logs() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+
+    event = scene.trigger_event_at(9, 4)
+    assert event is not None
+    assert event.id == "evento-sombra-observa"
+
+    scene._handle_dialogue_option(event.choice.options[0])
+    save = get_game_save(storage)
+
+    assert "viu_sombra_na_floresta_do_avesso" in save.story_flags
+    assert "floresta_do_avesso_inquieta" in save.world_flags
+    assert save.choice_history == [
+        {
+            "id": "evento-sombra-observa-escolha",
+            "location_id": "floresta-do-avesso",
+            "npc_id": None,
+            "choice": "Observar em silencio.",
+            "timestamp": None,
+        }
+    ]
+    assert save.consequence_log == [
+        {
+            "id": "evento-sombra-observa-consequencia",
+            "location_id": "floresta-do-avesso",
+            "npc_id": None,
+            "text": "A Floresta do Avesso pareceu notar que o personagem tambem observa de volta.",
+        }
+    ]
+    pygame.quit()
+
+
+def test_overworld_shadow_event_does_not_duplicate_narrative_state() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    event = scene.trigger_event_at(9, 4)
+    assert event is not None
+
+    scene._handle_dialogue_option(event.choice.options[1])
+    repeated = scene.trigger_event_at(9, 4)
+    save = get_game_save(storage)
+
+    assert repeated is None
+    assert save.story_flags.count("viu_sombra_na_floresta_do_avesso") == 1
+    assert save.world_flags.count("floresta_do_avesso_inquieta") == 1
+    assert len(save.choice_history) == 1
+    assert len(save.consequence_log) == 1
+    pygame.quit()
+
+
+def test_overworld_shadow_event_respects_location_id() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu", location_id="cidade-de-pedralume"),
+        storage,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+    save = get_game_save(storage)
+
+    assert scene.location_id == "cidade-de-pedralume"
+    assert event is None
+    assert save.story_flags == []
+    assert save.world_flags == []
+    pygame.quit()
+
+
+def test_overworld_shadow_event_does_not_trigger_when_story_flag_exists() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id=DEFAULT_LOCATION_ID,
+                        story_flags=["viu_sombra_na_floresta_do_avesso"],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+
+    event = scene.trigger_event_at(9, 4)
+    save = get_game_save(storage)
+
+    assert event is None
+    assert save.story_flags == ["viu_sombra_na_floresta_do_avesso"]
+    assert save.choice_history == []
+    pygame.quit()
