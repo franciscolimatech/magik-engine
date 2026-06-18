@@ -21,6 +21,7 @@ from src.game.appearance import (
     normalize_appearance,
 )
 from src.game.game_context import GameContext
+from src.game.save import initialize_character_starting_save
 from src.game.scenes.base import BaseScene
 from src.storage.types import JsonStore
 
@@ -367,7 +368,14 @@ class CharacterCreatorScene(BaseScene):
             background_summary=self.story_text.strip(),
             personal_goal="",
         )
-        self.context = self.context.with_character(character.id, self.storage)
+        save = initialize_character_starting_save(
+            self.storage,
+            character,
+            campaign_id=self.context.campaign_id,
+            session_id=self.context.campaign_session_id,
+            fallback_location_id=self.context.location_id,
+        )
+        self.context = self.context.with_character(character.id, self.storage).with_location(save.location_id)
         self.requested_scene = "overworld"
         return character
 

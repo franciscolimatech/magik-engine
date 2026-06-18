@@ -8,6 +8,7 @@ from src.game.save import (
     GameSave,
     create_default_game_save,
     get_game_save,
+    initialize_character_starting_save,
     load_game_saves,
     load_or_create_default_game_save,
     register_current_location,
@@ -107,6 +108,57 @@ def test_load_or_create_default_game_save_persists_when_missing() -> None:
 
     assert save.character_id == "lia"
     assert get_game_save(storage).character_id == "lia"
+
+
+def test_initialize_character_starting_save_uses_character_origin() -> None:
+    storage = MemoryStorage()
+    character = create_miko_meu()
+    character.id = "lia"
+    character.origin_location_id = "cidade-de-pedralume"
+
+    save = initialize_character_starting_save(storage, character)
+
+    assert save.character_id == "lia"
+    assert save.location_id == "cidade-de-pedralume"
+    assert save.position == (5, 4)
+    assert save.visited_locations == ["cidade-de-pedralume"]
+    assert get_game_save(storage).location_id == "cidade-de-pedralume"
+
+
+def test_initialize_character_starting_save_invalid_origin_uses_fallback() -> None:
+    storage = MemoryStorage()
+    character = create_miko_meu()
+    character.id = "lia"
+    character.origin_location_id = "local-inexistente"
+
+    save = initialize_character_starting_save(storage, character)
+
+    assert save.character_id == "lia"
+    assert save.location_id == DEFAULT_LOCATION_ID
+    assert save.visited_locations == [DEFAULT_LOCATION_ID]
+
+
+def test_initialize_character_starting_save_preserves_existing_progress() -> None:
+    storage = MemoryStorage()
+    existing = create_default_game_save(
+        character_id="miko-meu",
+        location_id="floresta-do-avesso",
+        position=(8, 9),
+    )
+    existing.triggered_events.append("pressagio-antigo")
+    existing.visited_locations.append("cidade-de-pedralume")
+    save_game_saves(storage, [existing])
+    character = create_miko_meu()
+    character.id = "lia"
+    character.origin_location_id = "cidade-de-pedralume"
+
+    save = initialize_character_starting_save(storage, character)
+
+    assert save.character_id == "lia"
+    assert save.location_id == "cidade-de-pedralume"
+    assert save.position == (8, 9)
+    assert save.triggered_events == ["pressagio-antigo"]
+    assert save.visited_locations.count("cidade-de-pedralume") == 1
 
 
 def test_sync_game_save_context_updates_character_and_session() -> None:

@@ -81,6 +81,16 @@ class GameContext:
             player_name=load_player_name(cleaned_id, storage),
         )
 
+    def with_location(self, location_id: str) -> "GameContext":
+        return GameContext(
+            character_id=self.character_id,
+            campaign_id=self.campaign_id,
+            campaign_session_id=self.campaign_session_id,
+            location_id=location_id.strip() or DEFAULT_LOCATION_ID,
+            map_name=self.map_name,
+            player_name=self.player_name,
+        )
+
 
 def load_player_name(character_id: str = MIKO_ID, storage: JsonStore | None = None) -> str:
     resolved_storage = storage or JSONStorage(DATA_PATH)

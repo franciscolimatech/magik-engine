@@ -27,6 +27,7 @@ from src.game.scenes.battle import BattleScene
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
 from src.game.scenes.main_menu import MainMenuScene
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
+from src.game.save import get_game_save
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.memory import MemoryStorage
@@ -966,7 +967,7 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     )
     scene.name = "Lia Nova"
     scene.class_index = 1
-    scene.origin_index = 3
+    scene.origin_index = 1
     scene.selected_equipment = {0, 5}
     scene.armor_index = 2
     scene.power_text = "Manipula fios de luz."
@@ -978,7 +979,7 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
 
     assert character.name == "Lia Nova"
     assert character.character_class == "Guerreiro"
-    assert character.origin_location_id == "floresta-do-avesso"
+    assert character.origin_location_id == "floresta-viridian"
     assert character.origin_region_id == "pais-de-magik"
     assert character.background_summary == "Busca uma cidade perdida."
     assert character.equipment == ["Cajado", "Escudo pequeno"]
@@ -988,7 +989,7 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     assert "Criado pelo jogo 2D" in character.notes
     assert "poder_especial_bruto: Manipula fios de luz." in character.notes
     assert any(note.startswith("poder_especial_interpretado:") for note in character.notes)
-    assert "origem_personagem: Floresta do Avesso (floresta-do-avesso)" in character.notes
+    assert "origem_personagem: Floresta Viridian (floresta-viridian)" in character.notes
     assert "personalidade_historia: Busca uma cidade perdida." in character.notes
     assert appearance_from_notes(character.notes)["hair_color"] == "vermelho"
     assert appearance_from_notes(character.notes)["outfit_color"] == "verde"
@@ -1000,6 +1001,9 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     assert "aprovar" in character.abilities[0]["notes"]
     assert scene.context.character_id == character.id
     assert scene.context.player_name == "Lia Nova"
+    assert scene.context.location_id == "floresta-viridian"
+    assert get_game_save(storage).location_id == "floresta-viridian"
+    assert get_game_save(storage).visited_locations == ["floresta-viridian"]
     assert scene.consume_requested_scene() == "overworld"
 
 

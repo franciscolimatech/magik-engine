@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from src.core.character import MIKO_ID
+from src.core.world import get_location_by_id
 from src.storage.types import JsonStore
 
 
@@ -150,6 +151,48 @@ def sync_game_save_context(
     if save.location_id not in save.visited_locations:
         save.visited_locations.append(save.location_id)
     _replace_save(storage, save)
+    return save
+
+
+def initialize_character_starting_save(
+    storage: JsonStore,
+    character: Any,
+    campaign_id: str | None = None,
+    session_id: str | None = None,
+    fallback_location_id: str = DEFAULT_LOCATION_ID,
+) -> GameSave:
+    """Prepare the default save for a new game character.
+
+    This updates only the runtime save state. The character origin remains stored
+    on the character sheet, while the current location remains stored here.
+    Existing progress lists and player position are preserved when a save already
+    exists.
+    """
+    character_id = str(getattr(character, "id", "") or MIKO_ID)
+    location_id = _resolve_valid_location_id(
+        storage,
+        getattr(character, "origin_location_id", None),
+        fallback_location_id,
+    )
+    saves = load_game_saves(storage)
+    for save in saves:
+        if save.id == DEFAULT_SAVE_ID:
+            save.character_id = character_id
+            save.campaign_id = campaign_id
+            save.session_id = session_id
+            save.location_id = location_id
+            if location_id not in save.visited_locations:
+                save.visited_locations.append(location_id)
+            _replace_save(storage, save)
+            return save
+    save = create_default_game_save(
+        character_id=character_id,
+        campaign_id=campaign_id,
+        session_id=session_id,
+        location_id=location_id,
+    )
+    saves.append(save)
+    save_game_saves(storage, saves)
     return save
 
 
@@ -304,3 +347,15 @@ def _unique_strings(values: list[str]) -> list[str]:
         if isinstance(value, str) and value and value not in result:
             result.append(value)
     return result
+
+
+def _resolve_valid_location_id(storage: JsonStore, candidate: Any, fallback: str) -> str:
+    for value in (candidate, fallback, DEFAULT_LOCATION_ID):
+        cleaned = str(value or "").strip()
+        if not cleaned:
+            continue
+        try:
+            return get_location_by_id(storage, cleaned).id
+        except ValueError:
+            continue
+    return DEFAULT_LOCATION_ID
