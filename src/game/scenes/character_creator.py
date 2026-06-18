@@ -8,7 +8,6 @@ from typing import Any, Callable
 from src.ai.power_interpreter import interpret_power
 from src.core.abilities import Ability
 from src.core.character import Character, create_character, generate_character_id
-from src.game import colors
 from src.game.appearance import (
     DEFAULT_APPEARANCE,
     EYE_COLORS,
@@ -59,6 +58,15 @@ ORIGIN_OPTIONS: tuple[tuple[str, str], ...] = (
 )
 ALLOWED_NAME_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_")
 TEXT_LIMITS = {"name": 32, "power": 140, "story": 140}
+CREATOR_GOLD = (220, 177, 83)
+CREATOR_TEXT = (232, 224, 207)
+CREATOR_MUTED = (166, 156, 135)
+CREATOR_BG = (8, 9, 14)
+CREATOR_PANEL_BG = (8, 9, 14, 214)
+CREATOR_PANEL_BORDER = (170, 138, 72, 126)
+CREATOR_PANEL_MAGIC = (112, 84, 190, 80)
+CREATOR_ERROR = (235, 118, 96)
+CREATOR_SHADOW = (0, 0, 0)
 
 
 PowerInterpreter = Callable[..., dict[str, Any]]
@@ -96,6 +104,9 @@ class CharacterCreatorScene(BaseScene):
         self.should_quit = False
         self._title_font = None
         self._font = None
+        self._small_font = None
+        self._step_font = None
+        self._font_key: tuple[int, int] | None = None
 
     @property
     def selected_class(self) -> str:
@@ -163,10 +174,12 @@ class CharacterCreatorScene(BaseScene):
         return
 
     def draw(self, surface) -> None:
-        self._ensure_fonts()
-        surface.fill(colors.BLACK)
-        self._draw_centered(surface, self._title_font, "Novo Jogo", 52, colors.WHITE)
+        self._ensure_fonts(surface.get_height())
+        self._draw_background(surface)
+        self._draw_header(surface)
         self._draw_panel(surface, self.step_title(), self.step_lines())
+        if surface.get_width() >= 980:
+            self._draw_summary_panel(surface)
 
     def step_title(self) -> str:
         return {
@@ -541,31 +554,170 @@ class CharacterCreatorScene(BaseScene):
             ("Cor da roupa", "outfit_color", tuple(OUTFIT_COLORS)),
         )
 
-    def _ensure_fonts(self) -> None:
-        if self._font is not None:
+    def _ensure_fonts(self, screen_height: int = 480) -> None:
+        key = (screen_height, _clamp(int(screen_height * 0.033), 22, 30))
+        if self._font is not None and self._font_key == key:
             return
-        self._title_font = self.pygame.font.Font(None, 48)
-        self._font = self.pygame.font.Font(None, 24)
+        self._font_key = key
+        self._title_font = self.pygame.font.Font(None, _clamp(int(screen_height * 0.07), 42, 66))
+        self._step_font = self.pygame.font.Font(None, _clamp(int(screen_height * 0.038), 26, 36))
+        self._font = self.pygame.font.Font(None, key[1])
+        self._small_font = self.pygame.font.Font(None, _clamp(int(screen_height * 0.026), 18, 23))
+
+    def _draw_background(self, surface) -> None:
+        surface.fill(CREATOR_BG)
+        width = surface.get_width()
+        height = surface.get_height()
+        for row in range(0, height, 32):
+            alpha = max(18, 54 - row // 18)
+            line = self.pygame.Surface((width, 1), self.pygame.SRCALPHA)
+            line.fill((112, 84, 190, alpha))
+            surface.blit(line, (0, row))
+        vignette = self.pygame.Surface((width, height), self.pygame.SRCALPHA)
+        vignette.fill((0, 0, 0, 46))
+        surface.blit(vignette, (0, 0))
+
+    def _draw_header(self, surface) -> None:
+        title = self._title_font.render("Criacao de Personagem", True, CREATOR_TEXT)
+        shadow = self._title_font.render("Criacao de Personagem", True, CREATOR_SHADOW)
+        x = max(46, int(surface.get_width() * 0.07))
+        y = max(28, int(surface.get_height() * 0.045))
+        surface.blit(shadow, (x + 3, y + 3))
+        surface.blit(title, (x, y))
+        subtitle = self._small_font.render("Um ritual para dar forma ao seu aventureiro", True, CREATOR_MUTED)
+        surface.blit(subtitle, (x + 2, y + title.get_height() + 4))
+
+    def _main_panel_rect(self, surface):
+        has_summary = surface.get_width() >= 980
+        x = max(44, int(surface.get_width() * 0.07))
+        y = max(116, int(surface.get_height() * 0.19))
+        width_ratio = 0.58 if has_summary else 0.86
+        width = _clamp(int(surface.get_width() * width_ratio), 520, 820)
+        height = _clamp(int(surface.get_height() * 0.66), 330, 520)
+        return self.pygame.Rect(x, y, width, height)
+
+    def _summary_panel_rect(self, surface, main_rect):
+        gap = max(24, int(surface.get_width() * 0.025))
+        x = main_rect.right + gap
+        y = main_rect.y + 28
+        width = max(260, surface.get_width() - x - max(42, int(surface.get_width() * 0.06)))
+        height = min(main_rect.height - 56, 360)
+        return self.pygame.Rect(x, y, width, height)
 
     def _draw_panel(self, surface, title: str, lines: list[str]) -> None:
-        rect = self.pygame.Rect(48, 118, surface.get_width() - 96, 330)
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BG, rect)
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BORDER, rect, width=2)
-        title_surface = self._font.render(title, False, colors.WHITE)
-        surface.blit(title_surface, (rect.x + 18, rect.y + 14))
-        y = rect.y + 46
-        max_lines = 14 if self.step == "confirm" else 12
-        line_gap = 20 if self.step == "confirm" else 22
-        for line in lines[:max_lines]:
-            color = colors.WHITE if line.startswith("> ") else colors.TEXT_MUTED
-            text = self._font.render(line, False, color)
-            surface.blit(text, (rect.x + 18, y))
-            y += line_gap
+        rect = self._main_panel_rect(surface)
+        self._draw_panel_frame(surface, rect)
+        step_label = f"Etapa {self._step_number()} de {len(self.STEPS)}"
+        step_surface = self._small_font.render(step_label.upper(), True, CREATOR_GOLD)
+        title_surface = self._step_font.render(self._clean_step_title(title), True, CREATOR_TEXT)
+        surface.blit(step_surface, (rect.x + 28, rect.y + 22))
+        surface.blit(title_surface, (rect.x + 28, rect.y + 48))
+        self._draw_progress_bar(surface, rect)
 
-    def _draw_centered(self, surface, font, text: str, y: int, color: tuple[int, int, int]) -> None:
-        rendered = font.render(text, False, color)
-        x = (surface.get_width() - rendered.get_width()) // 2
-        surface.blit(rendered, (x, y))
+        y = rect.y + 108
+        content_bottom = rect.bottom - 58
+        line_gap = _clamp(int(rect.height * (0.052 if self.step == "confirm" else 0.062)), 21, 30)
+        for line in lines:
+            if not line:
+                y += line_gap // 2
+                continue
+            if y > content_bottom:
+                break
+            color = self._line_color(line)
+            font = self._small_font if self._is_instruction_line(line) else self._font
+            text = font.render(line, True, color)
+            x = rect.x + 34
+            if line.startswith("> "):
+                self._draw_selection_mark(surface, rect.x + 24, y + 5)
+                x = rect.x + 52
+                text = font.render(line[2:], True, color)
+            surface.blit(text, (x, y))
+            y += line_gap
+        self._draw_footer(surface, rect)
+
+    def _draw_panel_frame(self, surface, rect) -> None:
+        panel = self.pygame.Surface((rect.width, rect.height), self.pygame.SRCALPHA)
+        panel.fill(CREATOR_PANEL_BG)
+        surface.blit(panel, (rect.x, rect.y))
+        self.pygame.draw.rect(surface, CREATOR_PANEL_BORDER, rect, width=1)
+        self.pygame.draw.rect(surface, CREATOR_PANEL_MAGIC, rect.inflate(-10, -10), width=1)
+
+    def _draw_summary_panel(self, surface) -> None:
+        main_rect = self._main_panel_rect(surface)
+        rect = self._summary_panel_rect(surface, main_rect)
+        self._draw_panel_frame(surface, rect)
+        title = self._small_font.render("RESUMO DO PERSONAGEM", True, CREATOR_GOLD)
+        surface.blit(title, (rect.x + 22, rect.y + 20))
+        rows = [
+            ("Nome", self.name.strip() or "-"),
+            ("Classe", self.selected_class),
+            ("Origem", self.selected_origin_name),
+            ("Armadura", str(self.selected_armor)),
+            ("Equip.", ", ".join(self.selected_equipment_names) or "-"),
+            ("Historia", self.story_text.strip() or "-"),
+        ]
+        y = rect.y + 62
+        for label, value in rows:
+            if y > rect.bottom - 34:
+                break
+            label_surface = self._small_font.render(label.upper(), True, CREATOR_GOLD)
+            value_surface = self._small_font.render(_clip_text(value, 34), True, CREATOR_TEXT)
+            surface.blit(label_surface, (rect.x + 22, y))
+            surface.blit(value_surface, (rect.x + 118, y))
+            y += 34
+
+    def _draw_progress_bar(self, surface, rect) -> None:
+        bar_rect = self.pygame.Rect(rect.x + 28, rect.y + 88, rect.width - 56, 5)
+        self.pygame.draw.rect(surface, (36, 31, 42), bar_rect)
+        filled_width = max(8, int(bar_rect.width * self._step_number() / len(self.STEPS)))
+        self.pygame.draw.rect(surface, CREATOR_GOLD, self.pygame.Rect(bar_rect.x, bar_rect.y, filled_width, bar_rect.height))
+
+    def _draw_selection_mark(self, surface, x: int, y: int) -> None:
+        points = [(x, y + 5), (x + 10, y), (x + 10, y + 10)]
+        self.pygame.draw.polygon(surface, CREATOR_GOLD, points)
+
+    def _draw_footer(self, surface, rect) -> None:
+        footer = self._footer_text()
+        rendered = self._small_font.render(footer, True, CREATOR_MUTED)
+        surface.blit(rendered, (rect.x + 28, rect.bottom - 36))
+
+    def _footer_text(self) -> str:
+        if self.step in {"name", "power", "story"}:
+            return "Enter confirma | Backspace apaga | ESC volta"
+        if self.step in {"class", "origin", "armor", "confirm"}:
+            return "Setas/WASD escolhem | Enter/Espaco confirma | ESC volta"
+        if self.step == "appearance":
+            return "Cima/baixo categoria | Esquerda/direita muda | Enter confirma"
+        return "Setas/WASD escolhem | Enter/Espaco marca | E confirma | ESC volta"
+
+    def _line_color(self, line: str) -> tuple[int, int, int]:
+        if line == self.error_message:
+            return CREATOR_ERROR
+        if line.startswith("> "):
+            return CREATOR_GOLD
+        if self._is_instruction_line(line):
+            return CREATOR_MUTED
+        return CREATOR_TEXT
+
+    def _is_instruction_line(self, line: str) -> bool:
+        markers = ("Enter", "ESC", "Cima/baixo", "Setas", "Minimo", "Nao sera", "Origem e", "Visual basico", "Sugestao")
+        return line.startswith(markers) or " confirma" in line or " volta" in line
+
+    def _step_number(self) -> int:
+        return self.STEPS.index(self.step) + 1
+
+    def _clean_step_title(self, title: str) -> str:
+        return title.split(". ", 1)[1] if ". " in title else title
+
+
+def _clamp(value: int, minimum: int, maximum: int) -> int:
+    return max(minimum, min(value, maximum))
+
+
+def _clip_text(value: str, limit: int) -> str:
+    if len(value) <= limit:
+        return value
+    return value[: max(0, limit - 3)].rstrip() + "..."
 
 
 def _ability_from_interpretation(interpretation: dict[str, Any]) -> dict[str, Any]:

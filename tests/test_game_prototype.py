@@ -985,6 +985,64 @@ def test_character_creator_instantiates_on_name_step() -> None:
     assert scene.step_title() == "1. Nome"
 
 
+def test_character_creator_draws_name_step_without_error() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = CharacterCreatorScene(pygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    scene.draw(surface)
+
+    rect = scene._main_panel_rect(surface)
+    assert rect.width < surface.get_width()
+    assert rect.height < surface.get_height()
+    assert scene._step_number() == 1
+    pygame.quit()
+
+
+def test_character_creator_draws_confirm_step_with_summary_panel_on_wide_screen() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1366, 768))
+    scene = CharacterCreatorScene(
+        pygame,
+        GameContext(player_name="Aventureiro"),
+        MemoryStorage(),
+        power_interpreter=fake_power_interpreter,
+    )
+    scene.name = "Lia Nova"
+    scene.origin_index = 3
+    scene.class_index = 1
+    scene.selected_equipment = {0, 5}
+    scene.story_text = "Busca uma cidade perdida."
+    scene.step = "confirm"
+
+    scene.draw(surface)
+
+    main_rect = scene._main_panel_rect(surface)
+    summary_rect = scene._summary_panel_rect(surface, main_rect)
+    assert summary_rect.x > main_rect.right
+    assert scene._step_number() == len(scene.STEPS)
+    pygame.quit()
+
+
+def test_character_creator_layout_uses_single_panel_on_narrow_screen() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((800, 450))
+    scene = CharacterCreatorScene(pygame, GameContext(player_name="Aventureiro"), MemoryStorage())
+
+    scene.draw(surface)
+
+    rect = scene._main_panel_rect(surface)
+    assert rect.width <= surface.get_width() - 80
+    assert rect.height <= surface.get_height() - 80
+    pygame.quit()
+
+
 def test_character_creator_rejects_empty_name() -> None:
     scene = CharacterCreatorScene(FakePygame, GameContext(player_name="Aventureiro"), MemoryStorage())
 
