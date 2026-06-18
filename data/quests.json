@@ -1,0 +1,2242 @@
+{
+  "quests": [
+    {
+      "id": "missao-da-marca-sombria",
+      "title": "Missão da Marca Sombria",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": "velho-nox",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca Sombria, o Velho Nox o conduz até uma clareira escondida nas regiões mais profundas da Floresta do Avesso. Lá, ele realiza um ritual simples e faz surgir um Reflexo Perdido, uma criatura formada pelas próprias sombras, memórias e desejos do aventureiro. O Reflexo Perdido possui aparência semelhante à do jogador, conhece parte de suas memórias e compartilha seus objetivos, acreditando ser a verdadeira versão daquela pessoa. Antes do combate, o aventureiro pode conversar com a criatura e descobrir mais sobre si mesmo através das respostas dadas pelo reflexo. Após o confronto, quando o Reflexo Perdido é derrotado, ele se desfaz em sombras e desaparece. O Velho Nox então faz apenas uma pergunta: \"Qual parte de si mesmo você abandonaria para alcançar seu objetivo?\" A resposta fica a critério do jogador. Caso considere a resposta sincera, o Velho Nox pede para o aprendiz dormir próximo a ele e, então, o jogador desperta no dia seguinte já possuindo a marca.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: reflexo-perdido"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-sombria"
+      ],
+      "enemy_refs": [
+        "reflexo-perdido"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-sonho-que-nao-era-meu",
+      "title": "O Sonho que Não Era Meu",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": "velho-nox",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "secundaria",
+      "description": "Velho Nox convida os aventureiros a dormir próximos à sua fogueira. Dentro do sonho, eles devem recuperar três memórias espalhadas por uma versão vazia da Floresta do Avesso. Cada memória é protegida por 1 Espelho Vivo Onírico e 2 Sombras Perdidas Oníricas. Ao reunir as três memórias, descobrem fragmentos da vida de uma pessoa que morreu há muito tempo, mas continua sonhando.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sombras-perdidas, espelho-vivo"
+      ],
+      "reward_text": "2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sombras-perdidas",
+        "espelho-vivo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-roubo-da-sombra",
+      "title": "O Roubo da Sombra",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": "a-menina-sem-sombra",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "secundaria",
+      "description": "A Menina Sem Sombra conta que sua sombra desapareceu novamente. Rastros encontrados perto de sua cabana indicam a presença de um Espelho Vivo. Os aventureiros devem seguir a criatura pela floresta. Durante a busca enfrentam 2 Sombras Perdidas e 1 Espelho Vivo. Após derrotá-lo, descobrem a sombra aprisionada dentro do espelho e podem devolvê-la à dona.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sombras-perdidas, espelho-vivo"
+      ],
+      "reward_text": "8 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sombras-perdidas",
+        "espelho-vivo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-casaco-inacabado",
+      "title": "O Casaco Inacabado",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": "as-costureiras-do-reflexo",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "secundaria",
+      "description": "As Costureiras do Reflexo desejam concluir uma antiga encomenda. Para isso, precisam de 3 Fios Bidimensionais obtidos de Aranhas Bidimensionais e 1 Estilhaço Reflexivo retirado de um Espelho Vivo. Durante a coleta, os aventureiros enfrentam 3 Aranhas Bidimensionais e 1 Espelho Vivo. Ao retornar com os materiais, as costureiras terminam o casaco e afirmam que o cliente jamais voltou para buscá-lo.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: aranhas-bidimensionais, espelho-vivo"
+      ],
+      "reward_text": "10 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "aranhas-bidimensionais",
+        "espelho-vivo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-reflexo-errado",
+      "title": "O Reflexo Errado",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": "senhor-espelho",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "secundaria",
+      "description": "Um Reflexo Perdido está se passando pelo Senhor Espelho e vendendo objetos roubados para viajantes. Os aventureiros devem localizá-lo antes que mais moradores sejam enganados. Durante a busca enfrentam 2 Cervos Negativos e 2 Sombras Perdidas. Ao encontrar o Reflexo Perdido, podem derrotá-lo ou convencê-lo a abandonar a farsa. Antes de fugir, a criatura menciona ter recebido ordens de alguém chamado apenas de Original.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sombras-perdidas, cervos-negativos, reflexo-perdido, viajante"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sombras-perdidas",
+        "cervos-negativos",
+        "reflexo-perdido",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "memorias-misturadas",
+      "title": "Memórias Misturadas",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": "o-clube-das-sombras-perdidas",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "secundaria",
+      "description": "Uma das sombras do clube começou a absorver memórias de outras sombras após entrar em contato com um Reflexo Perdido. Os aventureiros devem localizar a criatura responsável e recuperar as lembranças roubadas. Durante a investigação enfrentam 3 Sombras Perdidas e 1 Cervo Negativo. Ao encontrarem o Reflexo Perdido, descobrem que ele procurava memórias específicas relacionadas à floresta.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sombras-perdidas, reflexo-perdido"
+      ],
+      "reward_text": "Fruto da Sombra Perdida",
+      "reward_item_ids": [
+        "fruto-da-sombra-perdida"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sombras-perdidas",
+        "reflexo-perdido"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-original",
+      "title": "O Original",
+      "area": "Floresta do Avesso",
+      "giver_npc_id": null,
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "type": "principal",
+      "description": "Após ajudar Velho Nox, A Menina Sem Sombra, As Costureiras do Reflexo, Senhor Espelho e o Clube das Sombras Perdidas, os aventureiros descobrem que diversos Reflexos Perdidos mencionam uma figura chamada apenas de Original. Seguindo as pistas reunidas ao longo das missões, alcançam uma parte da floresta onde as leis da realidade parecem falhar. Durante a jornada enfrentam 3 Sombras Perdidas, 2 Cervos Negativos, 2 Aranhas Bidimensionais e 2 Espelhos Vivos. Conforme avançam, fenômenos cada vez mais estranhos surgem ao redor. Sombras aparecem antes de seus donos. Reflexos observam de poças d'água antes que alguém se aproxime delas. Em determinado momento, cada aventureiro vê versões de si mesmo caminhando entre as árvores. Nenhuma delas ataca. Apenas observam. No coração da floresta encontram um lago negro cuja superfície funciona como um espelho perfeito. Ali habita o Original. Tão antigo que já esqueceu qual era sua forma verdadeira. Durante o combate ele assume rostos, vozes e aparências retiradas das memórias dos próprios aventureiros. Após sua derrota, inúmeros reflexos desaparecem da floresta. Outros permanecem, agora livres para existir sem obedecer a ninguém. Onde o Original estava, os aventureiros encontram uma pequena biblioteca invertida escondida sob as raízes das árvores. Livros escritos de trás para frente, mapas impossíveis e artefatos abandonados por viajantes perdidos repousam em silêncio há séculos.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: aranhas-bidimensionais, sombras-perdidas, cervos-negativos, viajante"
+      ],
+      "reward_text": "• Marca da Contradição (Lendário)• Livro Invertido• Lanterna Negativa",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "aranhas-bidimensionais",
+        "sombras-perdidas",
+        "cervos-negativos",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    },
+    {
+      "id": "missao-da-marca-viridian",
+      "title": "Missão da Marca Viridian",
+      "area": "Floresta Viridian",
+      "giver_npc_id": "druida-dos-galhos-antigos",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca Viridian, a Druida dos Galhos Antigos entrega uma única semente envolta por raízes secas. Segundo ela, trata-se da Última Semente de Viridia, uma planta rara que já cobriu grande parte da floresta antes de desaparecer. O aventureiro deve encontrar um local adequado para plantá-la e protegê-la até que floresça. Assim que a semente é colocada no solo, criaturas da Floresta Viridian começam a surgir para destruí-la. A proteção da planta ocorre em três rodadas. Na primeira, dois Espíritos de Folhas e uma Raiz Andante atacam a muda. Na segunda, duas Raízes Andantes surgem da floresta. Na terceira e última rodada, aparece um Lenhador Perdido atraído pela energia da planta. Ao final do confronto, a semente cresce instantaneamente e se transforma numa pequena árvore de flores douradas. A Druida dos Galhos Antigos então faz apenas uma pergunta ao aventureiro: \"O que você está disposto a proteger?\" A resposta fica a critério do jogador. Caso considere o aventureiro digno, a druida utiliza uma das raízes da árvore para realizar o ritual da Marca Viridian. Uma pequena raiz atravessa a pele próxima ao tornozelo do aprendiz antes de desaparecer, deixando apenas a marca e concedendo acesso às Magias da Natureza.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: druida-dos-galhos-antigos, espiritos-de-folhas, lenhador-perdido, raiz-andante"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-viridian"
+      ],
+      "enemy_refs": [
+        "druida-dos-galhos-antigos",
+        "espiritos-de-folhas",
+        "lenhador-perdido",
+        "raiz-andante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-lenhador-que-nao-voltou",
+      "title": "O Lenhador que Não Voltou",
+      "area": "Floresta Viridian",
+      "giver_npc_id": "druida-dos-galhos-antigos",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "type": "secundaria",
+      "description": "A Druida dos Galhos Antigos afirma que outro Lenhador Perdido continua preso ao lugar onde derrubou sua última árvore. Ela pede que os aventureiros encontrem o Machado Quebrado dele e o levem até a Clareira da Árvore Oca, onde a floresta ainda não voltou a crescer. Durante a jornada enfrentam 2 Espíritos de Folhas, 2 Raízes Andantes e 1 Lenhador Perdido. Ao devolver o machado, raízes cobrem a clareira e abrem uma trilha segura até o território do Porco-Coruja Ancião",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: druida-dos-galhos-antigos, espiritos-de-folhas, porco-coruja-anciao, lenhador-perdido"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "druida-dos-galhos-antigos",
+        "espiritos-de-folhas",
+        "porco-coruja-anciao",
+        "lenhador-perdido"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-musgo-desaparecido",
+      "title": "O Musgo Desaparecido",
+      "area": "Floresta Viridian",
+      "giver_npc_id": "erdan-musgoalto",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "type": "secundaria",
+      "description": "Erdan afirma que sua reserva de Amostra de Musgo Raro foi roubada pelo Colecionador de Musgo. Os aventureiros devem seguir marcas verdes deixadas nas árvores até uma cabana escondida sob raízes antigas. Durante a busca enfrentam 2 Corujas de Musgo, 2 Espíritos de Folhas e, no final, o Colecionador de Musgo. Ao recuperar o musgo, Erdan descobre que ele estava tentando criar um mapa vivo da floresta",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: colecionador-de-musgo, espiritos-de-folhas, corujas-de-musgo"
+      ],
+      "reward_text": "10 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "colecionador-de-musgo",
+        "espiritos-de-folhas",
+        "corujas-de-musgo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "uma-pena-de-sabedoria",
+      "title": "Uma Pena de Sabedoria",
+      "area": "Floresta Viridian",
+      "giver_npc_id": "velho-orrin",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "type": "secundaria",
+      "description": "Orrin deseja provar que suas histórias são verdadeiras e pede que os aventureiros encontrem uma Pena do Porco-Coruja Ancião. A criatura não precisa ser derrotada; os jogadores podem convencê-la a entregar uma pena ou encontrar uma caída em seu território. Durante a busca enfrentam 2 Corujas de Musgo e 2 Veados de Três Pernas. Ao retornar, Orrin revela uma lenda sobre o Wrym Viridian.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: veados-de-tres-pernas, porco-coruja-anciao, corujas-de-musgo, wrym-viridian"
+      ],
+      "reward_text": "Pena do Porco-Coruja Ancião",
+      "reward_item_ids": [
+        "pena-do-porco-coruja-anciao"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "veados-de-tres-pernas",
+        "porco-coruja-anciao",
+        "corujas-de-musgo",
+        "wrym-viridian"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "trilha-interrompida",
+      "title": "Trilha Interrompida",
+      "area": "Floresta Viridian",
+      "giver_npc_id": "cacadora-lys",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "type": "secundaria",
+      "description": "Lys perdeu uma rota antiga que ligava sua cabana ao centro da floresta. Os aventureiros devem seguir pistas deixadas em troncos marcados e recuperar uma Folha do Primeiro Caminho levada por Espíritos de Folhas. Durante a exploração enfrentam 3 Espíritos de Folhas, 2 Raízes Andantes e 1 Wyrmling Viridian. Ao final, a trilha reaparece e leva até uma área próxima ao Ancião das Raízes",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: espiritos-de-folhas, anciao-das-raizes"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "espiritos-de-folhas",
+        "anciao-das-raizes"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "raizes-agressivas",
+      "title": "Raízes Agressivas",
+      "area": "Floresta Viridian",
+      "giver_npc_id": "guardioes-das-trilhas",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "type": "secundaria",
+      "description": "Algumas Raízes Andantes começaram a bloquear uma trilha usada por viajantes entre Avelgard e o interior da floresta. Os Guardiões pedem que os aventureiros descubram o motivo. Durante a missão enfrentam 4 Raízes Andantes e 2 Wyrmlings Viridian. Ao final, descobrem que as raízes estavam protegendo uma entrada subterrânea que leva até as proximidades da Druida dos Galhos Antigos",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: druida-dos-galhos-antigos, wyrmlings-viridian, viajante"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "druida-dos-galhos-antigos",
+        "wyrmlings-viridian",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "missao-da-marca-vermilion",
+      "title": "Missão da Marca Vermilion",
+      "area": "Vale Vermilion",
+      "giver_npc_id": "sacerdote-das-brasas",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca Vermilion, o Sacerdote das Brasas entrega uma pequena flor vermelha e pede que ela seja levada até um antigo depósito de Carvão Vermilion escondido nas regiões mais perigosas do vale. Segundo ele, a flor deve ser plantada sobre o carvão para que possa florescer. Durante a jornada, o calor emitido pela flor atrai criaturas da região. No início do percurso, o aventureiro encontra 2 Lobos de Brasas e um Carneiros de Cinzas. Conforme se aproxima do destino, grupos de 2 Wrymlings passam a perseguir a flor, atraídos por sua energia. Ao alcançar o depósito, o aventureiro descobre que o local é protegido por um Florista Vermilion, uma criatura antiga que cultiva e protege as flores mais raras do vale. Após derrotar ou convencer a criatura a permitir o ritual, a flor é plantada sobre o Carvão Vermilion e floresce instantaneamente, produzindo uma chama vermelha que não gera fumaça nem consome combustível. Quando voltam, o Sacerdote das Brasas então faz apenas uma pergunta: \"O que você estaria disposto a sacrificar para alcançar seu objetivo?\" A resposta fica a critério do jogador. Caso considere a resposta sincera, o sacerdote encosta o Carvão Vermilion acesso na palma da mão do aventureiro. A queimadura desaparece após alguns segundos, deixando apenas a Marca Vermilion e concedendo acesso às Magias de Sangue e Brasas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sacerdote-das-brasas, carneiros-de-cinzas, florista-vermilion, lobos-de-brasas"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-vermilion"
+      ],
+      "enemy_refs": [
+        "sacerdote-das-brasas",
+        "carneiros-de-cinzas",
+        "florista-vermilion",
+        "lobos-de-brasas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-ultimo-carvao",
+      "title": "O Último Carvão",
+      "area": "Vale Vermilion",
+      "giver_npc_id": "sacerdote-das-brasas",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "secundaria",
+      "description": "O Sacerdote das Brasas deseja recuperar um fragmento de Carvão Vermilion roubado por Wyrmlings Vermilion. Durante a busca os aventureiros enfrentam 4 Wyrmlings Vermilion e 2 Lobos de Brasas. Ao recuperar o fragmento, descobrem que as criaturas o usavam para aquecer um ninho escondido entre pedras escarlates",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sacerdote-das-brasas, wyrmlings-vermilion, lobos-de-brasas"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sacerdote-das-brasas",
+        "wyrmlings-vermilion",
+        "lobos-de-brasas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "jardim-devastado",
+      "title": "Jardim Devastado",
+      "area": "Vale Vermilion",
+      "giver_npc_id": "irma-rubra",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "secundaria",
+      "description": "Parte do jardim de Irmã Rubra foi destruída por Carneiros de Cinzas. Ela pede que os aventureiros recuperem 3 Lãs Carbonizadas e afastem as criaturas sem incendiar o restante da plantação. Durante a busca enfrentam 3 Carneiros de Cinzas e 2 Borboletas Vermilion. Ao final, descobrem que os carneiros estavam fugindo de Lobos de Brasas próximos",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: borboletas-vermilion, carneiros-de-cinzas, lobos-de-brasas"
+      ],
+      "reward_text": "10 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "borboletas-vermilion",
+        "carneiros-de-cinzas",
+        "lobos-de-brasas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "forja-sem-chama",
+      "title": "Forja Sem Chama",
+      "area": "Vale Vermilion",
+      "giver_npc_id": "ferreiro-cinzento",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "secundaria",
+      "description": "A forja do Ferreiro Cinzento parou de aquecer depois que uma carga de Escamas Rubras desapareceu. Os aventureiros devem seguir rastros de calor até uma passagem rochosa no vale. Durante a busca enfrentam 3 Wyrmlings Vermilion e 2 Lobos de Brasas. Ao recuperar as escamas, descobrem uma trilha que leva até o território do Florista Vermilion",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: wyrmlings-vermilion, florista-vermilion, lobos-de-brasas"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "wyrmlings-vermilion",
+        "florista-vermilion",
+        "lobos-de-brasas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-coracao-que-ainda-brilha",
+      "title": "O Coração que Ainda Brilha",
+      "area": "Vale Vermilion",
+      "giver_npc_id": "elias-da-chama-fria",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "secundaria",
+      "description": "Elias pede que os aventureiros consigam 2 Corações Luminosos de Vermes-Coração para estudar por que continuam brilhando após a morte. Durante a missão enfrentam 3 Vermes-Coração e 2 Coelhos Escarlates. Ao final, Elias descobre que os órgãos reagem à presença de Flores da Última Palavra próximas",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: coelhos-escarlates, vermes-coracao"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "coelhos-escarlates",
+        "vermes-coracao"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-lanterna-perdida",
+      "title": "A Lanterna Perdida",
+      "area": "Vale Vermilion",
+      "giver_npc_id": "peregrinos-vermilion",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "secundaria",
+      "description": "Uma das lanternas dos Peregrinos desapareceu durante uma fuga. Os aventureiros devem seguir pegadas quentes deixadas por Lobos de Brasas até um campo coberto por borboletas vermelhas. Durante a busca enfrentam 2 Lobos de Brasas, 2 Coelhos Escarlates e 3 Borboletas Vermilion. A lanterna é encontrada intacta e aponta o caminho para um antigo altar usado pelo Sacerdote das Brasas",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: borboletas-vermilion, sacerdote-das-brasas, coelhos-escarlates, lobos-de-brasas"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "borboletas-vermilion",
+        "sacerdote-das-brasas",
+        "coelhos-escarlates",
+        "lobos-de-brasas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-rei-das-brasas",
+      "title": "O Rei das Brasas",
+      "area": "Vale Vermilion",
+      "giver_npc_id": null,
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "type": "principal",
+      "description": "Após ajudar o Sacerdote das Brasas, Irmã Rubra, Ferreiro Cinzento, Elias da Chama Fria e os Peregrinos Vermilion, os aventureiros descobrem que as criaturas do vale estão abandonando seus territórios. Seguindo rastros de pegadas incandescentes, flores queimadas e carcaças deixadas para trás, avançam para as partes mais perigosas de Vermilion. Durante a jornada enfrentam 4 Lobos de Brasas, 3 Wyrmlings Vermilion, 2 Carneiros de Cinzas e 2 Vermes-Coração. Quanto mais avançam, mais flores Vermilion surgem pelo caminho. Primeiros dezenas, depois centenas. Em determinado momento o chão desaparece sob um mar escarlate de pétalas. Ossadas de Lobos de Brasas, Carneiros de Cinzas e outras criaturas cobrem a região. Nenhum predador permanece ali por muito tempo. Todos sabem quem governa aquelas terras. No centro do campo encontram uma enorme árvore morta coberta por flores da Última Palavra. Aos seus pés repousa o Lobo-Rei das Brasas. Diferente das histórias contadas pelos moradores, ele não negocia, não ameaça e não recua. O Lobo-Rei ataca imediatamente qualquer criatura que invada seu domínio. Após derrotá-lo, os aventureiros descobrem uma câmara oculta sob as raízes da árvore. No interior existem armas quebradas, armaduras destruídas e relíquias acumuladas ao longo de décadas. Entre elas repousa um antigo tesouro envolto por flores escarlates.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sacerdote-das-brasas, wyrmlings-vermilion, carneiros-de-cinzas, lobo-rei-das-brasas, lobos-de-brasas, vermes-coracao"
+      ],
+      "reward_text": "• Foice da Colheita Escarlate (Lendário)• Brasa Sagrada• Fruto Vermilion Ancião",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sacerdote-das-brasas",
+        "wyrmlings-vermilion",
+        "carneiros-de-cinzas",
+        "lobo-rei-das-brasas",
+        "lobos-de-brasas",
+        "vermes-coracao"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    },
+    {
+      "id": "missao-da-marca-do-esquecimento",
+      "title": "Missão da Marca do Esquecimento",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": "a-esquecida",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca do Esquecimento, A Esquecida revela que deseja recuperar a única lembrança que nunca conseguiu encontrar: seu próprio nome. O detalhe é que seu verdadeiro nome é Esquecida, mas todos acreditam que isso seja apenas um apelido por causa de sua falta de memória. Para recuperar essa lembrança, o aventureiro deve entrar nas partes mais profundas do Brejo do Esquecimento e encontrar o Colecionador de Memórias. O caminho até ele é formado por desafios mentais. A primeira provação é a Névoa do Esquecimento. Ao atravessá-la, os aventureiros começam a esquecer o motivo da própria jornada e podem acabar seguindo por caminhos errados sem perceber. Apenas aqueles que se lembram por conta própria do objetivo da viagem conseguem continuar. A segunda provação é a Casa Sem Dono, uma antiga cabana perdida no brejo onde móveis e objetos mudam constantemente de posição quando não estão sendo observados. Existem 4 móveis dentro da casa: uma mesa, uma cama, uma cadeira e uma lareira. Após investigar a casa, os aventureiros podem descobrir um bilhete escondido atrás da única coisa que nunca muda de lugar: a lareira. No papel está escrito: \"Aqui, você me explicou o meu nome, mãe.\" A última provação acontece no quintal do Colecionador de Memórias, onde cinco objetos repousam sobre pedras afundadas na lama. Conforme os aventureiros se aproximam, vozes surgem da lama contando cinco histórias diferentes sobre A Esquecida. A primeira diz que ela era Aurina, rainha de um reino construído sobre as águas do brejo. Durante muitos anos governou um povo próspero, mas uma grande névoa surgiu e cobriu suas terras. Um a um, seus súditos desapareceram até restar apenas ela. Aurina permaneceu sentada em seu trono por tanto tempo esperando o retorno do reino que acabou esquecendo o próprio nome. Dizem que sua coroa ainda está enterrada em algum lugar sob a lama. Ao lado do local que sai a voz existe uma coroa de cobre. A segunda afirma que ela era Ofélia, uma mulher que amava a própria família acima de tudo. Quando descobriu que envelheceria e morreria antes deles, atravessou o Brejo do Esquecimento em busca da imortalidade. Encontrou exatamente o que procurava, mas o preço foi alto. A cada ano que passava, esquecia uma pessoa que amava. Primeiro esqueceu amigos, depois irmãos, depois os próprios filhos. Quando finalmente conquistou a vida eterna, já não conseguia se lembrar por que a desejava. Ao lado do local que sai a voz existe uma aliança quebrada. A terceira conta que ela era Brumélia, uma criatura nascida da névoa do brejo. Não possuía pai, mãe ou passado, apenas uma curiosidade infinita sobre as pessoas. Durante séculos observou viajantes atravessando a região e aprendeu seus costumes, histórias e segredos. Com o tempo, passou a desejar ser humana. Dizem que certa noite ela roubou tantas lembranças de outras pessoas que acabou criando uma identidade para si mesma. Desde então, ninguém sabe se Brumélia realmente existiu ou se é apenas uma memória esquecida por alguém. Ao lado do local que sai a voz existe um frasco cheio de névoa. A quarta diz que ela era Nara, a esposa do Homem Sem Nome. Ela caminhou ao lado dele quando ainda era apenas um estudioso e testemunhou sua transformação em algo maior e mais terrível. Quando ele começou a roubar as marcas dos mestres, ela tentou impedi-lo. Como punição, teve seu nome arrancado de todas as memórias do mundo. Ao lado da voz existe uma pequena pulseira feita de couro envelhecido e fragmentos de mapas. A quinta, muito mais simples que as outras, conta a verdade: ela sempre se chamou Esquecida. Quando nasceu, todos na casa esqueceram por alguns segundos o que estavam fazendo, e sua mãe decidiu dar aquele nome à filha. Anos depois, ao tentar salvar uma criança perdida no brejo, ela encontrou o Colecionador de Memórias e teve seu nome roubado. O objeto ligado à história verdadeira é uma pulseira de junco marcada com a letra E. As lamas pedem ao jogador para escolher o item que representa a real história da Esquecida. Ao escolhê-la, o Colecionador de Memórias surge e exige que os aventureiros contem a história verdadeira de A Esquecida. Caso consigam reconstruir a lembrança corretamente, ele devolve o nome roubado. Se não, eles precisam lutar contra o Colecionador de Memórias. Quando o aventureiro retorna, A Esquecida finalmente se lembra de quem é e faz apenas uma pergunta: \"Qual lembrança você jamais gostaria de perder?\" A resposta fica a critério do jogador. Caso considere a resposta sincera, A Esquecida conta ao aventureiro uma história que ele esquece imediatamente após ouvi-la. Quando a história desaparece de sua memória, a Marca do Esquecimento surge em seu ombro, concedendo acesso às Magias de Alteração.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: colecionador-de-memorias, viajante"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-do-esquecimento"
+      ],
+      "enemy_refs": [
+        "colecionador-de-memorias",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-lembranca-errada",
+      "title": "A Lembrança Errada",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": "a-esquecida",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "secundaria",
+      "description": "A Esquecida encontrou uma memória que não reconhece, mas sente que deveria significar algo importante. Os aventureiros devem seguir os sussurros dessa lembrança até uma área alagada do brejo. Durante a busca enfrentam 3 Lamas Sussurrantes, 2 Névoas Vivas e 1 Monge Afogado. Ao final, descobrem que a lembrança não pertence a uma única pessoa, mas a dezenas de viajantes diferentes. Cada aventureiro vê uma cena diferente ao observá-la. A Esquecida reconhece imediatamente o fenômeno e apenas diz: \"Então ela ainda existe...\" antes de se recusar a explicar mais. Pela primeira vez, os aventureiros ouvem falar da Memória Perdida.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: lamas-sussurrantes, memoria-perdida, monge-afogado, nevoas-vivas, viajante"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "lamas-sussurrantes",
+        "memoria-perdida",
+        "monge-afogado",
+        "nevoas-vivas",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-paginas-perdidas",
+      "title": "As Páginas Perdidas",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": "irmao-salmo",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "secundaria",
+      "description": "Parte dos registros de Irmão Salmo desapareceu durante a noite. Os aventureiros devem recuperar os cadernos antes que sejam absorvidos pelo brejo. Durante a busca enfrentam 3 Sapos-Monges, 2 Névoas Vivas e 1 Monge Afogado. Os registros são encontrados próximos a uma torre afundada. Entre as anotações existe um relato antigo descrevendo uma entidade capaz de assumir a forma das lembranças mais importantes de quem a observa. O texto termina abruptamente com a frase: \"Quando uma memória é esquecida por todos, ela...\"",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: monge-afogado, sapos-monges, nevoas-vivas"
+      ],
+      "reward_text": "10 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "monge-afogado",
+        "sapos-monges",
+        "nevoas-vivas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-barco-que-voltou-sozinho",
+      "title": "O Barco que Voltou Sozinho",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": "dona-mirta",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "secundaria",
+      "description": "Um barco desaparecido retornou ao cais completamente vazio. Dona Mirta pede que os aventureiros investiguem de onde ele veio. Durante a busca enfrentam 2 Lesmas Cronológicas, 2 Névoas Vivas e 1 Nó Temporal. Dentro do barco encontram desenhos feitos pelos antigos tripulantes. Estranhamente, cada desenho retrata uma criatura diferente, mas todos estão identificados com o mesmo nome. Um retrata uma mãe, outro um irmão, outro uma criança. Nenhum deles parece representar a mesma coisa, mas todos se referem à Memória Perdida.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: lesmas-cronologicas, memoria-perdida, nevoas-vivas, no-temporal"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "lesmas-cronologicas",
+        "memoria-perdida",
+        "nevoas-vivas",
+        "no-temporal"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-memoria-pescada",
+      "title": "A Memória Pescada",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": "velho-daren",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "secundaria",
+      "description": "Daren afirma ter pescado uma lembrança que não pertence a ele. Desde então, sonha todas as noites com uma pessoa correndo pelo brejo enquanto repete o mesmo nome várias vezes, mas sempre esquece o nome ao acordar. Durante a investigação, os aventureiros enfrentam 3 Lamas Sussurrantes e 2 Sapos-Monges. Ao final, descobrem que a lembrança foi formada por fragmentos de dezenas de memórias diferentes costuradas em uma só. Ela não pertence a ninguém específico. O fenômeno aponta diretamente para a existência da Memória Perdida.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: lamas-sussurrantes, memoria-perdida, sapos-monges"
+      ],
+      "reward_text": "Fragmento de Memória",
+      "reward_item_ids": [
+        "fragmento-de-memoria"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "lamas-sussurrantes",
+        "memoria-perdida",
+        "sapos-monges"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "os-marcos-apagados",
+      "title": "Os Marcos Apagados",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": "vigias-do-brejo",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "secundaria",
+      "description": "Diversas marcações usadas pelos Vigias desapareceram, fazendo viajantes se perderem novamente. Os aventureiros devem refazer o caminho e descobrir o que apagou os sinais. Durante a missão enfrentam 3 Névoas Vivas, 2 Lesmas Cronológicas e 2 Lamas Sussurrantes. Ao final, encontram marcas estranhas nas árvores. Algumas parecem ter sido feitas por pessoas diferentes, em épocas diferentes, mas todas seguem exatamente o mesmo padrão. Os Vigias não sabem quem as deixou, mas afirmam que elas começaram a aparecer pouco antes dos relatos sobre a Memória Perdida.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: lesmas-cronologicas, lamas-sussurrantes, memoria-perdida, nevoas-vivas, viajante"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "lesmas-cronologicas",
+        "lamas-sussurrantes",
+        "memoria-perdida",
+        "nevoas-vivas",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "aquilo-que-todos-esqueceram",
+      "title": "Aquilo Que Todos Esqueceram",
+      "area": "Brejo do Esquecimento",
+      "giver_npc_id": null,
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "type": "principal",
+      "description": "Após ajudar A Esquecida, Irmão Salmo, Dona Mirta, Velho Daren e os Vigias do Brejo, os aventureiros percebem que todas as histórias apontam para a mesma entidade: a Memória Perdida. Seguindo as pistas reunidas ao longo das missões, avançam para uma parte do brejo onde nenhuma trilha permanece igual por muito tempo. Quanto mais caminham, mais silencioso o local se torna. Não existem pássaros, insetos ou vento. Árvores cobertas por placas apodrecidas surgem na névoa. Algumas carregam nomes desconhecidos. Outras possuem nomes estranhamente familiares. Durante a jornada enfrentam 3 Névoas Vivas, 3 Lamas Sussurrantes, 2 Lesmas Cronológicas e 1 Nó Temporal. Conforme avançam, objetos importantes de suas próprias vidas começam a aparecer parcialmente enterrados na lama, mesmo aqueles que jamais estiveram no brejo. No centro da região encontram uma clareira tomada por névoa branca. Ali habita a Memória Perdida. Durante o confronto, cada aventureiro enxerga uma criatura diferente. Alguns veem familiares, outros antigos amigos ou versões mais jovens de si mesmos. Após derrotá-la, a névoa começa a desaparecer lentamente. Centenas de lembranças roubadas emergem do lodo: fotografias, nomes, cartas, brinquedos e histórias esquecidas. Muitas retornam aos seus donos. Outras parecem pertencer a pessoas que já não existem há décadas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: lesmas-cronologicas, lamas-sussurrantes, memoria-perdida, nevoas-vivas, no-temporal"
+      ],
+      "reward_text": "• Espelho da Infância (Lendário)• Chave Sem Fechadura• Ampulheta Invertida",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "lesmas-cronologicas",
+        "lamas-sussurrantes",
+        "memoria-perdida",
+        "nevoas-vivas",
+        "no-temporal"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    },
+    {
+      "id": "missao-da-marca-das-mares",
+      "title": "Missão da Marca das Marés",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "bruxa-das-aguas-calmas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca das Marés, a Bruxa das Águas Calmas revela que as Carpas Profetas do lago começaram a repetir frases incompletas e desconexas. Três carpas diferentes parecem carregar partes da mesma profecia. A primeira diz: \"Onde não existe som...\" A segunda diz: \"Onde a água não se move...\" A terceira diz: \"Onde nem mesmo os ecos retornam...\" A princípio, as frases parecem indicar uma região silenciosa do próprio lago, na região leste, onde embarcações desaparecem, a água permanece imóvel e nenhum som parece se propagar. A bruxa pede ao aventureiro que investigue esse local e descubra o que está impedindo as carpas de completar a profecia. Durante a investigação, o aventureiro descobre que a região é habitada pela Enguia do Fundo Silencioso, uma criatura lendária que absorve os sons ao redor e perturba as correntes proféticas do lago. Para concluir a missão, o aventureiro deve encontrar a criatura e derrotá-la ou afastá-la das profundezas. Após isso, as Carpas Profetas finalmente conseguem completar a profecia: \"Onde não existe som, onde a água não se move, onde nem mesmo os ecos retornam, dorme uma lembrança do fim. Quando o pai dos Wrym retornar, as estradas deixarão de levar para casa.\" A Bruxa das Águas Calmas compreende que o aventureiro não apenas eliminou uma ameaça do lago, mas também revelou uma profecia importante sobre o futuro de Magik. Então, ela faz apenas uma pergunta: \"Como você sabe que algo é verdadeiro?\" A resposta fica a critério do jogador. Caso considere a resposta sincera, a bruxa realiza o ritual da Marca das Marés, utilizando uma agulha feita de escama de carpa para realizar um pequeno corte no pulso do aprendiz. Em seguida, derrama algumas gotas de água sobre a ferida, formando a marca e concedendo acesso às Magias de Água.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: enguia-do-fundo-silencioso, bruxa-das-aguas-calmas, carpas-profetas"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-das-mares"
+      ],
+      "enemy_refs": [
+        "enguia-do-fundo-silencioso",
+        "bruxa-das-aguas-calmas",
+        "carpas-profetas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-silencio-antes-da-resposta",
+      "title": "O Silêncio Antes da Resposta",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "bruxa-das-aguas-calmas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "secundaria",
+      "description": "A Bruxa das Águas Calmas afirma que uma Carpa Profeta deixou de responder perguntas pela primeira vez em décadas. A criatura permanece imóvel próximo a uma pequena ilha no centro do lago e parece observar constantemente as profundezas. Os aventureiros devem investigar o motivo. Durante a missão enfrentam 3 Carpas Profetas e 2 Espíritos das Águas. Ao final, descobrem uma enorme escama presa entre pedras submersas. Quando a escama é removida, a Carpa Profeta finalmente volta a falar e responde apenas uma única frase: \"Ela ainda está dormindo.\" A Bruxa das Águas Calmas reconhece imediatamente a descrição da escama e afirma que ela pertence à Mãe Carpa. Segundo ela, nenhuma escama da criatura deveria estar tão longe das profundezas do lago.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: bruxa-das-aguas-calmas, carpas-profetas"
+      ],
+      "reward_text": "2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "bruxa-das-aguas-calmas",
+        "carpas-profetas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-rede-profunda",
+      "title": "A Rede Profunda",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "jorek-escamafina",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "secundaria",
+      "description": "Jorek perdeu sua melhor rede próximo ao centro do lago. Segundo ele, a rede não rasgou nem afundou normalmente; ela foi puxada em linha reta para baixo, como se algo enorme a tivesse chamado. Os aventureiros devem atravessar três pontos marcados por boias antigas: a Boia Rachada, a Pedra Sem Reflexo e o Círculo das Carpas. Na Boia Rachada enfrentam 3 Carpas Profetas. Na Pedra Sem Reflexo enfrentam 2 Enguias Filosóficas. No Círculo das Carpas encontram 1 Tartaruga Oráculo presa na rede. Ao libertá-la, descobrem uma escama gigantesca presa entre as cordas. Jorek afirma nunca ter visto uma escama daquele tamanho e sugere levá-la para a Bruxa das Águas Calmas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: bruxa-das-aguas-calmas, enguias-filosoficas, tartaruga-oraculo, carpas-profetas"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "bruxa-das-aguas-calmas",
+        "enguias-filosoficas",
+        "tartaruga-oraculo",
+        "carpas-profetas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-casco-sem-reflexo",
+      "title": "O Casco Sem Reflexo",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "talia-das-escamas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "secundaria",
+      "description": "Talia está tentando terminar uma armadura feita com placas de casco oracular, mas uma das peças principais perdeu todos os símbolos durante a noite. Ela pede que os aventureiros descubram por que o casco ficou vazio. A investigação começa na oficina de Talia, onde os jogadores encontram água espalhada pelo chão, marcas de nadadeiras na madeira e uma frase escrita sozinha na parede: \"O futuro saiu daqui.\" Seguindo as marcas até a margem, enfrentam 2 Garças de Cristal e 2 Carpas Profetas. Depois, chegam a uma formação de pedras onde enfrentam 1 Oráculo Afogado. Após o confronto, descobrem que ele roubou os símbolos do casco para tentar prever o despertar da Mãe das Carpas. Antes de desaparecer, o Oráculo Afogado diz: \"Ela não acorda quando quer. Ela acorda quando alguém responde.\"",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: garcas-de-cristal, carpas-profetas, oraculo-afogado, mae-das-carpas"
+      ],
+      "reward_text": "10 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "garcas-de-cristal",
+        "carpas-profetas",
+        "oraculo-afogado",
+        "mae-das-carpas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-pagina-arrancada",
+      "title": "A Página Arrancada",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "miriel-das-profecias",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "secundaria",
+      "description": "Miriel encontrou um antigo livro de profecias com diversas páginas removidas. Segundo ela, todas as páginas arrancadas pertenciam ao mesmo capítulo, chamado \"A Primeira Pergunta\". Os aventureiros devem procurar as páginas em três locais citados no índice do livro: o Cais das Respostas Erradas, a Ilha da Água Imóvel e a margem onde as Garças de Cristal se reúnem ao amanhecer. No cais enfrentam 3 Carpas Profetas. Na ilha enfrentam 2 Enguias Filosóficas. Na margem enfrentam 2 Garças de Cristal e 1 Tartaruga Oráculo. Ao reunir as páginas, descobrem que todas mencionam uma criatura chamada Primeira Escama. Miriel acredita que esse seja um dos nomes antigos da Mãe das Carpas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: enguias-filosoficas, garcas-de-cristal, tartaruga-oraculo, carpas-profetas, mae-das-carpas"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "enguias-filosoficas",
+        "garcas-de-cristal",
+        "tartaruga-oraculo",
+        "carpas-profetas",
+        "mae-das-carpas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-respostas-apagadas",
+      "title": "As Respostas Apagadas",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "os-observadores-da-margem",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "secundaria",
+      "description": "Diversos registros antigos perderam completamente suas palavras. As páginas continuam intactas, mas toda a tinta desapareceu. Os Observadores pedem que os aventureiros descubram quem apagou as respostas antes que os registros mais recentes também desapareçam. A investigação começa nos arquivos da margem, onde os jogadores encontram páginas molhadas mesmo dentro de caixas fechadas. Seguindo o rastro de água, enfrentam 3 Carpas Profetas, 2 Enguias Filosóficas e 1 Oráculo Afogado. Ao final, descobrem que todos os registros apagados mencionavam a mesma frase: \"Abaixo das águas dorme aquela que fez a primeira pergunta.\" Os Observadores não sabem o que isso significa, mas afirmam que a frase aparece sempre em profecias ligadas à Mãe das Carpas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: enguias-filosoficas, carpas-profetas, oraculo-afogado, mae-das-carpas"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "enguias-filosoficas",
+        "carpas-profetas",
+        "oraculo-afogado",
+        "mae-das-carpas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "qual-delas-era-verdade",
+      "title": "Qual Delas Era Verdade?",
+      "area": "Lago das Carpas Profetas",
+      "giver_npc_id": "bento-sete-vezes",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "type": "secundaria",
+      "description": "Bento deseja descobrir qual das sete profecias recebidas estava correta. Ele entrega aos aventureiros sete bilhetes antigos, cada um descrevendo uma morte diferente: afogado, esmagado, esquecido, devorado, perdido, silenciado e respondido. Os jogadores devem investigar os três bilhetes que ainda estão molhados, pois Bento afirma que nunca conseguiu secá-los. O bilhete do afogado leva a uma margem funda, onde enfrentam 2 Carpas Profetas. O bilhete do silenciado leva a uma área sem eco, onde enfrentam 2 Enguias Filosóficas. O bilhete do respondido leva a uma pequena ilha coberta por marcas em formato de escama, onde enfrentam 1 Tartaruga Oráculo. Ao final, descobrem que nenhuma das previsões falava da morte de Bento. Todas mencionavam formas diferentes do lago anunciar o despertar da Mãe das Carpas. Bento entrega aos aventureiros uma anotação antiga indicando a região onde ela teria sido vista pela última vez.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: enguias-filosoficas, tartaruga-oraculo, carpas-profetas, mae-das-carpas"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "enguias-filosoficas",
+        "tartaruga-oraculo",
+        "carpas-profetas",
+        "mae-das-carpas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "missao-da-marca-tempestuosa",
+      "title": "Missão da Marca Tempestuosa",
+      "area": "Cidade de Pedralume",
+      "giver_npc_id": "cristalomante-aerion",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca Tempestuosa, o Cristalomante revela que uma antiga Pedralume Primordial encontrada sob a Cidade de Pedralume começou a apresentar rachaduras. Segundo ele, se o cristal se romper completamente, uma descarga de energia poderá destruir parte dos túneis abaixo da cidade. O aventureiro recebe acesso aos laboratórios do Cristalomante e deve investigar a origem do problema. Durante a busca, encontra anotações incompletas deixadas por antigos estudiosos. Os registros revelam que três Fragmentos Condutores foram espalhados pelas minas após o acidente que danificou a Pedralume Primordial. O primeiro está com um Rastreador Condutor nos túneis do sudoeste, o segundo com um Mineiro Cristalizado nos túneis do sudeste e o terceiro com o Supervisor de Escavação nas galerias do norte. Após recuperar os três fragmentos, o aventureiro descobre que eles precisam ser organizados corretamente para estabilizar o cristal. As anotações afirmam que toda energia passa por três estados: Busca, Condução e Acúmulo. As anotações são folhas rasgadas que eles acham (na ordem errada): Folha 1: “Após ser encontrada, a energia deve percorrer um caminho estável. Sem Condução, a energia se dispersa e retorna ao ambiente antes de alcançar seu destino.” Folha 2: Somente após ser encontrada e conduzida corretamente a energia pode ser armazenada. O Acúmulo é sempre o último estágio do processo.\" Folha 3: \"Nenhuma Pedralume pode armazenar energia que ainda não foi encontrada. Todo circuito deve começar pela Busca, pois apenas aquilo que é localizado pode ser conduzido.” O Fragmento da Busca pertence ao Rastreador Condutor, o Fragmento da Condução pertence ao Mineiro Cristalizado e o Fragmento do Acúmulo pertence ao Supervisor de Escavação. Quando colocados nessa ordem, os fragmentos restauram o circuito original da Pedralume Primordial e estabilizam sua energia. O Cristalomante então faz apenas uma pergunta: \"Qual é o maior erro de um estudioso?”. A resposta fica a critério do jogador. Caso considere a resposta sincera, ele encosta a Pedralume Primordial no pescoço do aventureiro. Uma pequena descarga percorre o corpo antes de desaparecer, deixando apenas a Marca Tempestuosa e concedendo acesso às Magias do Raio.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: supervisor-de-escavacao, mineiro-cristalizado, rastreador-condutor, cristalomante"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-tempestuosa"
+      ],
+      "enemy_refs": [
+        "supervisor-de-escavacao",
+        "mineiro-cristalizado",
+        "rastreador-condutor",
+        "cristalomante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "cristais-desaparecidos",
+      "title": "Cristais Desaparecidos",
+      "area": "Cidade de Pedralume",
+      "giver_npc_id": "cristalomante-aerion",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "type": "secundaria",
+      "description": "O Cristalomante percebeu que diversos Fragmentos Energizados desapareceram das galerias mais profundas das minas. Segundo os mineradores, ninguém entrou ou saiu dos túneis durante os últimos dias. Os aventureiros devem investigar os locais dos desaparecimentos e descobrir quem está roubando os cristais. Durante a missão enfrentam 3 Cristalófagos, 2 Morcegos Condutores e 1 Sentinela das Minas. Ao final descobrem um antigo depósito abandonado contendo dezenas de Fragmentos Energizados acumulados ao longo dos anos. Entre os objetos encontrados existe um mapa incompleto indicando túneis que não aparecem nos registros oficiais de Pedralume. O Cristalomante guarda o mapa para futuras pesquisas e recompensa os aventureiros pela ajuda.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sentinela-das-minas, cristalomante, cristalofago"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sentinela-das-minas",
+        "cristalomante",
+        "cristalofago"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-ultimo-muro",
+      "title": "O Último Muro",
+      "area": "Cidade de Pedralume",
+      "giver_npc_id": "capitao-aldren",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "type": "secundaria",
+      "description": "Aldren revela que uma antiga fortificação localizada abaixo das minas foi invadida por criaturas cristalizadas. Segundo os registros da guarda, naquele local repousa uma relíquia usada pelos fundadores da cidade durante a Primeira Defesa de Pedralume. Os aventureiros devem atravessar a Galeria Quebrada enfrentando 3 Cristalófagos, depois a Câmara dos Cristais Partidos enfrentando 2 Morcegos Condutores e 2 Larvas de Pedralume. Por fim chegam ao Bastião Enterrado, protegido por 2 Sentinelas das Minas. Após derrotá-las, descobrem uma sala esquecida contendo o escudo utilizado pelo primeiro defensor da cidade. Nas paredes existem registros descrevendo como o escudo resistiu a um ataque capaz de destruir parte das muralhas da capital.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: cristalofago"
+      ],
+      "reward_text": "Escudo do Último Muro",
+      "reward_item_ids": [
+        "escudo-do-ultimo-muro"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "cristalofago"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-legado-dos-fundadores",
+      "title": "O Legado dos Fundadores",
+      "area": "Cidade de Pedralume",
+      "giver_npc_id": "arquivista-velen",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "type": "secundaria",
+      "description": "Velen encontrou referências a uma armadura criada pelos fundadores da cidade utilizando fragmentos da Pedralume Primordial. Segundo os documentos, a armadura foi desmontada e suas partes escondidas em diferentes setores das minas após uma antiga calamidade. Os aventureiros devem localizar três registros antigos espalhados pelas minas e seguir as pistas deixadas pelos fundadores. Durante a jornada enfrentam 4 Cristalófagos, 3 Morcegos Condutores, 3 Larvas de Pedralume, 2 Mineiros Cristalizados e 2 Sentinelas das Minas. Após reunir as peças perdidas, os artesãos da cidade restauram a armadura utilizando técnicas esquecidas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: cristalofago"
+      ],
+      "reward_text": "Armadura Cristalina de Pedralume",
+      "reward_item_ids": [
+        "armadura-cristalina-de-pedralume"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "cristalofago"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-forja-silenciosa",
+      "title": "A Forja Silenciosa",
+      "area": "Cidade de Pedralume",
+      "giver_npc_id": "mestre-ferrox",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "type": "secundaria",
+      "description": "Pela primeira vez em décadas, uma das forjas de Ferrox deixou de funcionar. Os aventureiros devem investigar uma galeria abandonada de onde vinha parte da energia utilizada no local. Durante a missão enfrentam 3 Cristalófagos, 2 Morcegos Condutores e 1 Sentinela das Minas. Ao final descobrem que dezenas de Fragmentos Energizados estavam sendo acumulados em uma antiga câmara esquecida. A energia é restaurada e a forja volta a funcionar normalmente.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sentinela-das-minas, cristalofago"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sentinela-das-minas",
+        "cristalofago"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-formula-impossivel",
+      "title": "A Fórmula Impossível",
+      "area": "Cidade de Pedralume",
+      "giver_npc_id": "alquimista-selene",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "type": "secundaria",
+      "description": "Selene acredita estar próxima de concluir uma mistura alquímica capaz de armazenar energia tempestuosa por longos períodos, mas precisa de materiais recém-coletados das minas. Os aventureiros devem recuperar 4 Fragmentos Energizados e 1 Coração Cristalizado. Durante a missão enfrentam 2 Cristalófagos, 2 Larvas de Pedralume e 2 Mineiros Cristalizados. Após concluir seus estudos, Selene descobre registros antigos mencionando experimentos realizados pelos primeiros alquimistas da capital próximos à Pedralume Primordial.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: cristalofago"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "cristalofago"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "missao-da-marca-da-voz-distante",
+      "title": "Missão da Marca da Voz Distante",
+      "area": "Penhascos do ?ltimo Passo",
+      "giver_npc_id": "o-observador-do-penhasco",
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "type": "marca",
+      "description": "Quando um aventureiro pede a Marca da Voz Distante, o Observador do Penhasco revela que três moradores da região dos Penhascos do Último Passo abandonaram suas rotinas e passaram a visitar áreas isoladas dos penhascos, longe das patrulhas dos Vigias da Borda. Segundo ele, uma dessas pessoas pretende se jogar antes do próximo amanhecer. O aventureiro recebe apenas um dia para descobrir quem é. Os três suspeitos são Capitão Varn, encontrado em um antigo píer abandonado ao norte de Velharth; Dona Elara, vista frequentemente em uma colina próxima à estrada para Arkenford; e Senhora Salina, que passou a visitar uma formação rochosa voltada para o mar ao sul da cidade. Nenhum deles está acompanhado e nenhum sabe que os outros também estão sendo observados. Durante a investigação, o aventureiro pode conversar com cada um deles, procurar pistas e descobrir mais sobre suas vidas. Capitão Varn realmente perdeu toda a fortuna que possuía, mas ainda sonha em realizar uma última viagem. Dona Elara sofre pela morte de um de seus filhos, mas continua encontrando propósito em administrar sua hospedaria e ajudar viajantes. Já Senhora Salina, apesar de continuar sorrindo, trabalhando e tratando todos normalmente, perdeu o sentido que encontrava na própria vida e não consegue imaginar qualquer futuro para si mesma. Para concluir a missão, o aventureiro deve identificar corretamente quem pretende saltar e convencê-la a desistir sem utilizar violência ou ameaças. Caso consiga, o Observador faz apenas uma pergunta: \"O que torna uma escolha realmente livre?\" A resposta fica a critério do jogador. Se considerar a resposta sincera, o Observador mantém contato visual com o aprendiz durante alguns segundos. Quando o olhar é desfeito, a marca já está presente ao redor dos olhos, concedendo acesso às Magias da Manipulação.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: viajante"
+      ],
+      "reward_text": "Marca m?gica citada como recompensa narrativa.",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [
+        "marca-da-voz-distante"
+      ],
+      "enemy_refs": [
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-palavras-levadas-pelo-vento",
+      "title": "As Palavras Levadas Pelo Vento",
+      "area": "Penhascos do ?ltimo Passo",
+      "giver_npc_id": "irma-ventania",
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "type": "secundaria",
+      "description": "Irmã Ventania percebeu que diversos relatos antigos desapareceram de seus registros. As páginas continuam nos cadernos, mas todas as palavras sumiram. Os aventureiros devem investigar três locais frequentemente mencionados pelos viajantes afetados pela Voz dos Penhascos: a Pedra do Observador, uma formação rochosa onde ecos parecem responder perguntas; a Escadaria Quebrada, uma antiga trilha esculpida na falésia que termina abruptamente sobre o vazio; e o Mirante da Última Voz, um penhasco isolado onde diversas pessoas afirmaram ouvir alguém chamando seus nomes. Durante a missão enfrentam 2 Cabras Pálidas, 2 Urubus de Pedra e 1 Sereia dos Penhascos. Ao final descobrem inscrições gravadas diretamente na pedra das falésias. Todas repetem a mesma frase: \"Ela respondeu.\" Irmã Ventania afirma nunca ter registrado aquelas palavras. Ao retornar para a capela, os aventureiros percebem que um dos cadernos desaparecidos reapareceu sozinho durante sua ausência. Dentro dele existe apenas uma frase escrita em uma caligrafia desconhecida: \"Vocês também ouviram.\"",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: sereia-dos-penhascos, a-voz-dos-penhascos, urubus-de-pedra, cabras-palidas, viajante"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "sereia-dos-penhascos",
+        "a-voz-dos-penhascos",
+        "urubus-de-pedra",
+        "cabras-palidas",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "os-pertences-esquecidos",
+      "title": "Os Pertences Esquecidos",
+      "area": "Penhascos do ?ltimo Passo",
+      "giver_npc_id": "mercador-das-ultimas-coisas",
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "type": "secundaria",
+      "description": "O Mercador encontrou uma mochila abandonada contendo cartas e anotações de um viajante desaparecido. Os aventureiros devem seguir as pistas deixadas pelo dono da mochila antes que o rastro desapareça. Durante a missão enfrentam 3 Cabras Pálidas e 2 Urubus de Pedra. Ao final encontram um antigo mirante construído próximo à borda dos penhascos. Entre os objetos restantes existe um caderno contendo dezenas de páginas arrancadas. Em todas as páginas restantes aparece repetidamente a mesma frase: \"Ela respondeu.\" O estranho é que ninguém sabe quem escreveu aquilo. O Mercador afirma já ter encontrado a mesma frase em objetos pertencentes a viajantes diferentes, separados por décadas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: urubus-de-pedra, cabras-palidas, viajante"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "urubus-de-pedra",
+        "cabras-palidas",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-cliente-ausente",
+      "title": "O Cliente Ausente",
+      "area": "Estrada do Viajante",
+      "giver_npc_id": "mercador-das-ultimas-chances",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "type": "secundaria",
+      "description": "O Mercador afirma estar esperando um cliente há muitos anos, mas não consegue se lembrar quem ele é. Os aventureiros devem investigar três antigas estações abandonadas da Estrada do Viajante. Em cada uma delas encontram registros mencionando um comerciante idêntico ao atual, embora alguns documentos tenham mais de cem anos. Durante a jornada enfrentam 3 Cães das Estradas, 2 Corvos das Placas e 2 Goblins do Véu. Ao final encontram uma encomenda esquecida contendo apenas um bilhete: \"Obrigado por esperar.\" O Mercador fica visivelmente abalado ao ler a mensagem. Quando os aventureiros voltam para fazer perguntas, a carroça desapareceu sem deixar rastros",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: goblins-do-veu, viajante"
+      ],
+      "reward_text": "2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "goblins-do-veu",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-metal-impossivel",
+      "title": "O Metal Impossível",
+      "area": "Estrada do Viajante",
+      "giver_npc_id": "ferreiro-errante",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "type": "secundaria",
+      "description": "O Ferreiro procura um material chamado Ferro das Estradas, uma liga mencionada em registros antigos, mas que ninguém conseguiu encontrar nos últimos séculos. Os aventureiros devem investigar um trecho abandonado da estrada que não aparece em nenhum mapa moderno. Durante a missão enfrentam 3 Colecionadores de Pedágios, 2 Cães das Estradas e 2 Goblins do Véu. Ao final encontram uma antiga oficina em ruínas contendo ferramentas enferrujadas e uma forja apagada há décadas. No centro da oficina existe uma única barra de metal intacta. Próximo dela está gravada a frase: \"A estrada sempre leva de volta.\" O Ferreiro reconhece o material imediatamente, mas se recusa a explicar como o conhece.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: goblins-do-veu"
+      ],
+      "reward_text": "3 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "goblins-do-veu"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-caminho-que-nao-existe",
+      "title": "O Caminho Que Não Existe",
+      "area": "Estrada do Viajante",
+      "giver_npc_id": "a-cartografa-sem-mapas",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "type": "secundaria",
+      "description": "A Cartógrafa pede ajuda para encontrar uma estrada que aparece em relatos de viajantes, mas não em mapas. Os aventureiros devem seguir uma série de marcos antigos espalhados pela Estrada do Viajante. Durante a jornada enfrentam 2 Corvos das Placas, 2 Cães das Estradas e 2 Porcos-Coruja. Ao final encontram uma estrada de pedra perfeitamente preservada que desaparece após algumas centenas de metros. No local existe apenas uma placa coberta de musgo com a inscrição: \"Destino alcançado.\" Próximo à placa existe um mapa rasgado mostrando exatamente aquele local. No canto inferior está escrito apenas: \"Eu já estive aqui amanhã.\" Nenhum dos aventureiros consegue explicar para onde a estrada levava.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: porcos-coruja, viajante"
+      ],
+      "reward_text": "Mapa Inacabado",
+      "reward_item_ids": [
+        "mapa-inacabado"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "porcos-coruja",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "nao-siga-o-homem-da-placa",
+      "title": "Não Siga o Homem da Placa",
+      "area": "Estrada do Viajante",
+      "giver_npc_id": "o-homem-da-placa",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "type": "secundaria",
+      "description": "Após encontrarem o homem diversas vezes em locais diferentes, os aventureiros podem decidir investigá-lo. Seguindo seus rastros, descobrem acampamentos abandonados, placas semelhantes espalhadas pela estrada e relatos de viajantes desaparecidos. Durante a investigação enfrentam 3 Goblins do Véu, 2 Cães das Estradas e 1 O Viajante de Ontem. Ao final encontram uma clareira contendo dezenas de placas idênticas. Em uma delas está escrito: \"Você chegou tarde.\" Em outra: \"Não siga a próxima placa.\" Quando retornam para contar a descoberta, percebem que o Homem da Placa desapareceu novamente. Alguns dos aventureiros juram ter visto uma nova placa surgindo à beira da estrada durante a viagem de volta.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: o-viajante-de-ontem, goblins-do-veu, viajante"
+      ],
+      "reward_text": "Moeda do Viajante",
+      "reward_item_ids": [
+        "moeda-do-viajante"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "o-viajante-de-ontem",
+        "goblins-do-veu",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-lista-incompleta",
+      "title": "A Lista Incompleta",
+      "area": "Vilarejo dos Gatos Autistas",
+      "giver_npc_id": "prefeito-miaaannn",
+      "location_ids": [
+        "vilarejo-dos-gatos-autistas",
+        "montanhas-trippi"
+      ],
+      "type": "secundaria",
+      "description": "O Prefeito percebeu que diversas páginas do registro oficial da vila desapareceram. Os aventureiros devem conversar com três moradores diferentes para recuperar as informações perdidas. Um deles acredita que as páginas foram roubadas, outro as utilizou para fazer anotações e o terceiro as guardou tão bem que esqueceu onde colocou. Durante a investigação os aventureiros descobrem que diversos registros antigos mencionam viagens frequentes para a Vila dos Gatos com TDAH e uma antiga trilha que ligava as duas montanhas. Após reunir as páginas, o Prefeito percebe que vários trechos importantes foram removidos deliberadamente décadas atrás. Ninguém sabe quem fez isso.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: gatos-com-tdah"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "gatos-com-tdah"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-martelo-perdido",
+      "title": "O Martelo Perdido",
+      "area": "Vilarejo dos Gatos Autistas",
+      "giver_npc_id": "ferreiro-miaaannn",
+      "location_ids": [
+        "vilarejo-dos-gatos-autistas",
+        "montanhas-trippi"
+      ],
+      "type": "secundaria",
+      "description": "O Ferreiro perdeu seu martelo favorito e se recusa a fabricar outro. Segundo alguns moradores, ele foi levado acidentalmente para a Vila dos Gatos com TDAH. Os aventureiros devem seguir os relatos dos moradores e investigar o paradeiro do objeto. Na vila leste descobrem que o martelo foi usado como peso para impedir que uma pilha de documentos voasse durante uma ventania. O problema é que os documentos desapareceram e ninguém lembra quem os pegou. Após seguir uma série de pistas e conversar com diversos moradores, os aventureiros recuperam tanto o martelo quanto os documentos. Entre eles existe um desenho antigo mostrando as duas cavernas das montanhas ligadas por passagens subterrâneas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: gatos-com-tdah"
+      ],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "gatos-com-tdah"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-desafio-impossivel",
+      "title": "O Desafio Impossível",
+      "area": "Vilarejo dos Gatos Autistas",
+      "giver_npc_id": "tico-do-numero-proibido",
+      "location_ids": [
+        "vilarejo-dos-gatos-autistas",
+        "montanhas-trippi"
+      ],
+      "type": "secundaria",
+      "description": "Tico aposta com diversos moradores que conseguirá passar um dia inteiro sem mencionar os números proibidos. Os aventureiros devem acompanhá-lo durante o desafio e impedir que ele caia nas armadilhas preparadas pelos outros gatos. Ao longo do dia surgem placas com contas matemáticas, jogos, desafios de lógica e perguntas cuidadosamente criadas para fazê-lo perder a aposta. Os jogadores precisam encontrar maneiras criativas de distrair Tico ou responder por ele. Caso consigam ajudá-lo até o final do dia, ele vence a aposta e revela a localização de um pequeno esconderijo próximo à entrada da caverna da vila. Dentro dele existe uma antiga Anotação Incompreensível mencionando um \"gato que calculava o impossível\" muito antes do surgimento do atual Mategato.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: mategato"
+      ],
+      "reward_text": "8 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "mategato"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-reuniao-perdida",
+      "title": "A Reunião Perdida",
+      "area": "Vilarejo dos Gatos com TDAH",
+      "giver_npc_id": "chefe-ha",
+      "location_ids": [
+        "vilarejo-dos-gatos-com-tdah",
+        "montanhas-trippi"
+      ],
+      "type": "secundaria",
+      "description": "O Chefe organizou uma reunião importante para discutir um problema da vila, mas esqueceu completamente onde ela aconteceria e qual era o assunto. Os aventureiros devem conversar com diferentes moradores para reconstruir o trajeto da reunião. Cada morador lembra apenas um detalhe: uma árvore específica, uma ponte, uma pedra ou um caminho. Quando finalmente encontram o local correto, descobrem que a reunião aconteceria para discutir uma antiga trilha ligando as duas vilas. O problema é que ninguém consegue lembrar por que a trilha foi abandonada.",
+      "objectives": [],
+      "encounter_notes": [],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-hospede-que-nunca-foi-embora",
+      "title": "O Hóspede Que Nunca Foi Embora",
+      "area": "Vilarejo dos Gatos com TDAH",
+      "giver_npc_id": "dona-esqueci",
+      "location_ids": [
+        "vilarejo-dos-gatos-com-tdah",
+        "montanhas-trippi"
+      ],
+      "type": "secundaria",
+      "description": "Dona Esqueci encontrou um quarto ocupado por um viajante que aparentemente nunca realizou o check-out. O problema é que ninguém se lembra dele. Os aventureiros devem investigar os objetos deixados no quarto, conversar com moradores antigos e comparar diferentes versões da história. Alguns afirmam que o viajante existiu. Outros dizem que o quarto sempre esteve vazio. Entre os pertences encontrados existe uma carta antiga descrevendo uma caverna localizada no fundo da vila. A carta termina abruptamente após mencionar uma \"biblioteca impossível\". Quando retornam à hospedaria, Dona Esqueci afirma ter finalmente se lembrado do nome do viajante... mas esquece novamente antes de terminar a frase.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: viajante"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-lista-de-afazeres",
+      "title": "A Lista de Afazeres",
+      "area": "Vilarejo dos Gatos com TDAH",
+      "giver_npc_id": "nino",
+      "location_ids": [
+        "vilarejo-dos-gatos-com-tdah",
+        "montanhas-trippi"
+      ],
+      "type": "secundaria",
+      "description": "Nino encontrou uma Lista de Afazeres Inacabada, mas não consegue lembrar quais tarefas já concluiu. Os aventureiros devem ajudá-lo a visitar diferentes pontos da vila para verificar cada item. Algumas tarefas já foram concluídas, outras nunca começaram e algumas parecem ter sido escritas por outra pessoa. Durante a missão os jogadores conversam com diversos moradores e descobrem referências constantes à vila oeste. Ao final percebem que a última tarefa da lista é simplesmente: \"Terminar a lista\". Quando mostram isso para Nino, ele fica extremamente feliz e imediatamente começa uma nova lista.",
+      "objectives": [],
+      "encounter_notes": [],
+      "reward_text": "10 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-rebanho-desaparecido",
+      "title": "O Rebanho Desaparecido",
+      "area": "Campos dos Kriots",
+      "giver_npc_id": "pastor-elion",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "type": "secundaria",
+      "description": "Diversos animais desapareceram durante a noite sem deixar rastros. Elion pede que os aventureiros investiguem. Durante a missão enfrentam 3 Corvos Mineiros e 2 Falsos Espantalhos. Ao seguir as pistas, descobrem que os animais foram atraídos para uma antiga estrada comercial que liga os Campos dos Kriots a Redmoor. No final encontram o rebanho próximo da fronteira entre as regiões. Elion recompensa os aventureiros e sugere que conversem com os moradores de Redmoor caso queiram entender por que tantos animais começaram a seguir aquele caminho.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: falsos-espantalhos, corvos-mineiros"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "falsos-espantalhos",
+        "corvos-mineiros"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-espantalho-que-caminhava",
+      "title": "O Espantalho que Caminhava",
+      "area": "Campos dos Kriots",
+      "giver_npc_id": "prefeita-helena",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "type": "secundaria",
+      "description": "Agricultores afirmam ter visto um espantalho andando entre os campos durante a madrugada. Helena pede que os aventureiros investiguem antes que o pânico se espalhe. Durante a missão enfrentam 4 Falsos Espantalhos. Ao final descobrem que diversas plantações abandonadas estão sendo lentamente ocupadas por espantalhos cada vez mais organizados. Entre os objetos encontrados existe um símbolo desconhecido gravado em palha negra. Helena não reconhece o símbolo, mas afirma que ele não existia alguns anos atrás.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: falsos-espantalhos"
+      ],
+      "reward_text": "2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "falsos-espantalhos"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-casa-que-me-engoliu",
+      "title": "A Casa Que Me Engoliu",
+      "area": "Campos dos Kriots",
+      "giver_npc_id": "dono-arnaldo",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "type": "secundaria",
+      "description": "Arnaldo deseja provar que sua história é verdadeira. Ele pede que os aventureiros investiguem um antigo local onde um Kriot costumava aparecer. Durante a missão enfrentam 2 Corvos Mineiros e 2 Minhocas Gigantes. Ao final encontram fragmentos de pedra semelhantes aos encontrados em Kriots e uma antiga Maçaneta de Pedra enterrada no solo. Arnaldo fica extremamente satisfeito ao ver as evidências e recompensa os aventureiros. Antes da despedida, menciona que existe alguém nos campos que estuda os Kriots há décadas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: minhocas-gigantes, corvos-mineiros"
+      ],
+      "reward_text": "Porta do Interior Impossível",
+      "reward_item_ids": [
+        "porta-do-interior-impossivel"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "minhocas-gigantes",
+        "corvos-mineiros"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-primeiro-corredor",
+      "title": "O Primeiro Corredor",
+      "area": "Campos dos Kriots",
+      "giver_npc_id": "professor-malkor",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "type": "secundaria",
+      "description": "Malkor acredita que todos os Kriots descendem de uma única criatura ancestral. Para provar sua teoria, pede que os aventureiros recuperem registros espalhados pelos campos. Durante a missão enfrentam 3 Corvos Mineiros, 3 Falsos Espantalhos e 1 Minhoca Gigante. Ao reunir os documentos, descobrem referências a uma criatura conhecida como \"O Primeiro Corredor\". Segundo os registros, ela seria muito maior que qualquer Kriot já observado. Como recompensa, Malkor entrega um artefato que passou anos restaurando.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: falsos-espantalhos, corvos-mineiros"
+      ],
+      "reward_text": "Armadura das Mil Portas",
+      "reward_item_ids": [
+        "armadura-das-mil-portas"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "falsos-espantalhos",
+        "corvos-mineiros"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-rei-de-palha",
+      "title": "O Rei de Palha",
+      "area": "Campos dos Kriots",
+      "giver_npc_id": null,
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "type": "principal",
+      "description": "Diversos moradores desapareceram nos últimos meses após seguirem rastros deixados por Falsos Espantalhos. Alguns acreditam que os Kriots são responsáveis pelos desaparecimentos, enquanto outros afirmam que os viajantes apenas se perderam dentro deles. Após ajudar diversos moradores da região, os aventureiros descobrem que vários desaparecidos foram vistos pela última vez próximos a um enorme Kriot adormecido. Investigando seus corredores, encontram ferramentas, acampamentos abandonados e anotações deixadas por exploradores que entraram na criatura sem entender onde estavam. Durante a missão enfrentam 2 Falsos Espantalhos, 3 Corvos Mineiros e 2 Minhocas Gigantes. No centro de uma antiga plantação escondida dentro de um dos corredores do Kriot encontram o Rei Espantalho, que utiliza a confusão causada pelos desaparecimentos para atrair novas vítimas para seu território. Após derrotá-lo, os aventureiros encontram pertences dos desaparecidos e registros que ajudam a explicar diversos relatos contraditórios sobre os Kriots. Muitos dos mistérios da região permanecem sem resposta, mas fica claro que nem todo perigo dos Campos vem dos próprios Kriots.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: falsos-espantalhos, minhocas-gigantes, corvos-mineiros, viajante"
+      ],
+      "reward_text": "Armadura do Primeiro Espantalho",
+      "reward_item_ids": [
+        "armadura-do-primeiro-espantalho"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "falsos-espantalhos",
+        "minhocas-gigantes",
+        "corvos-mineiros",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    },
+    {
+      "id": "rastros-na-nevoa-verde",
+      "title": "Rastros na Névoa Verde",
+      "area": "Avelgard",
+      "giver_npc_id": "capita-lyra-folha-clara",
+      "location_ids": [
+        "avelgard"
+      ],
+      "type": "secundaria",
+      "description": "Diversos exploradores desapareceram após seguirem rastros de um enorme Porco-Coruja pela floresta. Lyra teme que aventureiros inexperientes tentem caçar a criatura e acabem se perdendo em áreas antigas de Viridian. Os aventureiros devem seguir os rastros, encontrar os desaparecidos e descobrir o que realmente aconteceu. Durante a jornada enfrentam 2 Veados de Três Pernas, 2 Espíritos de Folhas e 1 Raiz Andante. Ao final descobrem que os exploradores não foram atacados pelo Porco-Coruja Ancião; eles apenas seguiram a criatura até uma área profunda da floresta e não souberam voltar. Entre seus pertences existe um diário destinado a um pesquisador de Varnhollow, mencionando que o Ancião parecia estar protegendo algo.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: veados-de-tres-pernas, espiritos-de-folhas, porco-coruja-anciao, raiz-andante"
+      ],
+      "reward_text": "2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "veados-de-tres-pernas",
+        "espiritos-de-folhas",
+        "porco-coruja-anciao",
+        "raiz-andante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "madeira-viva",
+      "title": "Madeira Viva",
+      "area": "Avelgard",
+      "giver_npc_id": "ferreiro-cascaforte",
+      "location_ids": [
+        "avelgard"
+      ],
+      "type": "secundaria",
+      "description": "Cascaforte deseja produzir novos equipamentos, mas precisa de madeira retirada de uma árvore que caiu naturalmente na floresta. Os aventureiros devem localizar a árvore sem ferir Viridian. Durante a busca enfrentam 3 Espíritos de Folhas e 2 Corujas de Musgo. Próximo à árvore caída encontram marcas antigas indicando uma trilha que segue para regiões mais profundas da floresta. As marcas parecem apontar para uma área onde alguns moradores afirmam ter visto o Ancião das Raízes.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: espiritos-de-folhas, anciao-das-raizes, corujas-de-musgo"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "espiritos-de-folhas",
+        "anciao-das-raizes",
+        "corujas-de-musgo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "entrega-para-varnhollow",
+      "title": "Entrega para Varnhollow",
+      "area": "Avelgard",
+      "giver_npc_id": "mercadora-elenya",
+      "location_ids": [
+        "avelgard"
+      ],
+      "type": "secundaria",
+      "description": "Uma encomenda destinada a um pesquisador de Varnhollow deveria ter chegado há dias. Elenya pede que os aventureiros realizem a entrega. Durante a viagem encontram rastros de um Lenhador Perdido e sinais de que criaturas da floresta estão evitando uma trilha normalmente segura. Ao chegar em Varnhollow, o pesquisador recebe a encomenda e afirma que outros relatos parecidos surgiram perto do território do Porco-Coruja Ancião.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: porco-coruja-anciao, lenhador-perdido"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "porco-coruja-anciao",
+        "lenhador-perdido"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-quarto-vazio",
+      "title": "O Quarto Vazio",
+      "area": "Avelgard",
+      "giver_npc_id": "dona-iris",
+      "location_ids": [
+        "avelgard"
+      ],
+      "type": "secundaria",
+      "description": "Um estudioso hospedado na Raiz Dourada desapareceu sem deixar explicações. Os aventureiros devem investigar seus pertences, conversar com outros hóspedes e seguir um mapa rabiscado deixado em cima da cama. Durante a busca enfrentam 2 Corujas de Musgo e 2 Espíritos de Folhas. Ao final encontram o estudioso vivo, escondido perto de uma clareira. Ele afirma ter visto o Porco-Coruja Ancião carregando galhos, folhas e penas para construir algo. Antes de retornar para Avelgard, entrega aos aventureiros um mapa incompleto da região.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: espiritos-de-folhas, porco-coruja-anciao, corujas-de-musgo"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "espiritos-de-folhas",
+        "porco-coruja-anciao",
+        "corujas-de-musgo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-penas-do-anciao",
+      "title": "As Penas do Ancião",
+      "area": "Avelgard",
+      "giver_npc_id": "tome-dos-porcos-coruja",
+      "location_ids": [
+        "avelgard"
+      ],
+      "type": "secundaria",
+      "description": "Tomé acredita que o Porco-Coruja Ancião não é apenas um animal raro, mas uma criatura importante para o equilíbrio da floresta. Ele pede que os aventureiros investiguem relatos recentes envolvendo penas gigantes encontradas perto das trilhas. Durante a jornada enfrentam 2 Porcos-Coruja, 2 Corujas de Musgo e 1 Veado de Três Pernas. Ao final encontram uma enorme pena caída naturalmente e marcas de botas próximas. Tomé percebe que caçadores estão seguindo a criatura e pede que os aventureiros avisem a Capitã Lyra.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: porco-coruja-anciao, corujas-de-musgo, porcos-coruja"
+      ],
+      "reward_text": "Olho de Porco-Coruja",
+      "reward_item_ids": [
+        "olho-de-porco-coruja"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "porco-coruja-anciao",
+        "corujas-de-musgo",
+        "porcos-coruja"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-guardiao-das-copas",
+      "title": "O Guardião das Copas",
+      "area": "Avelgard",
+      "giver_npc_id": null,
+      "location_ids": [
+        "avelgard"
+      ],
+      "type": "principal",
+      "description": "Após as missões em Avelgard, os aventureiros descobrem que um grupo de caçadores entrou na Floresta Viridian em busca do Porco-Coruja Ancião. Eles acreditam que a criatura vale uma fortuna e que suas penas podem ser vendidas para colecionadores. Seguindo as pistas reunidas por Lyra, Elenya, Dona Íris e Tomé, os aventureiros chegam a uma clareira protegida por raízes antigas. Lá encontram o Porco-Coruja Ancião protegendo um ninho com filhotes raros. Pouco depois, os caçadores aparecem e tentam cercar a criatura. O grupo deve decidir se conversa, intimida ou enfrenta os caçadores. Se houver combate, enfrentam 4 Caçadores de Viridian. Cada Caçador de Viridian possui Vida 25 + 5 de armadura. Durante o confronto, 2 Corujas de Musgo e 1 Raiz Andante também podem surgir para defender a clareira. Caso os aventureiros protejam o Ancião, a criatura deixa cair uma de suas penas antes de desaparecer entre as árvores. Caso escolham atacar o Ancião, enfrentam uma das criaturas mais antigas de Viridian e a floresta passa a reagir contra eles.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: porco-coruja-anciao, corujas-de-musgo, raiz-andante"
+      ],
+      "reward_text": "Pena do Porco-Coruja Ancião",
+      "reward_item_ids": [
+        "pena-do-porco-coruja-anciao"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "porco-coruja-anciao",
+        "corujas-de-musgo",
+        "raiz-andante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-ultimo-navegante",
+      "title": "O Último Navegante",
+      "area": "Velharth",
+      "giver_npc_id": "capitao-varn",
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "secundaria",
+      "description": "Capitão Varn afirma que um antigo navegador desapareceu após seguir uma voz vinda dos penhascos durante uma tempestade. Muitos acreditam que a história é apenas mais uma de suas invenções, mas Varn insiste que o homem realmente existiu. Os aventureiros devem investigar antigos registros do porto e seguir as pistas deixadas pelo navegador. Durante a jornada enfrentam 3 Gaivotas Rochosas e 2 Cabras dos Penhascos. Ao final encontram um diário escondido em uma gruta costeira. As últimas páginas descrevem vozes chamando o navegador pelo nome durante várias noites. Entre os registros existe uma carta destinada a um morador de Stonewatch.",
+      "objectives": [],
+      "encounter_notes": [],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "os-chamados-da-nevoa",
+      "title": "Os Chamados da Névoa",
+      "area": "Velharth",
+      "giver_npc_id": "os-vigias-da-borda",
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "secundaria",
+      "description": "Três viajantes desapareceram após abandonarem seus acampamentos durante a madrugada. Os Vigias pedem ajuda para encontrá-los antes que alcancem as regiões mais perigosas dos penhascos. Durante a busca os aventureiros enfrentam 2 Ecos Perdidos e 3 Gaivotas Rochosas. Os desaparecidos são encontrados caminhando em direção às bordas dos penhascos, como se estivessem hipnotizados. Após salvá-los, os aventureiros descobrem que todos ouviram exatamente a mesma frase sendo repetida pelo vento.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: viajante"
+      ],
+      "reward_text": "2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "escamas-impossiveis",
+      "title": "Escamas Impossíveis",
+      "area": "Velharth",
+      "giver_npc_id": "senhora-salina",
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "secundaria",
+      "description": "Salina recebeu escamas que não consegue identificar. Ela pede que os aventureiros descubram sua origem. Investigando pescadores e mercadores da região, os aventureiros descobrem que as escamas vieram de um comerciante de Redmoor que as encontrou próximo às falésias. Salina recompensa os aventureiros e sugere uma visita à cidade.",
+      "objectives": [],
+      "encounter_notes": [],
+      "reward_text": "12 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-luzes-distantes",
+      "title": "As Luzes Distantes",
+      "area": "Velharth",
+      "giver_npc_id": "faroleiro-edrik",
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "secundaria",
+      "description": "Durante várias noites, Edrik observou luzes surgindo em penhascos onde não existe qualquer construção. Ele pede que os aventureiros investiguem. Durante a jornada enfrentam 2 Ecos Perdidos e 2 Cabras dos Penhascos. As luzes levam até antigas marcações usadas por moradores décadas atrás para alertar viajantes sobre regiões perigosas. Algumas delas parecem ter sido reacendidas recentemente por alguém desconhecido.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: viajante"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-sombra-perdida",
+      "title": "A sombra perdida",
+      "area": "Velharth",
+      "giver_npc_id": "dona-elara",
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "secundaria",
+      "description": "Dona Elara perdeu sua sombra depois de explorar a floresta do avesso em busca de alguns itens. A floresta parece ter puxado sua sombra. Os jogadores precisam entrar na floresta e lutar contra um Espelho vivo, então acham sua sombra numa região no fundo da floresta, machucada e com medo daquilo que a separou de seu corpo. O grupo tem um vislumbre do Reflexo Original quando a sombra explica como ele se aparenta.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: o-reflexo-original, espelho-vivo"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "o-reflexo-original",
+        "espelho-vivo"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-sino-caido",
+      "title": "O Sino Caído",
+      "area": "Velharth",
+      "giver_npc_id": "ferreiro-roderick",
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "secundaria",
+      "description": "Um carregamento de metais desapareceu durante uma tempestade próximo a um antigo sino utilizado pelos Vigias da Borda. Os aventureiros devem recuperar o material. Durante a missão enfrentam 3 Cabras dos Penhascos e 2 Ecos Perdidos. Ao final encontram o carregamento preso entre rochas e uma antiga inscrição descrevendo parte de um ritual utilizado para dar forma à Voz dos Penhascos.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: a-voz-dos-penhascos"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "a-voz-dos-penhascos"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-voz-dos-penhascos",
+      "title": "A Voz dos Penhascos",
+      "area": "Velharth",
+      "giver_npc_id": null,
+      "location_ids": [
+        "velharth"
+      ],
+      "type": "principal",
+      "description": "Após ajudar os moradores de Velharth, os aventureiros descobrem que diversas pistas apontam para um antigo ritual capaz de conceder forma física à Voz dos Penhascos. Os fragmentos do ritual estão espalhados entre os registros do navegador desaparecido, as anotações do hóspede sem nome, as inscrições encontradas pelos Vigias e os símbolos descobertos próximo ao sino antigo. Reunindo todas as informações, os aventureiros sobem até o ponto mais alto dos Penhascos do Último Passo durante uma noite sem lua. Conforme realizam o ritual, o vento desaparece completamente. As ondas se calam. Nenhum som pode ser ouvido além de sussurros vindos da escuridão. Aos poucos, milhares de vozes começam a falar ao mesmo tempo. Vozes de viajantes perdidos, exploradores mortos e pessoas que deram seu último passo nos penhascos. Então a Voz dos Penhascos assume forma física. Uma entidade composta por ecos, névoa e fragmentos de memórias. Durante o combate ela utiliza vozes conhecidas pelos aventureiros para tentar atraí-los para o abismo. Após sua derrota, os sussurros desaparecem pela primeira vez em séculos. Entre os restos da entidade encontram objetos acumulados ao longo dos anos por aqueles que sucumbiram aos chamados.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: a-voz-dos-penhascos, viajante"
+      ],
+      "reward_text": "• Sino dos Ecos Distantes (Lendário)• Mapa das Falésias Esquecidas• Última Carta do Navegante",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "a-voz-dos-penhascos",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    },
+    {
+      "id": "barcos-a-deriva",
+      "title": "Barcos à Deriva",
+      "area": "Brisvale",
+      "giver_npc_id": "prefeita-mirela-ondaclara",
+      "location_ids": [
+        "brisvale"
+      ],
+      "type": "secundaria",
+      "description": "Três embarcações desapareceram durante a mesma semana. Mirela pede que os aventureiros investiguem o ocorrido. Durante a busca enfrentam 3 Carpas Profetas Hostis e 2 Espíritos das Águas. Os barcos são encontrados intactos, abandonados no centro do lago. Em um deles existe um mapa marcado apontando para uma antiga cabana próxima a Corvenn. Entre os pertences abandonados há anotações sobre profecias que deixaram de se cumprir recentemente.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: carpas-profetas"
+      ],
+      "reward_text": "• 2 Pedralumes Puras",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "carpas-profetas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-metal-do-fundo",
+      "title": "O Metal do Fundo",
+      "area": "Brisvale",
+      "giver_npc_id": "dorian-mare-forte",
+      "location_ids": [
+        "brisvale"
+      ],
+      "type": "secundaria",
+      "description": "Um carregamento de metais caiu de uma embarcação durante uma tempestade. Dorian pede que os aventureiros recuperem o material. Durante a busca enfrentam 2 Tartarugas Oráculo e 3 Carpas Profetas. Nas ruínas submersas onde o metal foi parar existem símbolos semelhantes aos encontrados pelos pescadores desaparecidos. Entre os destroços os aventureiros encontram uma antiga placa de pedra coberta por inscrições. Dorian não consegue traduzir os símbolos, mas Arius das Mil Profecias acredita que eles fazem referência a uma antiga profecia relacionada à Mãe das Carpas",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: carpas-profetas, mae-das-carpas"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "carpas-profetas",
+        "mae-das-carpas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "entrega-para-dunwall",
+      "title": "Entrega para Dunwall",
+      "area": "Brisvale",
+      "giver_npc_id": "mercador-talio",
+      "location_ids": [
+        "brisvale"
+      ],
+      "type": "secundaria",
+      "description": "Tálio precisa enviar uma encomenda para um comerciante de Dunwall, mas ninguém quer fazer o trajeto. Durante a viagem os aventureiros encontram pertences abandonados por viajantes e ouvem rumores sobre profecias cada vez mais estranhas vindas do lago. O comerciante de Dunwall afirma que pescadores da região começaram a evitar certas partes da costa após ouvirem relatos sobre uma enorme sombra sob as águas.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: viajante"
+      ],
+      "reward_text": "15 Pedralumes Refinadas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-profeta-desaparecido",
+      "title": "O Profeta Desaparecido",
+      "area": "Brisvale",
+      "giver_npc_id": "dona-neris",
+      "location_ids": [
+        "brisvale"
+      ],
+      "type": "secundaria",
+      "description": "Um estudioso hospedado em Brisvale desapareceu após afirmar ter encontrado uma profecia impossível. Os aventureiros seguem suas anotações e encontram o homem escondido em uma cabana abandonada na margem do lago. No caminho enfrentam 2 Carpas Profetas e 1 Enguia Filosófica. O estudioso se recusa a explicar tudo o que viu, mas entrega uma página contendo apenas uma frase: \"Ele voltou a caminhar.\" Antes de partir, ele afirma que as Carpas Profetas começaram a temer o próprio futuro.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: carpas-profetas"
+      ],
+      "reward_text": "1 Pedralume Pura",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "carpas-profetas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-profecias-quebradas",
+      "title": "As Profecias Quebradas",
+      "area": "Brisvale",
+      "giver_npc_id": "arius-das-mil-profecias",
+      "location_ids": [
+        "brisvale"
+      ],
+      "type": "secundaria",
+      "description": "Arius descobriu que diversas Carpas Profetas começaram a fornecer previsões contraditórias. Investigando o fenômeno, os aventureiros enfrentam 3 Carpas Profetas e 1 Enguia Filosófica. Todas as previsões incorretas começaram após os primeiros desaparecimentos no lago. Entre registros antigos, Arius encontra referências a uma criatura conhecida como Mãe das Carpas, descrita como a mais antiga e poderosa das Carpas Profetas",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: carpas-profetas, mae-das-carpas"
+      ],
+      "reward_text": "Escama Profética",
+      "reward_item_ids": [
+        "escama-profetica"
+      ],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "carpas-profetas",
+        "mae-das-carpas"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-futuro-afogado",
+      "title": "O Futuro Afogado",
+      "area": "Brisvale",
+      "giver_npc_id": null,
+      "location_ids": [
+        "brisvale"
+      ],
+      "type": "principal",
+      "description": "Após ajudar os moradores de Brisvale, os aventureiros percebem que todas as pistas apontam para a mesma origem. Os barcos desaparecidos, as profecias contraditórias e o comportamento estranho das criaturas do lago estão ligados à Mãe das Carpas. Seguindo os registros encontrados por Mirela, Dorian, Tálio, Neris e Arius, os aventureiros navegam até uma região do lago que não aparece em mapa algum. Conforme avançam, a água torna-se completamente imóvel. Não existem ondas, vento ou pássaros. Barcos desaparecidos permanecem flutuando em silêncio, preservados como se tivessem sido abandonados apenas algumas horas atrás. Durante a jornada enfrentam 4 Carpas Profetas, 3 Enguias Filosóficas e 2 Tartarugas Oráculo. No centro do lago encontram a Mãe das Carpas. Antes do combate, imagens começam a surgir na superfície da água. Os aventureiros veem cidades em chamas, magos mortos e uma figura caminhando sozinha por uma estrada interminável. A criatura parece aterrorizada. Apenas quando insistem em avançar ela os enfrenta. Após derrotá-la ou acalmá-la, recebem uma última visão. Veem o Viajante caminhando novamente pela Estrada do Viajante. Veem magos sendo caçados. Veem o mundo mudando. Porém a visão termina antes do desfecho. A Mãe das Carpas foi capaz de enxergar a tragédia, mas não o que acontece depois dela. Foi esse medo que a levou à loucura. No fundo do lago, entre embarcações acumuladas ao longo de décadas, os aventureiros encontram um antigo tesouro protegido pela criatura.",
+      "objectives": [],
+      "encounter_notes": [
+        "Inimigos citados no texto: enguias-filosoficas, carpas-profetas, mae-das-carpas, viajante"
+      ],
+      "reward_text": "• Olho da Verdade Profunda• Escama da Primeira Profecia• Relógio das Marés Antigas",
+      "reward_item_ids": [],
+      "reward_magic_mark_ids": [],
+      "enemy_refs": [
+        "enguias-filosoficas",
+        "carpas-profetas",
+        "mae-das-carpas",
+        "viajante"
+      ],
+      "status": "catalogo",
+      "tags": [
+        "oficial",
+        "lore",
+        "principal"
+      ],
+      "notes": []
+    }
+  ]
+}

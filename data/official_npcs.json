@@ -1,0 +1,1518 @@
+{
+  "official_npcs": [
+    {
+      "id": "velho-nox",
+      "name": "Velho Nox",
+      "area": "Floresta do Avesso",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "role": "Mestre de marca",
+      "description": "Um homem misterioso encontrado na Floresta do Avesso. Pouco fala sobre si mesmo e parece conhecer muito mais do que demonstra. Muitos acreditam que ele já viveu centenas de vidas diferentes.",
+      "function": "Concede Marca Sombria",
+      "grants_magic_mark_id": "marca-sombria",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-sombria",
+        "o-sonho-que-nao-era-meu"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Não realiza nenhum ritual visível. O aprendiz apenas adormece próximo a ele e desperta no dia seguinte já possuindo a marca."
+      ]
+    },
+    {
+      "id": "a-menina-sem-sombra",
+      "name": "A Menina Sem Sombra",
+      "area": "Floresta do Avesso",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "role": "Guia incomum",
+      "description": "Uma garota que perdeu sua sombra quando era criança. Continua viva, mas sua sombra vaga pela floresta como uma criatura independente.",
+      "function": "Guia incomum",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-roubo-da-sombra"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "as-costureiras-do-reflexo",
+      "name": "As Costureiras do Reflexo",
+      "area": "Floresta do Avesso",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "role": "Artesãs",
+      "description": "Um pequeno grupo de mulheres que fabricam roupas usando sombras capturadas na floresta.",
+      "function": "Artesãs",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "Estilhaço Reflexivo",
+        "Fragmento de Sombra",
+        "Linha do Reflexo Partido",
+        "Agulha de Prata Invertida",
+        "Capa da Sombra Perdida",
+        "Máscara do Reflexo",
+        "Espelho de Bolso Vivo",
+        "Armadura do Reflexo Torto"
+      ],
+      "quest_ids": [
+        "o-casaco-inacabado"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "senhor-espelho",
+      "name": "Senhor Espelho",
+      "area": "Floresta do Avesso",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "role": "Mercador raro",
+      "description": "Um comerciante misterioso que nunca mostra o rosto. Em vez disso, usa uma máscara espelhada que reflete quem a observa.",
+      "function": "Mercador raro",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "Estilhaço Reflexivo",
+        "Pedra do Contrário",
+        "Mapa Dobrado",
+        "Olho Espelhado",
+        "Garrafa Vazia de Reflexo",
+        "Espelho de Bolso Vivo",
+        "Máscara do Reflexo",
+        "Lanterna Negativa"
+      ],
+      "quest_ids": [
+        "o-reflexo-errado"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-clube-das-sombras-perdidas",
+      "name": "O Clube das Sombras Perdidas",
+      "area": "Floresta do Avesso",
+      "location_ids": [
+        "floresta-do-avesso"
+      ],
+      "role": "Facção local",
+      "description": "Grupo formado por sombras que perderam seus corpos para a floresta. Reúnem-se mensalmente para compartilhar experiências e tentar encontrar seus corpos novamente.",
+      "function": "Facção local",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "memorias-misturadas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "druida-dos-galhos-antigos",
+      "name": "Druida dos Galhos Antigos",
+      "area": "Floresta Viridian",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "role": "Mestre de marca",
+      "description": "Um velho guardião da Floresta Viridian que raramente aparece para viajantes. Dizem que conhece o nome de todas as árvores da floresta e que conversa com elas diariamente.",
+      "function": "Concede Marca Viridian",
+      "grants_magic_mark_id": "marca-viridian",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-viridian",
+        "o-lenhador-que-nao-voltou"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Faz uma pequena raiz atravessar a pele próxima ao tornozelo do aprendiz. A raiz desaparece logo em seguida, deixando apenas a marca."
+      ]
+    },
+    {
+      "id": "erdan-musgoalto",
+      "name": "Erdan Musgoalto",
+      "area": "Floresta Viridian",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "role": "outro",
+      "description": "Um herborista que vive numa cabana construída sobre raízes gigantes. Passa os dias coletando plantas raras e catalogando espécies da floresta.Função: Herborista.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "Poção de Cura Menor — 5 Pedralumes Brutas",
+        "Poção de Cura — 3 Pedralumes Refinadas",
+        "Amostra de Musgo Raro — 4 Pedralumes Refinadas",
+        "Maçã Viridian — 8 Pedralumes Refinadas",
+        "Fruto do Primeiro Jardim — 4 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "o-musgo-desaparecido"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "cacadora-lys",
+      "name": "Caçadora Lys",
+      "area": "Floresta Viridian",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "role": "outro",
+      "description": "Uma exploradora experiente que conhece praticamente todas as trilhas da Floresta Viridian. Carrega mapas rabiscados em folhas, cascas de árvore e pedaços de couro.Função: Exploradora.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "Folha do Primeiro Caminho — 12 Pedralumes Refinadas",
+        "Botas Raiz — 4 Pedralumes Refinadas",
+        "Olho de Coruja-Musgo — 10 Pedralumes Refinadas",
+        "Cajado das Mil Trilhas — 15 Pedralumes Refinadas",
+        "Botas do Caminho Invisível — 3 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "trilha-interrompida"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "velho-orrin",
+      "name": "Velho Orrin",
+      "area": "Floresta Viridian",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "role": "Contador de histórias",
+      "description": "Um contador de histórias que afirma ter conversado com o Porco-Coruja Ancião. Ninguém acredita nele, embora suas histórias sempre acabem revelando algum detalhe verdadeiro.",
+      "function": "Contador de histórias",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "uma-pena-de-sabedoria"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "guardioes-das-trilhas",
+      "name": "Guardiões das Trilhas",
+      "area": "Floresta Viridian",
+      "location_ids": [
+        "floresta-viridian"
+      ],
+      "role": "outro",
+      "description": "Um pequeno grupo de protetores da floresta responsável por impedir que viajantes entrem nas áreas mais perigosas de Viridian. Ficam em volta da floresta.Função: Guardas da região.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "raizes-agressivas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "sacerdote-das-brasas",
+      "name": "Sacerdote das Brasas",
+      "area": "Vale Vermilion",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "role": "Mestre de marca",
+      "description": "Um homem que vive entre os campos de flores do Vale Vermilion. Acredita que toda vida nasce da mesma força que alimenta o fogo e o sangue. Dependendo das escolhas dos jogadores, pode se tornar um aliado ou um inimigo.",
+      "function": "Concede Marca Vermilion",
+      "grants_magic_mark_id": "marca-vermilion",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-vermilion",
+        "o-ultimo-carvao"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Encosta o Carvão Vermilion acesso na palma da mão do aprendiz. A queimadura desaparece após alguns segundos, deixando apenas a marca."
+      ]
+    },
+    {
+      "id": "irma-rubra",
+      "name": "Irmã Rubra",
+      "area": "Vale Vermilion",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "role": "outro",
+      "description": "Uma mulher que cultiva flores escarlates nos arredores do Vale Vermilion. Apesar da aparência gentil, conhece muitas histórias sobre morte, despedidas e arrependimentos.Função: Florista.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "Pelo Escarlate — 4 Pedralumes Brutas",
+        "Asa Vermilion — 4 Pedralumes Brutas",
+        "Coração Luminoso — 3 Pedralumes Refinadas",
+        "Flor da Última Palavra — 12 Pedralumes Refinadas",
+        "Fruto Vermilion Maduro — 15 Pedralumes Refinadas",
+        "Fruto Vermilion Ancião — 3 Pedralumes Puras",
+        "Máscara dos Sussurros — 18 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "jardim-devastado"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "ferreiro-cinzento",
+      "name": "Ferreiro Cinzento",
+      "area": "Vale Vermilion",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "role": "outro",
+      "description": "Um ferreiro silencioso que utiliza brasas naturais do Vale Vermilion em suas fornalhas. Suas armas e armaduras costumam permanecer mornas mesmo horas após serem produzidas.Função: Ferreiro.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "Manto de Cinzas — 8 Pedralumes Brutas",
+        "Armadura de Aço Vermilion — 12 Pedralumes Refinadas",
+        "Armadura da Brasa Viva — 3 Pedralumes Puras",
+        "Armadura do Silêncio Escarlate — 4 Pedralumes Puras",
+        "Espinho Vermilion — 2 Pedralumes Puras",
+        "Cajado das Chamas Impacientes — 3 Pedralumes Puras",
+        "Foice da Colheita Escarlate — 15 Pedralumes Pura"
+      ],
+      "quest_ids": [
+        "forja-sem-chama"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "elias-da-chama-fria",
+      "name": "Elias da Chama Fria",
+      "area": "Vale Vermilion",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "role": "outro",
+      "description": "Um pesquisador obcecado por fenômenos estranhos do vale. Ele estuda brasas que não queimam, flores que crescem sobre mortes antigas e criaturas que parecem carregar calor no sangue.Função: Pesquisador.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-coracao-que-ainda-brilha"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "peregrinos-vermilion",
+      "name": "Peregrinos Vermilion",
+      "area": "Vale Vermilion",
+      "location_ids": [
+        "vale-vermilion"
+      ],
+      "role": "outro",
+      "description": "Um grupo de viajantes que atravessa o vale carregando lanternas acesas com brasas protegidas. Eles acreditam que deixar uma chama morrer no vale atrai azar.Função: Grupo local.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-lanterna-perdida"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a-esquecida",
+      "name": "A Esquecida",
+      "area": "Brejo do Esquecimento",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "role": "Mestre de marca",
+      "description": "Uma mulher encontrada no Brejo do Esquecimento que não consegue se lembrar do próprio nome, mas sempre fala que é algo que está na cara e está na ponta da língua. Apesar disso, parece recordar perfeitamente segredos que ninguém mais conhece. Sua cabana está cheia de objetos etiquetados com descrições simples como \"chave\", \"colher\" e \"porta\", como se ela tivesse medo de esquecer o significado das coisas.",
+      "function": "Concede Marca do Esquecimento",
+      "grants_magic_mark_id": "marca-do-esquecimento",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-do-esquecimento",
+        "a-lembranca-errada"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Conta ao aprendiz uma história que ele esquece imediatamente após ouvi-la. Quando a história desaparece de sua memória, a marca surge em seu ombro."
+      ]
+    },
+    {
+      "id": "irmao-salmo",
+      "name": "Irmão Salmo",
+      "area": "Brejo do Esquecimento",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "role": "Escriba",
+      "description": "Um velho escriba que vive copiando mem?rias em cadernos para evitar que desapare?am. Sempre carrega tinta, papel e uma corda amarrada ao pr?prio pulso para lembrar o caminho de volta.",
+      "function": "Escriba",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Conta de Oração Enlameada — 4 Pedralumes Brutas• Pele de Sapo-Monge — 5 Pedralumes Brutas• Frasco de Névoa Viva — 4 Pedralumes Refinadas• Livro das Páginas Inquietas — 3 Pedralumes Puras• Vestes da Memória Perdida — 2 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "as-paginas-perdidas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dona-mirta",
+      "name": "Dona Mirta",
+      "area": "Brejo do Esquecimento",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "role": "Comerciante",
+      "description": "Uma comerciante que compra e vende objetos encontrados boiando no brejo. Quase todos os itens de sua loja pertenciam a algu?m que nunca voltou para busc?-los.",
+      "function": "Comerciante",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Lama Murmurante — 3 Pedralumes Brutas• Muco Cronológico — 4 Pedralumes Refinadas• Capa Enlameada — 8 Pedralumes Brutas• Pera Esquecida — 12 Pedralumes Refinadas• Fruto das Memórias Perdidas — 3 Pedralumes Puras• Relógio Sem Ponteiros — 5 Pedralumes Puras• Sobretudo do Esquecido — 4 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "o-barco-que-voltou-sozinho"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "velho-daren",
+      "name": "Velho Daren",
+      "area": "Brejo do Esquecimento",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "role": "Morador excêntrico",
+      "description": "Um morador exc?ntrico que passa os dias tentando pescar lembran?as em vez de peixes. Ningu?m sabe se ele est? louco ou se realmente consegue capturar mem?rias presas na ?gua.",
+      "function": "Morador excêntrico",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-memoria-pescada"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "vigias-do-brejo",
+      "name": "Vigias do Brejo",
+      "area": "Brejo do Esquecimento",
+      "location_ids": [
+        "brejo-do-esquecimento"
+      ],
+      "role": "Guardas da região",
+      "description": "Um grupo de moradores que marca ?rvores, pedras e postes para impedir que viajantes desapare?am nas partes mais perigosas do p?ntano.",
+      "function": "Guardas da região",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "os-marcos-apagados"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "bruxa-das-aguas-calmas",
+      "name": "Bruxa das Águas Calmas",
+      "area": "Lago das Carpas Profetas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "role": "Mestre de marca",
+      "description": "Uma mulher que vive em uma casa flutuante escondida entre as partes mais silenciosas do Lago das Carpas Profetas. Costuma conversar com as carpas como se fossem pessoas e raramente recebe visitantes. É a principal mestra das magias de Água.",
+      "function": "Concede Marca das Marés",
+      "grants_magic_mark_id": "marca-das-mares",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-das-mares",
+        "o-silencio-antes-da-resposta"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Utiliza uma agulha feita de escama de carpa para realizar um pequeno corte no pulso do aprendiz. Em seguida, derrama algumas gotas de água sobre a ferida, formando a marca."
+      ]
+    },
+    {
+      "id": "jorek-escamafina",
+      "name": "Jorek Escamafina",
+      "area": "Lago das Carpas Profetas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "role": "Comerciante",
+      "description": "Um pescador veterano que afirma ter recebido três profecias diferentes sobre o mesmo acontecimento e que nenhuma delas se concretizou.",
+      "function": "Comerciante",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Pena de Cristal — 8 Pedralumes Brutas• Dente de Enguia Filosófica — 7 Pedralumes Brutas• Fragmento de Casco Oracular — 4 Pedralumes Refinadas• Lágrima de Cristal — 14 Pedralumes Refinadas• Anzol do Destino — 18 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "a-rede-profunda"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "talia-das-escamas",
+      "name": "Talia das Escamas",
+      "area": "Lago das Carpas Profetas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "role": "Comerciante",
+      "description": "Uma artesã que transforma materiais encontrados no lago em armaduras, mantos e amuletos para viajantes.",
+      "function": "Comerciante",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Manto das Águas Calmas — 9 Pedralumes Brutas• Armadura de Escamas de Carpa — 18 Pedralumes Refinadas• Casco da Carpa Profeta — 4 Pedralumes Puras• Fragmento de Casco Oracular — 5 Pedralumes Refinadas• Carpa-Maçã Profética — 16 Pedralumes Refinadas• Arco das Carpas Profetas — 4 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "o-casco-sem-reflexo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "miriel-das-profecias",
+      "name": "Miriel das Profecias",
+      "area": "Lago das Carpas Profetas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "role": "Pesquisadora",
+      "description": "Uma estudiosa de Brisvale que dedica a vida a registrar respostas dadas pelas Carpas Profetas. Sua casa está repleta de livros contendo previsões contraditórias.",
+      "function": "Pesquisadora",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-pagina-arrancada"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "os-observadores-da-margem",
+      "name": "Os Observadores da Margem",
+      "area": "Lago das Carpas Profetas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "role": "Guardas da região",
+      "description": "Um grupo de moradores responsável por registrar todas as profecias dadas pelas Carpas Profetas. Mantêm centenas de cadernos organizados por ano, fase da lua, clima e número de carpas presentes durante cada pergunta.",
+      "function": "Guardas da região",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "as-respostas-apagadas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "bento-sete-vezes",
+      "name": "Bento Sete-Vezes",
+      "area": "Lago das Carpas Profetas",
+      "location_ids": [
+        "lago-das-carpas-profetas"
+      ],
+      "role": "Morador excêntrico",
+      "description": "Um morador de Brisvale que já recebeu sete profecias diferentes sobre sua própria morte e continua vivo.",
+      "function": "Morador excêntrico",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "qual-delas-era-verdade"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "cristalomante-aerion",
+      "name": "Cristalomante Aerion",
+      "area": "Cidade de Pedralume",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "role": "Mestre de marca",
+      "description": "Um estudioso dos cristais de Pedralume que passou décadas pesquisando a energia contida dentro das Pedralumes. Vive isolado próximo às minas e laboratórios da capital.",
+      "function": "Concede Marca Tempestuosa",
+      "grants_magic_mark_id": "marca-tempestuosa",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-tempestuosa",
+        "cristais-desaparecidos"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Encosta um cristal energizado no pescoço do aprendiz. Uma pequena descarga percorre o corpo antes da marca surgir."
+      ]
+    },
+    {
+      "id": "capitao-aldren",
+      "name": "Capitão Aldren",
+      "area": "Cidade de Pedralume",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "role": "Comandante da Guarda",
+      "description": "Comandante da Guarda de Pedralume. Um veterano respeitado que participou da defesa da cidade durante a última grande Tempestade de Cristal.",
+      "function": "Comandante da Guarda",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-ultimo-muro"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "arquivista-velen",
+      "name": "Arquivista Velen",
+      "area": "Cidade de Pedralume",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "role": "Arquivista",
+      "description": "Responsável pelos registros oficiais de Pedralume. Passa a maior parte do tempo organizando mapas, contratos e documentos antigos.",
+      "function": "Arquivista",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-legado-dos-fundadores"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "mestre-ferrox",
+      "name": "Mestre Ferrox",
+      "area": "Cidade de Pedralume",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "role": "Ferreiro",
+      "description": "O ferreiro mais famoso de Pedralume. Suas forjas funcionam dia e noite graças à energia dos cristais da cidade.",
+      "function": "Ferreiro",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Colete de Mineiro — 8 Pedralumes Brutas• Mochila Rara — 18 Pedralumes Refinadas• Mochila Épica — 4 Pedralumes Puras• Armadura de Pedralume Refinada — 18 Pedralumes Refinadas• Martelo Pedralume — 15 Pedralumes Refinadas• Guarda-Chuva de Combate — 18 Pedralumes Refinadas• Capacete do Esquecimento Localizado — 12 Pedralumes Refinadas• Espada da Decepção Profunda — 2 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "a-forja-silenciosa"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: Reparo de Armaduras",
+        "Mestre Ferrox é capaz de reparar qualquer armadura danificada. O custo depende da raridade do equipamento."
+      ]
+    },
+    {
+      "id": "comum",
+      "name": "• Comum",
+      "area": "Cidade de Pedralume",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "role": "outro",
+      "description": "2 Pedralumes Brutas• Incomum: 2 Pedralumes Refinadas• Rara: 6 Pedralumes Refinadas• Épica: 1 Pedralumes Puras• Lendária: 5 Pedralumes Puras• Relíquia: 10 Pedralumes Puras",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-forja-silenciosa"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "alquimista-selene",
+      "name": "Alquimista Selene",
+      "area": "Cidade de Pedralume",
+      "location_ids": [
+        "cidade-de-pedralume"
+      ],
+      "role": "Alquimista",
+      "description": "Uma pesquisadora especializada em misturar fragmentos de Pedralume com ingredientes raros. Sua oficina é famosa pelas explosões ocasionais.",
+      "function": "Alquimista",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Poção de Cura Menor — 5 Pedralumes Brutas• Poção de Cura — 3 Pedralumes Refinadas• Poção de Cura Maior — 12 Pedralumes Refinadas• Frasco de Vitalidade Menor — 18 Pedralumes Refinadas• Frasco de Vitalidade — 4 Pedralumes Puras• Bolsa das Misturas Terríveis — 4 Pedralumes Puras• Fruto Tempestuoso — 15 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "a-formula-impossivel"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "o-observador-do-penhasco",
+      "name": "O Observador do Penhasco",
+      "area": "Penhascos do ?ltimo Passo",
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "role": "Mestre de marca",
+      "description": "Um homem solitário que passa os dias observando o horizonte nos Penhascos do Último Passo. Dizem que ele consegue ouvir pensamentos carregados pelo vento.",
+      "function": "Concede Marca da Voz Distante",
+      "grants_magic_mark_id": "marca-da-voz-distante",
+      "sells": [],
+      "quest_ids": [
+        "missao-da-marca-da-voz-distante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "M?todo da marca: Mantém contato visual com o aprendiz durante alguns segundos. Quando o olhar é desfeito, a marca já está presente ao redor dos olhos."
+      ]
+    },
+    {
+      "id": "irma-ventania",
+      "name": "Irmã Ventania",
+      "area": "Penhascos do ?ltimo Passo",
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "role": "Pesquisadora",
+      "description": "Uma mulher que vive sozinha em uma pequena capela construída próxima aos penhascos. Costuma conversar com pessoas que afirmam ter ouvido a Voz dos Penhascos e registra seus relatos em dezenas de cadernos.",
+      "function": "Pesquisadora",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "as-palavras-levadas-pelo-vento"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "mercador-das-ultimas-coisas",
+      "name": "Mercador das Últimas Coisas",
+      "area": "Penhascos do ?ltimo Passo",
+      "location_ids": [
+        "penhascos-do-ultimo-passo"
+      ],
+      "role": "Comerciante",
+      "description": "Um homem que percorre os Penhascos do Último Passo comprando objetos abandonados por viajantes que nunca voltaram para buscá-los. Afirma que algumas pessoas abandonam seus pertences pouco antes de ouvir a Voz dos Penhascos.",
+      "function": "Comerciante",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Poção de Cura Menor — 5 Pedralumes Brutas• Poção de Cura — 3 Pedralumes Refinadas• Poção de Cura Maior — 12 Pedralumes Refinadas• Fruto do Último Passo — 15 Pedralumes Refinadas• Manto dos Ventos Altos — 3 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "os-pertences-esquecidos"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "viajante",
+      "name": "Viajante",
+      "area": "Estrada do Viajante",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "role": "outro",
+      "description": "O Viajante: Muito antes da fundação das cidades de Magik, existiu um homem conhecido apenas como O Viajante. Naquela época, as marcas ainda eram pouco compreendidas e grande parte das magias existentes permanecia espalhada pelo mundo. Fascinado pelo conhecimento, o Viajante dedicou sua vida a estudar cada uma delas. Durante décadas percorreu florestas, montanhas, lagos e ruínas, aprendendo diretamente com mestres, criaturas mágicas e estudiosos. Com o passar dos anos, tornou-se o maior mago que Magik já conheceu. Entretanto, sua busca por conhecimento transformou-se lentamente em obsessão. O Viajante passou a acreditar que enquanto as magias permanecessem divididas entre inúmeras pessoas, o mundo continuaria preso ao caos, aos conflitos e à ignorância. Convencido de que apenas ele era capaz de utilizar esse poder corretamente, começou a caçar usuários de magia para roubar suas marcas e incorporar seus conhecimentos. Para fazer isso, remove a região da pele onde a marca está localizada e a costura ao próprio corpo através de antigos rituais. Com o tempo, seu corpo tornou-se uma colcha formada pelas marcas de inúmeros mestres magos. Muitos morreram durante esse período, incluindo os pais de Caligo Thura. Conforme acumulava marcas, seu poder crescia além dos limites naturais de qualquer ser humano. Temendo que sua própria vida chegasse ao fim antes de concluir sua missão, o Viajante criou os Wrym, entidades capazes de armazenar fragmentos de magia, conhecimento e alma. Cada Wrym representa uma parte de seu poder espalhada pelo mundo. Com o passar dos séculos, ele abandonou riquezas, títulos, amizades e até mesmo sua própria identidade. Seu verdadeiro nome já não aparece em nenhum registro conhecido. Alguns estudiosos acreditam que ele o apagou deliberadamente; outros acreditam que simplesmente deixou de utilizá-lo por tanto tempo que acabou sendo esquecido pelo mundo. Quando questionado sobre quem era antes de se tornar O Viajante, ele apenas responde: \"Eu não preciso mais de um nome.\" Hoje, continua percorrendo silenciosamente as estradas de Magik, oferecendo artefatos a viajantes e observando o mundo que pretende governar. Seu objetivo final é reunir todas as magias existentes, recuperar todos os fragmentos de poder espalhados pelos Wrym e impor uma única vontade sobre Magik. Muitos acreditam que deseja conquistar o mundo. Outros acreditam que deseja salvá-lo. O próprio Viajante já não parece enxergar diferença entre as duas coisas. Aparece na Estrada do Viajante, no início da jornada de qualquer jogador, oferecendo dois artefatos misteriosos. O grupo só pode escolher 1. Caso alguém tente matá-lo, ele some e deixa aleatoriamente um dos itens no chão. Região: Estrada do Viajante. Vida: 250 + 40 de armadura.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "mercador-das-ultimas-chances",
+      "name": "Mercador das Últimas Chances",
+      "area": "Estrada do Viajante",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "role": "Comerciante Lendário",
+      "description": "Um velho comerciante encontrado apenas por viajantes extremamente sortudos ou extremamente azarados. Sua carroça parece maior por dentro do que por fora e está sempre estacionada em lugares onde nenhuma estrada deveria existir. Ele nunca explica de onde vêm seus produtos e nunca aceita barganhas.",
+      "function": "Comerciante Lendário",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Elixir da Vida — 20 Pedralumes Puras• Frasco de Vitalidade Superior — 18 Pedralumes Puras• Ovo Primordial — 15 Pedralumes Puras• Raiz do Primeiro Pacto — 20 Pedralumes Puras• Cinzas Escarlates do Wrym — 20 Pedralumes Puras• Placa do Futuro Incompleto — 22 Pedralumes Puras• Relógio das Marés Antigas — 22 Pedralumes Puras• Bússola Moral — 18 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "o-cliente-ausente"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Chance de Encontro: 1/16, número do npc: 3."
+      ]
+    },
+    {
+      "id": "ferreiro-errante",
+      "name": "Ferreiro Errante",
+      "area": "Estrada do Viajante",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "role": "Ferreiro Lendário",
+      "description": "Um artesão lendário que viaja pela Estrada do Viajante em uma carroça coberta por sinos enferrujados. Dizem que ele aparece apenas para pessoas que realmente precisam de seus produtos. Muitos aventureiros passam a vida inteira sem encontrá-lo.",
+      "function": "Ferreiro Lendário",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Lâmina do Último Viajante — 30 Pedralumes Puras• Agulha das Marcas Roubadas — 30 Pedralumes Puras• Bengala do Viajante — 30 Pedralumes Puras• Peitoral do Primeiro Guardião — 30 Pedralumes Puras• Mochila Lendária — 20 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "o-metal-impossivel"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Chance de Encontro: 1/16, número do npc: 1.",
+        "Servi?o: • Reparo de Armaduras"
+      ]
+    },
+    {
+      "id": "a-cartografa-sem-mapas",
+      "name": "A Cartógrafa Sem Mapas",
+      "area": "Estrada do Viajante",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "role": "Exploradora",
+      "description": "Uma mulher que percorre a Estrada do Viajante oferecendo orientação para locais que não aparecem em mapa algum. Curiosamente, ela não carrega nenhum mapa consigo.",
+      "function": "Exploradora",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-caminho-que-nao-existe"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Chance de Encontro: 1/16, número do npc: 14."
+      ]
+    },
+    {
+      "id": "o-homem-da-placa",
+      "name": "O Homem da Placa",
+      "area": "Estrada do Viajante",
+      "location_ids": [
+        "estrada-do-viajante"
+      ],
+      "role": "Mistério Ambulante",
+      "description": "Um homem silencioso encontrado ocasionalmente parado ao lado da estrada. Ele carrega uma placa de madeira escrita: \"NÃO SIGA O HOMEM DA PLACA\". Nunca fala, nunca reage a perguntas e desaparece sempre que ninguém está olhando.",
+      "function": "Mistério Ambulante",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "nao-siga-o-homem-da-placa"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Chance de Encontro: 1/8, número do npc: 4."
+      ]
+    },
+    {
+      "id": "prefeito-miaaannn",
+      "name": "Prefeito Miaaannn",
+      "area": "Vilarejo dos Gatos Autistas",
+      "location_ids": [
+        "vilarejo-dos-gatos-autistas",
+        "montanhas-trippi"
+      ],
+      "role": "Autoridade Local",
+      "description": "O líder informal da Vila dos Gatos Autistas. Passa boa parte do tempo organizando listas, regras e horários que quase ninguém segue. Apesar da aparência séria, se preocupa genuinamente com os moradores.",
+      "function": "Autoridade Local",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-lista-incompleta"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "ferreiro-miaaannn",
+      "name": "Ferreiro Miaaannn",
+      "area": "Vilarejo dos Gatos Autistas",
+      "location_ids": [
+        "vilarejo-dos-gatos-autistas",
+        "montanhas-trippi"
+      ],
+      "role": "Ferreiro",
+      "description": "Um Gato Autista extremamente habilidoso na arte da ferraria. Consegue passar horas trabalhando em uma única espada sem dizer uma palavra. Entra imediatamente em fúria caso alguém diga os números 6 ou 7 dentro de sua oficina.",
+      "function": "Ferreiro",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Espada Curta Felina — 7 Pedralumes Brutas• Escudo Arranhado — 6 Pedralumes Brutas• Armadura de Couro Costurada — 3 Pedralumes Refinadas• Mochila Rara — 18 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "o-martelo-perdido"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: • Reparo de Armaduras"
+      ]
+    },
+    {
+      "id": "tico-do-numero-proibido",
+      "name": "Tico do Número Proibido",
+      "area": "Vilarejo dos Gatos Autistas",
+      "location_ids": [
+        "vilarejo-dos-gatos-autistas",
+        "montanhas-trippi"
+      ],
+      "role": "NPC Memorável",
+      "description": "Um gato extremamente amigável que possui um problema sério: ele adora fazer perguntas envolvendo os números 6 e 7.",
+      "function": "NPC Memorável",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-desafio-impossivel"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "chefe-ha",
+      "name": "Chefe Hã?",
+      "area": "Vilarejo dos Gatos com TDAH",
+      "location_ids": [
+        "vilarejo-dos-gatos-com-tdah",
+        "montanhas-trippi"
+      ],
+      "role": "Autoridade Local",
+      "description": "O responsável pela Vila dos Gatos com TDAH. Apesar de ser oficialmente o líder da comunidade, frequentemente esquece reuniões, decisões importantes e até mesmo que é o líder.",
+      "function": "Autoridade Local",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-reuniao-perdida"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dona-esqueci",
+      "name": "Dona Esqueci",
+      "area": "Vilarejo dos Gatos com TDAH",
+      "location_ids": [
+        "vilarejo-dos-gatos-com-tdah",
+        "montanhas-trippi"
+      ],
+      "role": "Hospedeira",
+      "description": "Proprietária da única hospedaria da Vila dos Gatos com TDAH. Ela administra o local há muitos anos, embora frequentemente esqueça os nomes dos hóspedes e até mesmo quantos quartos possui.",
+      "function": "Hospedeira",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-hospede-que-nunca-foi-embora"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: • Descanso Simples — 3 Pedralumes Brutas• Descanso Confortável — 1 Pedralume Refinada"
+      ]
+    },
+    {
+      "id": "nino",
+      "name": "Nino",
+      "area": "Vilarejo dos Gatos com TDAH",
+      "location_ids": [
+        "vilarejo-dos-gatos-com-tdah",
+        "montanhas-trippi"
+      ],
+      "role": "NPC Memorável",
+      "description": "Um gato que passa os dias tentando lembrar o que estava fazendo antes de esquecer o que estava fazendo.",
+      "function": "NPC Memorável",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-lista-de-afazeres"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "pastor-elion",
+      "name": "Pastor Elion",
+      "area": "Campos dos Kriots",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "role": "Comerciante",
+      "description": "Um criador de animais que passa a maior parte do tempo percorrendo os Campos dos Kriots. Conhece atalhos, poços e trilhas esquecidas que não aparecem em nenhum mapa.",
+      "function": "Comerciante",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Poção de Cura Menor — 5 Pedralumes Brutas• Poção de Cura — 3 Pedralumes Refinadas• Poção de Cura Maior — 12 Pedralumes Refinadas• Dente de Minhoca Gigante — 8 Pedralumes Refinadas• Pena do Corvo Mineiro — 6 Pedralumes Refinadas• Chapéu do Espantalho Solitário — 15 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "o-rebanho-desaparecido"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "prefeita-helena",
+      "name": "Prefeita Helena",
+      "area": "Campos dos Kriots",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "role": "Autoridade Local",
+      "description": "Responsável pela principal comunidade agrícola dos Campos dos Kriots. É conhecida por resolver problemas pessoalmente em vez de delegá-los.",
+      "function": "Autoridade Local",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-espantalho-que-caminhava"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dono-arnaldo",
+      "name": "Dono Arnaldo",
+      "area": "Campos dos Kriots",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "role": "NPC Memorável",
+      "description": "Um fazendeiro idoso que afirma já ter entrado em um Kriot e sobrevivido. Metade dos moradores acredita nele. A outra metade acredita ainda mais.",
+      "function": "NPC Memorável",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-casa-que-me-engoliu"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "professor-malkor",
+      "name": "Professor Malkor",
+      "area": "Campos dos Kriots",
+      "location_ids": [
+        "campos-dos-kriots"
+      ],
+      "role": "Pesquisador",
+      "description": "Um estudioso obcecado pelos Kriots. Possui dezenas de mapas, desenhos e teorias tentando explicar como as criaturas funcionam.",
+      "function": "Pesquisador",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-primeiro-corredor"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "capita-lyra-folha-clara",
+      "name": "Capitã Lyra Folha-Clara",
+      "area": "Avelgard",
+      "location_ids": [
+        "avelgard"
+      ],
+      "role": "Autoridade Local",
+      "description": "Líder da guarda de Avelgard. Diferente de muitos capitães, passa mais tempo resolvendo conflitos entre moradores e exploradores do que lutando contra monstros. Conhece profundamente os limites seguros da Floresta Viridian.",
+      "function": "Autoridade Local",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "rastros-na-nevoa-verde"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "ferreiro-cascaforte",
+      "name": "Ferreiro Cascaforte",
+      "area": "Avelgard",
+      "location_ids": [
+        "avelgard"
+      ],
+      "role": "Ferreiro",
+      "description": "Um ferreiro especializado em equipamentos utilizados por exploradores e guardas florestais. Costuma incorporar materiais da Floresta Viridian em suas criações.",
+      "function": "Ferreiro",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Roupa Reforçada — 8 Pedralumes Brutas• Armadura dos Peregrinos — 4 Pedralumes Refinadas• Armadura de Caçador Viridian — 15 Pedralumes Refinadas• Botas Raiz — 18 Pedralumes Refinadas• Mochila Rara — 18 Pedralumes Refinadas• Mochila Épica — 4 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "madeira-viva"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: • Reparo de Armaduras"
+      ]
+    },
+    {
+      "id": "mercadora-elenya",
+      "name": "Mercadora Elenya",
+      "area": "Avelgard",
+      "location_ids": [
+        "avelgard"
+      ],
+      "role": "Comerciante Geral",
+      "description": "Uma comerciante que compra e vende praticamente qualquer objeto relacionado à floresta. É uma das principais responsáveis pelo comércio entre Avelgard e Varnhollow.",
+      "function": "Comerciante Geral",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Poção de Cura Menor — 5 Pedralumes Brutas• Poção de Cura — 3 Pedralumes Refinadas• Poção de Cura Maior — 12 Pedralumes Refinadas• Poção de Cura Superior — 4 Pedralumes Puras• Pena de Coruja-Musgo — 5 Pedralumes Brutas• Olho de Coruja-Musgo — 8 Pedralumes Refinadas• Folha do Primeiro Caminho — 10 Pedralumes Refinadas• Maçã Viridian — 15 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "entrega-para-varnhollow"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dona-iris",
+      "name": "Dona Íris",
+      "area": "Avelgard",
+      "location_ids": [
+        "avelgard"
+      ],
+      "role": "Hospedeira",
+      "description": "Proprietária da Hospedaria Raiz Dourada. Sua hospedaria é frequentada por exploradores, estudiosos e aventureiros que desejam entrar na Floresta Viridian.",
+      "function": "Hospedeira",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-quarto-vazio"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: • Descanso Simples — 3 Pedralumes Brutas• Descanso Confortável — 1 Pedralume Refinada"
+      ]
+    },
+    {
+      "id": "tome-dos-porcos-coruja",
+      "name": "Tomé dos Porcos-Coruja",
+      "area": "Avelgard",
+      "location_ids": [
+        "avelgard"
+      ],
+      "role": "NPC Memorável",
+      "description": "Um homem que dedica sua vida ao estudo dos Porcos-Coruja. Grande parte dos moradores o considera excêntrico. Tomé considera isso um elogio.",
+      "function": "NPC Memorável",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "as-penas-do-anciao"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "capitao-varn",
+      "name": "Capitão Varn",
+      "area": "Velharth",
+      "location_ids": [
+        "velharth"
+      ],
+      "role": "Navegador e contador de histórias",
+      "description": "Velho marinheiro que afirma ter ouvido a Voz dos Penhascos e sobrevivido. Passa boa parte do tempo contando histórias em tavernas. Metade delas provavelmente é mentira.",
+      "function": "Navegador e contador de histórias",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-ultimo-navegante"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "os-vigias-da-borda",
+      "name": "Os Vigias da Borda",
+      "area": "Velharth",
+      "location_ids": [
+        "velharth"
+      ],
+      "role": "Guardas da região",
+      "description": "Grupo responsável por patrulhar os Penhascos do Último Passo. Costumam resgatar viajantes atraídos pela Voz dos Penhascos. Formados de moradores voluntários que não conseguem escutar as vozes dos penhascos.",
+      "function": "Guardas da região",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "os-chamados-da-nevoa"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "senhora-salina",
+      "name": "Senhora Salina",
+      "area": "Velharth",
+      "location_ids": [
+        "velharth"
+      ],
+      "role": "Comerciante",
+      "description": "Dona do maior mercado de peixes da cidade. Consegue identificar qualquer criatura marinha apenas olhando suas escamas.",
+      "function": "Comerciante",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Poção de Cura Menor — 5 Pedralumes Brutas• Poção de Cura — 3 Pedralumes Refinadas• Poção de Cura Maior — 12 Pedralumes Refinadas• Fruta do Eco Perfeito — 5 Pedralumes Puras• Concha dos Penhascos — 6 Pedralumes Refinadas• Lanterna da Névoa — 15 Pedralumes Refinadas"
+      ],
+      "quest_ids": [
+        "escamas-impossiveis"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "faroleiro-edrik",
+      "name": "Faroleiro Edrik",
+      "area": "Velharth",
+      "location_ids": [
+        "velharth"
+      ],
+      "role": "Guardião do Farol",
+      "description": "Responsável pelo grande farol de Velharth. Quase nunca saiu da torre nos últimos quinze anos.",
+      "function": "Guardião do Farol",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "as-luzes-distantes"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dona-elara",
+      "name": "Dona Elara",
+      "area": "Velharth",
+      "location_ids": [
+        "velharth"
+      ],
+      "role": "Hospedeira",
+      "description": "Dona da principal hospedaria da cidade. Sabe praticamente tudo que acontece em Velharth e costuma ouvir os relatos dos aventureiros que retornam da Floresta do Avesso.",
+      "function": "Hospedeira",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "a-sombra-perdida"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: • Descanso Simples — 3 Pedralumes Brutas• Descanso Confortável — 1 Pedralume Refinada"
+      ]
+    },
+    {
+      "id": "ferreiro-roderick",
+      "name": "Ferreiro Roderick",
+      "area": "Velharth",
+      "location_ids": [
+        "velharth"
+      ],
+      "role": "outro",
+      "description": "Ferreiro conhecido por produzir equipamentos resistentes o suficiente para sobreviver às quedas, ventos e tempestades dos Penhascos do Último Passo. Já perdeu a conta de quantas armaduras precisou reconstruir após resgates realizados pelos Vigias.Função: Ferreiro.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Armadura do Eco Distante — 15 Pedralumes Refinadas• Machado do Último Argumento — 3 Pedralumes Puras• Lança do Horizonte — 4 Pedralumes Puras• Machado da Gargalhada Final — 30 Pedralumes Puras• Mochila Rara — 18 Pedralumes Refinadas• Mochila Épica — 4 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "o-sino-caido"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": [
+        "Servi?o: • Reparo de Armaduras"
+      ]
+    },
+    {
+      "id": "prefeita-mirela-ondaclara",
+      "name": "Prefeita Mirela Ondaclara",
+      "area": "Brisvale",
+      "location_ids": [
+        "brisvale"
+      ],
+      "role": "Autoridade Local",
+      "description": "Filha de pescadores que passou a vida inteira convivendo com o Lago das Carpas Profetas. Nos últimos meses tem tentado impedir que o medo causado pelos desaparecimentos se espalhe pela cidade.",
+      "function": "Autoridade Local",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "barcos-a-deriva"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dorian-mare-forte",
+      "name": "Dorian Maré-Forte",
+      "area": "Brisvale",
+      "location_ids": [
+        "brisvale"
+      ],
+      "role": "outro",
+      "description": "Ferreiro especializado em equipamentos resistentes à água. Grande parte dos pescadores e aventureiros da região utiliza suas criações.Função: Ferreiro.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Armadura de Escamas de Carpa — 15 Pedralumes Refinadas• Casco da Carpa Profeta — 3 Pedralumes Puras• Arco das Carpas Profetas — 4 Pedralumes Puras• Relógio das Marés Antigas — 18 Pedralumes Puras• Mochila Rara — 18 Pedralumes Refinadas• Mochila Épica — 4 Pedralumes PurasServiços:• Reparo de Armaduras"
+      ],
+      "quest_ids": [
+        "o-metal-do-fundo"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "mercador-talio",
+      "name": "Mercador Tálio",
+      "area": "Brisvale",
+      "location_ids": [
+        "brisvale"
+      ],
+      "role": "outro",
+      "description": "Comerciante conhecido por comprar praticamente qualquer coisa trazida do lago. Mantém contato frequente com Dunwall e Corvenn.Função: Comerciante Geral.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [
+        "• Poção de Cura — 3 Pedralumes Refinadas• Poção de Cura Maior — 12 Pedralumes Refinadas• Poção de Cura Superior — 3 Pedralumes Puras• Lágrima de Cristal — 8 Pedralumes Refinadas• Anzol do Destino — 10 Pedralumes Refinadas• Carpa-Maçã Profética — 15 Pedralumes Refinadas• Escama Profética — 3 Pedralumes Puras• Pergunta Sem Resposta — 3 Pedralumes Puras• Pera das Mil Possibilidades — 4 Pedralumes Puras• Anel do Véu Partido — 5 Pedralumes Puras"
+      ],
+      "quest_ids": [
+        "entrega-para-dunwall"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dona-neris",
+      "name": "Dona Neris",
+      "area": "Brisvale",
+      "location_ids": [
+        "brisvale"
+      ],
+      "role": "outro",
+      "description": "Proprietária da Hospedaria Água Serena. Sua hospedaria recebe pescadores, aventureiros e estudiosos das Carpas Profetas.Função: Hospedeira.Serviços:• Descanso Simples — 3 Pedralumes Brutas• Descanso Confortável — 1 Pedralume Refinada",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "o-profeta-desaparecido"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    },
+    {
+      "id": "arius-das-mil-profecias",
+      "name": "Arius das Mil Profecias",
+      "area": "Brisvale",
+      "location_ids": [
+        "brisvale"
+      ],
+      "role": "outro",
+      "description": "Um homem que passou décadas colecionando profecias das Carpas Profetas. Possui centenas de cadernos contendo previsões, erros e contradições.Função: NPC Memorável.",
+      "function": "",
+      "grants_magic_mark_id": null,
+      "sells": [],
+      "quest_ids": [
+        "as-profecias-quebradas"
+      ],
+      "tags": [
+        "oficial",
+        "lore"
+      ],
+      "notes": []
+    }
+  ]
+}
