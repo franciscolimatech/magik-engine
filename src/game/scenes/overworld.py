@@ -9,7 +9,12 @@ from src.core.character import get_character
 from src.core.lore import get_lore_summary_for_location
 from src.game import assets, colors
 from src.game.appearance import appearance_from_notes
-from src.game.ai_narration import GameNarrator, GameNarrationResult, narrate_game_text
+from src.game.ai_narration import (
+    GameNarrationResult,
+    GameNarrator,
+    is_game_ai_narration_enabled,
+    narrate_game_text,
+)
 from src.game.camera import Camera
 from src.game.entities.creature import Creature, load_game_creature
 from src.game.entities.npc import NPC
@@ -60,12 +65,16 @@ class OverworldScene(BaseScene):
         *,
         ai_narrator: GameNarrator | None = None,
         ai_config: AIConfig | None = None,
+        ai_narration_enabled: bool | None = None,
     ) -> None:
         self.pygame = pygame
         self.context = context if isinstance(context, GameContext) else GameContext(player_name=context)
         self.storage = storage
         self.ai_narrator = ai_narrator
         self.ai_config = ai_config
+        self.ai_narration_enabled = (
+            is_game_ai_narration_enabled() if ai_narration_enabled is None else ai_narration_enabled
+        )
         self.last_ai_narration_result: GameNarrationResult | None = None
         self.should_quit = False
         self.requested_scene: str | None = None
@@ -270,6 +279,14 @@ class OverworldScene(BaseScene):
 
     def _messages_for_event(self, event: MapEvent) -> tuple[str, ...]:
         if event.id != SHADOW_OBSERVE_EVENT_ID:
+            return event.messages
+        if not self.ai_narration_enabled:
+            self.last_ai_narration_result = GameNarrationResult(
+                text=event.text,
+                source="disabled",
+                used_ai=False,
+                diagnostic="game_ai_narration_disabled",
+            )
             return event.messages
         result = narrate_game_text(
             fallback_text=event.text,

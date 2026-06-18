@@ -1,11 +1,27 @@
 from src.ai.narrator import AIConfig, NarrationResult
 from src.game.ai_narration import (
+    GAME_AI_NARRATION_ENV,
     GAME_NARRATION_GUARDRAILS,
     build_safe_game_narration_context,
     get_local_fallback_narration,
+    is_game_ai_narration_enabled,
     narrate_game_text,
 )
 from src.game.save import create_default_game_save
+
+
+def test_game_ai_narration_is_disabled_by_default() -> None:
+    assert is_game_ai_narration_enabled({}) is False
+
+
+def test_game_ai_narration_env_accepts_disabled_values() -> None:
+    for value in ("0", "false", "no", "off"):
+        assert is_game_ai_narration_enabled({GAME_AI_NARRATION_ENV: value}) is False
+
+
+def test_game_ai_narration_env_accepts_enabled_values() -> None:
+    for value in ("1", "true", "yes", "on"):
+        assert is_game_ai_narration_enabled({GAME_AI_NARRATION_ENV: value}) is True
 
 
 def test_without_ai_available_returns_local_fallback() -> None:

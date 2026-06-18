@@ -8,11 +8,15 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
+import os
 from typing import Any
 
 from src.ai.narrator import AIConfig, NarrationResult, generate_short_narration
 
 
+GAME_AI_NARRATION_ENV = "MAGIK_GAME_AI_NARRATION"
+TRUE_VALUES = {"1", "true", "yes", "on"}
+FALSE_VALUES = {"0", "false", "no", "off"}
 MAX_TEXT_LENGTH = 600
 MAX_FLAGS = 12
 SENSITIVE_KEY_PARTS = ("key", "token", "secret", "password", "senha")
@@ -49,6 +53,22 @@ class GameNarrationResult:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def is_game_ai_narration_enabled(env: Mapping[str, str] | None = None) -> bool:
+    """Return whether PyGame narration may call optional AI providers.
+
+    Gameplay AI narration is disabled by default and intentionally separate
+    from MAGIK_AI_ENABLED used by other interfaces.
+    """
+
+    values = env if env is not None else os.environ
+    raw_value = values.get(GAME_AI_NARRATION_ENV, "").strip().casefold()
+    if raw_value in TRUE_VALUES:
+        return True
+    if raw_value in FALSE_VALUES:
+        return False
+    return False
 
 
 def build_safe_game_narration_context(

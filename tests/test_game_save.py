@@ -2,6 +2,7 @@ from pathlib import Path
 
 from src.ai.narrator import AIConfig, NarrationResult
 from src.core.character import create_miko_meu
+from src.game.ai_narration import GAME_AI_NARRATION_ENV
 from src.game.game_context import GameContext
 from src.game.save import (
     DEFAULT_LOCATION_ID,
@@ -592,6 +593,7 @@ def test_overworld_shadow_event_uses_local_text_when_ai_fails() -> None:
         storage,
         ai_config=AIConfig(enabled=True, api_key="fake"),
         ai_narrator=failing_game_ai,
+        ai_narration_enabled=True,
     )
 
     event = scene.trigger_event_at(9, 4)
@@ -621,6 +623,7 @@ def test_overworld_shadow_event_can_use_fake_ai_text_without_changing_effects() 
         storage,
         ai_config=AIConfig(enabled=True, api_key="fake"),
         ai_narrator=capturing_ai,
+        ai_narration_enabled=True,
     )
 
     event = scene.trigger_event_at(9, 4)
@@ -643,6 +646,81 @@ def test_overworld_shadow_event_can_use_fake_ai_text_without_changing_effects() 
     assert "floresta_do_avesso_inquieta" in save.world_flags
     assert save.choice_history[0]["choice"] == "Ignorar e seguir."
     assert save.consequence_log[0]["id"] == "evento-sombra-observa-consequencia"
+    pygame.quit()
+
+
+def test_overworld_shadow_event_game_ai_disabled_by_default(monkeypatch) -> None:
+    import pygame
+
+    def fail_if_called(context, config=None):
+        raise AssertionError("IA do PyGame nao deveria ser chamada por padrao.")
+
+    monkeypatch.delenv(GAME_AI_NARRATION_ENV, raising=False)
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=AIConfig(enabled=True, api_key="fake"),
+        ai_narrator=fail_if_called,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+
+    assert event is not None
+    assert scene.dialogue.messages == event.messages
+    assert scene.last_ai_narration_result is not None
+    assert scene.last_ai_narration_result.diagnostic == "game_ai_narration_disabled"
+    pygame.quit()
+
+
+def test_overworld_shadow_event_env_zero_uses_local_text(monkeypatch) -> None:
+    import pygame
+
+    def fail_if_called(context, config=None):
+        raise AssertionError("IA do PyGame nao deveria ser chamada com env 0.")
+
+    monkeypatch.setenv(GAME_AI_NARRATION_ENV, "0")
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=AIConfig(enabled=True, api_key="fake"),
+        ai_narrator=fail_if_called,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+
+    assert event is not None
+    assert scene.dialogue.messages == event.messages
+    assert scene.last_ai_narration_result is not None
+    assert scene.last_ai_narration_result.used_ai is False
+    pygame.quit()
+
+
+def test_overworld_shadow_event_env_one_can_use_fake_ai(monkeypatch) -> None:
+    import pygame
+
+    monkeypatch.setenv(GAME_AI_NARRATION_ENV, "1")
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=AIConfig(enabled=True, api_key="fake"),
+        ai_narrator=fake_game_ai_text,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+
+    assert event is not None
+    assert scene.dialogue.messages == ("A sombra respira junto da floresta.",)
+    assert scene.last_ai_narration_result is not None
+    assert scene.last_ai_narration_result.used_ai is True
     pygame.quit()
 
 
