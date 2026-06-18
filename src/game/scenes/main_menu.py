@@ -3,18 +3,32 @@
 from __future__ import annotations
 
 from src.core.character import Character, list_characters
-from src.game import colors
+from src.game import assets, colors
 from src.game.game_context import GameContext
 from src.game.scenes.base import BaseScene
 from src.storage.types import JsonStore
 
+
 class MainMenuScene(BaseScene):
     OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Ver Contexto", "Controles", "Sair")
 
-    def __init__(self, pygame, context: GameContext, storage: JsonStore | None = None) -> None:
+    def __init__(
+        self,
+        pygame,
+        context: GameContext,
+        storage: JsonStore | None = None,
+        *,
+        title_background=None,
+        load_title_background: bool = True,
+    ) -> None:
         self.pygame = pygame
         self.context = context
         self.storage = storage
+        self.title_background = (
+            title_background
+            if title_background is not None or not load_title_background
+            else assets.load_optional_image(pygame, assets.TITLE_BACKGROUND_PATH)
+        )
         self.selected_index = 0
         self.character_index = 0
         self.mode = "main"
@@ -54,7 +68,7 @@ class MainMenuScene(BaseScene):
 
     def draw(self, surface) -> None:
         self._ensure_fonts()
-        surface.fill(colors.BLACK)
+        self._draw_background(surface)
         self._draw_title(surface)
         if self.mode == "context":
             self._draw_panel(surface, "Contexto", self.context_lines())
@@ -175,6 +189,15 @@ class MainMenuScene(BaseScene):
     def _draw_title(self, surface) -> None:
         self._draw_centered(surface, self._title_font, "MAGIK Engine", 60, colors.WHITE)
         self._draw_centered(surface, self._subtitle_font, "RPG 2D Experimental", 106, colors.TEXT_MUTED)
+
+    def _draw_background(self, surface) -> None:
+        if self.title_background is None:
+            surface.fill(colors.BLACK)
+            return
+        assets.draw_cover_background(self.pygame, surface, self.title_background)
+        overlay = self.pygame.Surface((surface.get_width(), surface.get_height()), self.pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 115))
+        surface.blit(overlay, (0, 0))
 
     def _draw_options(self, surface) -> None:
         box_width = 360

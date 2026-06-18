@@ -3,10 +3,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from src.game import colors
 from src.game.appearance import EYE_COLORS, HAIR_COLORS, OUTFIT_COLORS, normalize_appearance
 from src.game.settings import TILE_SIZE
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+TITLE_BACKGROUND_PATH = PROJECT_ROOT / "assets" / "images" / "title_background.png"
 
 
 @dataclass
@@ -61,6 +66,41 @@ def draw_tile(pygame, surface, tile: str, x: int, y: int, assets: GameAssets | N
         surface.blit(assets.water_tile, (x, y))
     else:
         surface.blit(assets.floor_tiles.get(tile, assets.floor_tiles["."]), (x, y))
+
+
+def load_optional_image(pygame, path: str | Path):
+    candidate = Path(path)
+    if not candidate.is_file():
+        return None
+    try:
+        image = pygame.image.load(str(candidate))
+        return image.convert_alpha() if hasattr(image, "convert_alpha") else image
+    except Exception:
+        return None
+
+
+def scale_surface_cover(pygame, surface, target_width: int, target_height: int):
+    if target_width <= 0 or target_height <= 0:
+        raise ValueError("Dimensoes de destino devem ser positivas.")
+    source_width, source_height = surface.get_size()
+    if source_width <= 0 or source_height <= 0:
+        raise ValueError("Imagem de origem deve ter dimensoes positivas.")
+    scale = max(target_width / source_width, target_height / source_height)
+    scaled_size = (
+        max(1, int(round(source_width * scale))),
+        max(1, int(round(source_height * scale))),
+    )
+    scaled = pygame.transform.smoothscale(surface, scaled_size)
+    offset = (
+        (target_width - scaled_size[0]) // 2,
+        (target_height - scaled_size[1]) // 2,
+    )
+    return scaled, offset
+
+
+def draw_cover_background(pygame, surface, image) -> None:
+    scaled, offset = scale_surface_cover(pygame, image, surface.get_width(), surface.get_height())
+    surface.blit(scaled, offset)
 
 
 def _surface(pygame, size: tuple[int, int] = (TILE_SIZE, TILE_SIZE)):

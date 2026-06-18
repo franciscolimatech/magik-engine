@@ -3,7 +3,12 @@ from src.core.campaigns import create_campaign, create_campaign_session, get_cam
 from src.core.creatures import create_creature
 from src.core.session import list_events
 from src.game.appearance import DEFAULT_APPEARANCE, appearance_from_notes, appearance_summary, appearance_to_note
-from src.game.assets import create_assets, create_player_sprites_from_appearance
+from src.game.assets import (
+    create_assets,
+    create_player_sprites_from_appearance,
+    load_optional_image,
+    scale_surface_cover,
+)
 from src.game.app import _load_battle_character, _max_frames_from_env, load_player_name
 from src.game.camera import Camera
 from src.game.dialogue import DialogueChoice, DialogueOption
@@ -124,6 +129,49 @@ def test_generated_assets_include_tiles_and_sprites() -> None:
     assert assets.npc.get_size() == (32, 32)
     assert assets.creature.get_size() == (32, 32)
     assert assets.interaction_marker.get_width() > 0
+    pygame.quit()
+
+
+def test_optional_image_loader_returns_none_for_missing_file(tmp_path) -> None:
+    import pygame
+
+    pygame.init()
+
+    assert load_optional_image(pygame, tmp_path / "missing-title.png") is None
+    pygame.quit()
+
+
+def test_scale_surface_cover_keeps_widescreen_ratio_for_common_resolutions() -> None:
+    import pygame
+
+    pygame.init()
+    source = pygame.Surface((1920, 1080))
+    for target_width, target_height in ((1366, 768), (1280, 720), (1600, 900), (1920, 1080)):
+        scaled, offset = scale_surface_cover(pygame, source, target_width, target_height)
+        width, height = scaled.get_size()
+
+        assert width >= target_width
+        assert height >= target_height
+        assert abs((width / height) - (1920 / 1080)) < 0.01
+        assert offset[0] <= 0
+        assert offset[1] <= 0
+    pygame.quit()
+
+
+def test_scale_surface_cover_handles_vertical_image_with_crop() -> None:
+    import pygame
+
+    pygame.init()
+    source = pygame.Surface((800, 1600))
+
+    scaled, offset = scale_surface_cover(pygame, source, 1366, 768)
+    width, height = scaled.get_size()
+
+    assert width >= 1366
+    assert height >= 768
+    assert abs((width / height) - (800 / 1600)) < 0.01
+    assert offset[0] == 0
+    assert offset[1] < 0
     pygame.quit()
 
 
@@ -1127,6 +1175,23 @@ def test_main_menu_controls_lines_show_commands() -> None:
     assert "WASD/setas: mover" in lines
     assert "E/Espaco: interagir" in lines
     assert "ESC: voltar/sair" in lines
+
+
+def test_main_menu_draws_without_background_image() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((640, 480))
+    scene = MainMenuScene(
+        pygame,
+        GameContext(player_name="Miko Meu"),
+        load_title_background=False,
+    )
+
+    scene.draw(surface)
+
+    assert scene.title_background is None
+    pygame.quit()
 
 
 def test_max_frames_from_env_still_supports_smoke_test(monkeypatch) -> None:
