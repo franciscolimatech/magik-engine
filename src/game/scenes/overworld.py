@@ -57,7 +57,18 @@ class OverworldScene(BaseScene):
         self.game_save = self._load_game_save()
         start_x, start_y = self._starting_position()
         self.player = Player(start_x, start_y, name=self.context.player_name)
-        self.npcs = [NPC(item.x, item.y, item.name, item.dialogues, choice=item.choice) for item in find_npcs(self.map_data)]
+        self.npcs = [
+            NPC(
+                item.x,
+                item.y,
+                item.name,
+                item.dialogues,
+                choice=item.choice,
+                npc_id=item.npc_id,
+                location_id=item.location_id,
+            )
+            for item in find_npcs(self.map_data)
+        ]
         self.creatures = [load_game_creature(storage, item.x, item.y) for item in find_creatures(self.map_data)]
         self.events = load_test_events()
         self.triggered_event_ids: set[str] = set(self.game_save.triggered_events if self.game_save else [])
@@ -147,7 +158,8 @@ class OverworldScene(BaseScene):
         npc = self.facing_npc()
         if npc is None:
             return False
-        self.dialogue = DialogueBox(npc.name, npc.dialogues, choice=npc.choice)
+        self.dialogue = DialogueBox(npc.name, self._dialogues_for_npc(npc), choice=npc.choice)
+        self._apply_npc_interaction_effects(npc)
         return True
 
     def facing_npc(self) -> NPC | None:
@@ -244,6 +256,40 @@ class OverworldScene(BaseScene):
             return self.game_save
         except Exception:
             return self.game_save
+
+    def _dialogues_for_npc(self, npc: NPC) -> tuple[str, ...]:
+        if npc.npc_id != "velho-nox" or npc.location_id != self.location_id:
+            return tuple(npc.dialogues)
+        save = self._current_game_save()
+        if save is not None and "viu_sombra_na_floresta_do_avesso" in save.story_flags:
+            return (
+                "Velho Nox aperta os olhos.",
+                "'Entao voce tambem viu. A floresta ja comecou a olhar de volta.'",
+            )
+        return tuple(npc.dialogues)
+
+    def _apply_npc_interaction_effects(self, npc: NPC) -> None:
+        if self.storage is None or npc.npc_id != "velho-nox" or npc.location_id != self.location_id:
+            return
+        save = self._current_game_save()
+        saw_shadow = save is not None and "viu_sombra_na_floresta_do_avesso" in save.story_flags
+        effects: dict[str, Any] = {
+            "add_story_flags": ["falou_com_velho_nox"],
+            "add_npc_flags": {
+                "velho-nox": ["conhecido"],
+            },
+        }
+        if saw_shadow:
+            effects["narrative_consequence"] = {
+                "id": "velho-nox-reconhece-sombra",
+                "location_id": "floresta-do-avesso",
+                "npc_id": "velho-nox",
+                "text": "Velho Nox reconheceu que o personagem viu uma sombra na Floresta do Avesso.",
+            }
+        try:
+            self.game_save = apply_narrative_effects_to_storage(self.storage, DEFAULT_SAVE_ID, effects)
+        except Exception as exc:  # noqa: BLE001 - NPC memory must not crash interaction.
+            print(f"[MAGIK Game] Nao foi possivel salvar memoria do NPC: {exc}")
 
     def persist_state(self) -> None:
         if self.storage is None:

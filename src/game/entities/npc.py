@@ -17,6 +17,8 @@ class NPC:
     name: str
     dialogues: str | Iterable[str]
     choice: DialogueChoice | None = None
+    npc_id: str | None = None
+    location_id: str | None = None
 
     def __post_init__(self) -> None:
         if isinstance(self.dialogues, str):

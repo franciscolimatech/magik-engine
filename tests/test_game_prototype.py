@@ -101,6 +101,7 @@ def test_test_map_loads_npcs() -> None:
     assert len(npcs) >= 1
     assert npcs[0].name
     assert npcs[0].dialogues
+    assert any(npc.npc_id == "velho-nox" for npc in npcs)
 
 
 def test_test_map_loads_creatures() -> None:

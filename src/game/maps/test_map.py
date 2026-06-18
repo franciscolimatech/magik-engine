@@ -43,6 +43,8 @@ class MapNpc:
     name: str
     dialogues: tuple[str, ...]
     choice: DialogueChoice | None = None
+    npc_id: str | None = None
+    location_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -67,11 +69,10 @@ NPC_DIALOGUES = [
         ),
     ),
     (
-        "Velho de Varnhollow",
+        "Velho Nox",
         (
-            "Voce nao devia andar por aqui tao tarde.",
-            "A Floresta do Avesso escuta quem fala sozinho.",
-            "E essa corrente no seu braco... ela tambem escuta?",
+            "Velho Nox observa as arvores como se elas estivessem respirando.",
+            "'Nem toda sombra pertence a quem a carrega.'",
         ),
         DialogueChoice(
             question="Vai mesmo seguir para a floresta?",
@@ -93,6 +94,8 @@ NPC_DIALOGUES = [
                 ),
             ),
         ),
+        "velho-nox",
+        "floresta-do-avesso",
     ),
 ]
 
@@ -126,7 +129,19 @@ def find_npcs(map_data: list[str]) -> list[MapNpc]:
                 npc_data = NPC_DIALOGUES[npc_index % len(NPC_DIALOGUES)]
                 name, dialogues = npc_data[0], npc_data[1]
                 choice = npc_data[2] if len(npc_data) > 2 else None
-                npcs.append(MapNpc(x=x, y=y, name=name, dialogues=dialogues, choice=choice))
+                npc_id = npc_data[3] if len(npc_data) > 3 else None
+                location_id = npc_data[4] if len(npc_data) > 4 else None
+                npcs.append(
+                    MapNpc(
+                        x=x,
+                        y=y,
+                        name=name,
+                        dialogues=dialogues,
+                        choice=choice,
+                        npc_id=npc_id,
+                        location_id=location_id,
+                    )
+                )
                 npc_index += 1
     return npcs
 

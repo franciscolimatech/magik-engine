@@ -601,3 +601,127 @@ def test_overworld_shadow_event_does_not_trigger_when_story_flag_exists() -> Non
     assert save.story_flags == ["viu_sombra_na_floresta_do_avesso"]
     assert save.choice_history == []
     pygame.quit()
+
+
+def test_overworld_velho_nox_interaction_adds_memory_flags() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene.player.x = 4
+    scene.player.y = 10
+    scene.player.direction = "right"
+
+    assert scene.interact() is True
+    save = get_game_save(storage)
+
+    assert scene.dialogue.speaker == "Velho Nox"
+    assert scene.dialogue.current_text == "Velho Nox observa as arvores como se elas estivessem respirando."
+    assert "falou_com_velho_nox" in save.story_flags
+    assert save.npc_flags["velho-nox"] == ["conhecido"]
+    assert save.consequence_log == []
+    pygame.quit()
+
+
+def test_overworld_velho_nox_reacts_after_shadow_flag() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id=DEFAULT_LOCATION_ID,
+                        story_flags=["viu_sombra_na_floresta_do_avesso"],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene.player.x = 4
+    scene.player.y = 10
+    scene.player.direction = "right"
+
+    assert scene.interact() is True
+    save = get_game_save(storage)
+
+    assert scene.dialogue.speaker == "Velho Nox"
+    assert scene.dialogue.current_text == "Velho Nox aperta os olhos."
+    scene.dialogue.advance()
+    assert scene.dialogue.current_text == "'Entao voce tambem viu. A floresta ja comecou a olhar de volta.'"
+    assert "falou_com_velho_nox" in save.story_flags
+    assert save.npc_flags["velho-nox"] == ["conhecido"]
+    assert save.consequence_log == [
+        {
+            "id": "velho-nox-reconhece-sombra",
+            "location_id": "floresta-do-avesso",
+            "npc_id": "velho-nox",
+            "text": "Velho Nox reconheceu que o personagem viu uma sombra na Floresta do Avesso.",
+        }
+    ]
+    pygame.quit()
+
+
+def test_overworld_velho_nox_consequence_does_not_duplicate() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id=DEFAULT_LOCATION_ID,
+                        story_flags=["viu_sombra_na_floresta_do_avesso"],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene.player.x = 4
+    scene.player.y = 10
+    scene.player.direction = "right"
+
+    scene.interact()
+    scene.interact()
+    save = get_game_save(storage)
+
+    assert save.story_flags.count("falou_com_velho_nox") == 1
+    assert save.npc_flags["velho-nox"].count("conhecido") == 1
+    assert len(save.consequence_log) == 1
+    pygame.quit()
+
+
+def test_overworld_velho_nox_reaction_respects_location_id() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu", location_id="cidade-de-pedralume"),
+        storage,
+    )
+    scene.player.x = 4
+    scene.player.y = 10
+    scene.player.direction = "right"
+
+    assert scene.interact() is True
+    save = get_game_save(storage)
+
+    assert scene.location_id == "cidade-de-pedralume"
+    assert scene.dialogue.current_text == "Velho Nox observa as arvores como se elas estivessem respirando."
+    assert "falou_com_velho_nox" not in save.story_flags
+    assert "velho-nox" not in save.npc_flags
+    assert save.consequence_log == []
+    pygame.quit()
