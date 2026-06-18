@@ -25,6 +25,10 @@ from src.game.maps.test_map import (
     map_width,
 )
 from src.game.narrative_conditions import apply_narrative_effects_to_storage, conditions_met
+from src.game.npc_reactions import (
+    apply_npc_interaction_effects_to_storage,
+    get_npc_dialogue_for_state,
+)
 from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
@@ -258,36 +262,17 @@ class OverworldScene(BaseScene):
             return self.game_save
 
     def _dialogues_for_npc(self, npc: NPC) -> tuple[str, ...]:
-        if npc.npc_id != "velho-nox" or npc.location_id != self.location_id:
-            return tuple(npc.dialogues)
-        save = self._current_game_save()
-        if save is not None and "viu_sombra_na_floresta_do_avesso" in save.story_flags:
-            return (
-                "Velho Nox aperta os olhos.",
-                "'Entao voce tambem viu. A floresta ja comecou a olhar de volta.'",
-            )
-        return tuple(npc.dialogues)
+        return get_npc_dialogue_for_state(npc, self._current_game_save(), self.context.with_location(self.location_id))
 
     def _apply_npc_interaction_effects(self, npc: NPC) -> None:
-        if self.storage is None or npc.npc_id != "velho-nox" or npc.location_id != self.location_id:
+        if self.storage is None:
             return
-        save = self._current_game_save()
-        saw_shadow = save is not None and "viu_sombra_na_floresta_do_avesso" in save.story_flags
-        effects: dict[str, Any] = {
-            "add_story_flags": ["falou_com_velho_nox"],
-            "add_npc_flags": {
-                "velho-nox": ["conhecido"],
-            },
-        }
-        if saw_shadow:
-            effects["narrative_consequence"] = {
-                "id": "velho-nox-reconhece-sombra",
-                "location_id": "floresta-do-avesso",
-                "npc_id": "velho-nox",
-                "text": "Velho Nox reconheceu que o personagem viu uma sombra na Floresta do Avesso.",
-            }
         try:
-            self.game_save = apply_narrative_effects_to_storage(self.storage, DEFAULT_SAVE_ID, effects)
+            self.game_save = apply_npc_interaction_effects_to_storage(
+                self.storage,
+                npc,
+                self.context.with_location(self.location_id),
+            )
         except Exception as exc:  # noqa: BLE001 - NPC memory must not crash interaction.
             print(f"[MAGIK Game] Nao foi possivel salvar memoria do NPC: {exc}")
 
