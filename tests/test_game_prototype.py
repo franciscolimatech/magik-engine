@@ -34,10 +34,18 @@ from src.game.scenes.main_menu import GLOBAL_BACKGROUND_OVERLAY_ALPHA, MENU_BACK
 from src.game.scenes.overworld import OverworldScene, load_player_appearance
 from src.game.save import get_game_save
 from src.game.settings import (
+    DISPLAY_MODE_BORDERLESS,
+    DISPLAY_MODE_FULLSCREEN,
+    DISPLAY_MODE_WINDOWED,
     FALLBACK_WINDOW_HEIGHT,
     FALLBACK_WINDOW_WIDTH,
     calculate_auto_window_size,
+    display_flags_for_mode,
+    get_game_display_mode,
     get_game_resolution,
+    load_game_settings,
+    resolution_for_display_mode,
+    save_game_display_mode,
 )
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
@@ -49,6 +57,8 @@ class FakePygame:
     KEYDOWN = 1
     MOUSEMOTION = 15
     MOUSEBUTTONDOWN = 16
+    FULLSCREEN = 32
+    NOFRAME = 64
     K_DOWN = 2
     K_s = 3
     K_UP = 4
@@ -776,6 +786,7 @@ def test_main_menu_starts_with_start_game_selected() -> None:
     assert scene.selected_option == "Continuar"
     assert "Novo Jogo" in scene.OPTIONS
     assert "Carregar Personagem" in scene.OPTIONS
+    assert "Opcoes" in scene.OPTIONS
 
 
 def test_main_menu_navigation_down_changes_option() -> None:
@@ -870,7 +881,7 @@ def test_main_menu_hitboxes_recalculate_with_resolution() -> None:
 
 def test_main_menu_exit_requests_quit() -> None:
     scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"))
-    scene.selected_index = 5
+    scene.selected_index = len(scene.OPTIONS) - 1
 
     scene.handle_event(FakeEvent(FakePygame.K_RETURN))
 
@@ -976,6 +987,41 @@ def test_main_menu_new_game_requests_character_creator() -> None:
     scene.handle_event(FakeEvent(FakePygame.K_RETURN))
 
     assert scene.consume_requested_scene() == "character_creator"
+
+
+def test_main_menu_options_screen_draws_without_error() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = MainMenuScene(pygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage(), load_title_background=False)
+    scene.mode = "settings"
+
+    scene.draw(surface)
+
+    assert ("Modo de tela", "Janela") in scene.display_settings_items(surface)
+    pygame.quit()
+
+
+def test_main_menu_options_change_display_mode_with_keyboard() -> None:
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
+    scene.mode = "settings"
+
+    scene.handle_event(FakeEvent(FakePygame.K_RIGHT))
+
+    assert scene.display_mode_index == 1
+
+
+def test_main_menu_options_apply_saves_preference_and_requests_display_change() -> None:
+    storage = MemoryStorage()
+    scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=storage)
+    scene.mode = "settings"
+    scene.display_mode_index = 2
+
+    assert scene.apply_display_mode_selection() == DISPLAY_MODE_BORDERLESS
+
+    assert load_game_settings(storage)["display_mode"] == DISPLAY_MODE_BORDERLESS
+    assert scene.consume_requested_display_mode() == DISPLAY_MODE_BORDERLESS
 
 
 def test_character_creator_instantiates_on_name_step() -> None:
@@ -1492,6 +1538,50 @@ def test_main_menu_draws_with_fake_background_image() -> None:
 
 def test_game_resolution_uses_final_fallback_without_env_or_display() -> None:
     assert get_game_resolution({}) == (FALLBACK_WINDOW_WIDTH, FALLBACK_WINDOW_HEIGHT)
+
+
+def test_game_display_mode_defaults_to_windowed() -> None:
+    assert get_game_display_mode({}) == DISPLAY_MODE_WINDOWED
+
+
+def test_game_display_mode_accepts_environment_values() -> None:
+    assert get_game_display_mode({"MAGIK_GAME_DISPLAY_MODE": "windowed"}) == DISPLAY_MODE_WINDOWED
+    assert get_game_display_mode({"MAGIK_GAME_DISPLAY_MODE": "fullscreen"}) == DISPLAY_MODE_FULLSCREEN
+    assert get_game_display_mode({"MAGIK_GAME_DISPLAY_MODE": "borderless"}) == DISPLAY_MODE_BORDERLESS
+
+
+def test_game_display_mode_invalid_environment_uses_windowed() -> None:
+    assert get_game_display_mode({"MAGIK_GAME_DISPLAY_MODE": "cinema"}) == DISPLAY_MODE_WINDOWED
+
+
+def test_game_display_mode_uses_local_preference_when_env_is_absent() -> None:
+    storage = MemoryStorage()
+
+    save_game_display_mode(storage, DISPLAY_MODE_FULLSCREEN)
+
+    assert get_game_display_mode({}, storage=storage) == DISPLAY_MODE_FULLSCREEN
+
+
+def test_game_display_mode_environment_overrides_local_preference() -> None:
+    storage = MemoryStorage()
+    save_game_display_mode(storage, DISPLAY_MODE_FULLSCREEN)
+
+    assert get_game_display_mode({"MAGIK_GAME_DISPLAY_MODE": "borderless"}, storage=storage) == DISPLAY_MODE_BORDERLESS
+
+
+def test_display_mode_flags_match_pygame_modes() -> None:
+    assert display_flags_for_mode(FakePygame, DISPLAY_MODE_WINDOWED) == 0
+    assert display_flags_for_mode(FakePygame, DISPLAY_MODE_FULLSCREEN) == FakePygame.FULLSCREEN
+    assert display_flags_for_mode(FakePygame, DISPLAY_MODE_BORDERLESS) == FakePygame.NOFRAME
+
+
+def test_display_mode_resolution_uses_monitor_size_for_borderless_and_fullscreen() -> None:
+    windowed = (1280, 720)
+    display = (1920, 1080)
+
+    assert resolution_for_display_mode(DISPLAY_MODE_WINDOWED, windowed, display) == windowed
+    assert resolution_for_display_mode(DISPLAY_MODE_FULLSCREEN, windowed, display) == display
+    assert resolution_for_display_mode(DISPLAY_MODE_BORDERLESS, windowed, display) == display
 
 
 def test_game_resolution_accepts_1366x768() -> None:

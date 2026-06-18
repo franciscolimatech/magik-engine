@@ -14,3 +14,4 @@ venv/
 Thumbs.db
 lore_sources/
 data/game_saves.json
+data/game_settings.json

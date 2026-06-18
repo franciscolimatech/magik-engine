@@ -308,6 +308,12 @@ def test_real_game_save_file_is_ignored() -> None:
     assert "data/game_saves.json" in gitignore
 
 
+def test_real_game_settings_file_is_ignored() -> None:
+    gitignore = Path(".gitignore").read_text(encoding="utf-8")
+
+    assert "data/game_settings.json" in gitignore
+
+
 def test_load_or_create_default_game_save_persists_when_missing() -> None:
     storage = MemoryStorage()
 

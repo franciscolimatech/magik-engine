@@ -7,6 +7,13 @@ from src.game import assets, colors
 from src.game.game_context import GameContext
 from src.game.save import DEFAULT_SAVE_ID, sync_game_save_context
 from src.game.scenes.base import BaseScene
+from src.game.settings import (
+    DISPLAY_MODES,
+    display_mode_label,
+    get_game_display_mode,
+    normalize_display_mode,
+    save_game_display_mode,
+)
 from src.storage.types import JsonStore
 
 
@@ -25,7 +32,7 @@ MENU_BACKDROP_MAX_ALPHA = 165
 
 
 class MainMenuScene(BaseScene):
-    OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Ver Contexto", "Controles", "Sair")
+    OPTIONS = ("Continuar", "Novo Jogo", "Carregar Personagem", "Ver Contexto", "Controles", "Opcoes", "Sair")
 
     def __init__(
         self,
@@ -35,6 +42,7 @@ class MainMenuScene(BaseScene):
         *,
         title_background=None,
         load_title_background: bool = True,
+        display_mode: str | None = None,
     ) -> None:
         self.pygame = pygame
         self.context = context
@@ -47,8 +55,11 @@ class MainMenuScene(BaseScene):
         self.selected_index = 0
         self.character_index = 0
         self.mode = "main"
+        self.display_mode = normalize_display_mode(display_mode or get_game_display_mode(storage=storage))
+        self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
         self.error_message = ""
         self.requested_scene: str | None = None
+        self.requested_display_mode: str | None = None
         self.should_quit = False
         self._font = None
         self._menu_font = None
@@ -69,6 +80,11 @@ class MainMenuScene(BaseScene):
         self.requested_scene = None
         return requested
 
+    def consume_requested_display_mode(self) -> str | None:
+        requested = self.requested_display_mode
+        self.requested_display_mode = None
+        return requested
+
     def handle_event(self, event) -> None:
         if event.type == getattr(self.pygame, "MOUSEMOTION", None):
             if self.mode == "main":
@@ -86,6 +102,8 @@ class MainMenuScene(BaseScene):
             self._handle_panel_key(event.key)
         elif self.mode == "characters":
             self._handle_characters_key(event.key)
+        elif self.mode == "settings":
+            self._handle_settings_key(event.key)
         else:
             self._handle_main_key(event.key)
 
@@ -101,6 +119,8 @@ class MainMenuScene(BaseScene):
             self._draw_controls_panel(surface)
         elif self.mode == "characters":
             self._draw_characters_panel(surface)
+        elif self.mode == "settings":
+            self._draw_settings_panel(surface)
         else:
             self._draw_options(surface)
 
@@ -170,6 +190,14 @@ class MainMenuScene(BaseScene):
             ("Voltar ou sair", "ESC"),
         ]
 
+    def display_settings_items(self, surface) -> list[tuple[str, str]]:
+        selected_mode = DISPLAY_MODES[self.display_mode_index]
+        return [
+            ("Modo de tela", display_mode_label(selected_mode)),
+            ("Resolucao atual", f"{surface.get_width()}x{surface.get_height()}"),
+            ("Preferencia salva", display_mode_label(self.display_mode)),
+        ]
+
     def select_character(self, index: int) -> bool:
         characters = self.available_characters()
         if not characters:
@@ -221,6 +249,9 @@ class MainMenuScene(BaseScene):
             self.mode = "context"
         elif option == "Controles":
             self.mode = "controls"
+        elif option == "Opcoes":
+            self.mode = "settings"
+            self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
         elif option == "Sair":
             self.should_quit = True
 
@@ -248,6 +279,30 @@ class MainMenuScene(BaseScene):
         if key in {keys.K_ESCAPE, keys.K_RETURN, keys.K_SPACE, keys.K_e}:
             self.mode = "main"
 
+    def _handle_settings_key(self, key: int) -> None:
+        keys = self.pygame
+        if key == keys.K_ESCAPE:
+            self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
+            self.mode = "main"
+        elif key in {keys.K_LEFT, keys.K_a, keys.K_UP, keys.K_w}:
+            self.display_mode_index = (self.display_mode_index - 1) % len(DISPLAY_MODES)
+        elif key in {keys.K_RIGHT, keys.K_d, keys.K_DOWN, keys.K_s}:
+            self.display_mode_index = (self.display_mode_index + 1) % len(DISPLAY_MODES)
+        elif key in {keys.K_RETURN, keys.K_SPACE, keys.K_e}:
+            self.apply_display_mode_selection()
+
+    def apply_display_mode_selection(self) -> str:
+        selected_mode = DISPLAY_MODES[self.display_mode_index]
+        self.display_mode = selected_mode
+        if self.storage is not None:
+            try:
+                self.display_mode = save_game_display_mode(self.storage, selected_mode)
+            except Exception as exc:  # noqa: BLE001 - display preference must not crash the menu.
+                print(f"[MAGIK Game] Nao foi possivel salvar configuracao de tela: {exc}")
+        self.display_mode_index = DISPLAY_MODES.index(self.display_mode)
+        self.requested_display_mode = self.display_mode
+        return self.display_mode
+
     def _ensure_fonts(self, screen_height: int = 480) -> None:
         menu_font_size = self._menu_font_size(screen_height)
         key = (screen_height, menu_font_size)
@@ -269,7 +324,7 @@ class MainMenuScene(BaseScene):
 
     def _menu_layout(self, screen_width: int, screen_height: int) -> dict[str, int]:
         font_size = self._menu_font_size(screen_height)
-        gap = max(int(font_size * 1.25), 38)
+        gap = max(int(font_size * 1.0), 38)
         menu_height = (len(self.OPTIONS) - 1) * gap + font_size
         x = max(int(screen_width * 0.09), 48)
         preferred_y = int(screen_height * 0.585)
@@ -360,6 +415,14 @@ class MainMenuScene(BaseScene):
         rect = self._draw_panel_frame(surface, "Controles")
         self._draw_labeled_rows(surface, rect, self.controls_items())
         self._draw_panel_footer(surface, rect)
+
+    def _draw_settings_panel(self, surface) -> None:
+        rect = self._draw_panel_frame(surface, "Opcoes")
+        self._draw_labeled_rows(surface, rect, self.display_settings_items(surface))
+        selected_mode = DISPLAY_MODES[self.display_mode_index]
+        hint = self._font.render(f"< {display_mode_label(selected_mode)} >", True, SELECTED_OPTION_COLOR)
+        surface.blit(hint, (rect.x + 34, rect.y + 238))
+        self._draw_panel_footer(surface, rect, "Esquerda/direita altera | Enter aplica | ESC volta")
 
     def _draw_characters_panel(self, surface) -> None:
         rect = self._draw_panel_frame(surface, "Carregar Personagem")
