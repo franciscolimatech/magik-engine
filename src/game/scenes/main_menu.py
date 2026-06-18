@@ -30,6 +30,11 @@ PANEL_DIVIDER_COLOR = (170, 138, 72, 64)
 PANEL_LABEL_COLOR = (220, 177, 83)
 PANEL_VALUE_COLOR = (232, 224, 207)
 PANEL_FOOTER_COLOR = (166, 156, 135)
+SELECT_FIELD_BG_COLOR = (13, 15, 22, 174)
+SELECT_FIELD_HOVER_COLOR = (220, 177, 83, 28)
+SELECT_FIELD_DISABLED_COLOR = (22, 23, 28, 120)
+SELECT_FIELD_BORDER_COLOR = (170, 138, 72, 96)
+SELECT_FIELD_DISABLED_BORDER_COLOR = (120, 112, 96, 54)
 GLOBAL_BACKGROUND_OVERLAY_ALPHA = 38
 MENU_BACKDROP_MAX_ALPHA = 165
 
@@ -69,6 +74,7 @@ class MainMenuScene(BaseScene):
         )
         self.resolution_index = self.available_resolutions.index(self.window_resolution)
         self.settings_row_index = 0
+        self.settings_dropdown_open: str | None = None
         self.resolution_dropdown_open = False
         self.error_message = ""
         self.requested_scene: str | None = None
@@ -85,6 +91,7 @@ class MainMenuScene(BaseScene):
         self._character_hitboxes = []
         self._settings_hitboxes = []
         self._resolution_option_hitboxes = []
+        self._mode_option_hitboxes = []
 
     @property
     def selected_option(self) -> str:
@@ -115,7 +122,8 @@ class MainMenuScene(BaseScene):
             elif self.mode == "characters":
                 self._select_character_at(event.pos)
             elif self.mode == "settings":
-                self._select_settings_item_at(event.pos)
+                if not self._select_settings_dropdown_item_at(event.pos):
+                    self._select_settings_item_at(event.pos)
             return
         if event.type == getattr(self.pygame, "MOUSEBUTTONDOWN", None):
             if self.mode == "main" and getattr(event, "button", None) == 1 and self._select_main_option_at(event.pos):
@@ -289,17 +297,19 @@ class MainMenuScene(BaseScene):
     def _handle_settings_key(self, key: int) -> None:
         keys = self.pygame
         if key == keys.K_ESCAPE:
-            if self.resolution_dropdown_open:
-                self.resolution_dropdown_open = False
+            if self.settings_dropdown_open is not None:
+                self._close_settings_dropdown()
                 return
             self._reset_pending_display_preferences()
             self.mode = "main"
+        elif self.settings_dropdown_open is not None:
+            self._handle_settings_dropdown_key(key)
         elif key in {keys.K_UP, keys.K_w}:
             self.settings_row_index = (self.settings_row_index - 1) % 4
-            self.resolution_dropdown_open = False
+            self._close_settings_dropdown()
         elif key in {keys.K_DOWN, keys.K_s}:
             self.settings_row_index = (self.settings_row_index + 1) % 4
-            self.resolution_dropdown_open = False
+            self._close_settings_dropdown()
         elif key in {keys.K_LEFT, keys.K_a}:
             self._change_selected_settings_value(-1)
         elif key in {keys.K_RIGHT, keys.K_d}:
@@ -307,19 +317,28 @@ class MainMenuScene(BaseScene):
         elif key in {keys.K_RETURN, keys.K_SPACE, keys.K_e}:
             self._confirm_settings_row()
 
+    def _handle_settings_dropdown_key(self, key: int) -> None:
+        keys = self.pygame
+        if key in {keys.K_UP, keys.K_w, keys.K_LEFT, keys.K_a}:
+            self._move_settings_dropdown_selection(-1)
+        elif key in {keys.K_DOWN, keys.K_s, keys.K_RIGHT, keys.K_d}:
+            self._move_settings_dropdown_selection(1)
+        elif key in {keys.K_RETURN, keys.K_SPACE, keys.K_e}:
+            self._close_settings_dropdown()
+
     def _change_selected_settings_value(self, delta: int) -> None:
         if self.settings_row_index == 0:
             self.display_mode_index = (self.display_mode_index - 1) % len(DISPLAY_MODES)
             if delta > 0:
                 self.display_mode_index = (self.display_mode_index + 2) % len(DISPLAY_MODES)
-        elif self.settings_row_index == 1:
+        elif self.settings_row_index == 1 and self._resolution_select_enabled():
             self.resolution_index = (self.resolution_index + delta) % len(self.available_resolutions)
 
     def _confirm_settings_row(self) -> None:
         if self.settings_row_index == 0:
-            self.display_mode_index = (self.display_mode_index + 1) % len(DISPLAY_MODES)
-        elif self.settings_row_index == 1:
-            self.resolution_dropdown_open = not self.resolution_dropdown_open
+            self._toggle_settings_dropdown("mode")
+        elif self.settings_row_index == 1 and self._resolution_select_enabled():
+            self._toggle_settings_dropdown("resolution")
         elif self.settings_row_index == 2:
             self.apply_display_mode_selection()
         elif self.settings_row_index == 3:
@@ -344,7 +363,7 @@ class MainMenuScene(BaseScene):
         )
         self.requested_display_mode = self.display_mode
         self.requested_window_resolution = self.window_resolution
-        self.resolution_dropdown_open = False
+        self._close_settings_dropdown()
         return self.display_mode
 
     def _reset_pending_display_preferences(self) -> None:
@@ -352,7 +371,7 @@ class MainMenuScene(BaseScene):
         self.resolution_index = self.available_resolutions.index(
             choose_window_resolution(self.window_resolution, self.available_resolutions)
         )
-        self.resolution_dropdown_open = False
+        self._close_settings_dropdown()
 
     def _ensure_fonts(self, screen_height: int = 480) -> None:
         menu_font_size = self._menu_font_size(screen_height)
@@ -468,30 +487,35 @@ class MainMenuScene(BaseScene):
         rect = self._draw_panel_frame(surface, "Opcoes")
         self._settings_hitboxes = []
         self._resolution_option_hitboxes = []
-        rows = [
-            ("Modo de tela", f"< {display_mode_label(DISPLAY_MODES[self.display_mode_index])} >"),
-            ("Resolucao", f"< {self._resolution_label(self.available_resolutions[self.resolution_index])} >"),
-            ("Aplicar", ""),
-            ("Voltar", ""),
-        ]
-        y = rect.y + 104
-        row_gap = 42
-        for index, (label, value) in enumerate(rows):
+        self._mode_option_hitboxes = []
+        row_gap = 54
+        rows = self._settings_rows()
+        y = rect.y + 100
+        for index, row in enumerate(rows):
             selected = index == self.settings_row_index
-            row_rect = self.pygame.Rect(rect.x + 28, y - 6, rect.width - 56, 34)
+            enabled = bool(row["enabled"])
+            row_rect = self.pygame.Rect(rect.x + 28, y - 8, rect.width - 56, 44)
             self._settings_hitboxes.append((index, row_rect))
             if selected:
-                self.pygame.draw.rect(surface, (220, 177, 83, 28), row_rect)
-            color = SELECTED_OPTION_COLOR if selected else PANEL_LABEL_COLOR
-            label_surface = self._small_font.render(label.upper(), True, color)
-            surface.blit(label_surface, (rect.x + 34, y + 4))
-            if value:
-                value_surface = self._font.render(value, True, PANEL_VALUE_COLOR)
-                surface.blit(value_surface, (rect.x + 260, y))
+                self.pygame.draw.rect(surface, SELECT_FIELD_HOVER_COLOR, row_rect)
+            label_color = SELECTED_OPTION_COLOR if selected and enabled else (PANEL_LABEL_COLOR if enabled else OPTION_MUTED_COLOR)
+            label_surface = self._small_font.render(str(row["label"]).upper(), True, label_color)
+            surface.blit(label_surface, (rect.x + 34, y + 7))
+            if row["kind"] in {"mode", "resolution"}:
+                self._draw_select_field(
+                    surface,
+                    self.pygame.Rect(rect.x + 252, y - 4, rect.width - 312, 38),
+                    str(row["value"]),
+                    enabled=enabled,
+                    open=self.settings_dropdown_open == row["kind"],
+                )
+            else:
+                button_color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
+                button_surface = self._font.render(str(row["value"]), True, button_color)
+                surface.blit(button_surface, (rect.x + 260, y + 2))
             y += row_gap
-        if self.resolution_dropdown_open:
-            self._draw_resolution_dropdown(surface, rect)
-        self._draw_panel_footer(surface, rect, "Setas/WASD alteram | Enter aplica | ESC volta | Mouse seleciona")
+        self._draw_active_settings_dropdown(surface, rect)
+        self._draw_panel_footer(surface, rect, "Setas/WASD navegam | Enter abre/seleciona | ESC volta | Mouse seleciona")
 
     def _draw_characters_panel(self, surface) -> None:
         rect = self._draw_panel_frame(surface, "Carregar Personagem")
@@ -535,25 +559,71 @@ class MainMenuScene(BaseScene):
         self._draw_labeled_rows(surface, self.pygame.Rect(summary_x, summary_y, rect.right - summary_x - 28, 180), summary_rows, summary_y)
         self._draw_panel_footer(surface, rect, "Enter/Espaco para escolher | ESC para voltar")
 
-    def _draw_resolution_dropdown(self, surface, rect) -> None:
-        width = min(260, rect.width - 80)
-        x = rect.x + 260
-        y = rect.y + 184
-        visible = self.available_resolutions[:8]
-        dropdown = self.pygame.Rect(x, y, width, 30 * len(visible) + 12)
+    def _draw_select_field(self, surface, field_rect, value: str, *, enabled: bool, open: bool) -> None:
+        fill = SELECT_FIELD_BG_COLOR if enabled else SELECT_FIELD_DISABLED_COLOR
+        border = SELECTED_OPTION_COLOR if open and enabled else (SELECT_FIELD_BORDER_COLOR if enabled else SELECT_FIELD_DISABLED_BORDER_COLOR)
+        self.pygame.draw.rect(surface, fill, field_rect)
+        self.pygame.draw.rect(surface, border, field_rect, width=1)
+        value_color = PANEL_VALUE_COLOR if enabled else OPTION_MUTED_COLOR
+        rendered = self._font.render(value, True, value_color)
+        surface.blit(rendered, (field_rect.x + 14, field_rect.y + 7))
+        indicator = "v" if not open else "^"
+        indicator_surface = self._small_font.render(indicator if enabled else "-", True, SELECTED_OPTION_COLOR if enabled else OPTION_MUTED_COLOR)
+        surface.blit(indicator_surface, (field_rect.right - 24, field_rect.y + 10))
+
+    def _draw_active_settings_dropdown(self, surface, rect) -> None:
+        if self.settings_dropdown_open == "mode":
+            self._draw_settings_dropdown(
+                surface,
+                rect,
+                row_index=0,
+                items=[(index, self._display_mode_menu_label(mode)) for index, mode in enumerate(DISPLAY_MODES)],
+                selected_index=self.display_mode_index,
+                target="mode",
+            )
+        elif self.settings_dropdown_open == "resolution" and self._resolution_select_enabled():
+            self._draw_settings_dropdown(
+                surface,
+                rect,
+                row_index=1,
+                items=[(index, self._resolution_label(self.available_resolutions[index])) for index in self._resolution_dropdown_indices()],
+                selected_index=self.resolution_index,
+                target="resolution",
+            )
+
+    def _draw_settings_dropdown(
+        self,
+        surface,
+        rect,
+        *,
+        row_index: int,
+        items: list[tuple[int, str]],
+        selected_index: int,
+        target: str,
+    ) -> None:
+        if not items:
+            return
+        width = max(260, rect.width - 312)
+        x = rect.x + 252
+        y = rect.y + 100 + row_index * 54 + 38
+        visible = items[:8]
+        dropdown = self.pygame.Rect(x, y, width, 32 * len(visible) + 12)
         panel = self.pygame.Surface((dropdown.width, dropdown.height), self.pygame.SRCALPHA)
         panel.fill((8, 9, 14, 232))
         surface.blit(panel, (dropdown.x, dropdown.y))
         self.pygame.draw.rect(surface, PANEL_BORDER_COLOR, dropdown, width=1)
-        for index, resolution in enumerate(visible):
-            option_y = dropdown.y + 8 + index * 30
-            option_rect = self.pygame.Rect(dropdown.x + 8, option_y - 3, dropdown.width - 16, 26)
-            self._resolution_option_hitboxes.append((index, option_rect))
-            selected = index == self.resolution_index
+        for position, (item_index, label) in enumerate(visible):
+            option_y = dropdown.y + 8 + position * 32
+            option_rect = self.pygame.Rect(dropdown.x + 8, option_y - 3, dropdown.width - 16, 28)
+            if target == "mode":
+                self._mode_option_hitboxes.append((item_index, option_rect))
+            else:
+                self._resolution_option_hitboxes.append((item_index, option_rect))
+            selected = item_index == selected_index
             if selected:
                 self.pygame.draw.rect(surface, (220, 177, 83, 34), option_rect)
             color = SELECTED_OPTION_COLOR if selected else PANEL_VALUE_COLOR
-            rendered = self._small_font.render(self._resolution_label(resolution), True, color)
+            rendered = self._small_font.render(label, True, color)
             surface.blit(rendered, (option_rect.x + 8, option_rect.y + 4))
 
     def _click_panel_at(self, position: tuple[int, int]) -> bool:
@@ -583,18 +653,18 @@ class MainMenuScene(BaseScene):
         return False
 
     def _click_settings_at(self, position: tuple[int, int]) -> bool:
-        if self.resolution_dropdown_open:
-            for index, rect in self._resolution_option_hitboxes:
-                if rect.collidepoint(position):
-                    self.resolution_index = index
-                    self.settings_row_index = 1
-                    self.resolution_dropdown_open = False
-                    return True
+        if self.settings_dropdown_open is not None:
+            if self._select_settings_dropdown_item_at(position):
+                self._close_settings_dropdown()
+                return True
+            self._close_settings_dropdown()
+            return True
         if self._select_settings_item_at(position):
             if self.settings_row_index == 0:
-                self.display_mode_index = (self.display_mode_index + 1) % len(DISPLAY_MODES)
+                self._toggle_settings_dropdown("mode")
             elif self.settings_row_index == 1:
-                self.resolution_dropdown_open = not self.resolution_dropdown_open
+                if self._resolution_select_enabled():
+                    self._toggle_settings_dropdown("resolution")
             elif self.settings_row_index == 2:
                 self.apply_display_mode_selection()
             elif self.settings_row_index == 3:
@@ -602,6 +672,74 @@ class MainMenuScene(BaseScene):
                 self.mode = "main"
             return True
         return self._click_panel_at(position)
+
+    def _select_settings_dropdown_item_at(self, position: tuple[int, int]) -> bool:
+        if self.settings_dropdown_open == "mode":
+            for index, rect in self._mode_option_hitboxes:
+                if rect.collidepoint(position):
+                    self.display_mode_index = index
+                    self.settings_row_index = 0
+                    return True
+        if self.settings_dropdown_open == "resolution":
+            for index, rect in self._resolution_option_hitboxes:
+                if rect.collidepoint(position):
+                    self.resolution_index = index
+                    self.settings_row_index = 1
+                    return True
+        return False
+
+    def _toggle_settings_dropdown(self, dropdown: str) -> None:
+        if dropdown == "resolution" and not self._resolution_select_enabled():
+            self._close_settings_dropdown()
+            return
+        if self.settings_dropdown_open == dropdown:
+            self._close_settings_dropdown()
+            return
+        self.settings_dropdown_open = dropdown
+        self.resolution_dropdown_open = dropdown == "resolution"
+
+    def _close_settings_dropdown(self) -> None:
+        self.settings_dropdown_open = None
+        self.resolution_dropdown_open = False
+
+    def _move_settings_dropdown_selection(self, delta: int) -> None:
+        if self.settings_dropdown_open == "mode":
+            self.display_mode_index = (self.display_mode_index + delta) % len(DISPLAY_MODES)
+        elif self.settings_dropdown_open == "resolution" and self._resolution_select_enabled():
+            indices = self._resolution_dropdown_indices()
+            current_position = indices.index(self.resolution_index) if self.resolution_index in indices else 0
+            self.resolution_index = indices[(current_position + delta) % len(indices)]
+
+    def _settings_rows(self) -> list[dict[str, object]]:
+        resolution_enabled = self._resolution_select_enabled()
+        resolution_value = (
+            self._resolution_label(self.available_resolutions[self.resolution_index])
+            if resolution_enabled
+            else "Usa resolucao nativa do monitor"
+        )
+        return [
+            {
+                "kind": "mode",
+                "label": "Modo de tela",
+                "value": self._display_mode_menu_label(DISPLAY_MODES[self.display_mode_index]),
+                "enabled": True,
+            },
+            {"kind": "resolution", "label": "Resolucao", "value": resolution_value, "enabled": resolution_enabled},
+            {"kind": "apply", "label": "Aplicar", "value": "Aplicar alteracoes", "enabled": True},
+            {"kind": "back", "label": "Voltar", "value": "Voltar ao menu", "enabled": True},
+        ]
+
+    def _display_mode_menu_label(self, display_mode: str) -> str:
+        normalized = DISPLAY_MODES[DISPLAY_MODES.index(display_mode)] if display_mode in DISPLAY_MODES else DISPLAY_MODES[0]
+        if normalized == "borderless":
+            return "Sem borda"
+        return display_mode_label(normalized)
+
+    def _resolution_select_enabled(self) -> bool:
+        return DISPLAY_MODES[self.display_mode_index] != "borderless"
+
+    def _resolution_dropdown_indices(self) -> list[int]:
+        return sorted(range(len(self.available_resolutions)), key=lambda index: self.available_resolutions[index][0] * self.available_resolutions[index][1], reverse=True)
 
     def _resolution_label(self, resolution: tuple[int, int]) -> str:
         return f"{resolution[0]}x{resolution[1]}"
