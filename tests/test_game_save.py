@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from src.ai.narrator import AIConfig, NarrationResult
 from src.core.character import create_miko_meu
 from src.game.game_context import GameContext
 from src.game.save import (
@@ -29,6 +30,17 @@ from src.game.save import (
 from src.game.scenes.overworld import OverworldScene
 from src.storage.json_storage import JSONStorage
 from src.storage.memory import MemoryStorage
+
+
+DISABLED_AI = AIConfig(enabled=False, api_key=None)
+
+
+def fake_game_ai_text(context, config=None):
+    return NarrationResult(source="ai", text="A sombra respira junto da floresta.", diagnostic="ok")
+
+
+def failing_game_ai(context, config=None):
+    raise RuntimeError("IA indisponivel")
 
 
 def test_missing_game_save_uses_safe_fallback(tmp_path: Path) -> None:
@@ -469,7 +481,12 @@ def test_overworld_uses_saved_position_when_available() -> None:
     )
     pygame.init()
 
-    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=DISABLED_AI,
+    )
 
     assert scene.player.position == (6, 4)
     assert scene.location_id == DEFAULT_LOCATION_ID
@@ -485,7 +502,12 @@ def test_overworld_registers_triggered_event_in_save() -> None:
 
     storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
     pygame.init()
-    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=DISABLED_AI,
+    )
 
     event = scene.trigger_event_at(14, 4)
     save = get_game_save(storage)
@@ -500,7 +522,12 @@ def test_overworld_shadow_event_applies_narrative_flags_and_logs() -> None:
 
     storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
     pygame.init()
-    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=DISABLED_AI,
+    )
 
     event = scene.trigger_event_at(9, 4)
     assert event is not None
@@ -531,12 +558,105 @@ def test_overworld_shadow_event_applies_narrative_flags_and_logs() -> None:
     pygame.quit()
 
 
+def test_overworld_shadow_event_uses_local_text_when_ai_is_disabled() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=DISABLED_AI,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+
+    assert event is not None
+    assert scene.dialogue.messages == event.messages
+    assert scene.dialogue.current_text == event.messages[0]
+    assert scene.last_ai_narration_result is not None
+    assert scene.last_ai_narration_result.source == "disabled"
+    assert scene.last_ai_narration_result.used_ai is False
+    pygame.quit()
+
+
+def test_overworld_shadow_event_uses_local_text_when_ai_fails() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=AIConfig(enabled=True, api_key="fake"),
+        ai_narrator=failing_game_ai,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+
+    assert event is not None
+    assert scene.dialogue.messages == event.messages
+    assert scene.last_ai_narration_result is not None
+    assert scene.last_ai_narration_result.source == "error"
+    assert scene.last_ai_narration_result.used_ai is False
+    pygame.quit()
+
+
+def test_overworld_shadow_event_can_use_fake_ai_text_without_changing_effects() -> None:
+    import pygame
+
+    captured_context = {}
+
+    def capturing_ai(context, config=None):
+        captured_context.update(context)
+        return fake_game_ai_text(context, config)
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=AIConfig(enabled=True, api_key="fake"),
+        ai_narrator=capturing_ai,
+    )
+
+    event = scene.trigger_event_at(9, 4)
+    assert event is not None
+    assert scene.dialogue.messages == ("A sombra respira junto da floresta.",)
+    assert scene.last_ai_narration_result is not None
+    assert scene.last_ai_narration_result.used_ai is True
+    assert captured_context["event_id"] == "evento-sombra-observa"
+    assert captured_context["location_id"] == "floresta-do-avesso"
+    assert "save" not in captured_context
+    assert "choice_history" not in captured_context
+    save_before_choice = get_game_save(storage)
+    assert save_before_choice.story_flags == []
+    assert save_before_choice.world_flags == []
+
+    scene._handle_dialogue_option(event.choice.options[2])
+    save = get_game_save(storage)
+
+    assert "viu_sombra_na_floresta_do_avesso" in save.story_flags
+    assert "floresta_do_avesso_inquieta" in save.world_flags
+    assert save.choice_history[0]["choice"] == "Ignorar e seguir."
+    assert save.consequence_log[0]["id"] == "evento-sombra-observa-consequencia"
+    pygame.quit()
+
+
 def test_overworld_shadow_event_does_not_duplicate_narrative_state() -> None:
     import pygame
 
     storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
     pygame.init()
-    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=DISABLED_AI,
+    )
     event = scene.trigger_event_at(9, 4)
     assert event is not None
 
@@ -561,6 +681,7 @@ def test_overworld_shadow_event_respects_location_id() -> None:
         pygame,
         GameContext(character_id="miko-meu", player_name="Miko Meu", location_id="cidade-de-pedralume"),
         storage,
+        ai_config=DISABLED_AI,
     )
 
     event = scene.trigger_event_at(9, 4)
@@ -592,7 +713,12 @@ def test_overworld_shadow_event_does_not_trigger_when_story_flag_exists() -> Non
         }
     )
     pygame.init()
-    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage)
+    scene = OverworldScene(
+        pygame,
+        GameContext(character_id="miko-meu", player_name="Miko Meu"),
+        storage,
+        ai_config=DISABLED_AI,
+    )
 
     event = scene.trigger_event_at(9, 4)
     save = get_game_save(storage)

@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.ai.narrator import AIConfig
 from src.core.character import get_character
 from src.core.lore import get_lore_summary_for_location
 from src.game import assets, colors
 from src.game.appearance import appearance_from_notes
+from src.game.ai_narration import GameNarrator, GameNarrationResult, narrate_game_text
 from src.game.camera import Camera
 from src.game.entities.creature import Creature, load_game_creature
 from src.game.entities.npc import NPC
@@ -46,11 +48,25 @@ from src.game.ui.hud import HUD
 from src.storage.types import JsonStore
 
 
+SHADOW_OBSERVE_EVENT_ID = "evento-sombra-observa"
+
+
 class OverworldScene(BaseScene):
-    def __init__(self, pygame, context: GameContext | str, storage: JsonStore | None = None) -> None:
+    def __init__(
+        self,
+        pygame,
+        context: GameContext | str,
+        storage: JsonStore | None = None,
+        *,
+        ai_narrator: GameNarrator | None = None,
+        ai_config: AIConfig | None = None,
+    ) -> None:
         self.pygame = pygame
         self.context = context if isinstance(context, GameContext) else GameContext(player_name=context)
         self.storage = storage
+        self.ai_narrator = ai_narrator
+        self.ai_config = ai_config
+        self.last_ai_narration_result: GameNarrationResult | None = None
         self.should_quit = False
         self.requested_scene: str | None = None
         self.requested_creature: Creature | None = None
@@ -183,7 +199,7 @@ class OverworldScene(BaseScene):
         if not event.repeatable:
             self.triggered_event_ids.add(event.id)
         self._persist_triggered_event(event.id)
-        self.dialogue = DialogueBox(event.speaker, event.messages, choice=event.choice)
+        self.dialogue = DialogueBox(event.speaker, self._messages_for_event(event), choice=event.choice)
         if event.choice is not None:
             self.pending_event = event
         elif self.storage is not None:
@@ -251,6 +267,32 @@ class OverworldScene(BaseScene):
             self.game_save = apply_narrative_effects_to_storage(self.storage, DEFAULT_SAVE_ID, effects)
         except Exception as exc:  # noqa: BLE001 - narrative state must not crash exploration.
             print(f"[MAGIK Game] Nao foi possivel aplicar efeito narrativo: {exc}")
+
+    def _messages_for_event(self, event: MapEvent) -> tuple[str, ...]:
+        if event.id != SHADOW_OBSERVE_EVENT_ID:
+            return event.messages
+        result = narrate_game_text(
+            fallback_text=event.text,
+            context=self._safe_ai_context_for_event(event),
+            config=self.ai_config,
+            narrator=self.ai_narrator,
+        )
+        self.last_ai_narration_result = result
+        if result.used_ai:
+            return (result.text,)
+        return event.messages
+
+    def _safe_ai_context_for_event(self, event: MapEvent) -> dict[str, Any]:
+        save = self._current_game_save()
+        return {
+            "location_id": self.location_id,
+            "location_name": self.location_display_name,
+            "event_id": event.id,
+            "story_flags": list(save.story_flags if save else []),
+            "world_flags": list(save.world_flags if save else []),
+            "decided_consequence": _event_decided_consequence(event),
+            "tone": "sombrio, misterioso, curto",
+        }
 
     def _current_game_save(self) -> GameSave | None:
         if self.storage is None:
@@ -370,3 +412,10 @@ def _effects_for_selected_option(effects: dict[str, Any], selected_option=None) 
         choice_payload["choice"] = selected_option.text
         resolved_effects["important_choice"] = choice_payload
     return resolved_effects
+
+
+def _event_decided_consequence(event: MapEvent) -> str:
+    consequence = event.narrative_effects.get("narrative_consequence")
+    if isinstance(consequence, dict):
+        return str(consequence.get("text") or "")
+    return ""
