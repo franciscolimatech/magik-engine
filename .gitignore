@@ -13,3 +13,4 @@ venv/
 .DS_Store
 Thumbs.db
 lore_sources/
+data/game_saves.json

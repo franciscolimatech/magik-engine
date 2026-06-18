@@ -16,9 +16,20 @@ from src.game.maps.test_map import (
     find_creatures,
     find_npcs,
     find_player_start,
+    is_walkable,
     load_test_map,
     map_height,
     map_width,
+)
+from src.game.save import (
+    DEFAULT_LOCATION_ID,
+    DEFAULT_SAVE_ID,
+    GameSave,
+    load_or_create_default_game_save,
+    register_current_location,
+    register_triggered_event,
+    sync_game_save_context,
+    update_player_position,
 )
 from src.game.scenes.base import BaseScene
 from src.game.ui.dialogue_box import DialogueBox
@@ -35,12 +46,13 @@ class OverworldScene(BaseScene):
         self.requested_scene: str | None = None
         self.requested_creature: Creature | None = None
         self.map_data = load_test_map()
-        start_x, start_y = find_player_start(self.map_data)
+        self.game_save = self._load_game_save()
+        start_x, start_y = self._starting_position()
         self.player = Player(start_x, start_y, name=self.context.player_name)
         self.npcs = [NPC(item.x, item.y, item.name, item.dialogues, choice=item.choice) for item in find_npcs(self.map_data)]
         self.creatures = [load_game_creature(storage, item.x, item.y) for item in find_creatures(self.map_data)]
         self.events = load_test_events()
-        self.triggered_event_ids: set[str] = set()
+        self.triggered_event_ids: set[str] = set(self.game_save.triggered_events if self.game_save else [])
         self.dialogue: DialogueBox | None = None
         self.pending_event: MapEvent | None = None
         self.pending_creature: Creature | None = None
@@ -55,11 +67,13 @@ class OverworldScene(BaseScene):
         self.player_appearance = load_player_appearance(storage, self.context)
         self.assets = assets.create_assets(pygame, player_appearance=self.player_appearance)
         self.camera.follow(self.player.x, self.player.y, map_width(self.map_data), map_height(self.map_data))
+        self.persist_state()
 
     def handle_event(self, event) -> None:
         if event.type != self.pygame.KEYDOWN:
             return
         if event.key == self.pygame.K_ESCAPE:
+            self.persist_state()
             self.should_quit = True
             return
         if self.dialogue and self.dialogue.visible:
@@ -113,6 +127,7 @@ class OverworldScene(BaseScene):
             return False
         moved = self.player.move(dx, dy, self.map_data)
         if moved:
+            self.persist_state()
             self.trigger_event_at(self.player.x, self.player.y)
         return moved
 
@@ -143,6 +158,7 @@ class OverworldScene(BaseScene):
             return None
         if not event.repeatable:
             self.triggered_event_ids.add(event.id)
+        self._persist_triggered_event(event.id)
         self.dialogue = DialogueBox(event.speaker, event.messages, choice=event.choice)
         if event.choice is not None:
             self.pending_event = event
@@ -190,6 +206,55 @@ class OverworldScene(BaseScene):
         if key in {keys.K_DOWN, keys.K_s}:
             return (0, 1)
         return None
+
+    def persist_state(self) -> None:
+        if self.storage is None:
+            return
+        try:
+            update_player_position(self.storage, DEFAULT_SAVE_ID, self.player.x, self.player.y)
+            register_current_location(self.storage, DEFAULT_SAVE_ID, DEFAULT_LOCATION_ID)
+        except Exception as exc:  # noqa: BLE001 - save failures must not crash the prototype.
+            print(f"[MAGIK Game] Nao foi possivel salvar progresso do jogo: {exc}")
+
+    def _load_game_save(self) -> GameSave | None:
+        if self.storage is None:
+            return None
+        try:
+            save = load_or_create_default_game_save(
+                self.storage,
+                character_id=self.context.character_id,
+                campaign_id=self.context.campaign_id,
+                session_id=self.context.campaign_session_id,
+                location_id=DEFAULT_LOCATION_ID,
+            )
+            return sync_game_save_context(
+                self.storage,
+                DEFAULT_SAVE_ID,
+                self.context.character_id,
+                self.context.campaign_id,
+                self.context.campaign_session_id,
+                DEFAULT_LOCATION_ID,
+            )
+        except Exception as exc:  # noqa: BLE001 - save failures must not block the game.
+            print(f"[MAGIK Game] Nao foi possivel carregar save do jogo: {exc}")
+            return None
+
+    def _starting_position(self) -> tuple[int, int]:
+        default_position = find_player_start(self.map_data)
+        if self.game_save is None:
+            return default_position
+        x, y = self.game_save.position
+        if is_walkable(self.map_data, x, y):
+            return x, y
+        return default_position
+
+    def _persist_triggered_event(self, event_id: str) -> None:
+        if self.storage is None:
+            return
+        try:
+            register_triggered_event(self.storage, DEFAULT_SAVE_ID, event_id)
+        except Exception as exc:  # noqa: BLE001 - save failures must not block event display.
+            print(f"[MAGIK Game] Nao foi possivel salvar evento disparado: {exc}")
 
 
 def load_player_appearance(storage: JsonStore | None, context: GameContext) -> dict[str, str] | None:

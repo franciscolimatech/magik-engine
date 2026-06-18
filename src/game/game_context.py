@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Mapping
 
 from src.core.character import MIKO_ID, get_character
+from src.game.save import DEFAULT_SAVE_ID, get_game_save
 from src.game.settings import PLAYER_NAME_FALLBACK
 from src.storage.json_storage import JSONStorage
 from src.storage.types import JsonStore
@@ -34,9 +35,10 @@ class GameContext:
         map_name: str = DEFAULT_MAP_NAME,
     ) -> "GameContext":
         values = env if env is not None else os.environ
-        character_id = _env_text(values, "MAGIK_GAME_CHARACTER_ID") or MIKO_ID
-        campaign_id = _env_text(values, "MAGIK_GAME_CAMPAIGN_ID")
-        campaign_session_id = _env_text(values, "MAGIK_GAME_SESSION_ID")
+        default_save = _load_default_save(storage)
+        character_id = _env_text(values, "MAGIK_GAME_CHARACTER_ID") or _save_character_id(default_save) or MIKO_ID
+        campaign_id = _env_text(values, "MAGIK_GAME_CAMPAIGN_ID") or _save_campaign_id(default_save)
+        campaign_session_id = _env_text(values, "MAGIK_GAME_SESSION_ID") or _save_session_id(default_save)
         return cls(
             character_id=character_id,
             campaign_id=campaign_id,
@@ -83,3 +85,24 @@ def load_player_name(character_id: str = MIKO_ID, storage: JsonStore | None = No
 def _env_text(env: Mapping[str, str], key: str) -> str | None:
     value = env.get(key, "").strip()
     return value or None
+
+
+def _load_default_save(storage: JsonStore | None):
+    if storage is None:
+        return None
+    try:
+        return get_game_save(storage, DEFAULT_SAVE_ID)
+    except ValueError:
+        return None
+
+
+def _save_character_id(save) -> str | None:
+    return save.character_id if save is not None and save.character_id.strip() else None
+
+
+def _save_campaign_id(save) -> str | None:
+    return save.campaign_id if save is not None else None
+
+
+def _save_session_id(save) -> str | None:
+    return save.session_id if save is not None else None

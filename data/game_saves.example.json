@@ -1,0 +1,24 @@
+{
+  "saves": [
+    {
+      "id": "default",
+      "character_id": "miko-meu",
+      "campaign_id": null,
+      "session_id": null,
+      "location_id": "mapa-de-teste",
+      "player_position": {
+        "x": 5,
+        "y": 4
+      },
+      "visited_locations": [
+        "mapa-de-teste"
+      ],
+      "triggered_events": [],
+      "known_quest_ids": [],
+      "active_quest_ids": [],
+      "completed_quest_ids": [],
+      "defeated_enemy_ids": [],
+      "notes": []
+    }
+  ]
+}

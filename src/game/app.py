@@ -42,18 +42,23 @@ def run_game(max_frames: int | None = None) -> None:
             else:
                 scene.handle_event(event)
         if getattr(scene, "should_quit", False):
+            _persist_scene_state(scene)
             running = False
         requested_scene = _consume_requested_scene(scene)
         if requested_scene == "overworld":
+            _persist_scene_state(scene)
             context = getattr(scene, "context", context)
             scene = getattr(scene, "return_scene", None) or OverworldScene(pygame, context, storage=storage)
         elif requested_scene == "character_creator":
+            _persist_scene_state(scene)
             context = getattr(scene, "context", context)
             scene = CharacterCreatorScene(pygame, context, storage)
         elif requested_scene == "main_menu":
+            _persist_scene_state(scene)
             context = getattr(scene, "context", context)
             scene = MainMenuScene(pygame, context, storage=storage)
         elif requested_scene == "battle":
+            _persist_scene_state(scene)
             context = getattr(scene, "context", context)
             creature = _consume_requested_creature(scene)
             if creature is not None:
@@ -73,6 +78,7 @@ def run_game(max_frames: int | None = None) -> None:
         if max_frames is not None and frame_count >= max_frames:
             running = False
 
+    _persist_scene_state(scene)
     pygame.quit()
 
 
@@ -102,6 +108,12 @@ def _load_battle_character(storage: JsonStore, context: GameContext) -> Characte
             current_health=20,
             armor=0,
         )
+
+
+def _persist_scene_state(scene) -> None:
+    persist = getattr(scene, "persist_state", None)
+    if persist is not None:
+        persist()
 
 
 def _max_frames_from_env() -> int | None:
