@@ -34,6 +34,11 @@ class GameSave:
     active_quest_ids: list[str] = field(default_factory=list)
     completed_quest_ids: list[str] = field(default_factory=list)
     defeated_enemy_ids: list[str] = field(default_factory=list)
+    story_flags: list[str] = field(default_factory=list)
+    world_flags: list[str] = field(default_factory=list)
+    npc_flags: dict[str, list[str]] = field(default_factory=dict)
+    choice_history: list[dict[str, Any]] = field(default_factory=list)
+    consequence_log: list[dict[str, Any]] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     @property
@@ -59,6 +64,11 @@ class GameSave:
                 active_quest_ids=list(data.get("active_quest_ids", [])),
                 completed_quest_ids=list(data.get("completed_quest_ids", [])),
                 defeated_enemy_ids=list(data.get("defeated_enemy_ids", [])),
+                story_flags=list(data.get("story_flags", [])),
+                world_flags=list(data.get("world_flags", [])),
+                npc_flags=_normalize_npc_flags(data.get("npc_flags", {})),
+                choice_history=_normalize_dict_list(data.get("choice_history", [])),
+                consequence_log=_normalize_dict_list(data.get("consequence_log", [])),
                 notes=list(data.get("notes", [])),
             )
         except KeyError as exc:
@@ -248,6 +258,120 @@ def register_defeated_enemy(
     return save
 
 
+def add_story_flag(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    flag: str = "",
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    _append_unique(save.story_flags, flag)
+    _replace_save(storage, save)
+    return save
+
+
+def add_world_flag(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    flag: str = "",
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    _append_unique(save.world_flags, flag)
+    _replace_save(storage, save)
+    return save
+
+
+def add_npc_flag(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    npc_id: str = "",
+    flag: str = "",
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    cleaned_npc_id = npc_id.strip()
+    if cleaned_npc_id:
+        flags = save.npc_flags.setdefault(cleaned_npc_id, [])
+        _append_unique(flags, flag)
+        if not flags:
+            save.npc_flags.pop(cleaned_npc_id, None)
+    _replace_save(storage, save)
+    return save
+
+
+def has_story_flag(storage: JsonStore, save_id: str = DEFAULT_SAVE_ID, flag: str = "") -> bool:
+    return _has_flag(get_game_save(storage, save_id).story_flags, flag)
+
+
+def has_world_flag(storage: JsonStore, save_id: str = DEFAULT_SAVE_ID, flag: str = "") -> bool:
+    return _has_flag(get_game_save(storage, save_id).world_flags, flag)
+
+
+def has_npc_flag(storage: JsonStore, save_id: str = DEFAULT_SAVE_ID, npc_id: str = "", flag: str = "") -> bool:
+    save = get_game_save(storage, save_id)
+    return _has_flag(save.npc_flags.get(npc_id.strip(), []), flag)
+
+
+def register_important_choice(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    choice_id: str = "",
+    choice: str = "",
+    location_id: str | None = None,
+    npc_id: str | None = None,
+    timestamp: str | None = None,
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    cleaned_id = choice_id.strip()
+    cleaned_choice = choice.strip()
+    if cleaned_id and cleaned_choice and not _entry_exists(save.choice_history, cleaned_id):
+        save.choice_history.append(
+            {
+                "id": cleaned_id,
+                "location_id": location_id,
+                "npc_id": npc_id,
+                "choice": cleaned_choice,
+                "timestamp": timestamp,
+            }
+        )
+        _replace_save(storage, save)
+    return save
+
+
+def register_narrative_consequence(
+    storage: JsonStore,
+    save_id: str = DEFAULT_SAVE_ID,
+    consequence_id: str = "",
+    text: str = "",
+    location_id: str | None = None,
+    npc_id: str | None = None,
+) -> GameSave:
+    save = _get_or_create_save(storage, save_id)
+    cleaned_id = consequence_id.strip()
+    cleaned_text = text.strip()
+    if cleaned_id and cleaned_text and not _entry_exists(save.consequence_log, cleaned_id):
+        save.consequence_log.append(
+            {
+                "id": cleaned_id,
+                "location_id": location_id,
+                "npc_id": npc_id,
+                "text": cleaned_text,
+            }
+        )
+        _replace_save(storage, save)
+    return save
+
+
+def list_relevant_flags(storage: JsonStore, save_id: str = DEFAULT_SAVE_ID, npc_id: str | None = None) -> dict[str, Any]:
+    save = get_game_save(storage, save_id)
+    result: dict[str, Any] = {
+        "story_flags": list(save.story_flags),
+        "world_flags": list(save.world_flags),
+        "npc_flags": dict(save.npc_flags),
+    }
+    if npc_id is not None:
+        result["npc_flags"] = {npc_id: list(save.npc_flags.get(npc_id, []))}
+    return result
+
+
 def validate_unique_save_ids(saves: list[GameSave]) -> None:
     seen: set[str] = set()
     for save in saves:
@@ -274,10 +398,20 @@ def validate_game_save(save: GameSave) -> None:
         "active_quest_ids",
         "completed_quest_ids",
         "defeated_enemy_ids",
+        "story_flags",
+        "world_flags",
         "notes",
     ):
         if not all(isinstance(item, str) for item in getattr(save, field_name)):
             raise ValueError(f"{field_name} deve conter apenas strings.")
+    if not all(isinstance(npc_id, str) and isinstance(flags, list) for npc_id, flags in save.npc_flags.items()):
+        raise ValueError("npc_flags deve ser um objeto com listas de strings.")
+    if not all(all(isinstance(flag, str) for flag in flags) for flags in save.npc_flags.values()):
+        raise ValueError("npc_flags deve conter apenas strings.")
+    if not all(isinstance(item, dict) for item in save.choice_history):
+        raise ValueError("choice_history deve conter apenas objetos JSON.")
+    if not all(isinstance(item, dict) for item in save.consequence_log):
+        raise ValueError("consequence_log deve conter apenas objetos JSON.")
 
 
 def _get_or_create_save(
@@ -341,12 +475,43 @@ def _position_dict(position: tuple[int, int]) -> dict[str, int]:
     return {"x": int(x), "y": int(y)}
 
 
+def _normalize_npc_flags(value: Any) -> dict[str, list[str]]:
+    if not isinstance(value, dict):
+        return {}
+    result: dict[str, list[str]] = {}
+    for npc_id, flags in value.items():
+        if not isinstance(npc_id, str) or not isinstance(flags, list):
+            continue
+        result[npc_id] = _unique_strings([flag for flag in flags if isinstance(flag, str)])
+    return result
+
+
+def _normalize_dict_list(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
+
+
 def _unique_strings(values: list[str]) -> list[str]:
     result: list[str] = []
     for value in values:
         if isinstance(value, str) and value and value not in result:
             result.append(value)
     return result
+
+
+def _append_unique(values: list[str], value: str) -> None:
+    cleaned = value.strip()
+    if cleaned and cleaned not in values:
+        values.append(cleaned)
+
+
+def _has_flag(values: list[str], flag: str) -> bool:
+    return flag.strip() in values
+
+
+def _entry_exists(entries: list[dict[str, Any]], entry_id: str) -> bool:
+    return any(str(entry.get("id", "")).casefold() == entry_id.casefold() for entry in entries)
 
 
 def _resolve_valid_location_id(storage: JsonStore, candidate: Any, fallback: str) -> str:

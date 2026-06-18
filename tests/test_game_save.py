@@ -6,12 +6,21 @@ from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
     GameSave,
+    add_npc_flag,
+    add_story_flag,
+    add_world_flag,
     create_default_game_save,
     get_game_save,
+    has_npc_flag,
+    has_story_flag,
+    has_world_flag,
     initialize_character_starting_save,
+    list_relevant_flags,
     load_game_saves,
     load_or_create_default_game_save,
     register_current_location,
+    register_important_choice,
+    register_narrative_consequence,
     register_triggered_event,
     save_game_saves,
     sync_game_save_context,
@@ -42,6 +51,31 @@ def test_invalid_game_save_uses_safe_fallback(tmp_path: Path) -> None:
     assert load_game_saves(storage) == []
 
 
+def test_old_game_save_without_flags_loads_with_safe_defaults() -> None:
+    storage = MemoryStorage(
+        {
+            "game_saves.json": {
+                "saves": [
+                    {
+                        "id": DEFAULT_SAVE_ID,
+                        "character_id": "miko-meu",
+                        "location_id": DEFAULT_LOCATION_ID,
+                        "player_position": {"x": 5, "y": 4},
+                    }
+                ]
+            }
+        }
+    )
+
+    save = get_game_save(storage)
+
+    assert save.story_flags == []
+    assert save.world_flags == []
+    assert save.npc_flags == {}
+    assert save.choice_history == []
+    assert save.consequence_log == []
+
+
 def test_create_default_game_save() -> None:
     save = create_default_game_save()
 
@@ -50,6 +84,11 @@ def test_create_default_game_save() -> None:
     assert save.location_id == DEFAULT_LOCATION_ID
     assert save.position == (5, 4)
     assert save.visited_locations == [DEFAULT_LOCATION_ID]
+    assert save.story_flags == []
+    assert save.world_flags == []
+    assert save.npc_flags == {}
+    assert save.choice_history == []
+    assert save.consequence_log == []
 
 
 def test_get_game_save_by_id() -> None:
@@ -78,6 +117,122 @@ def test_register_triggered_event_without_duplicate() -> None:
     assert save.triggered_events == ["ikisaki-stir"]
 
 
+def test_add_story_flag_without_duplicate() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    add_story_flag(storage, DEFAULT_SAVE_ID, "falou_com_velho_nox")
+    save = add_story_flag(storage, DEFAULT_SAVE_ID, "falou_com_velho_nox")
+
+    assert save.story_flags == ["falou_com_velho_nox"]
+
+
+def test_add_world_flag_without_duplicate() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    add_world_flag(storage, DEFAULT_SAVE_ID, "floresta_do_avesso_inquieta")
+    save = add_world_flag(storage, DEFAULT_SAVE_ID, "floresta_do_avesso_inquieta")
+
+    assert save.world_flags == ["floresta_do_avesso_inquieta"]
+
+
+def test_add_npc_flag_without_duplicate() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    add_npc_flag(storage, DEFAULT_SAVE_ID, "velho-nox", "conhecido")
+    save = add_npc_flag(storage, DEFAULT_SAVE_ID, "velho-nox", "conhecido")
+
+    assert save.npc_flags == {"velho-nox": ["conhecido"]}
+
+
+def test_flag_checks_work() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    add_story_flag(storage, DEFAULT_SAVE_ID, "falou_com_velho_nox")
+    add_world_flag(storage, DEFAULT_SAVE_ID, "floresta_do_avesso_inquieta")
+    add_npc_flag(storage, DEFAULT_SAVE_ID, "velho-nox", "desconfiado")
+
+    assert has_story_flag(storage, DEFAULT_SAVE_ID, "falou_com_velho_nox") is True
+    assert has_world_flag(storage, DEFAULT_SAVE_ID, "floresta_do_avesso_inquieta") is True
+    assert has_npc_flag(storage, DEFAULT_SAVE_ID, "velho-nox", "desconfiado") is True
+    assert has_story_flag(storage, DEFAULT_SAVE_ID, "nao-existe") is False
+
+
+def test_register_important_choice_without_duplicate() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    register_important_choice(
+        storage,
+        DEFAULT_SAVE_ID,
+        "escolha-velho-nox-001",
+        "Recusou dormir perto da fogueira.",
+        location_id="floresta-do-avesso",
+        npc_id="velho-nox",
+    )
+    save = register_important_choice(
+        storage,
+        DEFAULT_SAVE_ID,
+        "escolha-velho-nox-001",
+        "Recusou dormir perto da fogueira.",
+        location_id="floresta-do-avesso",
+        npc_id="velho-nox",
+    )
+
+    assert save.choice_history == [
+        {
+            "id": "escolha-velho-nox-001",
+            "location_id": "floresta-do-avesso",
+            "npc_id": "velho-nox",
+            "choice": "Recusou dormir perto da fogueira.",
+            "timestamp": None,
+        }
+    ]
+
+
+def test_register_narrative_consequence_without_duplicate() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+
+    register_narrative_consequence(
+        storage,
+        DEFAULT_SAVE_ID,
+        "consequencia-001",
+        "Velho Nox passou a observar o personagem com mais cautela.",
+        location_id="floresta-do-avesso",
+        npc_id="velho-nox",
+    )
+    save = register_narrative_consequence(
+        storage,
+        DEFAULT_SAVE_ID,
+        "consequencia-001",
+        "Velho Nox passou a observar o personagem com mais cautela.",
+        location_id="floresta-do-avesso",
+        npc_id="velho-nox",
+    )
+
+    assert save.consequence_log == [
+        {
+            "id": "consequencia-001",
+            "location_id": "floresta-do-avesso",
+            "npc_id": "velho-nox",
+            "text": "Velho Nox passou a observar o personagem com mais cautela.",
+        }
+    ]
+
+
+def test_list_relevant_flags() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
+    add_story_flag(storage, DEFAULT_SAVE_ID, "falou_com_velho_nox")
+    add_world_flag(storage, DEFAULT_SAVE_ID, "floresta_do_avesso_inquieta")
+    add_npc_flag(storage, DEFAULT_SAVE_ID, "velho-nox", "desconfiado")
+
+    flags = list_relevant_flags(storage, DEFAULT_SAVE_ID, npc_id="velho-nox")
+
+    assert flags == {
+        "story_flags": ["falou_com_velho_nox"],
+        "world_flags": ["floresta_do_avesso_inquieta"],
+        "npc_flags": {"velho-nox": ["desconfiado"]},
+    }
+
+
 def test_register_current_location_tracks_visit_once() -> None:
     storage = MemoryStorage({"game_saves.json": {"saves": [create_default_game_save().to_dict()]}})
 
@@ -99,6 +254,45 @@ def test_save_and_reload_keeps_data(tmp_path: Path) -> None:
     assert reloaded.character_id == "lia"
     assert reloaded.position == (3, 4)
     assert reloaded.triggered_events == ["pressagio"]
+
+
+def test_save_and_reload_preserves_flags_and_logs(tmp_path: Path) -> None:
+    storage = JSONStorage(tmp_path)
+    save = create_default_game_save(character_id="lia", position=(3, 4))
+    save.story_flags.append("falou_com_velho_nox")
+    save.world_flags.append("floresta_do_avesso_inquieta")
+    save.npc_flags["velho-nox"] = ["desconfiado"]
+    save.choice_history.append(
+        {
+            "id": "escolha-001",
+            "location_id": "floresta-do-avesso",
+            "npc_id": "velho-nox",
+            "choice": "Perguntou sobre a floresta.",
+            "timestamp": None,
+        }
+    )
+    save.consequence_log.append(
+        {
+            "id": "consequencia-001",
+            "location_id": "floresta-do-avesso",
+            "text": "A floresta pareceu escutar.",
+        }
+    )
+
+    save_game_saves(storage, [save])
+    reloaded = get_game_save(storage, DEFAULT_SAVE_ID)
+
+    assert reloaded.story_flags == ["falou_com_velho_nox"]
+    assert reloaded.world_flags == ["floresta_do_avesso_inquieta"]
+    assert reloaded.npc_flags == {"velho-nox": ["desconfiado"]}
+    assert reloaded.choice_history[0]["choice"] == "Perguntou sobre a floresta."
+    assert reloaded.consequence_log[0]["text"] == "A floresta pareceu escutar."
+
+
+def test_real_game_save_file_is_ignored() -> None:
+    gitignore = Path(".gitignore").read_text(encoding="utf-8")
+
+    assert "data/game_saves.json" in gitignore
 
 
 def test_load_or_create_default_game_save_persists_when_missing() -> None:
