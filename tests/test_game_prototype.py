@@ -41,6 +41,7 @@ from src.game.settings import (
 )
 from src.game.ui.dialogue_box import DialogueBox, wrap_text
 from src.game.ui.hud import HUD
+from src.storage.json_storage import JSONStorage
 from src.storage.memory import MemoryStorage
 
 
@@ -948,6 +949,26 @@ def test_main_menu_load_existing_character_updates_context() -> None:
     assert scene.consume_requested_scene() == "overworld"
 
 
+def test_main_menu_load_existing_character_updates_default_save() -> None:
+    other = Character(
+        id="lia",
+        name="Lia",
+        character_class="Guia",
+        max_health=20,
+        current_health=20,
+        armor=1,
+    )
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict(), other.to_dict()]}})
+    context = GameContext(player_name="Miko Meu", location_id="floresta-do-avesso")
+    scene = MainMenuScene(FakePygame, context, storage=storage)
+
+    assert scene.select_character(1) is True
+
+    save = get_game_save(storage)
+    assert save.character_id == "lia"
+    assert save.location_id == "floresta-do-avesso"
+
+
 def test_main_menu_new_game_requests_character_creator() -> None:
     scene = MainMenuScene(FakePygame, GameContext(player_name="Miko Meu"), storage=MemoryStorage())
     scene.selected_index = 1
@@ -1163,6 +1184,34 @@ def test_character_creator_creates_complete_character_and_updates_context() -> N
     assert get_game_save(storage).location_id == "floresta-viridian"
     assert get_game_save(storage).visited_locations == ["floresta-viridian"]
     assert scene.consume_requested_scene() == "overworld"
+
+
+def test_character_creator_persists_character_for_load_menu_after_storage_reload(tmp_path) -> None:
+    storage = JSONStorage(tmp_path)
+    scene = CharacterCreatorScene(
+        FakePygame,
+        GameContext(player_name="Aventureiro"),
+        storage,
+        power_interpreter=fake_power_interpreter,
+    )
+    scene.name = "Lia Persistente"
+    scene.origin_index = 3
+    scene.power_text = "Ouve ecos na neblina."
+
+    character = scene.create_character_from_selection()
+    reloaded_storage = JSONStorage(tmp_path)
+    menu = MainMenuScene(
+        FakePygame,
+        GameContext.from_env(env={}, storage=reloaded_storage),
+        storage=reloaded_storage,
+        load_title_background=False,
+    )
+
+    characters = menu.available_characters()
+    assert [current.id for current in characters] == ["miko-meu", character.id]
+    assert any(current.name == "Lia Persistente" for current in characters)
+    assert get_game_save(reloaded_storage).character_id == character.id
+    assert get_game_save(reloaded_storage).location_id == "floresta-do-avesso"
 
 
 def test_character_creator_generates_unique_id() -> None:

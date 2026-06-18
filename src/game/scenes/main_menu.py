@@ -5,6 +5,7 @@ from __future__ import annotations
 from src.core.character import Character, list_characters
 from src.game import assets, colors
 from src.game.game_context import GameContext
+from src.game.save import DEFAULT_SAVE_ID, sync_game_save_context
 from src.game.scenes.base import BaseScene
 from src.storage.types import JsonStore
 
@@ -147,8 +148,24 @@ class MainMenuScene(BaseScene):
         self.character_index = max(0, min(index, len(characters) - 1))
         character = characters[self.character_index]
         self.context = self.context.with_character(character.id, self.storage)
+        self._sync_selected_character_save(character.id)
         self.requested_scene = "overworld"
         return True
+
+    def _sync_selected_character_save(self, character_id: str) -> None:
+        if self.storage is None:
+            return
+        try:
+            sync_game_save_context(
+                self.storage,
+                save_id=DEFAULT_SAVE_ID,
+                character_id=character_id,
+                campaign_id=self.context.campaign_id,
+                session_id=self.context.campaign_session_id,
+                location_id=self.context.location_id,
+            )
+        except Exception as exc:  # noqa: BLE001 - menu selection must not crash if local save is unavailable.
+            print(f"[MAGIK Game] Nao foi possivel atualizar o save do personagem selecionado: {exc}")
 
     def _handle_main_key(self, key: int) -> None:
         keys = self.pygame
