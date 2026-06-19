@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src.game.maps.events import MapEvent, load_test_events
-from src.game.maps.test_map import TEST_MAP
+from src.game.maps.test_map import TEST_MAP, is_walkable
 
 
 DEFAULT_AREA_ID = "floresta-do-avesso-entrada"
@@ -35,6 +35,7 @@ class AreaTransition:
     target_area_id: str
     target_spawn_id: str = DEFAULT_SPAWN_ID
     target_location_id: str | None = None
+    label: str = "Atravessar"
 
     @property
     def position(self) -> tuple[int, int]:
@@ -53,14 +54,36 @@ class GameArea:
 
 
 FOREST_CLEARING_MAP = (
-    "################",
-    "#..............#",
-    "#.P..ggg.......#",
-    "#....ggg.......#",
-    "#..............#",
-    "#......?.......#",
-    "#..............#",
-    "################",
+    "########################",
+    "#..P....ggg............#",
+    "#........ggg...........#",
+    "#....####..............#",
+    "#......................#",
+    "#.......?..............#",
+    "#...................ggg#",
+    "#..ggg.................#",
+    "#...............####...#",
+    "#......................#",
+    "#...####..........####.#",
+    "#......................#",
+    "#......................#",
+    "########################",
+)
+
+
+NOX_CABIN_MAP = (
+    "##################",
+    "#......####......#",
+    "#....##....##....#",
+    "#...#........#...#",
+    "#...#........#...#",
+    "#......?.........#",
+    "#....####........#",
+    "#................#",
+    "#..P.............#",
+    "#................#",
+    "#................#",
+    "##################",
 )
 
 
@@ -81,6 +104,7 @@ AREAS = (
                 y=20,
                 target_area_id="floresta-do-avesso-clareira",
                 target_spawn_id="entrada-da-clareira",
+                label="Ir para Clareira",
             ),
         ),
         events=tuple(load_test_events()),
@@ -92,7 +116,7 @@ AREAS = (
         map_data=FOREST_CLEARING_MAP,
         spawns=(
             AreaSpawn("entrada-da-clareira", 2, 2),
-            AreaSpawn("retorno", 1, 2),
+            AreaSpawn("volta-da-cabana", 21, 12),
         ),
         transitions=(
             AreaTransition(
@@ -101,6 +125,35 @@ AREAS = (
                 y=2,
                 target_area_id=DEFAULT_AREA_ID,
                 target_spawn_id="volta-da-clareira",
+                label="Voltar para Entrada",
+            ),
+            AreaTransition(
+                id="clareira-para-cabana-nox",
+                x=22,
+                y=12,
+                target_area_id="floresta-do-avesso-cabana-nox",
+                target_spawn_id="entrada-cabana",
+                label="Ir para Cabana do Nox",
+            ),
+        ),
+    ),
+    GameArea(
+        id="floresta-do-avesso-cabana-nox",
+        name="Cabana do Nox",
+        location_id="floresta-do-avesso",
+        map_data=NOX_CABIN_MAP,
+        spawns=(
+            AreaSpawn("entrada-cabana", 2, 8),
+            AreaSpawn("retorno-clareira", 1, 9),
+        ),
+        transitions=(
+            AreaTransition(
+                id="cabana-nox-para-clareira",
+                x=1,
+                y=9,
+                target_area_id="floresta-do-avesso-clareira",
+                target_spawn_id="volta-da-cabana",
+                label="Voltar para Clareira",
             ),
         ),
     ),
@@ -154,5 +207,7 @@ def validate_area_registry() -> None:
         if not spawn_ids:
             raise ValueError(f"Area sem spawn: {area.id}.")
         for transition in area.transitions:
+            if not is_walkable(list(area.map_data), transition.x, transition.y):
+                raise ValueError(f"Transicao em tile bloqueado: {transition.id}.")
             target = get_area(transition.target_area_id)
             get_spawn(target, transition.target_spawn_id)

@@ -22,6 +22,7 @@ from src.game.maps.area_registry import (
     find_transition_at,
     get_area,
     get_spawn,
+    list_areas,
     validate_area_registry,
 )
 from src.game.maps.events import MapEvent, find_event_at
@@ -167,13 +168,45 @@ def test_default_area_loads_current_entry_map() -> None:
     assert get_spawn(area, "entrada").position == (5, 4)
 
 
-def test_area_transition_points_to_existing_area_and_spawn() -> None:
-    area = get_area(DEFAULT_AREA_ID)
-    transition = find_transition_at(area, 30, 20)
+def test_area_registry_contains_forest_areas_with_same_location() -> None:
+    area_ids = {area.id for area in list_areas()}
 
-    assert transition is not None
-    assert transition.target_area_id == "floresta-do-avesso-clareira"
-    assert get_spawn(get_area(transition.target_area_id), transition.target_spawn_id).position == (2, 2)
+    assert {
+        DEFAULT_AREA_ID,
+        "floresta-do-avesso-clareira",
+        "floresta-do-avesso-cabana-nox",
+    }.issubset(area_ids)
+    assert all(area.location_id == "floresta-do-avesso" for area in list_areas())
+
+
+def test_area_transitions_point_to_existing_areas_and_spawns() -> None:
+    entry = get_area(DEFAULT_AREA_ID)
+    clearing = get_area("floresta-do-avesso-clareira")
+    cabin = get_area("floresta-do-avesso-cabana-nox")
+    entry_transition = find_transition_at(entry, 30, 20)
+    clearing_return = find_transition_at(clearing, 1, 2)
+    clearing_to_cabin = find_transition_at(clearing, 22, 12)
+    cabin_return = find_transition_at(cabin, 1, 9)
+
+    assert entry_transition is not None
+    assert entry_transition.target_area_id == "floresta-do-avesso-clareira"
+    assert entry_transition.label == "Ir para Clareira"
+    assert get_spawn(get_area(entry_transition.target_area_id), entry_transition.target_spawn_id).position == (2, 2)
+
+    assert clearing_return is not None
+    assert clearing_return.target_area_id == DEFAULT_AREA_ID
+    assert clearing_return.label == "Voltar para Entrada"
+    assert get_spawn(get_area(clearing_return.target_area_id), clearing_return.target_spawn_id).position == (29, 20)
+
+    assert clearing_to_cabin is not None
+    assert clearing_to_cabin.target_area_id == "floresta-do-avesso-cabana-nox"
+    assert clearing_to_cabin.label == "Ir para Cabana do Nox"
+    assert get_spawn(get_area(clearing_to_cabin.target_area_id), clearing_to_cabin.target_spawn_id).position == (2, 8)
+
+    assert cabin_return is not None
+    assert cabin_return.target_area_id == "floresta-do-avesso-clareira"
+    assert cabin_return.label == "Voltar para Clareira"
+    assert get_spawn(get_area(cabin_return.target_area_id), cabin_return.target_spawn_id).position == (21, 12)
 
 
 def test_generated_assets_include_tiles_and_sprites() -> None:
@@ -1032,6 +1065,39 @@ def test_overworld_draws_after_area_transition() -> None:
     pygame.quit()
 
 
+def test_overworld_draws_all_registered_forest_areas() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1366, 768))
+    for area in list_areas():
+        spawn = area.spawns[0]
+        storage = MemoryStorage(
+            {
+                "characters.json": {"characters": [create_miko_meu().to_dict()]},
+                "game_saves.json": {
+                    "saves": [
+                        GameSave(
+                            id=DEFAULT_SAVE_ID,
+                            character_id="miko-meu",
+                            location_id=area.location_id,
+                            area_id=area.id,
+                            player_position={"x": spawn.x, "y": spawn.y},
+                        ).to_dict()
+                    ]
+                },
+            }
+        )
+        scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+        scene.draw(surface)
+
+        assert scene.area_id == area.id
+        assert scene.location_id == "floresta-do-avesso"
+        assert scene.camera.screen_width == 1366
+        assert scene.camera.screen_height == 768
+    pygame.quit()
+
+
 def test_overworld_transition_return_works_with_interaction() -> None:
     import pygame
 
@@ -1055,6 +1121,42 @@ def test_overworld_transition_return_works_with_interaction() -> None:
     pygame.quit()
 
 
+def test_overworld_transition_to_cabin_and_back_works_with_interaction() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.x = 30
+    scene.player.y = 20
+    scene.interact()
+    assert scene.area_id == "floresta-do-avesso-clareira"
+
+    scene.player.x = 22
+    scene.player.y = 12
+    assert scene.current_transition() is not None
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert scene.area_id == "floresta-do-avesso-cabana-nox"
+    assert scene.location_id == "floresta-do-avesso"
+    assert scene.player.position == (2, 8)
+    assert save.area_id == "floresta-do-avesso-cabana-nox"
+    assert save.position == (2, 8)
+
+    scene.player.x = 1
+    scene.player.y = 9
+    assert scene.current_transition() is not None
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert scene.area_id == "floresta-do-avesso-clareira"
+    assert scene.player.position == (21, 12)
+    assert save.area_id == "floresta-do-avesso-clareira"
+    assert save.position == (21, 12)
+    pygame.quit()
+
+
 def test_overworld_transition_hint_appears_only_on_transition_tile() -> None:
     import pygame
 
@@ -1070,7 +1172,7 @@ def test_overworld_transition_hint_appears_only_on_transition_tile() -> None:
     scene.player.y = 20
     scene.draw(surface)
 
-    assert "E atravessar" in scene.hud.controls_hint
+    assert "E Ir para Clareira" in scene.hud.controls_hint
     assert "Clareira" in scene.hud.controls_hint
     pygame.quit()
 

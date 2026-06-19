@@ -491,8 +491,7 @@ class OverworldScene(BaseScene):
         transition = self.current_transition()
         if transition is None:
             return "WASD/setas mover | E/espaco interagir | ESC sair"
-        target_area = resolve_area(transition.target_area_id)
-        return f"E atravessar para {target_area.name} | ESC sair"
+        return f"E {transition.label} | ESC sair"
 
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
         if self.storage is None:
