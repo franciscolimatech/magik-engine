@@ -62,7 +62,9 @@ from src.game.save import (
     update_player_position,
 )
 from src.game.scenes.base import BaseScene
+from src.game.story_summary import build_story_summary
 from src.game.ui.dialogue_box import DialogueBox
+from src.game.ui.dialogue_box import wrap_text
 from src.game.ui.hud import HUD
 from src.storage.types import JsonStore
 
@@ -104,6 +106,7 @@ class OverworldScene(BaseScene):
         self.player = Player(start_x, start_y, name=self.context.player_name)
         self.triggered_event_ids: set[str] = set(self.game_save.triggered_events if self.game_save else [])
         self.dialogue: DialogueBox | None = None
+        self.story_summary_visible = False
         self.pending_event: MapEvent | None = None
         self.pending_creature: Creature | None = None
         self.font = pygame.font.Font(None, 24)
@@ -122,6 +125,10 @@ class OverworldScene(BaseScene):
     def handle_event(self, event) -> None:
         if event.type != self.pygame.KEYDOWN:
             return
+        if self.story_summary_visible:
+            if event.key in {self.pygame.K_ESCAPE, self.pygame.K_RETURN, self.pygame.K_j}:
+                self.story_summary_visible = False
+            return
         if event.key == self.pygame.K_ESCAPE:
             self.persist_state()
             self.should_quit = True
@@ -130,6 +137,9 @@ class OverworldScene(BaseScene):
             selected_option = self.dialogue.handle_key(self.pygame, event.key)
             if selected_option is not None:
                 self._handle_dialogue_option(selected_option)
+            return
+        if event.key == self.pygame.K_j:
+            self.story_summary_visible = True
             return
         movement = self._movement_for_key(event.key)
         if movement is not None:
@@ -175,9 +185,11 @@ class OverworldScene(BaseScene):
         self.hud.draw(self.pygame, surface, self.font)
         if self.dialogue:
             self.dialogue.draw(self.pygame, surface, self.font)
+        if self.story_summary_visible:
+            self._draw_story_summary_panel(surface)
 
     def try_move_player(self, dx: int, dy: int) -> bool:
-        if self.dialogue and self.dialogue.visible:
+        if self.story_summary_visible or (self.dialogue and self.dialogue.visible):
             return False
         moved = self.player.move(dx, dy, self.map_data)
         if moved:
@@ -186,6 +198,8 @@ class OverworldScene(BaseScene):
         return moved
 
     def interact(self) -> bool:
+        if self.story_summary_visible:
+            return False
         creature = self.facing_creature()
         if creature is not None:
             self.open_creature_encounter(creature)
@@ -553,13 +567,60 @@ class OverworldScene(BaseScene):
         )
 
     def _current_controls_hint(self) -> str:
+        if self.story_summary_visible:
+            return "ESC/J/Enter fechar memorias"
         area_interaction = self.current_area_interaction()
         if area_interaction is not None:
-            return f"E {area_interaction.label} | ESC sair"
+            return f"E {area_interaction.label} | J memorias | ESC sair"
         transition = self.current_transition()
         if transition is None:
-            return "WASD/setas mover | E/espaco interagir | ESC sair"
-        return f"E {transition.label} | ESC sair"
+            return "WASD/setas mover | E/espaco interagir | J memorias | ESC sair"
+        return f"E {transition.label} | J memorias | ESC sair"
+
+    def _draw_story_summary_panel(self, surface) -> None:
+        width = min(760, max(360, surface.get_width() - 96))
+        height = min(420, max(260, surface.get_height() - 120))
+        rect = self.pygame.Rect(0, 0, width, height)
+        rect.center = (surface.get_width() // 2, surface.get_height() // 2)
+
+        overlay = self.pygame.Surface((surface.get_width(), surface.get_height()), self.pygame.SRCALPHA)
+        overlay.fill((5, 6, 12, 112))
+        panel = self.pygame.Surface((rect.width, rect.height), self.pygame.SRCALPHA)
+        panel.fill((13, 15, 27, 232))
+        surface.blit(overlay, (0, 0))
+        surface.blit(panel, rect.topleft)
+
+        border_color = (183, 145, 74)
+        inner_color = (79, 62, 105)
+        self.pygame.draw.rect(surface, border_color, rect, width=2, border_radius=8)
+        self.pygame.draw.rect(surface, inner_color, rect.inflate(-12, -12), width=1, border_radius=6)
+
+        title_font = self.pygame.font.Font(None, 34)
+        title_surface = title_font.render("Memorias da Floresta", False, colors.WHITE)
+        surface.blit(title_surface, (rect.x + 28, rect.y + 24))
+        self.pygame.draw.line(
+            surface,
+            (121, 91, 151),
+            (rect.x + 28, rect.y + 64),
+            (rect.right - 28, rect.y + 64),
+            width=1,
+        )
+
+        y = rect.y + 84
+        max_text_width = rect.width - 72
+        for memory in build_story_summary(self._current_game_save()):
+            marker = self.pygame.Rect(rect.x + 32, y + 7, 6, 6)
+            self.pygame.draw.rect(surface, border_color, marker)
+            for line in wrap_text(memory, self.font, max_text_width):
+                line_surface = self.font.render(line, False, colors.TEXT_MUTED)
+                surface.blit(line_surface, (rect.x + 50, y))
+                y += 22
+            y += 12
+            if y > rect.bottom - 52:
+                break
+
+        footer = self.font.render("ESC, J ou Enter para voltar", False, colors.TEXT_MUTED)
+        surface.blit(footer, (rect.x + 28, rect.bottom - 36))
 
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
         if self.storage is None:

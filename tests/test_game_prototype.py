@@ -95,6 +95,7 @@ class FakePygame:
     K_RIGHT = 12
     K_a = 13
     K_d = 14
+    K_j = 18
 
 
 class FakeEvent:
@@ -989,6 +990,70 @@ def test_overworld_movement_and_collision_still_use_tile_grid() -> None:
     assert scene.try_move_player(1, 0) is False
     assert scene.player.direction == "right"
     assert scene.camera.tile_size == 49
+    pygame.quit()
+
+
+def test_overworld_story_summary_panel_opens_with_j_and_blocks_movement() -> None:
+    import pygame
+
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        story_flags=["falou_com_velho_nox", NOX_TRAIL_MENTIONED_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    start = scene.player.position
+
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_j}))
+    scene.draw(surface)
+
+    assert scene.story_summary_visible is True
+    assert "fechar memorias" in scene.hud.controls_hint
+    assert scene.try_move_player(1, 0) is False
+    assert scene.player.position == start
+    pygame.quit()
+
+
+def test_overworld_story_summary_panel_closes_and_movement_returns() -> None:
+    import pygame
+
+    pygame.init()
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    start = scene.player.position
+
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_j}))
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_ESCAPE}))
+
+    assert scene.story_summary_visible is False
+    assert scene.try_move_player(1, 0) is True
+    assert scene.player.position == (start[0] + 1, start[1])
+    pygame.quit()
+
+
+def test_overworld_story_summary_panel_closes_with_enter() -> None:
+    import pygame
+
+    pygame.init()
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_j}))
+    scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_RETURN}))
+
+    assert scene.story_summary_visible is False
+    assert scene.should_quit is False
     pygame.quit()
 
 
