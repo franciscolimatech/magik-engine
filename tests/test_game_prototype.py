@@ -179,6 +179,21 @@ def test_area_registry_contains_forest_areas_with_same_location() -> None:
     assert all(area.location_id == "floresta-do-avesso" for area in list_areas())
 
 
+def test_cabin_area_declares_velho_nox_npc_only_for_cabin_content() -> None:
+    entry = get_area(DEFAULT_AREA_ID)
+    clearing = get_area("floresta-do-avesso-clareira")
+    cabin = get_area("floresta-do-avesso-cabana-nox")
+
+    assert not any(npc.npc_id == "velho-nox" for npc in entry.npcs)
+    assert not any(npc.npc_id == "velho-nox" for npc in clearing.npcs)
+    assert any(
+        npc.npc_id == "velho-nox"
+        and npc.location_id == "floresta-do-avesso"
+        and npc.position == (8, 5)
+        for npc in cabin.npcs
+    )
+
+
 def test_area_transitions_point_to_existing_areas_and_spawns() -> None:
     entry = get_area(DEFAULT_AREA_ID)
     clearing = get_area("floresta-do-avesso-clareira")
@@ -1154,6 +1169,113 @@ def test_overworld_transition_to_cabin_and_back_works_with_interaction() -> None
     assert scene.player.position == (21, 12)
     assert save.area_id == "floresta-do-avesso-clareira"
     assert save.position == (21, 12)
+    pygame.quit()
+
+
+def test_overworld_cabin_loads_velho_nox_and_interaction_adds_flags() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-cabana-nox",
+                        player_position={"x": 9, "y": 5},
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "left"
+    nox = scene.facing_npc()
+
+    assert nox is not None
+    assert nox.name == "Velho Nox"
+    assert nox.npc_id == "velho-nox"
+
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert "falou_com_velho_nox" in save.story_flags
+    assert save.npc_flags == {"velho-nox": ["conhecido"]}
+    assert scene.dialogue is not None
+    assert "passos apressados" in scene.dialogue.messages[0]
+    pygame.quit()
+
+
+def test_overworld_cabin_velho_nox_reacts_to_shadow_flag_without_duplicate_effects() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-cabana-nox",
+                        player_position={"x": 9, "y": 5},
+                        story_flags=["viu_sombra_na_floresta_do_avesso"],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "left"
+
+    assert scene.interact() is True
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert save.story_flags.count("falou_com_velho_nox") == 1
+    assert save.npc_flags["velho-nox"].count("conhecido") == 1
+    assert len(save.consequence_log) == 1
+    assert scene.dialogue is not None
+    assert "ja olhou para voce" in scene.dialogue.messages[1]
+    pygame.quit()
+
+
+def test_overworld_interaction_prioritizes_npc_over_current_transition() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-cabana-nox",
+                        player_position={"x": 1, "y": 9},
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.npcs = [NPC(2, 9, "Velho Nox", ("Teste de prioridade.",), npc_id="velho-nox", location_id="floresta-do-avesso")]
+    scene.player.direction = "right"
+
+    assert scene.current_transition() is not None
+    assert scene.interact() is True
+
+    assert scene.area_id == "floresta-do-avesso-cabana-nox"
+    assert scene.dialogue is not None
+    assert scene.dialogue.speaker == "Velho Nox"
     pygame.quit()
 
 

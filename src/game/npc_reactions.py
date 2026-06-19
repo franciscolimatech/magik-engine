@@ -22,7 +22,11 @@ VELHO_NOX_SHADOW_CONSEQUENCE_ID = "velho-nox-reconhece-sombra"
 VELHO_NOX_SHADOW_CONSEQUENCE_TEXT = "Velho Nox reconheceu que o personagem viu uma sombra na Floresta do Avesso."
 VELHO_NOX_SHADOW_DIALOGUE = (
     "Velho Nox aperta os olhos.",
-    "'Entao voce tambem viu. A floresta ja comecou a olhar de volta.'",
+    "'Entao ela ja olhou para voce. Nao olhe de volta por muito tempo.'",
+)
+VELHO_NOX_REPEAT_DIALOGUE = (
+    "Velho Nox ajeita o manto sem olhar diretamente para voce.",
+    "'Volte quando a floresta comecar a repetir o seu nome.'",
 )
 
 
@@ -33,8 +37,11 @@ def get_npc_dialogue_for_state(npc: NPC, save: GameSave | None, context: GameCon
 
 
 def get_velho_nox_reaction(save: GameSave | None, npc: NPC) -> tuple[str, ...]:
-    if save is not None and SHADOW_SEEN_FLAG in save.story_flags:
-        return VELHO_NOX_SHADOW_DIALOGUE
+    if save is not None:
+        if SHADOW_SEEN_FLAG in save.story_flags:
+            return VELHO_NOX_SHADOW_DIALOGUE
+        if VELHO_NOX_TALKED_FLAG in save.story_flags:
+            return VELHO_NOX_REPEAT_DIALOGUE
     return tuple(npc.dialogues)
 
 

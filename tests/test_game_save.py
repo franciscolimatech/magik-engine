@@ -5,6 +5,7 @@ from src.core.character import create_miko_meu
 from src.game.ai_narration import GAME_AI_NARRATION_ENV
 from src.game.game_context import GameContext
 from src.game.maps.area_registry import DEFAULT_AREA_ID
+from src.game.npc_reactions import VELHO_NOX_SHADOW_DIALOGUE
 from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
@@ -966,7 +967,7 @@ def test_overworld_velho_nox_reacts_after_shadow_flag() -> None:
     assert scene.dialogue.speaker == "Velho Nox"
     assert scene.dialogue.current_text == "Velho Nox aperta os olhos."
     scene.dialogue.advance()
-    assert scene.dialogue.current_text == "'Entao voce tambem viu. A floresta ja comecou a olhar de volta.'"
+    assert scene.dialogue.current_text == VELHO_NOX_SHADOW_DIALOGUE[1]
     assert "falou_com_velho_nox" in save.story_flags
     assert save.npc_flags["velho-nox"] == ["conhecido"]
     assert save.consequence_log == [

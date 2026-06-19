@@ -412,6 +412,7 @@ class OverworldScene(BaseScene):
 
     def _load_area_content(self, area: GameArea) -> None:
         self.map_data = list(area.map_data)
+        map_npcs = [*find_npcs(self.map_data), *area.npcs]
         self.npcs = [
             NPC(
                 item.x,
@@ -422,7 +423,7 @@ class OverworldScene(BaseScene):
                 npc_id=item.npc_id,
                 location_id=item.location_id,
             )
-            for item in find_npcs(self.map_data)
+            for item in map_npcs
         ]
         self.creatures = [load_game_creature(self.storage, item.x, item.y) for item in find_creatures(self.map_data)]
         self.events = list(area.events)

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.game.dialogue import DialogueChoice
 from src.game.maps.events import MapEvent, load_test_events
 from src.game.maps.test_map import TEST_MAP, is_walkable
 
@@ -43,6 +44,21 @@ class AreaTransition:
 
 
 @dataclass(frozen=True)
+class AreaNpc:
+    x: int
+    y: int
+    name: str
+    dialogues: tuple[str, ...]
+    choice: DialogueChoice | None = None
+    npc_id: str | None = None
+    location_id: str | None = None
+
+    @property
+    def position(self) -> tuple[int, int]:
+        return self.x, self.y
+
+
+@dataclass(frozen=True)
 class GameArea:
     id: str
     name: str
@@ -51,6 +67,7 @@ class GameArea:
     spawns: tuple[AreaSpawn, ...]
     transitions: tuple[AreaTransition, ...] = ()
     events: tuple[MapEvent, ...] = ()
+    npcs: tuple[AreaNpc, ...] = ()
 
 
 FOREST_CLEARING_MAP = (
@@ -156,6 +173,19 @@ AREAS = (
                 label="Voltar para Clareira",
             ),
         ),
+        npcs=(
+            AreaNpc(
+                x=8,
+                y=5,
+                name="Velho Nox",
+                dialogues=(
+                    "A floresta nao gosta de passos apressados.",
+                    "Ela devolve caminhos... mas raramente devolve pessoas inteiras.",
+                ),
+                npc_id="velho-nox",
+                location_id="floresta-do-avesso",
+            ),
+        ),
     ),
 )
 
@@ -211,3 +241,6 @@ def validate_area_registry() -> None:
                 raise ValueError(f"Transicao em tile bloqueado: {transition.id}.")
             target = get_area(transition.target_area_id)
             get_spawn(target, transition.target_spawn_id)
+        for npc in area.npcs:
+            if not is_walkable(list(area.map_data), npc.x, npc.y):
+                raise ValueError(f"NPC em tile bloqueado: {npc.name}.")

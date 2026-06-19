@@ -1,8 +1,10 @@
 from src.game.entities.npc import NPC
 from src.game.game_context import GameContext
 from src.game.npc_reactions import (
+    VELHO_NOX_REPEAT_DIALOGUE,
     VELHO_NOX_SHADOW_CONSEQUENCE_ID,
     VELHO_NOX_SHADOW_CONSEQUENCE_TEXT,
+    VELHO_NOX_SHADOW_DIALOGUE,
     apply_npc_interaction_effects,
     apply_npc_interaction_effects_to_storage,
     get_npc_dialogue_for_state,
@@ -45,10 +47,19 @@ def test_velho_nox_dialogue_after_shadow_flag_changes() -> None:
 
     dialogue = get_npc_dialogue_for_state(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
 
-    assert dialogue == (
-        "Velho Nox aperta os olhos.",
-        "'Entao voce tambem viu. A floresta ja comecou a olhar de volta.'",
+    assert dialogue == VELHO_NOX_SHADOW_DIALOGUE
+
+
+def test_velho_nox_dialogue_after_first_talk_uses_repeat_line() -> None:
+    save = GameSave(
+        id=DEFAULT_SAVE_ID,
+        character_id="miko-meu",
+        story_flags=["falou_com_velho_nox"],
     )
+
+    dialogue = get_npc_dialogue_for_state(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
+
+    assert dialogue == VELHO_NOX_REPEAT_DIALOGUE
 
 
 def test_apply_npc_interaction_effects_adds_velho_nox_flags() -> None:
