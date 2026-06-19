@@ -1,13 +1,17 @@
 from src.game.entities.npc import NPC
 from src.game.game_context import GameContext
 from src.game.npc_reactions import (
+    ENTRY_WHISPER_HEARD_FLAG,
     NOX_TRAIL_MENTIONED_FLAG,
+    VELHO_NOX_AFTER_WHISPER_DIALOGUE,
     SHADOW_TRAIL_INVESTIGATED_FLAG,
     VELHO_NOX_AFTER_TRAIL_DIALOGUE,
     VELHO_NOX_REPEAT_DIALOGUE,
     VELHO_NOX_SHADOW_CONSEQUENCE_ID,
     VELHO_NOX_SHADOW_CONSEQUENCE_TEXT,
     VELHO_NOX_SHADOW_DIALOGUE,
+    VELHO_NOX_WHISPER_CONSEQUENCE_ID,
+    VELHO_NOX_WHISPER_CONSEQUENCE_TEXT,
     apply_npc_interaction_effects,
     apply_npc_interaction_effects_to_storage,
     get_npc_dialogue_for_state,
@@ -87,6 +91,18 @@ def test_velho_nox_dialogue_after_trail_investigation_changes() -> None:
     assert dialogue == VELHO_NOX_AFTER_TRAIL_DIALOGUE
 
 
+def test_velho_nox_dialogue_after_entry_whisper_has_priority_over_trail() -> None:
+    save = GameSave(
+        id=DEFAULT_SAVE_ID,
+        character_id="miko-meu",
+        story_flags=[SHADOW_TRAIL_INVESTIGATED_FLAG, ENTRY_WHISPER_HEARD_FLAG],
+    )
+
+    dialogue = get_npc_dialogue_for_state(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
+
+    assert dialogue == VELHO_NOX_AFTER_WHISPER_DIALOGUE
+
+
 def test_apply_npc_interaction_effects_after_shadow_adds_consequence_once() -> None:
     save = GameSave(
         id=DEFAULT_SAVE_ID,
@@ -106,6 +122,29 @@ def test_apply_npc_interaction_effects_after_shadow_adds_consequence_once() -> N
             "location_id": "floresta-do-avesso",
             "npc_id": "velho-nox",
             "text": VELHO_NOX_SHADOW_CONSEQUENCE_TEXT,
+        }
+    ]
+
+
+def test_apply_npc_interaction_effects_after_whisper_adds_consequence_once() -> None:
+    save = GameSave(
+        id=DEFAULT_SAVE_ID,
+        character_id="miko-meu",
+        story_flags=[ENTRY_WHISPER_HEARD_FLAG],
+    )
+
+    apply_npc_interaction_effects(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
+    updated = apply_npc_interaction_effects(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
+
+    assert updated.story_flags.count("falou_com_velho_nox") == 1
+    assert updated.story_flags.count(NOX_TRAIL_MENTIONED_FLAG) == 1
+    assert updated.npc_flags["velho-nox"].count("conhecido") == 1
+    assert updated.consequence_log == [
+        {
+            "id": VELHO_NOX_WHISPER_CONSEQUENCE_ID,
+            "location_id": "floresta-do-avesso",
+            "npc_id": "velho-nox",
+            "text": VELHO_NOX_WHISPER_CONSEQUENCE_TEXT,
         }
     ]
 
