@@ -982,7 +982,7 @@ def test_overworld_invalid_area_uses_default() -> None:
     pygame.quit()
 
 
-def test_overworld_transition_changes_area_and_saves_position() -> None:
+def test_overworld_transition_waits_for_interaction_and_saves_position() -> None:
     import pygame
 
     storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
@@ -993,6 +993,15 @@ def test_overworld_transition_changes_area_and_saves_position() -> None:
     scene.player.direction = "right"
 
     assert scene.try_move_player(1, 0) is True
+
+    save = get_game_save(storage)
+    assert scene.area_id == DEFAULT_AREA_ID
+    assert scene.player.position == (30, 20)
+    assert scene.current_transition() is not None
+    assert save.area_id == DEFAULT_AREA_ID
+    assert save.position == (30, 20)
+
+    assert scene.interact() is True
 
     save = get_game_save(storage)
     assert scene.area_id == "floresta-do-avesso-clareira"
@@ -1014,11 +1023,74 @@ def test_overworld_draws_after_area_transition() -> None:
     scene.player.y = 20
 
     scene.try_move_player(1, 0)
+    scene.interact()
     scene.draw(surface)
 
     assert scene.area_id == "floresta-do-avesso-clareira"
     assert scene.camera.screen_width == 1280
     assert scene.camera.screen_height == 720
+    pygame.quit()
+
+
+def test_overworld_transition_return_works_with_interaction() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.x = 30
+    scene.player.y = 20
+    scene.interact()
+    assert scene.area_id == "floresta-do-avesso-clareira"
+
+    assert scene.try_move_player(-1, 0) is True
+    assert scene.current_transition() is not None
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert scene.area_id == DEFAULT_AREA_ID
+    assert scene.player.position == (29, 20)
+    assert save.area_id == DEFAULT_AREA_ID
+    assert save.position == (29, 20)
+    pygame.quit()
+
+
+def test_overworld_transition_hint_appears_only_on_transition_tile() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.draw(surface)
+
+    assert "atravessar" not in scene.hud.controls_hint
+
+    scene.player.x = 30
+    scene.player.y = 20
+    scene.draw(surface)
+
+    assert "E atravessar" in scene.hud.controls_hint
+    assert "Clareira" in scene.hud.controls_hint
+    pygame.quit()
+
+
+def test_overworld_transition_marker_respects_camera_and_scale() -> None:
+    import pygame
+
+    storage = MemoryStorage({"characters.json": {"characters": [create_miko_meu().to_dict()]}})
+    pygame.init()
+    surface = pygame.Surface((1920, 1080))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.draw(surface)
+    transition = scene.area.transitions[0]
+    marker = scene.transition_marker_rect(transition)
+    transition_x, transition_y = scene.camera.tile_to_screen(transition.x, transition.y)
+
+    assert scene.camera.tile_size > 32
+    assert marker.width < scene.camera.tile_size
+    assert marker.height < scene.camera.tile_size
+    assert marker.collidepoint(transition_x + scene.camera.tile_size // 2, transition_y + scene.camera.tile_size // 2)
     pygame.quit()
 
 

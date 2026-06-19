@@ -157,6 +157,7 @@ class OverworldScene(BaseScene):
             for x, tile in enumerate(row):
                 screen_x, screen_y = self.camera.tile_to_screen(x, y)
                 assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y, self.assets, size=self.camera.tile_size)
+        self._draw_area_transitions(surface)
         highlighted_npc = self.facing_npc()
         highlighted_creature = self.facing_creature()
         for npc in self.npcs:
@@ -164,6 +165,7 @@ class OverworldScene(BaseScene):
         for creature in self.creatures:
             creature.draw(self.pygame, surface, self.camera, self.assets, highlighted=creature == highlighted_creature)
         self.player.draw(self.pygame, surface, self.camera, self.assets)
+        self._refresh_hud()
         self.hud.draw(self.pygame, surface, self.font)
         if self.dialogue:
             self.dialogue.draw(self.pygame, surface, self.font)
@@ -173,8 +175,6 @@ class OverworldScene(BaseScene):
             return False
         moved = self.player.move(dx, dy, self.map_data)
         if moved:
-            if self._try_area_transition():
-                return True
             self.persist_state()
             self.trigger_event_at(self.player.x, self.player.y)
         return moved
@@ -186,7 +186,7 @@ class OverworldScene(BaseScene):
             return True
         npc = self.facing_npc()
         if npc is None:
-            return False
+            return self._try_area_transition()
         self.dialogue = DialogueBox(npc.name, self._dialogues_for_npc(npc), choice=npc.choice)
         self._apply_npc_interaction_effects(npc)
         return True
@@ -196,6 +196,9 @@ class OverworldScene(BaseScene):
 
     def facing_creature(self) -> Creature | None:
         return next((creature for creature in self.creatures if creature.can_interact(self.player)), None)
+
+    def current_transition(self) -> AreaTransition | None:
+        return find_transition_at(self.area, self.player.x, self.player.y)
 
     def open_creature_encounter(self, creature: Creature) -> None:
         self.pending_creature = creature
@@ -425,7 +428,7 @@ class OverworldScene(BaseScene):
         self.events = list(area.events)
 
     def _try_area_transition(self) -> bool:
-        transition = find_transition_at(self.area, self.player.x, self.player.y)
+        transition = self.current_transition()
         if transition is None:
             return False
         self._apply_area_transition(transition)
@@ -452,6 +455,44 @@ class OverworldScene(BaseScene):
         self.pending_event = None
         self.pending_creature = None
         self.persist_state()
+
+    def _draw_area_transitions(self, surface) -> None:
+        current_transition = self.current_transition()
+        for transition in self.area.transitions:
+            self._draw_transition_marker(surface, self.transition_marker_rect(transition), highlighted=transition == current_transition)
+
+    def transition_marker_rect(self, transition: AreaTransition):
+        screen_x, screen_y = self.camera.tile_to_screen(transition.x, transition.y)
+        size = self.camera.tile_size
+        pad = max(3, size // 8)
+        return self.pygame.Rect(screen_x + pad, screen_y + pad, size - pad * 2, size - pad * 2)
+
+    def _draw_transition_marker(self, surface, rect, *, highlighted: bool = False) -> None:
+        pad = max(3, self.camera.tile_size // 8)
+        arch_color = (148, 120, 68) if not highlighted else (220, 177, 83)
+        glow_color = (84, 62, 128) if not highlighted else (118, 91, 168)
+        inner_color = (20, 18, 34)
+        self.pygame.draw.rect(surface, glow_color, rect, width=max(1, self.camera.tile_size // 16), border_radius=max(2, self.camera.tile_size // 10))
+        self.pygame.draw.arc(surface, arch_color, rect, 0, 3.14, max(2, self.camera.tile_size // 14))
+        door = self.pygame.Rect(rect.x + rect.width // 3, rect.y + rect.height // 3, max(2, rect.width // 3), max(2, rect.height // 2))
+        self.pygame.draw.rect(surface, inner_color, door)
+        self.pygame.draw.line(surface, arch_color, (rect.centerx, rect.y + rect.height // 4), (rect.centerx, rect.bottom - pad), width=max(1, self.camera.tile_size // 18))
+
+    def _refresh_hud(self) -> None:
+        self.hud = HUD(
+            player_name=self.context.player_name,
+            map_name=self.location_display_name,
+            campaign_label=self.context.campaign_label,
+            session_label=self.context.session_label,
+            controls_hint=self._current_controls_hint(),
+        )
+
+    def _current_controls_hint(self) -> str:
+        transition = self.current_transition()
+        if transition is None:
+            return "WASD/setas mover | E/espaco interagir | ESC sair"
+        target_area = resolve_area(transition.target_area_id)
+        return f"E atravessar para {target_area.name} | ESC sair"
 
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
         if self.storage is None:
