@@ -16,10 +16,13 @@ if TYPE_CHECKING:
 
 
 SHADOW_TRAIL_INTERACTION_ID = "rastro-da-sombra-clareira"
+WHISPERING_TREE_INTERACTION_ID = "arvore-que-sussurra"
+FOREST_ENTRY_AREA_ID = "floresta-do-avesso-entrada"
 FOREST_CLEARING_AREA_ID = "floresta-do-avesso-clareira"
 FLORESTA_DO_AVESSO_LOCATION_ID = "floresta-do-avesso"
 NOX_TRAIL_MENTIONED_FLAG = "nox_mencionou_rastro_na_clareira"
 SHADOW_TRAIL_INVESTIGATED_FLAG = "investigou_rastro_da_sombra"
+ENTRY_WHISPER_HEARD_FLAG = "ouviu_sussurro_da_entrada"
 
 
 @dataclass(frozen=True)
@@ -86,7 +89,28 @@ SHADOW_TRAIL_INTERACTION = AreaInteraction(
 )
 
 
-AREA_INTERACTIONS = (SHADOW_TRAIL_INTERACTION,)
+WHISPERING_TREE_INTERACTION = AreaInteraction(
+    id=WHISPERING_TREE_INTERACTION_ID,
+    area_id=FOREST_ENTRY_AREA_ID,
+    x=7,
+    y=4,
+    label="ouvir sussurro",
+    speaker="Arvore que Sussurra",
+    messages=(
+        "As folhas tremem sem vento.",
+        "Uma voz baixa repete seu nome, mas erra a ultima silaba.",
+    ),
+    location_id=FLORESTA_DO_AVESSO_LOCATION_ID,
+    required_story_flags=(SHADOW_TRAIL_INVESTIGATED_FLAG,),
+    add_story_flags=(ENTRY_WHISPER_HEARD_FLAG,),
+    consequence_id="sussurro-da-entrada-ouvido",
+    consequence_text="O personagem ouviu a arvore da entrada repetir seu nome de forma errada.",
+    repeatable=True,
+    marker_style="whisper",
+)
+
+
+AREA_INTERACTIONS = (SHADOW_TRAIL_INTERACTION, WHISPERING_TREE_INTERACTION)
 
 
 def list_area_interactions(area_id: str | None = None) -> list[AreaInteraction]:

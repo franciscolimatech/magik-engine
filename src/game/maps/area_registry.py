@@ -127,6 +127,7 @@ AREAS = (
             ),
         ),
         events=tuple(load_test_events()),
+        interactions=tuple(list_area_interactions(DEFAULT_AREA_ID)),
     ),
     GameArea(
         id="floresta-do-avesso-clareira",

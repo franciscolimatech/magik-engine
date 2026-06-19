@@ -38,6 +38,7 @@ from src.game.maps.test_map import (
 )
 from src.game.scenes.battle import BattleScene
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
+from src.game.area_interactions import ENTRY_WHISPER_HEARD_FLAG
 from src.game.npc_reactions import NOX_TRAIL_MENTIONED_FLAG, SHADOW_TRAIL_INVESTIGATED_FLAG
 from src.game.scenes.main_menu import (
     GLOBAL_BACKGROUND_OVERLAY_ALPHA,
@@ -208,6 +209,21 @@ def test_clearing_area_declares_shadow_trail_interaction() -> None:
     }
     assert trail.narrative_effects is not None
     assert trail.narrative_effects["add_story_flags"] == [SHADOW_TRAIL_INVESTIGATED_FLAG]
+
+
+def test_entry_area_declares_whispering_tree_interaction() -> None:
+    entry = get_area(DEFAULT_AREA_ID)
+
+    whisper = next((interaction for interaction in entry.interactions if interaction.id == "arvore-que-sussurra"), None)
+
+    assert whisper is not None
+    assert whisper.position == (7, 4)
+    assert whisper.label == "ouvir sussurro"
+    assert whisper.narrative_conditions == {
+        "required_story_flags": [SHADOW_TRAIL_INVESTIGATED_FLAG],
+    }
+    assert whisper.narrative_effects is not None
+    assert whisper.narrative_effects["add_story_flags"] == [ENTRY_WHISPER_HEARD_FLAG]
 
 
 def test_area_transitions_point_to_existing_areas_and_spawns() -> None:
@@ -1367,6 +1383,111 @@ def test_overworld_clearing_trail_interaction_adds_flag_and_consequence_once() -
     assert scene.dialogue is not None
     assert scene.dialogue.speaker == "Rastro na Clareira"
     assert "O ar dobra" in scene.dialogue.messages[0]
+    pygame.quit()
+
+
+def test_overworld_entry_whisper_is_unavailable_before_trail_investigation() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id=DEFAULT_AREA_ID,
+                        player_position={"x": 7, "y": 5},
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "up"
+    scene.draw(surface)
+
+    assert scene.current_area_interaction() is None
+    assert "ouvir sussurro" not in scene.hud.controls_hint
+    assert scene.interact() is False
+    pygame.quit()
+
+
+def test_overworld_entry_whisper_appears_after_trail_investigation_and_updates_hud() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id=DEFAULT_AREA_ID,
+                        player_position={"x": 7, "y": 5},
+                        story_flags=[SHADOW_TRAIL_INVESTIGATED_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "up"
+    scene.draw(surface)
+
+    assert scene.current_area_interaction() is not None
+    assert "E ouvir sussurro" in scene.hud.controls_hint
+    pygame.quit()
+
+
+def test_overworld_entry_whisper_interaction_adds_flag_and_consequence_once() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id=DEFAULT_AREA_ID,
+                        player_position={"x": 7, "y": 5},
+                        story_flags=[SHADOW_TRAIL_INVESTIGATED_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "up"
+
+    assert scene.interact() is True
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert save.story_flags.count(ENTRY_WHISPER_HEARD_FLAG) == 1
+    assert save.consequence_log == [
+        {
+            "id": "sussurro-da-entrada-ouvido",
+            "location_id": "floresta-do-avesso",
+            "npc_id": None,
+            "text": "O personagem ouviu a arvore da entrada repetir seu nome de forma errada.",
+        }
+    ]
+    assert scene.dialogue is not None
+    assert scene.dialogue.speaker == "Arvore que Sussurra"
+    assert "As folhas tremem" in scene.dialogue.messages[0]
     pygame.quit()
 
 
