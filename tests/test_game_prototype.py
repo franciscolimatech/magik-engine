@@ -69,7 +69,7 @@ from src.game.settings import (
     save_game_display_preferences,
     save_game_display_mode,
 )
-from src.game.ui.dialogue_box import DialogueBox, wrap_text
+from src.game.ui.dialogue_box import DialogueBox, dialogue_panel_rect, wrap_text
 from src.game.ui.hud import HUD
 from src.storage.json_storage import JSONStorage
 from src.storage.memory import MemoryStorage
@@ -852,6 +852,62 @@ def test_wrap_text_returns_multiple_lines_for_long_text() -> None:
     assert len(lines) > 1
 
 
+def test_dialogue_panel_rect_uses_surface_size() -> None:
+    import pygame
+
+    pygame.init()
+    small_surface = pygame.Surface((1280, 720))
+    large_surface = pygame.Surface((1920, 1080))
+
+    small_rect = dialogue_panel_rect(pygame, small_surface)
+    large_rect = dialogue_panel_rect(pygame, large_surface)
+
+    assert small_rect.width <= 960
+    assert large_rect.width == 960
+    assert small_rect.centerx == small_surface.get_width() // 2
+    assert large_rect.centerx == large_surface.get_width() // 2
+    assert small_rect.bottom < small_surface.get_height()
+    assert large_rect.bottom < large_surface.get_height()
+    pygame.quit()
+
+
+def test_dialogue_box_draws_without_error_at_common_resolutions() -> None:
+    import pygame
+
+    pygame.init()
+    font = pygame.font.Font(None, 24)
+    dialogue = DialogueBox(
+        "Velho Nox",
+        "A floresta respondeu. Ainda baixo, ainda torto... mas respondeu.",
+    )
+
+    for width, height in [(1280, 720), (1366, 768), (1920, 1080)]:
+        surface = pygame.Surface((width, height))
+        dialogue.draw(pygame, surface, font)
+
+    pygame.quit()
+
+
+def test_dialogue_box_choice_draws_without_error() -> None:
+    import pygame
+
+    pygame.init()
+    font = pygame.font.Font(None, 24)
+    choice = DialogueChoice(
+        "Vai seguir?",
+        (
+            DialogueOption("Sim", "Entao cuidado."),
+            DialogueOption("Nao", "Sabio."),
+        ),
+    )
+    dialogue = DialogueBox("Velho Nox", "Ola.", choice=choice)
+    dialogue.advance()
+
+    dialogue.draw(pygame, pygame.Surface((1366, 768)), font)
+
+    pygame.quit()
+
+
 def test_player_facing_position_uses_direction() -> None:
     player = Player(4, 5, direction="left")
 
@@ -1017,6 +1073,7 @@ def test_overworld_story_summary_panel_opens_with_j_and_blocks_movement() -> Non
 
     scene.handle_event(pygame.event.Event(pygame.KEYDOWN, {"key": pygame.K_j}))
     scene.draw(surface)
+    scene.draw(pygame.Surface((1920, 1080)))
 
     assert scene.story_summary_visible is True
     assert "fechar memorias" in scene.hud.controls_hint

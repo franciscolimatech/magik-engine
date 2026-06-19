@@ -5,9 +5,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Iterable
 
-from src.game import colors
 from src.game.dialogue import DialogueChoice, DialogueOption, normalize_messages
-from src.game.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.game.ui.panels import (
+    PANEL_GOLD,
+    TEXT_IVORY,
+    TEXT_MUTED,
+    draw_dark_fantasy_panel,
+    draw_panel_separator,
+)
 
 
 @dataclass
@@ -83,46 +88,62 @@ class DialogueBox:
     def draw(self, pygame, surface, font) -> None:
         if not self.visible:
             return
-        rect = pygame.Rect(24, SCREEN_HEIGHT - 132, SCREEN_WIDTH - 48, 108)
-        inner = rect.inflate(-10, -10)
-        pygame.draw.rect(surface, colors.DIALOGUE_BG, rect)
-        pygame.draw.rect(surface, colors.DIALOGUE_BORDER, rect, width=3)
-        pygame.draw.rect(surface, colors.WHITE, inner, width=1)
-        name_plate = pygame.Rect(rect.x + 14, rect.y - 10, 150, 22)
-        pygame.draw.rect(surface, colors.DIALOGUE_BG, name_plate)
-        pygame.draw.rect(surface, colors.DIALOGUE_BORDER, name_plate, width=2)
-        speaker_surface = font.render(self.speaker, False, colors.WHITE)
-        surface.blit(speaker_surface, (name_plate.x + 8, name_plate.y + 3))
+        rect = dialogue_panel_rect(pygame, surface)
+        draw_dark_fantasy_panel(pygame, surface, rect, alpha=236, border_radius=8)
+        draw_panel_separator(pygame, surface, (rect.x + 20, rect.y + 38), (rect.right - 20, rect.y + 38))
+        name_width = min(max(160, _text_width(font, self.speaker) + 34), rect.width - 48)
+        name_plate = pygame.Rect(rect.x + 22, rect.y - 13, name_width, 28)
+        draw_dark_fantasy_panel(pygame, surface, name_plate, alpha=244, border_radius=6)
+        speaker_surface = font.render(self.speaker, False, PANEL_GOLD)
+        surface.blit(speaker_surface, (name_plate.x + 12, name_plate.y + 6))
 
         if self.mode == "choice" and self.choice is not None:
             self._draw_choice(pygame, surface, font, rect)
             return
 
-        for index, line in enumerate(wrap_text(self.current_text, font, rect.width - 40)):
-            if index >= 3:
+        max_lines = 4
+        for index, line in enumerate(wrap_text(self.current_text, font, rect.width - 56)):
+            if index >= max_lines:
                 break
-            line_surface = font.render(line, False, colors.WHITE)
-            surface.blit(line_surface, (rect.x + 18, rect.y + 30 + index * 22))
+            line_surface = font.render(line, False, TEXT_IVORY)
+            surface.blit(line_surface, (rect.x + 28, rect.y + 52 + index * 23))
 
         hint = "Espaco/Enter/E para avancar" if self.current_index < len(self.messages) - 1 else "Espaco/Enter/E para fechar"
-        hint_surface = font.render(hint, False, colors.TEXT_MUTED)
-        surface.blit(hint_surface, (rect.x + 18, rect.y + 84))
+        hint_surface = font.render(hint, False, TEXT_MUTED)
+        surface.blit(hint_surface, (rect.x + 28, rect.bottom - 28))
 
     def _draw_choice(self, pygame, surface, font, rect) -> None:
-        question_lines = wrap_text(self.current_text, font, rect.width - 40)
+        question_lines = wrap_text(self.current_text, font, rect.width - 56)
         question = question_lines[0] if question_lines else ""
-        question_surface = font.render(question, False, colors.WHITE)
-        surface.blit(question_surface, (rect.x + 18, rect.y + 24))
+        question_surface = font.render(question, False, TEXT_IVORY)
+        surface.blit(question_surface, (rect.x + 28, rect.y + 52))
 
         for index, option in enumerate(self.choice.options[:3] if self.choice else ()):
             selected = index == self.selected_option_index
-            prefix = "> " if selected else "  "
-            text_color = colors.WHITE if selected else colors.TEXT_MUTED
-            option_surface = font.render(f"{prefix}{option.text}", False, text_color)
-            surface.blit(option_surface, (rect.x + 28, rect.y + 48 + index * 18))
+            item_rect = pygame.Rect(rect.x + 28, rect.y + 78 + index * 24, rect.width - 56, 22)
+            if selected:
+                highlight = pygame.Surface((item_rect.width, item_rect.height), pygame.SRCALPHA)
+                highlight.fill((PANEL_GOLD[0], PANEL_GOLD[1], PANEL_GOLD[2], 28))
+                surface.blit(highlight, item_rect.topleft)
+                pygame.draw.rect(surface, PANEL_GOLD, pygame.Rect(item_rect.x, item_rect.y + 3, 3, item_rect.height - 6))
+            text_color = TEXT_IVORY if selected else TEXT_MUTED
+            option_surface = font.render(option.text, False, text_color)
+            surface.blit(option_surface, (item_rect.x + 14, item_rect.y + 3))
 
-        hint_surface = font.render("Cima/baixo escolhe | Enter/E confirma", False, colors.TEXT_MUTED)
-        surface.blit(hint_surface, (rect.x + 18, rect.y + 88))
+        hint_surface = font.render("Cima/baixo escolhe | Enter/E confirma", False, TEXT_MUTED)
+        surface.blit(hint_surface, (rect.x + 28, rect.bottom - 28))
+
+
+def dialogue_panel_rect(pygame, surface):
+    screen_width = surface.get_width()
+    screen_height = surface.get_height()
+    margin_x = max(28, min(96, screen_width // 16))
+    width = min(960, screen_width - margin_x * 2)
+    height = min(max(148, screen_height // 5), 184)
+    bottom_margin = max(28, min(60, screen_height // 18))
+    rect = pygame.Rect(0, 0, width, height)
+    rect.midbottom = (screen_width // 2, screen_height - bottom_margin)
+    return rect
 
 
 def wrap_text(text: str, font, max_width: int) -> list[str]:

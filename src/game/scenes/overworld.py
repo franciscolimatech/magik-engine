@@ -66,6 +66,13 @@ from src.game.story_summary import build_story_summary
 from src.game.ui.dialogue_box import DialogueBox
 from src.game.ui.dialogue_box import wrap_text
 from src.game.ui.hud import HUD
+from src.game.ui.panels import (
+    PANEL_GOLD,
+    TEXT_IVORY,
+    TEXT_MUTED,
+    draw_dark_fantasy_panel,
+    draw_panel_separator,
+)
 from src.storage.types import JsonStore
 
 
@@ -585,41 +592,28 @@ class OverworldScene(BaseScene):
 
         overlay = self.pygame.Surface((surface.get_width(), surface.get_height()), self.pygame.SRCALPHA)
         overlay.fill((5, 6, 12, 112))
-        panel = self.pygame.Surface((rect.width, rect.height), self.pygame.SRCALPHA)
-        panel.fill((13, 15, 27, 232))
         surface.blit(overlay, (0, 0))
-        surface.blit(panel, rect.topleft)
-
-        border_color = (183, 145, 74)
-        inner_color = (79, 62, 105)
-        self.pygame.draw.rect(surface, border_color, rect, width=2, border_radius=8)
-        self.pygame.draw.rect(surface, inner_color, rect.inflate(-12, -12), width=1, border_radius=6)
+        draw_dark_fantasy_panel(self.pygame, surface, rect, alpha=238, border_radius=10)
 
         title_font = self.pygame.font.Font(None, 34)
-        title_surface = title_font.render("Memorias da Floresta", False, colors.WHITE)
+        title_surface = title_font.render("Memorias da Floresta", False, PANEL_GOLD)
         surface.blit(title_surface, (rect.x + 28, rect.y + 24))
-        self.pygame.draw.line(
-            surface,
-            (121, 91, 151),
-            (rect.x + 28, rect.y + 64),
-            (rect.right - 28, rect.y + 64),
-            width=1,
-        )
+        draw_panel_separator(self.pygame, surface, (rect.x + 28, rect.y + 64), (rect.right - 28, rect.y + 64))
 
         y = rect.y + 84
         max_text_width = rect.width - 72
         for memory in build_story_summary(self._current_game_save()):
             marker = self.pygame.Rect(rect.x + 32, y + 7, 6, 6)
-            self.pygame.draw.rect(surface, border_color, marker)
+            self.pygame.draw.rect(surface, PANEL_GOLD, marker)
             for line in wrap_text(memory, self.font, max_text_width):
-                line_surface = self.font.render(line, False, colors.TEXT_MUTED)
+                line_surface = self.font.render(line, False, TEXT_IVORY)
                 surface.blit(line_surface, (rect.x + 50, y))
                 y += 22
             y += 12
             if y > rect.bottom - 52:
                 break
 
-        footer = self.font.render("ESC, J ou Enter para voltar", False, colors.TEXT_MUTED)
+        footer = self.font.render("ESC, J ou Enter para voltar", False, TEXT_MUTED)
         surface.blit(footer, (rect.x + 28, rect.bottom - 36))
 
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
