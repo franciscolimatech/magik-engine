@@ -6,6 +6,7 @@ start quests, grant rewards, change reputation, or apply mechanical effects.
 
 from __future__ import annotations
 
+from src.game.area_interactions import NOX_TRAIL_MENTIONED_FLAG, SHADOW_TRAIL_INVESTIGATED_FLAG
 from src.game.entities.npc import NPC
 from src.game.game_context import GameContext
 from src.game.narrative_conditions import apply_narrative_effects, apply_narrative_effects_to_storage
@@ -17,8 +18,6 @@ VELHO_NOX_ID = "velho-nox"
 FLORESTA_DO_AVESSO_ID = "floresta-do-avesso"
 SHADOW_SEEN_FLAG = "viu_sombra_na_floresta_do_avesso"
 VELHO_NOX_TALKED_FLAG = "falou_com_velho_nox"
-NOX_TRAIL_MENTIONED_FLAG = "nox_mencionou_rastro_na_clareira"
-SHADOW_TRAIL_INVESTIGATED_FLAG = "investigou_rastro_da_sombra"
 VELHO_NOX_KNOWN_FLAG = "conhecido"
 VELHO_NOX_SHADOW_CONSEQUENCE_ID = "velho-nox-reconhece-sombra"
 VELHO_NOX_SHADOW_CONSEQUENCE_TEXT = "Velho Nox reconheceu que o personagem viu uma sombra na Floresta do Avesso."

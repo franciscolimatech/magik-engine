@@ -9,6 +9,11 @@ from src.core.character import get_character
 from src.core.lore import get_lore_summary_for_location
 from src.game import assets, colors
 from src.game.appearance import appearance_from_notes
+from src.game.area_interactions import (
+    AreaInteraction,
+    apply_area_interaction_effects_to_storage,
+    area_interaction_available,
+)
 from src.game.ai_narration import (
     GameNarrationResult,
     GameNarrator,
@@ -23,7 +28,6 @@ from src.game.event_registry import register_creature_encounter, register_map_ev
 from src.game.game_context import GameContext
 from src.game.maps.area_registry import (
     DEFAULT_AREA_ID,
-    AreaInteraction,
     AreaTransition,
     GameArea,
     find_transition_at,
@@ -207,11 +211,12 @@ class OverworldScene(BaseScene):
         return find_transition_at(self.area, self.player.x, self.player.y)
 
     def current_area_interaction(self) -> AreaInteraction | None:
+        save = self._current_game_save()
         return next(
             (
                 interaction
                 for interaction in self.area_interactions
-                if self._area_interaction_available(interaction)
+                if area_interaction_available(interaction, save, self.location_id)
                 and (
                     interaction.position == self.player.position
                     or interaction.position == self.player.facing_position()
@@ -305,10 +310,10 @@ class OverworldScene(BaseScene):
         if self.storage is None or not interaction.narrative_effects:
             return
         try:
-            self.game_save = apply_narrative_effects_to_storage(
+            self.game_save = apply_area_interaction_effects_to_storage(
                 self.storage,
+                interaction,
                 DEFAULT_SAVE_ID,
-                interaction.narrative_effects,
             )
         except Exception as exc:  # noqa: BLE001 - area interaction state must not crash exploration.
             print(f"[MAGIK Game] Nao foi possivel aplicar interacao narrativa: {exc}")
@@ -498,8 +503,9 @@ class OverworldScene(BaseScene):
 
     def _draw_area_interactions(self, surface) -> None:
         current_interaction = self.current_area_interaction()
+        save = self._current_game_save()
         for interaction in self.area_interactions:
-            if self._area_interaction_available(interaction):
+            if area_interaction_available(interaction, save, self.location_id):
                 self._draw_area_interaction_marker(
                     surface,
                     self.area_interaction_marker_rect(interaction),
@@ -554,16 +560,6 @@ class OverworldScene(BaseScene):
         if transition is None:
             return "WASD/setas mover | E/espaco interagir | ESC sair"
         return f"E {transition.label} | ESC sair"
-
-    def _area_interaction_available(self, interaction: AreaInteraction) -> bool:
-        if interaction.location_id is not None and interaction.location_id != self.location_id:
-            return False
-        if not interaction.narrative_conditions:
-            return True
-        save = self._current_game_save()
-        if save is None:
-            return False
-        return conditions_met(save, interaction.narrative_conditions)
 
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
         if self.storage is None:

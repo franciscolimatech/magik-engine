@@ -7,8 +7,8 @@ create quests, rewards, encounters, or combat rules by themselves.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
+from src.game.area_interactions import AreaInteraction, list_area_interactions
 from src.game.dialogue import DialogueChoice
 from src.game.maps.events import MapEvent, load_test_events
 from src.game.maps.test_map import TEST_MAP, is_walkable
@@ -53,23 +53,6 @@ class AreaNpc:
     choice: DialogueChoice | None = None
     npc_id: str | None = None
     location_id: str | None = None
-
-    @property
-    def position(self) -> tuple[int, int]:
-        return self.x, self.y
-
-
-@dataclass(frozen=True)
-class AreaInteraction:
-    id: str
-    x: int
-    y: int
-    label: str
-    speaker: str
-    messages: tuple[str, ...]
-    location_id: str | None = None
-    narrative_conditions: dict[str, Any] | None = None
-    narrative_effects: dict[str, Any] | None = None
 
     @property
     def position(self) -> tuple[int, int]:
@@ -172,31 +155,7 @@ AREAS = (
                 label="Ir para Cabana do Nox",
             ),
         ),
-        interactions=(
-            AreaInteraction(
-                id="rastro-da-sombra-clareira",
-                x=8,
-                y=5,
-                label="investigar rastro",
-                speaker="Rastro na Clareira",
-                messages=(
-                    "O ar dobra ao redor dos seus dedos.",
-                    "Por um instante, sua sombra se atrasa.",
-                ),
-                location_id="floresta-do-avesso",
-                narrative_conditions={
-                    "required_story_flags": ["nox_mencionou_rastro_na_clareira"],
-                },
-                narrative_effects={
-                    "add_story_flags": ["investigou_rastro_da_sombra"],
-                    "narrative_consequence": {
-                        "id": "rastro-da-sombra-investigado",
-                        "location_id": "floresta-do-avesso",
-                        "text": "O personagem investigou o rastro da sombra na Clareira da Floresta do Avesso.",
-                    },
-                },
-            ),
-        ),
+        interactions=tuple(list_area_interactions("floresta-do-avesso-clareira")),
     ),
     GameArea(
         id="floresta-do-avesso-cabana-nox",
