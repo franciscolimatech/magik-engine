@@ -17,6 +17,8 @@ VELHO_NOX_ID = "velho-nox"
 FLORESTA_DO_AVESSO_ID = "floresta-do-avesso"
 SHADOW_SEEN_FLAG = "viu_sombra_na_floresta_do_avesso"
 VELHO_NOX_TALKED_FLAG = "falou_com_velho_nox"
+NOX_TRAIL_MENTIONED_FLAG = "nox_mencionou_rastro_na_clareira"
+SHADOW_TRAIL_INVESTIGATED_FLAG = "investigou_rastro_da_sombra"
 VELHO_NOX_KNOWN_FLAG = "conhecido"
 VELHO_NOX_SHADOW_CONSEQUENCE_ID = "velho-nox-reconhece-sombra"
 VELHO_NOX_SHADOW_CONSEQUENCE_TEXT = "Velho Nox reconheceu que o personagem viu uma sombra na Floresta do Avesso."
@@ -28,6 +30,10 @@ VELHO_NOX_REPEAT_DIALOGUE = (
     "Velho Nox ajeita o manto sem olhar diretamente para voce.",
     "'Volte quando a floresta comecar a repetir o seu nome.'",
 )
+VELHO_NOX_AFTER_TRAIL_DIALOGUE = (
+    "Velho Nox fica em silencio por tempo demais.",
+    "'Agora ela sabe que voce percebeu. Isso e diferente de apenas ser visto.'",
+)
 
 
 def get_npc_dialogue_for_state(npc: NPC, save: GameSave | None, context: GameContext) -> tuple[str, ...]:
@@ -38,6 +44,8 @@ def get_npc_dialogue_for_state(npc: NPC, save: GameSave | None, context: GameCon
 
 def get_velho_nox_reaction(save: GameSave | None, npc: NPC) -> tuple[str, ...]:
     if save is not None:
+        if SHADOW_TRAIL_INVESTIGATED_FLAG in save.story_flags:
+            return VELHO_NOX_AFTER_TRAIL_DIALOGUE
         if SHADOW_SEEN_FLAG in save.story_flags:
             return VELHO_NOX_SHADOW_DIALOGUE
         if VELHO_NOX_TALKED_FLAG in save.story_flags:
@@ -65,7 +73,7 @@ def apply_npc_interaction_effects_to_storage(
 
 def _velho_nox_effects(save: GameSave) -> dict:
     effects: dict = {
-        "add_story_flags": [VELHO_NOX_TALKED_FLAG],
+        "add_story_flags": [VELHO_NOX_TALKED_FLAG, NOX_TRAIL_MENTIONED_FLAG],
         "add_npc_flags": {
             VELHO_NOX_ID: [VELHO_NOX_KNOWN_FLAG],
         },

@@ -1,6 +1,9 @@
 from src.game.entities.npc import NPC
 from src.game.game_context import GameContext
 from src.game.npc_reactions import (
+    NOX_TRAIL_MENTIONED_FLAG,
+    SHADOW_TRAIL_INVESTIGATED_FLAG,
+    VELHO_NOX_AFTER_TRAIL_DIALOGUE,
     VELHO_NOX_REPEAT_DIALOGUE,
     VELHO_NOX_SHADOW_CONSEQUENCE_ID,
     VELHO_NOX_SHADOW_CONSEQUENCE_TEXT,
@@ -67,9 +70,21 @@ def test_apply_npc_interaction_effects_adds_velho_nox_flags() -> None:
 
     updated = apply_npc_interaction_effects(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
 
-    assert updated.story_flags == ["falou_com_velho_nox"]
+    assert updated.story_flags == ["falou_com_velho_nox", NOX_TRAIL_MENTIONED_FLAG]
     assert updated.npc_flags == {"velho-nox": ["conhecido"]}
     assert updated.consequence_log == []
+
+
+def test_velho_nox_dialogue_after_trail_investigation_changes() -> None:
+    save = GameSave(
+        id=DEFAULT_SAVE_ID,
+        character_id="miko-meu",
+        story_flags=[SHADOW_TRAIL_INVESTIGATED_FLAG],
+    )
+
+    dialogue = get_npc_dialogue_for_state(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
+
+    assert dialogue == VELHO_NOX_AFTER_TRAIL_DIALOGUE
 
 
 def test_apply_npc_interaction_effects_after_shadow_adds_consequence_once() -> None:
@@ -83,6 +98,7 @@ def test_apply_npc_interaction_effects_after_shadow_adds_consequence_once() -> N
     updated = apply_npc_interaction_effects(velho_nox(), save, GameContext(location_id=DEFAULT_LOCATION_ID))
 
     assert updated.story_flags.count("falou_com_velho_nox") == 1
+    assert updated.story_flags.count(NOX_TRAIL_MENTIONED_FLAG) == 1
     assert updated.npc_flags["velho-nox"].count("conhecido") == 1
     assert updated.consequence_log == [
         {
@@ -117,5 +133,5 @@ def test_apply_npc_interaction_effects_to_storage_uses_save_layer() -> None:
     apply_npc_interaction_effects_to_storage(storage, velho_nox(), GameContext(location_id=DEFAULT_LOCATION_ID))
     save = get_game_save(storage)
 
-    assert save.story_flags == ["falou_com_velho_nox"]
+    assert save.story_flags == ["falou_com_velho_nox", NOX_TRAIL_MENTIONED_FLAG]
     assert save.npc_flags == {"velho-nox": ["conhecido"]}

@@ -23,6 +23,7 @@ from src.game.event_registry import register_creature_encounter, register_map_ev
 from src.game.game_context import GameContext
 from src.game.maps.area_registry import (
     DEFAULT_AREA_ID,
+    AreaInteraction,
     AreaTransition,
     GameArea,
     find_transition_at,
@@ -158,6 +159,7 @@ class OverworldScene(BaseScene):
                 screen_x, screen_y = self.camera.tile_to_screen(x, y)
                 assets.draw_tile(self.pygame, surface, tile, screen_x, screen_y, self.assets, size=self.camera.tile_size)
         self._draw_area_transitions(surface)
+        self._draw_area_interactions(surface)
         highlighted_npc = self.facing_npc()
         highlighted_creature = self.facing_creature()
         for npc in self.npcs:
@@ -186,6 +188,10 @@ class OverworldScene(BaseScene):
             return True
         npc = self.facing_npc()
         if npc is None:
+            area_interaction = self.current_area_interaction()
+            if area_interaction is not None:
+                self._open_area_interaction(area_interaction)
+                return True
             return self._try_area_transition()
         self.dialogue = DialogueBox(npc.name, self._dialogues_for_npc(npc), choice=npc.choice)
         self._apply_npc_interaction_effects(npc)
@@ -199,6 +205,20 @@ class OverworldScene(BaseScene):
 
     def current_transition(self) -> AreaTransition | None:
         return find_transition_at(self.area, self.player.x, self.player.y)
+
+    def current_area_interaction(self) -> AreaInteraction | None:
+        return next(
+            (
+                interaction
+                for interaction in self.area_interactions
+                if self._area_interaction_available(interaction)
+                and (
+                    interaction.position == self.player.position
+                    or interaction.position == self.player.facing_position()
+                )
+            ),
+            None,
+        )
 
     def open_creature_encounter(self, creature: Creature) -> None:
         self.pending_creature = creature
@@ -279,6 +299,19 @@ class OverworldScene(BaseScene):
             self.game_save = apply_narrative_effects_to_storage(self.storage, DEFAULT_SAVE_ID, effects)
         except Exception as exc:  # noqa: BLE001 - narrative state must not crash exploration.
             print(f"[MAGIK Game] Nao foi possivel aplicar efeito narrativo: {exc}")
+
+    def _open_area_interaction(self, interaction: AreaInteraction) -> None:
+        self.dialogue = DialogueBox(interaction.speaker, interaction.messages)
+        if self.storage is None or not interaction.narrative_effects:
+            return
+        try:
+            self.game_save = apply_narrative_effects_to_storage(
+                self.storage,
+                DEFAULT_SAVE_ID,
+                interaction.narrative_effects,
+            )
+        except Exception as exc:  # noqa: BLE001 - area interaction state must not crash exploration.
+            print(f"[MAGIK Game] Nao foi possivel aplicar interacao narrativa: {exc}")
 
     def _messages_for_event(self, event: MapEvent) -> tuple[str, ...]:
         if event.id != SHADOW_OBSERVE_EVENT_ID:
@@ -427,6 +460,7 @@ class OverworldScene(BaseScene):
         ]
         self.creatures = [load_game_creature(self.storage, item.x, item.y) for item in find_creatures(self.map_data)]
         self.events = list(area.events)
+        self.area_interactions = list(area.interactions)
 
     def _try_area_transition(self) -> bool:
         transition = self.current_transition()
@@ -462,10 +496,26 @@ class OverworldScene(BaseScene):
         for transition in self.area.transitions:
             self._draw_transition_marker(surface, self.transition_marker_rect(transition), highlighted=transition == current_transition)
 
+    def _draw_area_interactions(self, surface) -> None:
+        current_interaction = self.current_area_interaction()
+        for interaction in self.area_interactions:
+            if self._area_interaction_available(interaction):
+                self._draw_area_interaction_marker(
+                    surface,
+                    self.area_interaction_marker_rect(interaction),
+                    highlighted=interaction == current_interaction,
+                )
+
     def transition_marker_rect(self, transition: AreaTransition):
         screen_x, screen_y = self.camera.tile_to_screen(transition.x, transition.y)
         size = self.camera.tile_size
         pad = max(3, size // 8)
+        return self.pygame.Rect(screen_x + pad, screen_y + pad, size - pad * 2, size - pad * 2)
+
+    def area_interaction_marker_rect(self, interaction: AreaInteraction):
+        screen_x, screen_y = self.camera.tile_to_screen(interaction.x, interaction.y)
+        size = self.camera.tile_size
+        pad = max(5, size // 5)
         return self.pygame.Rect(screen_x + pad, screen_y + pad, size - pad * 2, size - pad * 2)
 
     def _draw_transition_marker(self, surface, rect, *, highlighted: bool = False) -> None:
@@ -479,6 +529,14 @@ class OverworldScene(BaseScene):
         self.pygame.draw.rect(surface, inner_color, door)
         self.pygame.draw.line(surface, arch_color, (rect.centerx, rect.y + rect.height // 4), (rect.centerx, rect.bottom - pad), width=max(1, self.camera.tile_size // 18))
 
+    def _draw_area_interaction_marker(self, surface, rect, *, highlighted: bool = False) -> None:
+        glow_color = (88, 60, 122) if not highlighted else (151, 111, 187)
+        rune_color = (169, 143, 89) if not highlighted else (231, 194, 103)
+        self.pygame.draw.ellipse(surface, glow_color, rect)
+        self.pygame.draw.ellipse(surface, rune_color, rect, width=max(1, self.camera.tile_size // 18))
+        self.pygame.draw.line(surface, rune_color, rect.midleft, rect.midright, width=max(1, self.camera.tile_size // 20))
+        self.pygame.draw.line(surface, rune_color, rect.midtop, rect.midbottom, width=max(1, self.camera.tile_size // 20))
+
     def _refresh_hud(self) -> None:
         self.hud = HUD(
             player_name=self.context.player_name,
@@ -489,10 +547,23 @@ class OverworldScene(BaseScene):
         )
 
     def _current_controls_hint(self) -> str:
+        area_interaction = self.current_area_interaction()
+        if area_interaction is not None:
+            return f"E {area_interaction.label} | ESC sair"
         transition = self.current_transition()
         if transition is None:
             return "WASD/setas mover | E/espaco interagir | ESC sair"
         return f"E {transition.label} | ESC sair"
+
+    def _area_interaction_available(self, interaction: AreaInteraction) -> bool:
+        if interaction.location_id is not None and interaction.location_id != self.location_id:
+            return False
+        if not interaction.narrative_conditions:
+            return True
+        save = self._current_game_save()
+        if save is None:
+            return False
+        return conditions_met(save, interaction.narrative_conditions)
 
     def _load_lore_summary(self, location_id: str) -> dict[str, Any] | None:
         if self.storage is None:

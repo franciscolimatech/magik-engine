@@ -7,6 +7,7 @@ create quests, rewards, encounters, or combat rules by themselves.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from src.game.dialogue import DialogueChoice
 from src.game.maps.events import MapEvent, load_test_events
@@ -59,6 +60,23 @@ class AreaNpc:
 
 
 @dataclass(frozen=True)
+class AreaInteraction:
+    id: str
+    x: int
+    y: int
+    label: str
+    speaker: str
+    messages: tuple[str, ...]
+    location_id: str | None = None
+    narrative_conditions: dict[str, Any] | None = None
+    narrative_effects: dict[str, Any] | None = None
+
+    @property
+    def position(self) -> tuple[int, int]:
+        return self.x, self.y
+
+
+@dataclass(frozen=True)
 class GameArea:
     id: str
     name: str
@@ -68,6 +86,7 @@ class GameArea:
     transitions: tuple[AreaTransition, ...] = ()
     events: tuple[MapEvent, ...] = ()
     npcs: tuple[AreaNpc, ...] = ()
+    interactions: tuple[AreaInteraction, ...] = ()
 
 
 FOREST_CLEARING_MAP = (
@@ -153,6 +172,31 @@ AREAS = (
                 label="Ir para Cabana do Nox",
             ),
         ),
+        interactions=(
+            AreaInteraction(
+                id="rastro-da-sombra-clareira",
+                x=8,
+                y=5,
+                label="investigar rastro",
+                speaker="Rastro na Clareira",
+                messages=(
+                    "O ar dobra ao redor dos seus dedos.",
+                    "Por um instante, sua sombra se atrasa.",
+                ),
+                location_id="floresta-do-avesso",
+                narrative_conditions={
+                    "required_story_flags": ["nox_mencionou_rastro_na_clareira"],
+                },
+                narrative_effects={
+                    "add_story_flags": ["investigou_rastro_da_sombra"],
+                    "narrative_consequence": {
+                        "id": "rastro-da-sombra-investigado",
+                        "location_id": "floresta-do-avesso",
+                        "text": "O personagem investigou o rastro da sombra na Clareira da Floresta do Avesso.",
+                    },
+                },
+            ),
+        ),
     ),
     GameArea(
         id="floresta-do-avesso-cabana-nox",
@@ -181,6 +225,7 @@ AREAS = (
                 dialogues=(
                     "A floresta nao gosta de passos apressados.",
                     "Ela devolve caminhos... mas raramente devolve pessoas inteiras.",
+                    "Na clareira, ha um lugar onde as folhas caem para cima. Nao toque nele com pressa.",
                 ),
                 npc_id="velho-nox",
                 location_id="floresta-do-avesso",
@@ -244,3 +289,6 @@ def validate_area_registry() -> None:
         for npc in area.npcs:
             if not is_walkable(list(area.map_data), npc.x, npc.y):
                 raise ValueError(f"NPC em tile bloqueado: {npc.name}.")
+        for interaction in area.interactions:
+            if not is_walkable(list(area.map_data), interaction.x, interaction.y):
+                raise ValueError(f"Interacao em tile bloqueado: {interaction.id}.")

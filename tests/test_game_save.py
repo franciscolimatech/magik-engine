@@ -5,7 +5,7 @@ from src.core.character import create_miko_meu
 from src.game.ai_narration import GAME_AI_NARRATION_ENV
 from src.game.game_context import GameContext
 from src.game.maps.area_registry import DEFAULT_AREA_ID
-from src.game.npc_reactions import VELHO_NOX_SHADOW_DIALOGUE
+from src.game.npc_reactions import NOX_TRAIL_MENTIONED_FLAG, VELHO_NOX_SHADOW_DIALOGUE
 from src.game.save import (
     DEFAULT_LOCATION_ID,
     DEFAULT_SAVE_ID,
@@ -932,6 +932,7 @@ def test_overworld_velho_nox_interaction_adds_memory_flags() -> None:
     assert scene.dialogue.speaker == "Velho Nox"
     assert scene.dialogue.current_text == "Velho Nox observa as arvores como se elas estivessem respirando."
     assert "falou_com_velho_nox" in save.story_flags
+    assert NOX_TRAIL_MENTIONED_FLAG in save.story_flags
     assert save.npc_flags["velho-nox"] == ["conhecido"]
     assert save.consequence_log == []
     pygame.quit()
@@ -969,6 +970,7 @@ def test_overworld_velho_nox_reacts_after_shadow_flag() -> None:
     scene.dialogue.advance()
     assert scene.dialogue.current_text == VELHO_NOX_SHADOW_DIALOGUE[1]
     assert "falou_com_velho_nox" in save.story_flags
+    assert NOX_TRAIL_MENTIONED_FLAG in save.story_flags
     assert save.npc_flags["velho-nox"] == ["conhecido"]
     assert save.consequence_log == [
         {
@@ -1010,6 +1012,7 @@ def test_overworld_velho_nox_consequence_does_not_duplicate() -> None:
     save = get_game_save(storage)
 
     assert save.story_flags.count("falou_com_velho_nox") == 1
+    assert save.story_flags.count(NOX_TRAIL_MENTIONED_FLAG) == 1
     assert save.npc_flags["velho-nox"].count("conhecido") == 1
     assert len(save.consequence_log) == 1
     pygame.quit()

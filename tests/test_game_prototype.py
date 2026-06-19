@@ -38,6 +38,7 @@ from src.game.maps.test_map import (
 )
 from src.game.scenes.battle import BattleScene
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
+from src.game.npc_reactions import NOX_TRAIL_MENTIONED_FLAG, SHADOW_TRAIL_INVESTIGATED_FLAG
 from src.game.scenes.main_menu import (
     GLOBAL_BACKGROUND_OVERLAY_ALPHA,
     MENU_BACKDROP_MAX_ALPHA,
@@ -192,6 +193,21 @@ def test_cabin_area_declares_velho_nox_npc_only_for_cabin_content() -> None:
         and npc.position == (8, 5)
         for npc in cabin.npcs
     )
+
+
+def test_clearing_area_declares_shadow_trail_interaction() -> None:
+    clearing = get_area("floresta-do-avesso-clareira")
+
+    trail = next((interaction for interaction in clearing.interactions if interaction.id == "rastro-da-sombra-clareira"), None)
+
+    assert trail is not None
+    assert trail.position == (8, 5)
+    assert trail.label == "investigar rastro"
+    assert trail.narrative_conditions == {
+        "required_story_flags": [NOX_TRAIL_MENTIONED_FLAG],
+    }
+    assert trail.narrative_effects is not None
+    assert trail.narrative_effects["add_story_flags"] == [SHADOW_TRAIL_INVESTIGATED_FLAG]
 
 
 def test_area_transitions_point_to_existing_areas_and_spawns() -> None:
@@ -1204,9 +1220,11 @@ def test_overworld_cabin_loads_velho_nox_and_interaction_adds_flags() -> None:
 
     save = get_game_save(storage)
     assert "falou_com_velho_nox" in save.story_flags
+    assert NOX_TRAIL_MENTIONED_FLAG in save.story_flags
     assert save.npc_flags == {"velho-nox": ["conhecido"]}
     assert scene.dialogue is not None
     assert "passos apressados" in scene.dialogue.messages[0]
+    assert "folhas caem para cima" in scene.dialogue.messages[2]
     pygame.quit()
 
 
@@ -1239,10 +1257,116 @@ def test_overworld_cabin_velho_nox_reacts_to_shadow_flag_without_duplicate_effec
 
     save = get_game_save(storage)
     assert save.story_flags.count("falou_com_velho_nox") == 1
+    assert save.story_flags.count(NOX_TRAIL_MENTIONED_FLAG) == 1
     assert save.npc_flags["velho-nox"].count("conhecido") == 1
     assert len(save.consequence_log) == 1
     assert scene.dialogue is not None
     assert "ja olhou para voce" in scene.dialogue.messages[1]
+    pygame.quit()
+
+
+def test_overworld_clearing_trail_is_unavailable_before_nox_hint() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        player_position={"x": 8, "y": 6},
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "up"
+    scene.draw(surface)
+
+    assert scene.current_area_interaction() is None
+    assert "investigar rastro" not in scene.hud.controls_hint
+    assert scene.interact() is False
+    pygame.quit()
+
+
+def test_overworld_clearing_trail_appears_after_nox_hint_and_updates_hud() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        player_position={"x": 8, "y": 6},
+                        story_flags=[NOX_TRAIL_MENTIONED_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    surface = pygame.Surface((1280, 720))
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "up"
+    scene.draw(surface)
+
+    assert scene.current_area_interaction() is not None
+    assert "E investigar rastro" in scene.hud.controls_hint
+    pygame.quit()
+
+
+def test_overworld_clearing_trail_interaction_adds_flag_and_consequence_once() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        player_position={"x": 8, "y": 6},
+                        story_flags=[NOX_TRAIL_MENTIONED_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+    scene.player.direction = "up"
+
+    assert scene.interact() is True
+    assert scene.interact() is True
+
+    save = get_game_save(storage)
+    assert save.story_flags.count(SHADOW_TRAIL_INVESTIGATED_FLAG) == 1
+    assert save.consequence_log == [
+        {
+            "id": "rastro-da-sombra-investigado",
+            "location_id": "floresta-do-avesso",
+            "npc_id": None,
+            "text": "O personagem investigou o rastro da sombra na Clareira da Floresta do Avesso.",
+        }
+    ]
+    assert scene.dialogue is not None
+    assert scene.dialogue.speaker == "Rastro na Clareira"
+    assert "O ar dobra" in scene.dialogue.messages[0]
     pygame.quit()
 
 
