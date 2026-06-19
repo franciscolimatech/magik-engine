@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.game.area_interactions import AreaInteraction, list_area_interactions
+from src.game.area_interactions import AreaInteraction, ENTRY_WHISPER_HEARD_FLAG, list_area_interactions
 from src.game.dialogue import DialogueChoice
 from src.game.maps.events import MapEvent, load_test_events
 from src.game.maps.test_map import TEST_MAP, is_walkable
@@ -16,6 +16,7 @@ from src.game.maps.test_map import TEST_MAP, is_walkable
 
 DEFAULT_AREA_ID = "floresta-do-avesso-entrada"
 DEFAULT_SPAWN_ID = "entrada"
+MISALIGNED_SHADOW_ID = "sombra-desalinhada"
 
 
 @dataclass(frozen=True)
@@ -60,6 +61,25 @@ class AreaNpc:
 
 
 @dataclass(frozen=True)
+class AreaCreature:
+    id: str
+    name: str
+    x: int
+    y: int
+    description: str
+    current_health: int
+    max_health: int
+    armor: int = 0
+    hostile: bool = True
+    required_story_flags: tuple[str, ...] = ()
+    blocked_defeated_enemy_ids: tuple[str, ...] = ()
+
+    @property
+    def position(self) -> tuple[int, int]:
+        return self.x, self.y
+
+
+@dataclass(frozen=True)
 class GameArea:
     id: str
     name: str
@@ -69,6 +89,7 @@ class GameArea:
     transitions: tuple[AreaTransition, ...] = ()
     events: tuple[MapEvent, ...] = ()
     npcs: tuple[AreaNpc, ...] = ()
+    creatures: tuple[AreaCreature, ...] = ()
     interactions: tuple[AreaInteraction, ...] = ()
 
 
@@ -154,6 +175,20 @@ AREAS = (
                 target_area_id="floresta-do-avesso-cabana-nox",
                 target_spawn_id="entrada-cabana",
                 label="Ir para Cabana do Nox",
+            ),
+        ),
+        creatures=(
+            AreaCreature(
+                id=MISALIGNED_SHADOW_ID,
+                name="Sombra Desalinhada",
+                x=13,
+                y=6,
+                description="A sombra a sua frente se move um segundo depois de voce. Entao sorri.",
+                current_health=10,
+                max_health=10,
+                armor=2,
+                required_story_flags=(ENTRY_WHISPER_HEARD_FLAG,),
+                blocked_defeated_enemy_ids=(MISALIGNED_SHADOW_ID,),
             ),
         ),
         interactions=tuple(list_area_interactions("floresta-do-avesso-clareira")),
@@ -249,6 +284,9 @@ def validate_area_registry() -> None:
         for npc in area.npcs:
             if not is_walkable(list(area.map_data), npc.x, npc.y):
                 raise ValueError(f"NPC em tile bloqueado: {npc.name}.")
+        for creature in area.creatures:
+            if not is_walkable(list(area.map_data), creature.x, creature.y):
+                raise ValueError(f"Criatura em tile bloqueado: {creature.name}.")
         for interaction in area.interactions:
             if not is_walkable(list(area.map_data), interaction.x, interaction.y):
                 raise ValueError(f"Interacao em tile bloqueado: {interaction.id}.")

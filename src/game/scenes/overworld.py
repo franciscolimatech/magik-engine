@@ -28,6 +28,7 @@ from src.game.event_registry import register_creature_encounter, register_map_ev
 from src.game.game_context import GameContext
 from src.game.maps.area_registry import (
     DEFAULT_AREA_ID,
+    AreaCreature,
     AreaTransition,
     GameArea,
     find_transition_at,
@@ -56,6 +57,7 @@ from src.game.save import (
     get_game_save,
     load_or_create_default_game_save,
     register_current_location,
+    register_defeated_enemy,
     register_triggered_event,
     sync_game_save_context,
     update_area_and_player_position,
@@ -198,6 +200,9 @@ class OverworldScene(BaseScene):
     def try_move_player(self, dx: int, dy: int) -> bool:
         if self.story_summary_visible or (self.dialogue and self.dialogue.visible):
             return False
+        if self._creature_at(self.player.x + dx, self.player.y + dy) is not None:
+            self._turn_player_toward(dx, dy)
+            return False
         moved = self.player.move(dx, dy, self.map_data)
         if moved:
             self.persist_state()
@@ -227,6 +232,18 @@ class OverworldScene(BaseScene):
 
     def facing_creature(self) -> Creature | None:
         return next((creature for creature in self.creatures if creature.can_interact(self.player)), None)
+
+    def mark_creature_defeated(self, creature_id: str) -> None:
+        cleaned = creature_id.strip()
+        if not cleaned:
+            return
+        self.creatures = [creature for creature in self.creatures if creature.id != cleaned]
+        if self.storage is None:
+            return
+        try:
+            self.game_save = register_defeated_enemy(self.storage, DEFAULT_SAVE_ID, cleaned)
+        except Exception as exc:  # noqa: BLE001 - defeated marker must not crash battle return.
+            print(f"[MAGIK Game] Nao foi possivel registrar criatura derrotada: {exc}")
 
     def current_transition(self) -> AreaTransition | None:
         return find_transition_at(self.area, self.player.x, self.player.y)
@@ -484,9 +501,28 @@ class OverworldScene(BaseScene):
             )
             for item in map_npcs
         ]
-        self.creatures = [load_game_creature(self.storage, item.x, item.y) for item in find_creatures(self.map_data)]
+        map_creatures = [load_game_creature(self.storage, item.x, item.y) for item in find_creatures(self.map_data)]
+        area_creatures = [
+            _creature_from_area(item)
+            for item in area.creatures
+            if _area_creature_available(item, self._current_game_save())
+        ]
+        self.creatures = [*map_creatures, *area_creatures]
         self.events = list(area.events)
         self.area_interactions = list(area.interactions)
+
+    def _creature_at(self, x: int, y: int) -> Creature | None:
+        return next((creature for creature in self.creatures if creature.position == (x, y)), None)
+
+    def _turn_player_toward(self, dx: int, dy: int) -> None:
+        if dy < 0:
+            self.player.direction = "up"
+        elif dy > 0:
+            self.player.direction = "down"
+        elif dx < 0:
+            self.player.direction = "left"
+        elif dx > 0:
+            self.player.direction = "right"
 
     def _try_area_transition(self) -> bool:
         transition = self.current_transition()
@@ -685,3 +721,27 @@ def _event_decided_consequence(event: MapEvent) -> str:
     if isinstance(consequence, dict):
         return str(consequence.get("text") or "")
     return ""
+
+
+def _creature_from_area(area_creature: AreaCreature) -> Creature:
+    return Creature(
+        id=area_creature.id,
+        name=area_creature.name,
+        x=area_creature.x,
+        y=area_creature.y,
+        description=area_creature.description,
+        current_health=area_creature.current_health,
+        max_health=area_creature.max_health,
+        armor=area_creature.armor,
+        hostile=area_creature.hostile,
+    )
+
+
+def _area_creature_available(area_creature: AreaCreature, save: GameSave | None) -> bool:
+    if save is None:
+        return False
+    if any(flag not in save.story_flags for flag in area_creature.required_story_flags):
+        return False
+    if any(enemy_id in save.defeated_enemy_ids for enemy_id in area_creature.blocked_defeated_enemy_ids):
+        return False
+    return True

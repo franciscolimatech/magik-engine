@@ -10,6 +10,7 @@ from src.game.entities.creature import Creature
 from src.game.event_registry import register_battle_event
 from src.game.game_context import GameContext
 from src.game.scenes.base import BaseScene
+from src.game.save import DEFAULT_SAVE_ID, register_defeated_enemy
 from src.game.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.storage.types import JsonStore
 
@@ -194,6 +195,7 @@ class BattleScene(BaseScene):
         self._add_log(f"Vitoria! {self.creature.name} foi derrotada.")
         self._add_log("Pressione Enter ou Espaco para voltar ao mapa.")
         self._register_battle_event("vitoria", f"{self.creature.name} foi derrotada.")
+        self._register_defeated_creature()
 
     def _defeat(self) -> None:
         self.defeat = True
@@ -223,6 +225,14 @@ class BattleScene(BaseScene):
         if self.storage is None:
             return
         register_battle_event(self.storage, self.context, self.creature, self.creature.position, event_name, detail)
+
+    def _register_defeated_creature(self) -> None:
+        marker = getattr(self.return_scene, "mark_creature_defeated", None)
+        if callable(marker):
+            marker(self.creature.id)
+            return
+        if self.storage is not None:
+            register_defeated_enemy(self.storage, DEFAULT_SAVE_ID, self.creature.id)
 
     def _ensure_draw_resources(self) -> None:
         if self._font is not None:

@@ -19,6 +19,7 @@ from src.game.event_registry import register_battle_event, register_creature_enc
 from src.game.game_context import GameContext
 from src.game.maps.area_registry import (
     DEFAULT_AREA_ID,
+    MISALIGNED_SHADOW_ID,
     find_transition_at,
     get_area,
     get_spawn,
@@ -210,6 +211,18 @@ def test_clearing_area_declares_shadow_trail_interaction() -> None:
     }
     assert trail.narrative_effects is not None
     assert trail.narrative_effects["add_story_flags"] == [SHADOW_TRAIL_INVESTIGATED_FLAG]
+
+
+def test_clearing_area_declares_conditional_misaligned_shadow() -> None:
+    clearing = get_area("floresta-do-avesso-clareira")
+
+    assert len(clearing.creatures) == 1
+    creature = clearing.creatures[0]
+    assert creature.id == MISALIGNED_SHADOW_ID
+    assert creature.name == "Sombra Desalinhada"
+    assert creature.position == (13, 6)
+    assert creature.required_story_flags == (ENTRY_WHISPER_HEARD_FLAG,)
+    assert creature.blocked_defeated_enemy_ids == (MISALIGNED_SHADOW_ID,)
 
 
 def test_entry_area_declares_whispering_tree_interaction() -> None:
@@ -680,6 +693,49 @@ def test_battle_detects_victory_when_creature_reaches_zero() -> None:
     assert scene.turn_state == "vitoria"
     assert scene.creature.current_health == 0
     assert any("Vitoria!" in line for line in scene.log)
+
+
+def test_battle_victory_registers_defeated_enemy_in_save() -> None:
+    storage = MemoryStorage({"game_saves.json": {"saves": [GameSave(id=DEFAULT_SAVE_ID, character_id="miko-meu").to_dict()]}})
+    character = create_miko_meu()
+    creature = Creature(MISALIGNED_SHADOW_ID, "Sombra Desalinhada", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0)
+    scene = BattleScene(
+        FakePygame,
+        GameContext(player_name=character.name),
+        character,
+        creature,
+        storage=storage,
+        rng=FakeRng([1]),
+    )
+
+    scene.attack()
+    save = get_game_save(storage)
+
+    assert MISALIGNED_SHADOW_ID in save.defeated_enemy_ids
+
+
+def test_battle_victory_notifies_return_scene_about_defeated_creature() -> None:
+    class ReturnScene:
+        defeated: list[str] = []
+
+        def mark_creature_defeated(self, creature_id: str) -> None:
+            self.defeated.append(creature_id)
+
+    return_scene = ReturnScene()
+    character = create_miko_meu()
+    creature = Creature(MISALIGNED_SHADOW_ID, "Sombra Desalinhada", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0)
+    scene = BattleScene(
+        FakePygame,
+        GameContext(player_name=character.name),
+        character,
+        creature,
+        return_scene=return_scene,
+        rng=FakeRng([1]),
+    )
+
+    scene.attack()
+
+    assert return_scene.defeated == [MISALIGNED_SHADOW_ID]
 
 
 def test_battle_return_to_map_after_victory() -> None:
@@ -1264,6 +1320,150 @@ def test_overworld_draws_all_registered_forest_areas() -> None:
         assert scene.location_id == "floresta-do-avesso"
         assert scene.camera.screen_width == 1366
         assert scene.camera.screen_height == 768
+    pygame.quit()
+
+
+def test_misaligned_shadow_does_not_spawn_before_entry_whisper() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        player_position={"x": 2, "y": 2},
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    assert not any(creature.id == MISALIGNED_SHADOW_ID for creature in scene.creatures)
+    pygame.quit()
+
+
+def test_misaligned_shadow_spawns_in_clearing_after_entry_whisper() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        player_position={"x": 13, "y": 7},
+                        story_flags=[ENTRY_WHISPER_HEARD_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    shadow = next((creature for creature in scene.creatures if creature.id == MISALIGNED_SHADOW_ID), None)
+
+    assert shadow is not None
+    assert shadow.name == "Sombra Desalinhada"
+    assert shadow.position == (13, 6)
+    scene.player.direction = "up"
+    assert scene.facing_creature() == shadow
+    assert scene.try_move_player(0, -1) is False
+    assert scene.player.position == (13, 7)
+    pygame.quit()
+
+
+def test_misaligned_shadow_does_not_spawn_outside_clearing() -> None:
+    import pygame
+
+    pygame.init()
+    for area_id in [DEFAULT_AREA_ID, "floresta-do-avesso-cabana-nox"]:
+        storage = MemoryStorage(
+            {
+                "characters.json": {"characters": [create_miko_meu().to_dict()]},
+                "game_saves.json": {
+                    "saves": [
+                        GameSave(
+                            id=DEFAULT_SAVE_ID,
+                            character_id="miko-meu",
+                            location_id="floresta-do-avesso",
+                            area_id=area_id,
+                            story_flags=[ENTRY_WHISPER_HEARD_FLAG],
+                        ).to_dict()
+                    ]
+                },
+            }
+        )
+        scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+        assert not any(creature.id == MISALIGNED_SHADOW_ID for creature in scene.creatures)
+    pygame.quit()
+
+
+def test_misaligned_shadow_does_not_spawn_after_defeat_marker() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        story_flags=[ENTRY_WHISPER_HEARD_FLAG],
+                        defeated_enemy_ids=[MISALIGNED_SHADOW_ID],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    assert not any(creature.id == MISALIGNED_SHADOW_ID for creature in scene.creatures)
+    pygame.quit()
+
+
+def test_overworld_mark_creature_defeated_removes_shadow_and_saves_marker() -> None:
+    import pygame
+
+    storage = MemoryStorage(
+        {
+            "characters.json": {"characters": [create_miko_meu().to_dict()]},
+            "game_saves.json": {
+                "saves": [
+                    GameSave(
+                        id=DEFAULT_SAVE_ID,
+                        character_id="miko-meu",
+                        location_id="floresta-do-avesso",
+                        area_id="floresta-do-avesso-clareira",
+                        story_flags=[ENTRY_WHISPER_HEARD_FLAG],
+                    ).to_dict()
+                ]
+            },
+        }
+    )
+    pygame.init()
+    scene = OverworldScene(pygame, GameContext(character_id="miko-meu", player_name="Miko Meu"), storage=storage)
+
+    scene.mark_creature_defeated(MISALIGNED_SHADOW_ID)
+    save = get_game_save(storage)
+
+    assert not any(creature.id == MISALIGNED_SHADOW_ID for creature in scene.creatures)
+    assert save.defeated_enemy_ids == [MISALIGNED_SHADOW_ID]
     pygame.quit()
 
 
