@@ -11,6 +11,7 @@ from src.game.area_interactions import (
     NOX_TRAIL_MENTIONED_FLAG,
     SHADOW_TRAIL_INVESTIGATED_FLAG,
 )
+from src.game.maps.area_registry import MISALIGNED_SHADOW_ID
 from src.game.npc_reactions import (
     VELHO_NOX_SHADOW_CONSEQUENCE_ID,
     VELHO_NOX_TALKED_FLAG,
@@ -38,6 +39,8 @@ def build_story_summary(save: GameSave | None) -> tuple[str, ...]:
         memories.append("Voce tocou o rastro da sombra. O ar dobrou, e sua sombra se atrasou.")
     if ENTRY_WHISPER_HEARD_FLAG in flags:
         memories.append("Na Entrada, uma voz tentou repetir seu nome e errou a ultima silaba.")
+    if MISALIGNED_SHADOW_ID in save.defeated_enemy_ids:
+        memories.append("Na Clareira, voce enfrentou uma sombra que se movia atrasada em relacao ao mundo.")
     if VELHO_NOX_WHISPER_CONSEQUENCE_ID in consequence_ids:
         memories.append("Nox disse que a floresta respondeu. Enquanto ela erra seu nome, voce ainda e seu.")
     elif VELHO_NOX_SHADOW_CONSEQUENCE_ID in consequence_ids:

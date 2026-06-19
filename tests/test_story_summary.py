@@ -3,6 +3,7 @@ from src.game.area_interactions import (
     NOX_TRAIL_MENTIONED_FLAG,
     SHADOW_TRAIL_INVESTIGATED_FLAG,
 )
+from src.game.maps.area_registry import MISALIGNED_SHADOW_ID
 from src.game.npc_reactions import (
     VELHO_NOX_SHADOW_CONSEQUENCE_ID,
     VELHO_NOX_TALKED_FLAG,
@@ -48,6 +49,22 @@ def test_story_summary_includes_entry_whisper_memory() -> None:
     summary = build_story_summary(save)
 
     assert any("errou a ultima silaba" in memory for memory in summary)
+
+
+def test_story_summary_includes_misaligned_shadow_defeat_memory() -> None:
+    save = GameSave(id=DEFAULT_SAVE_ID, character_id="miko-meu", defeated_enemy_ids=[MISALIGNED_SHADOW_ID])
+
+    summary = build_story_summary(save)
+
+    assert any("sombra que se movia atrasada" in memory for memory in summary)
+
+
+def test_story_summary_omits_misaligned_shadow_defeat_memory_before_defeat() -> None:
+    save = GameSave(id=DEFAULT_SAVE_ID, character_id="miko-meu", story_flags=[ENTRY_WHISPER_HEARD_FLAG])
+
+    summary = build_story_summary(save)
+
+    assert not any("sombra que se movia atrasada" in memory for memory in summary)
 
 
 def test_story_summary_includes_nox_whisper_consequence() -> None:
