@@ -6,6 +6,7 @@ from src.core.abilities import Ability, list_abilities, use_ability
 from src.core.character import Character
 from src.core.combat import apply_physical_damage, roll_damage
 from src.game import assets, colors
+from src.game.dice import AttackResolution, resolve_basic_attack
 from src.game.entities.creature import Creature
 from src.game.event_registry import register_battle_event
 from src.game.game_context import GameContext
@@ -17,6 +18,9 @@ from src.storage.types import JsonStore
 
 class BattleScene(BaseScene):
     OPTIONS = ("Atacar", "Habilidade", "Observar", "Fugir")
+    ATTACK_MODIFIER = 2
+    ATTACK_DIFFICULTY = 13
+    DICE_ANIMATION_FRAMES = 12
 
     def __init__(
         self,
@@ -45,6 +49,9 @@ class BattleScene(BaseScene):
         self.defeat = False
         self.fled = False
         self.turn_state = "jogador"
+        self.pending_attack: AttackResolution | None = None
+        self.dice_frames_remaining = 0
+        self.dice_display_value = 1
         self._font = None
         self._title_font = None
         self._assets = None
@@ -73,6 +80,8 @@ class BattleScene(BaseScene):
     def handle_event(self, event) -> None:
         if event.type != self.pygame.KEYDOWN:
             return
+        if self.pending_attack is not None:
+            return
         if self.battle_ended:
             if event.key in {self.pygame.K_RETURN, self.pygame.K_SPACE, self.pygame.K_e}:
                 self.requested_scene = "overworld"
@@ -90,7 +99,13 @@ class BattleScene(BaseScene):
             self.confirm_selection()
 
     def update(self) -> None:
-        return
+        if self.pending_attack is None:
+            return
+        if self.dice_frames_remaining > 0:
+            self.dice_display_value = ((self.dice_display_value + 6) % 20) + 1
+            self.dice_frames_remaining -= 1
+            return
+        self._resolve_pending_attack()
 
     def draw(self, surface) -> None:
         self._ensure_draw_resources()
@@ -99,6 +114,7 @@ class BattleScene(BaseScene):
         self._draw_combatants(surface)
         self._draw_log(surface)
         self._draw_menu(surface)
+        self._draw_dice_overlay(surface)
 
     def confirm_selection(self) -> None:
         option = self.selected_option
@@ -148,14 +164,38 @@ class BattleScene(BaseScene):
         self.mode = "actions"
 
     def attack(self) -> None:
-        if self.battle_ended or self.creature.current_health <= 0:
+        if self.battle_ended or self.creature.current_health <= 0 or self.pending_attack is not None:
             return
         self.turn_state = "jogador"
-        damage = roll_damage(max(self.creature.current_health, 1), self.rng).result
+        self.pending_attack = resolve_basic_attack(
+            modifier=self.ATTACK_MODIFIER,
+            difficulty=self.ATTACK_DIFFICULTY,
+            rng=self.rng,
+        )
+        self.dice_frames_remaining = self.DICE_ANIMATION_FRAMES
+        self.dice_display_value = 1
+        self.turn_state = "rolagem"
+        self._add_log(f"{self.character.name} prepara um ataque. Rolando D20...")
+
+    def _resolve_pending_attack(self) -> None:
+        if self.pending_attack is None:
+            return
+        resolution = self.pending_attack
+        self.pending_attack = None
+        self.turn_state = "jogador"
+        check = resolution.check
+        self._add_log(f"D20: {check.natural} | Modificador: {check.modifier:+d} | Total: {check.total}")
+        self._add_log(f"Dificuldade: {check.difficulty} | Resultado: {_check_outcome_label(check.outcome)}")
+        if not check.is_success:
+            self._add_log(f"{self.character.name} errou o ataque.")
+            self.creature_turn()
+            return
+        damage = resolution.damage
+        damage_text = _damage_roll_text(resolution)
         result = apply_physical_damage(self.creature.current_health, self.creature.armor, damage)
         self.creature.current_health = result.current_health
         self.creature.armor = result.armor
-        self._add_log(f"{self.character.name} atacou {self.creature.name} e causou {damage} de dano.")
+        self._add_log(f"{self.character.name} acertou {self.creature.name}. {damage_text}")
         if self.creature.current_health <= 0:
             self._win()
             return
@@ -285,12 +325,29 @@ class BattleScene(BaseScene):
             text = self._font.render(f"{prefix}{option}", False, color)
             surface.blit(text, (rect.x + 18 + index * 138, rect.y + 22))
         hint = "Cima/baixo escolhe | Enter/E confirma | ESC fugir"
+        if self.pending_attack is not None:
+            hint = "Rolando dados..."
         if self.mode == "abilities":
             hint = "Cima/baixo escolhe habilidade | ESC volta"
         if self.battle_ended:
             hint = "Enter/Espaco para voltar ao mapa"
         hint_surface = self._font.render(hint, False, colors.TEXT_MUTED)
         surface.blit(hint_surface, (rect.x + 18, rect.y + 58))
+
+    def _draw_dice_overlay(self, surface) -> None:
+        if self.pending_attack is None:
+            return
+        rect = self.pygame.Rect(SCREEN_WIDTH // 2 - 88, SCREEN_HEIGHT // 2 - 74, 176, 148)
+        self._draw_panel(surface, rect)
+        title = self._font.render("Rolando D20", False, colors.TEXT_MUTED)
+        value = self._title_font.render(str(self.dice_display_value), False, colors.WHITE)
+        footer = self._font.render("O dado decide o ataque", False, colors.TEXT_MUTED)
+        surface.blit(title, (rect.centerx - title.get_width() // 2, rect.y + 18))
+        dice_rect = self.pygame.Rect(rect.centerx - 32, rect.y + 48, 64, 48)
+        self.pygame.draw.rect(surface, (28, 24, 42), dice_rect)
+        self.pygame.draw.rect(surface, colors.DIALOGUE_BORDER, dice_rect, width=2)
+        surface.blit(value, (dice_rect.centerx - value.get_width() // 2, dice_rect.centery - value.get_height() // 2))
+        surface.blit(footer, (rect.centerx - footer.get_width() // 2, rect.y + 108))
 
     def _draw_panel(self, surface, rect) -> None:
         self.pygame.draw.rect(surface, colors.DIALOGUE_BG, rect)
@@ -309,3 +366,20 @@ class BattleScene(BaseScene):
         self.pygame.draw.rect(surface, (28, 32, 48), (x, y, width, 10))
         ratio = 0 if maximum <= 0 else max(0, min(value / maximum, 1))
         self.pygame.draw.rect(surface, color, (x, y, int(width * ratio), 10))
+
+
+def _check_outcome_label(outcome: str) -> str:
+    labels = {
+        "critical_failure": "Falha critica",
+        "failure": "Falha",
+        "success": "Sucesso",
+        "critical_success": "Critico",
+    }
+    return labels.get(outcome, outcome)
+
+
+def _damage_roll_text(resolution: AttackResolution) -> str:
+    if resolution.damage_roll is None:
+        return "Dano: nenhum."
+    rolls = "+".join(str(value) for value in resolution.damage_roll.rolls)
+    return f"Dano: {resolution.damage_roll.expression} = {rolls} -> {resolution.damage_roll.total}."

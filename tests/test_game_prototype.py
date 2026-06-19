@@ -115,6 +115,12 @@ class FakeRng:
         return max(a, min(value, b))
 
 
+def resolve_battle_roll(scene: BattleScene) -> None:
+    for _ in range(scene.DICE_ANIMATION_FRAMES + 1):
+        scene.update()
+    assert scene.pending_attack is None
+
+
 def fake_power_interpreter(**kwargs) -> dict:
     return {
         "source": "fallback",
@@ -660,22 +666,40 @@ def test_battle_ability_use_without_campaign_does_not_break() -> None:
 def test_battle_attack_reduces_creature_armor_with_physical_rule() -> None:
     character = create_miko_meu()
     creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=10, max_health=10, armor=3)
-    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([2, 1]))
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([12, 2, 1]))
 
     scene.attack()
+    resolve_battle_roll(scene)
 
     assert scene.creature.armor == 1
     assert scene.creature.current_health == 10
-    assert "causou 2 de dano" in scene.log[-2]
+    assert "Dano: 1d6 = 2 -> 2" in scene.log[-2]
+
+
+def test_battle_attack_enters_dice_rolling_state_before_applying_result() -> None:
+    character = create_miko_meu()
+    creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=10, max_health=10, armor=0)
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([12, 4, 1]))
+
+    scene.attack()
+
+    assert scene.pending_attack is not None
+    assert scene.turn_state == "rolagem"
+    assert scene.creature.current_health == 10
+
+    resolve_battle_roll(scene)
+
+    assert scene.creature.current_health == 6
 
 
 def test_battle_creature_responds_when_alive() -> None:
     character = create_miko_meu()
     character.armor = 0
     creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=10, max_health=10, armor=0)
-    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([2, 3]))
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([12, 2, 3]))
 
     scene.attack()
+    resolve_battle_roll(scene)
 
     assert scene.creature.current_health == 8
     assert scene.character.current_health == 22
@@ -685,9 +709,10 @@ def test_battle_creature_responds_when_alive() -> None:
 def test_battle_detects_victory_when_creature_reaches_zero() -> None:
     character = create_miko_meu()
     creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0)
-    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([1]))
+    scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([12, 1]))
 
     scene.attack()
+    resolve_battle_roll(scene)
 
     assert scene.victory is True
     assert scene.turn_state == "vitoria"
@@ -705,10 +730,11 @@ def test_battle_victory_registers_defeated_enemy_in_save() -> None:
         character,
         creature,
         storage=storage,
-        rng=FakeRng([1]),
+        rng=FakeRng([12, 1]),
     )
 
     scene.attack()
+    resolve_battle_roll(scene)
     save = get_game_save(storage)
 
     assert MISALIGNED_SHADOW_ID in save.defeated_enemy_ids
@@ -730,10 +756,11 @@ def test_battle_victory_notifies_return_scene_about_defeated_creature() -> None:
         character,
         creature,
         return_scene=return_scene,
-        rng=FakeRng([1]),
+        rng=FakeRng([12, 1]),
     )
 
     scene.attack()
+    resolve_battle_roll(scene)
 
     assert return_scene.defeated == [MISALIGNED_SHADOW_ID]
 
@@ -744,10 +771,11 @@ def test_battle_return_to_map_after_victory() -> None:
         GameContext(player_name="Miko Meu"),
         create_miko_meu(),
         Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0),
-        rng=FakeRng([1]),
+        rng=FakeRng([12, 1]),
     )
 
     scene.attack()
+    resolve_battle_roll(scene)
     scene.handle_event(FakeEvent(FakePygame.K_RETURN))
 
     assert scene.consume_requested_scene() == "overworld"
@@ -767,6 +795,7 @@ def test_battle_detects_defeat_when_character_reaches_zero() -> None:
     scene = BattleScene(FakePygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([1, 2]))
 
     scene.attack()
+    resolve_battle_roll(scene)
 
     assert scene.defeat is True
     assert scene.turn_state == "derrota"
