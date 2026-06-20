@@ -12,6 +12,7 @@ from src.game.assets import (
 from src.game.app import _load_battle_character, _max_frames_from_env, load_player_name
 from src.game.camera import Camera
 from src.game.dialogue import DialogueChoice, DialogueOption
+from src.game.dice import resolve_basic_attack
 from src.game.entities.creature import Creature, default_creature, load_game_creature
 from src.game.entities.npc import NPC
 from src.game.entities.player import Player
@@ -37,7 +38,7 @@ from src.game.maps.test_map import (
     map_height,
     map_width,
 )
-from src.game.scenes.battle import BattleScene
+from src.game.scenes.battle import BattleScene, _attack_detail_lines
 from src.game.scenes.character_creator import ARMOR_OPTIONS, CharacterCreatorScene, ORIGIN_OPTIONS
 from src.game.area_interactions import ENTRY_WHISPER_HEARD_FLAG
 from src.game.npc_reactions import NOX_TRAIL_MENTIONED_FLAG, SHADOW_TRAIL_INVESTIGATED_FLAG
@@ -690,6 +691,47 @@ def test_battle_attack_enters_dice_rolling_state_before_applying_result() -> Non
     resolve_battle_roll(scene)
 
     assert scene.creature.current_health == 6
+
+
+def test_battle_attack_detail_lines_explain_success_roll() -> None:
+    resolution = resolve_basic_attack(modifier=2, difficulty=13, rng=FakeRng([14, 4]))
+
+    lines = _attack_detail_lines(resolution)
+
+    assert lines == (
+        "D20: 14  +2 = 16",
+        "DT: 13",
+        "Resultado: Sucesso",
+        "Dano: 1d6 = 4 -> 4",
+    )
+
+
+def test_battle_attack_detail_lines_explain_critical_failure() -> None:
+    resolution = resolve_basic_attack(modifier=2, difficulty=13, rng=FakeRng([1]))
+
+    lines = _attack_detail_lines(resolution)
+
+    assert lines[0] == "D20: 1  +2 = 3"
+    assert lines[2] == "Resultado: Falha critica"
+    assert "ataque falha" in lines[3]
+
+
+def test_battle_draws_dice_ui_at_common_resolutions() -> None:
+    import pygame
+
+    pygame.init()
+    character = create_miko_meu()
+    creature = Creature("sombra", "Sombra", 3, 2, "Uma sombra.", current_health=1, max_health=1, armor=0)
+    scene = BattleScene(pygame, GameContext(player_name=character.name), character, creature, rng=FakeRng([20, 3, 5]))
+    scene.attack()
+    for width, height in [(1280, 720), (1366, 768), (1920, 1080)]:
+        surface = pygame.Surface((width, height))
+        scene.draw(surface)
+    resolve_battle_roll(scene)
+    for width, height in [(1280, 720), (1366, 768), (1920, 1080)]:
+        surface = pygame.Surface((width, height))
+        scene.draw(surface)
+    pygame.quit()
 
 
 def test_battle_creature_responds_when_alive() -> None:

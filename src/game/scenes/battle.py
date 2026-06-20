@@ -5,14 +5,14 @@ from __future__ import annotations
 from src.core.abilities import Ability, list_abilities, use_ability
 from src.core.character import Character
 from src.core.combat import apply_physical_damage, roll_damage
-from src.game import assets, colors
+from src.game import assets
 from src.game.dice import AttackResolution, resolve_basic_attack
 from src.game.entities.creature import Creature
 from src.game.event_registry import register_battle_event
 from src.game.game_context import GameContext
 from src.game.scenes.base import BaseScene
 from src.game.save import DEFAULT_SAVE_ID, register_defeated_enemy
-from src.game.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.game.ui import panels
 from src.storage.types import JsonStore
 
 
@@ -50,6 +50,7 @@ class BattleScene(BaseScene):
         self.fled = False
         self.turn_state = "jogador"
         self.pending_attack: AttackResolution | None = None
+        self.last_attack_resolution: AttackResolution | None = None
         self.dice_frames_remaining = 0
         self.dice_display_value = 1
         self._font = None
@@ -109,11 +110,14 @@ class BattleScene(BaseScene):
 
     def draw(self, surface) -> None:
         self._ensure_draw_resources()
-        surface.fill((10, 12, 24))
-        self._draw_title(surface)
-        self._draw_combatants(surface)
-        self._draw_log(surface)
-        self._draw_menu(surface)
+        width, height = surface.get_width(), surface.get_height()
+        layout = _battle_layout(width, height, self.pygame)
+        surface.fill((7, 8, 15))
+        self._draw_title(surface, layout["title"])
+        self._draw_combatants(surface, layout["player"], layout["creature"])
+        self._draw_roll_panel(surface, layout["roll"])
+        self._draw_log(surface, layout["log"])
+        self._draw_menu(surface, layout["menu"])
         self._draw_dice_overlay(surface)
 
     def confirm_selection(self) -> None:
@@ -172,6 +176,7 @@ class BattleScene(BaseScene):
             difficulty=self.ATTACK_DIFFICULTY,
             rng=self.rng,
         )
+        self.last_attack_resolution = None
         self.dice_frames_remaining = self.DICE_ANIMATION_FRAMES
         self.dice_display_value = 1
         self.turn_state = "rolagem"
@@ -182,6 +187,7 @@ class BattleScene(BaseScene):
             return
         resolution = self.pending_attack
         self.pending_attack = None
+        self.last_attack_resolution = resolution
         self.turn_state = "jogador"
         check = resolution.check
         self._add_log(f"D20: {check.natural} | Modificador: {check.modifier:+d} | Total: {check.total}")
@@ -281,49 +287,96 @@ class BattleScene(BaseScene):
         self._title_font = self.pygame.font.Font(None, 34)
         self._assets = assets.create_assets(self.pygame)
 
-    def _draw_title(self, surface) -> None:
-        title = self._title_font.render(f"Combate Visual - Turno: {self.turn_state}", False, colors.WHITE)
-        surface.blit(title, (24, 18))
+    def _draw_title(self, surface, position: tuple[int, int]) -> None:
+        title = self._title_font.render("Combate", False, panels.PANEL_GOLD)
+        subtitle = self._font.render(f"Turno: {self.turn_state}", False, panels.TEXT_MUTED)
+        surface.blit(title, position)
+        surface.blit(subtitle, (position[0] + title.get_width() + 18, position[1] + 7))
 
-    def _draw_combatants(self, surface) -> None:
-        left = self.pygame.Rect(24, 62, 250, 118)
-        right = self.pygame.Rect(SCREEN_WIDTH - 274, 62, 250, 118)
-        self._draw_panel(surface, left)
-        self._draw_panel(surface, right)
+    def _draw_combatants(self, surface, left, right) -> None:
+        self._draw_panel(surface, left, alpha=220)
+        self._draw_panel(surface, right, alpha=220)
         surface.blit(self._assets.player["right"][0], (left.x + 18, left.y + 44))
         surface.blit(self._assets.creature, (right.x + right.width - 58, right.y + 44))
         self._draw_stats(surface, left, self.character.name, self.character.current_health, self.character.max_health, self.character.armor)
         self._draw_stats(surface, right, self.creature.name, self.creature.current_health, self.creature.max_health, self.creature.armor)
 
     def _draw_stats(self, surface, rect, name: str, health: int, max_health: int, armor: int) -> None:
-        name_surface = self._font.render(name, False, colors.WHITE)
+        name_surface = self._font.render(_truncate_text(name, self._font, rect.width - 28), False, panels.TEXT_IVORY)
         surface.blit(name_surface, (rect.x + 14, rect.y + 12))
-        self._draw_bar(surface, rect.x + 14, rect.y + 38, 130, health, max_health, (114, 207, 142))
-        self._draw_bar(surface, rect.x + 14, rect.y + 52, 130, armor, 10, (139, 124, 246))
-        health_surface = self._font.render(f"Vida {health}/{max_health}", False, colors.TEXT_MUTED)
-        armor_surface = self._font.render(f"Armadura {armor}", False, colors.TEXT_MUTED)
+        bar_width = min(150, rect.width - 86)
+        self._draw_bar(surface, rect.x + 14, rect.y + 38, bar_width, health, max_health, (114, 207, 142))
+        self._draw_bar(surface, rect.x + 14, rect.y + 52, bar_width, armor, 10, (139, 124, 246))
+        health_surface = self._font.render(f"Vida {health}/{max_health}", False, panels.TEXT_MUTED)
+        armor_surface = self._font.render(f"Armadura {armor}", False, panels.TEXT_MUTED)
         surface.blit(health_surface, (rect.x + 14, rect.y + 68))
         surface.blit(armor_surface, (rect.x + 14, rect.y + 90))
 
-    def _draw_log(self, surface) -> None:
-        rect = self.pygame.Rect(24, 196, SCREEN_WIDTH - 48, 142)
-        self._draw_panel(surface, rect)
-        for index, line in enumerate(self.log[-5:]):
-            text = self._font.render(line, False, colors.WHITE if index == len(self.log[-5:]) - 1 else colors.TEXT_MUTED)
-            surface.blit(text, (rect.x + 14, rect.y + 14 + index * 24))
+    def _draw_roll_panel(self, surface, rect) -> None:
+        self._draw_panel(surface, rect, alpha=226)
+        title = self._font.render("Rolagem de ataque", False, panels.PANEL_GOLD)
+        surface.blit(title, (rect.x + 18, rect.y + 14))
+        panels.draw_panel_separator(self.pygame, surface, (rect.x + 18, rect.y + 42), (rect.right - 18, rect.y + 42))
+        if self.pending_attack is not None:
+            self._draw_active_roll_details(surface, rect)
+            return
+        if self.last_attack_resolution is not None:
+            self._draw_attack_result_details(surface, rect, self.last_attack_resolution)
+            return
+        hint = self._font.render("Escolha Atacar para rolar 1d20 + 2 contra DT 13.", False, panels.TEXT_MUTED)
+        surface.blit(hint, (rect.x + 18, rect.y + 58))
 
-    def _draw_menu(self, surface) -> None:
-        rect = self.pygame.Rect(24, SCREEN_HEIGHT - 116, SCREEN_WIDTH - 48, 92)
-        self._draw_panel(surface, rect)
+    def _draw_active_roll_details(self, surface, rect) -> None:
+        dice_rect = self.pygame.Rect(rect.x + 22, rect.y + 56, 76, 62)
+        self.pygame.draw.rect(surface, (26, 22, 38), dice_rect, border_radius=6)
+        self.pygame.draw.rect(surface, panels.PANEL_GOLD, dice_rect, width=2, border_radius=6)
+        value = self._title_font.render(str(self.dice_display_value), False, panels.TEXT_IVORY)
+        surface.blit(value, (dice_rect.centerx - value.get_width() // 2, dice_rect.centery - value.get_height() // 2))
+        lines = ("D20 em movimento...", f"Modificador: {self.ATTACK_MODIFIER:+d}", f"DT: {self.ATTACK_DIFFICULTY}")
+        for index, line in enumerate(lines):
+            text = self._font.render(line, False, panels.TEXT_IVORY if index == 0 else panels.TEXT_MUTED)
+            surface.blit(text, (dice_rect.right + 22, rect.y + 58 + index * 24))
+
+    def _draw_attack_result_details(self, surface, rect, resolution: AttackResolution) -> None:
+        check = resolution.check
+        color = _outcome_color(check.outcome)
+        badge = self.pygame.Rect(rect.x + 22, rect.y + 56, 104, 62)
+        self.pygame.draw.rect(surface, (24, 20, 34), badge, border_radius=6)
+        self.pygame.draw.rect(surface, color, badge, width=2, border_radius=6)
+        d20_label = "D20"
+        if check.natural in {1, 20}:
+            d20_label = "natural"
+        label = self._font.render(d20_label, False, panels.TEXT_MUTED)
+        value = self._title_font.render(str(check.natural), False, color)
+        surface.blit(label, (badge.centerx - label.get_width() // 2, badge.y + 8))
+        surface.blit(value, (badge.centerx - value.get_width() // 2, badge.y + 28))
+        for index, line in enumerate(_attack_detail_lines(resolution)):
+            line_color = color if line.startswith("Resultado:") else panels.TEXT_IVORY
+            text = self._font.render(_truncate_text(line, self._font, rect.width - 164), False, line_color)
+            surface.blit(text, (badge.right + 22, rect.y + 55 + index * 22))
+
+    def _draw_log(self, surface, rect) -> None:
+        self._draw_panel(surface, rect, alpha=216)
+        title = self._font.render("Registro", False, panels.PANEL_GOLD)
+        surface.blit(title, (rect.x + 14, rect.y + 10))
+        visible_lines = max(2, (rect.height - 42) // 22)
+        for index, line in enumerate(self.log[-visible_lines:]):
+            color = panels.TEXT_IVORY if index == len(self.log[-visible_lines:]) - 1 else panels.TEXT_MUTED
+            text = self._font.render(_truncate_text(line, self._font, rect.width - 28), False, color)
+            surface.blit(text, (rect.x + 14, rect.y + 36 + index * 22))
+
+    def _draw_menu(self, surface, rect) -> None:
+        self._draw_panel(surface, rect, alpha=224)
         options = tuple(ability.name for ability in self.available_abilities()) if self.mode == "abilities" else self.OPTIONS
         if self.battle_ended:
             options = ("Voltar ao mapa",)
         for index, option in enumerate(options):
             selected = (index == self.ability_index if self.mode == "abilities" else index == self.selected_index) and not self.battle_ended
-            prefix = "> " if selected else "  "
-            color = colors.WHITE if selected else colors.TEXT_MUTED
-            text = self._font.render(f"{prefix}{option}", False, color)
-            surface.blit(text, (rect.x + 18 + index * 138, rect.y + 22))
+            color = panels.PANEL_GOLD if selected else panels.TEXT_IVORY
+            label = f"> {option}" if selected else option
+            text = self._font.render(label, False, color)
+            item_x = rect.x + 18 + index * max(130, rect.width // 5)
+            surface.blit(text, (item_x, rect.y + 22))
         hint = "Cima/baixo escolhe | Enter/E confirma | ESC fugir"
         if self.pending_attack is not None:
             hint = "Rolando dados..."
@@ -331,27 +384,27 @@ class BattleScene(BaseScene):
             hint = "Cima/baixo escolhe habilidade | ESC volta"
         if self.battle_ended:
             hint = "Enter/Espaco para voltar ao mapa"
-        hint_surface = self._font.render(hint, False, colors.TEXT_MUTED)
+        hint_surface = self._font.render(hint, False, panels.TEXT_MUTED)
         surface.blit(hint_surface, (rect.x + 18, rect.y + 58))
 
     def _draw_dice_overlay(self, surface) -> None:
         if self.pending_attack is None:
             return
-        rect = self.pygame.Rect(SCREEN_WIDTH // 2 - 88, SCREEN_HEIGHT // 2 - 74, 176, 148)
-        self._draw_panel(surface, rect)
-        title = self._font.render("Rolando D20", False, colors.TEXT_MUTED)
-        value = self._title_font.render(str(self.dice_display_value), False, colors.WHITE)
-        footer = self._font.render("O dado decide o ataque", False, colors.TEXT_MUTED)
+        width, height = surface.get_width(), surface.get_height()
+        rect = self.pygame.Rect(width // 2 - 96, height // 2 - 82, 192, 164)
+        self._draw_panel(surface, rect, alpha=238)
+        title = self._font.render("Rolando D20", False, panels.PANEL_GOLD)
+        value = self._title_font.render(str(self.dice_display_value), False, panels.TEXT_IVORY)
+        footer = self._font.render("O dado decide o ataque", False, panels.TEXT_MUTED)
         surface.blit(title, (rect.centerx - title.get_width() // 2, rect.y + 18))
         dice_rect = self.pygame.Rect(rect.centerx - 32, rect.y + 48, 64, 48)
         self.pygame.draw.rect(surface, (28, 24, 42), dice_rect)
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BORDER, dice_rect, width=2)
+        self.pygame.draw.rect(surface, panels.PANEL_GOLD, dice_rect, width=2)
         surface.blit(value, (dice_rect.centerx - value.get_width() // 2, dice_rect.centery - value.get_height() // 2))
         surface.blit(footer, (rect.centerx - footer.get_width() // 2, rect.y + 108))
 
-    def _draw_panel(self, surface, rect) -> None:
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BG, rect)
-        self.pygame.draw.rect(surface, colors.DIALOGUE_BORDER, rect, width=2)
+    def _draw_panel(self, surface, rect, *, alpha: int = 232) -> None:
+        panels.draw_dark_fantasy_panel(self.pygame, surface, rect, alpha=alpha, border_radius=8)
 
     def _draw_bar(
         self,
@@ -378,8 +431,77 @@ def _check_outcome_label(outcome: str) -> str:
     return labels.get(outcome, outcome)
 
 
+def _attack_detail_lines(resolution: AttackResolution) -> tuple[str, ...]:
+    check = resolution.check
+    lines = [
+        f"D20: {check.natural}  {check.modifier:+d} = {check.total}",
+        f"DT: {check.difficulty}",
+        f"Resultado: {_check_outcome_label(check.outcome)}",
+    ]
+    if check.is_critical_failure:
+        lines.append("Sua sombra se move antes de voce. O ataque falha.")
+    elif resolution.damage_roll is not None:
+        lines.append(_damage_roll_text(resolution).rstrip("."))
+    else:
+        lines.append("Dano: nenhum")
+    return tuple(lines)
+
+
 def _damage_roll_text(resolution: AttackResolution) -> str:
     if resolution.damage_roll is None:
         return "Dano: nenhum."
     rolls = "+".join(str(value) for value in resolution.damage_roll.rolls)
     return f"Dano: {resolution.damage_roll.expression} = {rolls} -> {resolution.damage_roll.total}."
+
+
+def _outcome_color(outcome: str) -> tuple[int, int, int]:
+    if outcome == "critical_success":
+        return (228, 183, 83)
+    if outcome == "critical_failure":
+        return (170, 72, 92)
+    if outcome == "failure":
+        return (184, 118, 104)
+    return (218, 209, 170)
+
+
+def _battle_layout(width: int, height: int, pygame) -> dict[str, object]:
+    margin = max(24, min(48, width // 28))
+    title = (margin, max(16, height // 36))
+    compact = height < 600
+    card_width = min(360, max(250, (width - margin * 3) // 2))
+    card_height = 110 if compact else 118
+    top = max(58, height // 12)
+    player = pygame.Rect(margin, top, card_width, card_height)
+    creature = pygame.Rect(width - margin - card_width, top, card_width, card_height)
+    menu_height = 88 if compact else 96
+    menu = pygame.Rect(margin, height - menu_height - margin, width - margin * 2, menu_height)
+    log_height = 72 if compact else max(88, min(132, height // 5))
+    log = pygame.Rect(margin, menu.y - log_height - 14, width - margin * 2, log_height)
+    roll_y = player.bottom + 16
+    available_roll_height = log.y - roll_y - 14
+    if available_roll_height >= 92:
+        roll_height = min(154, available_roll_height)
+    else:
+        roll_height = max(54, available_roll_height)
+    roll = pygame.Rect(margin, roll_y, width - margin * 2, roll_height)
+    return {
+        "title": title,
+        "player": player,
+        "creature": creature,
+        "roll": roll,
+        "log": log,
+        "menu": menu,
+    }
+
+
+def _truncate_text(text: str, font, max_width: int) -> str:
+    if max_width <= 0 or font.size(text)[0] <= max_width:
+        return text
+    suffix = "..."
+    available = max_width - font.size(suffix)[0]
+    if available <= 0:
+        return suffix
+    result = text
+    while result and font.size(result)[0] > available:
+        result = result[:-1]
+    return result.rstrip() + suffix
